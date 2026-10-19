@@ -39,6 +39,52 @@
 @media(max-width:720px){.hero-fullscreen{min-height:calc(100svh - 94px)}.hero-fullscreen .hero-grid{min-height:calc(100svh - 94px);width:min(100% - 30px,560px);padding:48px 0}.hero-fullscreen .hero-copy{max-width:100%}.hero-fullscreen .hero-backdrop{background-position:58% center;background-image:linear-gradient(90deg,rgba(8,28,50,.74),rgba(8,28,50,.42)),url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=85')}}
 @media(max-width:720px){.container{width:min(100% - 30px,560px)}.section{padding:68px 0}.top-note{font-size:.73rem}.nav{height:70px}.brand{font-size:.9rem;gap:8px}.brand-mark{width:39px;height:39px}.menu-toggle{display:block}.nav-links{display:none;position:absolute;top:70px;right:15px;left:15px;padding:15px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);flex-direction:column;align-items:stretch;gap:0}.nav-links.open{display:flex}.nav-links a{padding:11px 10px;border-bottom:1px solid #edf2f7}.nav-links a:last-child{border-bottom:0}.hero{padding:30px 0 45px}.hero-grid{grid-template-columns:1fr;gap:25px}.hero-copy{padding:0}.hero h1{font-size:clamp(2.15rem,10vw,3.15rem);margin:16px 0}.hero-copy>p{font-size:1rem}.hero-photo-wrap{height:390px;border-width:5px;border-radius:25px}.float-chip{left:7px;top:13px}.photo-label{bottom:12px;right:12px;left:12px;padding:10px 12px}.hero-proof{margin-top:20px}.trust-grid{grid-template-columns:1fr;gap:14px}.trust-item{justify-content:flex-start}.service-grid{grid-template-columns:1fr;gap:16px}.service-image{height:230px}.tech-grid,.experience-grid{grid-template-columns:1fr;gap:28px}.tech-photo{padding:0 0 18px 18px}.tech-photo img{height:340px}.why-grid{grid-template-columns:1fr;gap:14px}.gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:210px 150px 150px;gap:10px}.gallery-item:first-child{grid-row:span 2}.gallery-item:last-child{grid-column:span 2}.experience-image img{height:320px}.contact-card{padding:25px 21px;border-radius:23px}.contact-actions{flex-direction:column;align-items:stretch}.footer-top{flex-direction:column}.footer-links{gap:14px}.footer-bottom{flex-direction:column}.section h2{font-size:1.8rem}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}.image-reveal{clip-path:none}}
+
+/* Final hero layout override: put the photo directly on the full-screen section. */
+.hero-fullscreen{
+  position:relative!important;
+  isolation:isolate!important;
+  display:flex!important;
+  align-items:center!important;
+  width:100%!important;
+  height:calc(100svh - 106px)!important;
+  min-height:560px!important;
+  padding:0!important;
+  margin:0!important;
+  overflow:hidden!important;
+  background:#17314d!important;
+  background-image:linear-gradient(90deg,rgba(8,28,50,.78) 0%,rgba(8,28,50,.58) 48%,rgba(8,28,50,.24) 100%),url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=2200&q=90')!important;
+  background-size:cover!important;
+  background-position:center 48%!important;
+  background-repeat:no-repeat!important;
+}
+.hero-fullscreen .hero-grid{
+  display:flex!important;
+  align-items:center!important;
+  width:min(1160px,calc(100% - 40px))!important;
+  min-height:100%!important;
+  height:100%!important;
+  margin-inline:auto!important;
+  padding:56px 0!important;
+  position:relative!important;
+  z-index:2!important;
+}
+.hero-fullscreen .hero-copy{max-width:760px!important;color:#fff!important;position:relative!important;z-index:3!important}
+.hero-fullscreen h1,.hero-fullscreen .hero-copy>p,.hero-fullscreen .hero-proof{color:#fff!important}
+.hero-fullscreen .hero-proof strong{color:#fff!important}
+.hero-fullscreen h1 span{color:#f3d49a!important}
+.hero-fullscreen .hero-media,.hero-fullscreen .hero-backdrop{display:none!important}
+@media(max-width:720px){
+  .hero-fullscreen{
+    height:calc(100svh - 102px)!important;
+    min-height:600px!important;
+    background-image:linear-gradient(90deg,rgba(8,28,50,.78),rgba(8,28,50,.56)),url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=85')!important;
+    background-position:58% center!important;
+  }
+  .hero-fullscreen .hero-grid{width:calc(100% - 30px)!important;padding:42px 0!important}
+  .hero-fullscreen .hero-copy{max-width:100%!important}
+}
+
 </style>
 </head>
 <body>
@@ -53,7 +99,6 @@
 </header>
 <main id="home">
 <section class="hero hero-fullscreen">
- <div class="hero-backdrop" aria-hidden="true"></div>
  <div class="container hero-grid">
   <div class="hero-copy reveal">
    <span class="hero-tag"><i></i> عناية عصرية بتصميم يبعث على الراحة</span>
@@ -62,7 +107,6 @@
    <div class="hero-actions"><a class="btn primary" href="#services">اكتشف الخدمات <span aria-hidden="true">←</span></a><a class="btn secondary" href="#gallery">شاهد أجواء العيادة</a></div>
    <div class="hero-proof"><span class="proof-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 19 6v5c0 4.5-3 7.5-7 10-4-2.5-7-5.5-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg></span><span>مساحة مصممة للراحة والوضوح<br><strong style="color:var(--navy)">من أول زيارة إلى ما بعدها</strong></span></div>
   </div>
-  <div class="hero-media" aria-hidden="true"><img class="hero-photo" src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=2200&q=90" alt="" fetchpriority="high"></div>
  </div>
 </section>
 <div class="trust-strip"><div class="container trust-grid"><div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 19 6v5c0 4.5-3 7.5-7 10-4-2.5-7-5.5-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg><span>وضوح في رحلة الرعاية</span></div><div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-3h4v3"/></svg><span>مساحات عصرية مريحة</span></div><div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>اهتمام بتفاصيل تجربتك</span></div></div></div>
