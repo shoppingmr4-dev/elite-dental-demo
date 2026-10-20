@@ -171,6 +171,7 @@ html.js-enabled .reveal{opacity:0;transform:translateY(24px);transition:opacity 
    root.classList.add('js-enabled');
    gsap.registerPlugin(ScrollTrigger);
    targets.forEach(el=>el.classList.remove('is-visible'));
+   document.querySelectorAll('.hero-copy.reveal').forEach(el=>el.classList.add('is-visible'));
    const heroItems=document.querySelectorAll('.hero-copy .hero-tag,.hero-copy h1,.hero-copy>p,.hero-copy .hero-actions,.hero-copy .hero-proof');
    gsap.set(heroItems,{autoAlpha:0,y:18});
    gsap.to(heroItems,{autoAlpha:1,y:0,duration:.72,stagger:.12,ease:'power2.out',delay:.12,clearProps:'transform'});
