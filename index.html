@@ -94,7 +94,7 @@ html.js-enabled .reveal{opacity:0;transform:translateY(24px);transition:opacity 
 .whatsapp-float svg{width:23px;height:23px;flex:0 0 23px}
 .whatsapp-float:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(10,70,40,.34)}
 @media(max-width:950px){.nav>.btn{display:inline-flex}}
-@media(max-width:720px){.nav{gap:8px}.brand{font-size:.78rem;gap:6px}.brand-mark{width:34px;height:34px;border-radius:11px}.nav>.btn{display:inline-flex;padding:10px 11px;font-size:.76rem}.whatsapp-float{right:12px;bottom:12px;padding:12px 15px;font-size:.86rem}body{padding-bottom:72px}}
+@media(max-width:720px){.nav{gap:8px}.brand{font-size:.78rem;gap:6px}.brand-mark{width:34px;height:34px;border-radius:11px}.nav>.btn{display:none}.whatsapp-float{right:12px;bottom:12px;padding:12px 15px;font-size:.86rem}body{padding-bottom:72px}}
 
 </style>
 </head>
@@ -103,7 +103,16 @@ html.js-enabled .reveal{opacity:0;transform:translateY(24px);transition:opacity 
 <header class="header">
  <div class="container nav">
   <a class="brand" href="#home" aria-label="Elite Dental Clinic الصفحة الرئيسية"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3.5c-2.8 0-4 2.4-3.2 5.2l2.7 9.2c.6 2.1 2.2 2.8 3.1.5l1.2-3.2c.4-1.1 1.8-1.1 2.2 0l1.2 3.2c.9 2.3 2.5 1.6 3.1-.5L20 8.7c.8-2.8-.4-5.2-3.2-5.2-1.9 0-3.1 1.2-4.8 1.2S8.9 3.5 7 3.5Z"/></svg></span><span>Elite Dental Clinic</span></a>
+  <nav class="nav-links" id="site-nav" aria-label="التنقل الرئيسي">
+   <a href="#services">الخدمات</a>
+   <a href="#technology">التقنيات</a>
+   <a href="#gallery">معرض الصور</a>
+   <a href="#experience">خطوات العناية</a>
+   <a href="#faq">الأسئلة الشائعة</a>
+   <a href="#contact">تواصل معنا</a>
+  </nav>
   <a class="btn primary whatsapp-btn" data-whatsapp-cta href="https://wa.me/?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%88%D8%B9%D8%AF%20%D9%81%D9%8A%20Elite%20Dental%20Clinic." target="_blank" rel="noopener noreferrer">اطلب موعدك عبر واتساب</a>
+  <button class="menu-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="فتح القائمة">☰</button>
  </div>
 </header>
 <main id="home">
@@ -491,6 +500,33 @@ html.js-enabled .reveal{opacity:0;transform:translateY(24px);transition:opacity 
     motionQuery.addEventListener('change', onMotionPreferenceChange);
   } else if (typeof motionQuery.addListener === 'function') {
     motionQuery.addListener(onMotionPreferenceChange);
+  }
+
+  const menuToggle = document.querySelector('.menu-toggle');
+  const siteNav = document.querySelector('#site-nav');
+
+  if (menuToggle && siteNav) {
+    const setMenuOpen = open => {
+      siteNav.classList.toggle('open', open);
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.setAttribute('aria-label', open ? 'إغلاق القائمة' : 'فتح القائمة');
+      menuToggle.textContent = open ? '×' : '☰';
+    };
+
+    menuToggle.addEventListener('click', () => {
+      setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true');
+    });
+    siteNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => setMenuOpen(false));
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    });
+    document.addEventListener('click', event => {
+      if (!siteNav.contains(event.target) && !menuToggle.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    });
   }
 
   initEnhancements({ restoredFromBFCache: false });
