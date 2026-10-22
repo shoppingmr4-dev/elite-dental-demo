@@ -91,7 +91,14 @@ html.js-enabled .reveal{opacity:0;transform:translateY(24px);transition:opacity 
 .whatsapp-btn{background:#16834a!important;color:#fff!important;border:1px solid #16834a!important;box-shadow:0 9px 22px rgba(22,131,74,.22)!important;white-space:nowrap}
 .whatsapp-btn:hover{background:#116d3d!important;box-shadow:0 13px 28px rgba(22,131,74,.28)!important}
 @media(max-width:950px){.nav>.btn{display:inline-flex}}
-@media(max-width:720px){.nav{gap:8px}.brand{font-size:.78rem;gap:6px}.brand-mark{width:34px;height:34px;border-radius:11px}.nav>.btn{display:none}.nav>.whatsapp-btn{display:inline-flex;padding:10px 12px;font-size:.78rem;white-space:nowrap}.menu-toggle{display:none}}</style>
+@media(max-width:720px){.nav{gap:8px}.brand{font-size:.78rem;gap:6px}.brand-mark{width:34px;height:34px;border-radius:11px}.nav>.btn{display:none}.nav>.whatsapp-btn{display:inline-flex;padding:10px 12px;font-size:.78rem;white-space:nowrap}.menu-toggle{display:none}
+@media(max-width:720px){
+  .nav{height:auto;min-height:70px;flex-wrap:wrap;padding:8px 0}
+  .nav-links,.nav-links.open{display:flex;position:static;order:3;flex:0 0 100%;width:100%;min-width:0;overflow-x:auto;overscroll-behavior-x:contain;white-space:nowrap;flex-direction:row;align-items:center;gap:8px;padding:5px 0 7px;background:transparent;border:0;border-radius:0;box-shadow:none;scrollbar-width:thin}
+  .nav-links a,.nav-links a:last-child{flex:0 0 auto;padding:7px 10px;border:1px solid var(--line);border-radius:10px;font-size:.78rem}
+  .nav>.whatsapp-btn{max-width:52%;padding:9px 10px;font-size:.74rem}
+  html{scroll-padding-top:145px}
+}</style>
 </head>
 <body>
 <div class="top-note">رعاية الأسنان تبدأ بفهم احتياجاتك</div>
