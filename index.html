@@ -90,13 +90,15 @@ html.js-enabled .reveal{opacity:0;transform:translateY(24px);transition:opacity 
 /* Conversion-focused CTA styling */
 .whatsapp-btn{background:#16834a!important;color:#fff!important;border:1px solid #16834a!important;box-shadow:0 9px 22px rgba(22,131,74,.22)!important;white-space:nowrap}
 .whatsapp-btn:hover{background:#116d3d!important;box-shadow:0 13px 28px rgba(22,131,74,.28)!important}
-.whatsapp-float{position:fixed;left:18px;top:18px;right:auto;bottom:auto;z-index:100;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;border-radius:999px;background:#16834a;color:#fff;border:1px solid rgba(255,255,255,.3);box-shadow:0 12px 30px rgba(10,70,40,.28);font-size:.92rem;font-weight:800;transition:transform .22s,box-shadow .22s}
-.whatsapp-float svg{width:23px;height:23px;flex:0 0 23px}
-.whatsapp-float:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(10,70,40,.34)}
 @media(max-width:950px){.nav>.btn{display:inline-flex}}
-@media(max-width:720px){.nav{gap:8px}.brand{font-size:.78rem;gap:6px}.brand-mark{width:34px;height:34px;border-radius:11px}.nav>.btn{display:none}.whatsapp-float{left:12px;top:12px;right:auto;bottom:auto;padding:12px 15px;font-size:.86rem}}
-
-</style>
+@media(max-width:720px){.nav{gap:8px}.brand{font-size:.78rem;gap:6px}.brand-mark{width:34px;height:34px;border-radius:11px}.nav>.btn{display:none}.nav>.whatsapp-btn{display:inline-flex;padding:10px 12px;font-size:.78rem;white-space:nowrap}.menu-toggle{display:none}}
+@media(max-width:720px){
+  .nav{height:auto;min-height:70px;flex-wrap:wrap;padding:8px 0}
+  .nav-links,.nav-links.open{display:flex;position:static;order:3;flex:0 0 100%;width:100%;min-width:0;overflow-x:auto;overscroll-behavior-x:contain;white-space:nowrap;flex-direction:row;align-items:center;gap:8px;padding:5px 0 7px;background:transparent;border:0;border-radius:0;box-shadow:none;scrollbar-width:thin}
+  .nav-links a,.nav-links a:last-child{flex:0 0 auto;padding:7px 10px;border:1px solid var(--line);border-radius:10px;font-size:.78rem}
+  .nav>.whatsapp-btn{max-width:52%;padding:9px 10px;font-size:.74rem}
+  html{scroll-padding-top:145px}
+}</style>
 </head>
 <body>
 <div class="top-note">رعاية الأسنان تبدأ بفهم احتياجاتك</div>
@@ -532,6 +534,6 @@ html.js-enabled .reveal{opacity:0;transform:translateY(24px);transition:opacity 
 })();
 </script>
 
-<a class="whatsapp-float" data-whatsapp-cta href="https://wa.me/?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%88%D8%B9%D8%AF%20%D9%81%D9%8A%20Elite%20Dental%20Clinic." target="_blank" rel="noopener noreferrer" aria-label="اطلب موعدك عبر واتساب"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 11.5a8.2 8.2 0 0 1-12.1 7.2L4 20l1.3-4A8.2 8.2 0 1 1 20.2 11.5Z"/><path d="M9 8.7c.4 2.1 2 3.7 4.2 4.3l1.1-1.1 2 .9c.2.1.3.3.2.5-.3.9-1.1 1.4-2 1.4-3.6-.2-7.7-4.4-7.8-7.7 0-.8.5-1.6 1.3-1.9.2-.1.4 0 .5.2l.9 1.9L9 8.7Z"/></svg><span>اطلب موعدك عبر واتساب</span></a>
+
 </body>
 </html>
