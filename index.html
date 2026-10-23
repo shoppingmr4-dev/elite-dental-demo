@@ -160,6 +160,7 @@ html.js-enabled .reveal{opacity:0;transform:translateY(24px);transition:opacity 
   let generation = 0;
   let enhancement = null;
   let fallbackObserver = null;
+  let scheduledInit = null;
 
   const showAll = () => targets.forEach(el => el.classList.add('is-visible'));
 
@@ -226,7 +227,55 @@ html.js-enabled .reveal{opacity:0;transform:translateY(24px);transition:opacity 
     Array.from(pendingLoads.values()).forEach(cancel => cancel());
   }
 
+  function cancelScheduledInit() {
+    if (!scheduledInit) return;
+
+    if (scheduledInit.type === 'load') {
+      window.removeEventListener('load', scheduledInit.callback);
+    } else if (scheduledInit.type === 'idle' && typeof window.cancelIdleCallback === 'function') {
+      window.cancelIdleCallback(scheduledInit.id);
+    } else if (scheduledInit.type === 'timeout') {
+      window.clearTimeout(scheduledInit.id);
+    }
+
+    scheduledInit = null;
+  }
+
+  function scheduleEnhancements(options) {
+    const settings = options || {};
+    cancelScheduledInit();
+
+    const run = () => {
+      scheduledInit = null;
+      initEnhancements(settings);
+    };
+
+    if (settings.restoredFromBFCache) {
+      run();
+      return;
+    }
+
+    if (document.readyState !== 'complete') {
+      const onLoad = () => {
+        scheduledInit = null;
+        scheduleEnhancements(settings);
+      };
+      scheduledInit = { type: 'load', callback: onLoad };
+      window.addEventListener('load', onLoad, { once: true });
+      return;
+    }
+
+    if (typeof window.requestIdleCallback === 'function') {
+      const id = window.requestIdleCallback(run, { timeout: 1800 });
+      scheduledInit = { type: 'idle', id };
+    } else {
+      const id = window.setTimeout(run, 700);
+      scheduledInit = { type: 'timeout', id };
+    }
+  }
+
   function cleanupEnhancements() {
+    cancelScheduledInit();
     generation += 1;
     cancelPendingLoads();
     stopFallback();
@@ -491,7 +540,7 @@ html.js-enabled .reveal{opacity:0;transform:translateY(24px);transition:opacity 
 
   window.addEventListener('pagehide', cleanupEnhancements);
   window.addEventListener('pageshow', event => {
-    if (event.persisted) initEnhancements({ restoredFromBFCache: true });
+    if (event.persisted) scheduleEnhancements({ restoredFromBFCache: true });
   });
 
   const onMotionPreferenceChange = event => {
@@ -532,7 +581,7 @@ html.js-enabled .reveal{opacity:0;transform:translateY(24px);transition:opacity 
     });
   }
 
-  initEnhancements({ restoredFromBFCache: false });
+  scheduleEnhancements({ restoredFromBFCache: false });
 })();
 </script>
 
