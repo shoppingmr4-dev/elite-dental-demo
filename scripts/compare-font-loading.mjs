@@ -96,8 +96,6 @@ async function browserSmoke(name, url) {
   const jsErrors = [];
   const failedExternalRequests = [];
   const fontRequestEvents = [];
-  const fontCssResponses = [];
-  const pendingCssReads = [];
   let phase = 'before-navigation';
   let navigationStartEpoch = Date.now();
   page.on('pageerror', error => jsErrors.push(String(error.message || error)));
@@ -115,33 +113,11 @@ async function browserSmoke(name, url) {
     }
   });
   page.on('response', response => {
-    const request = response.request();
     const url = response.url();
     const matching = fontRequestEvents.findLast(item => item.url === url && item.responseStatus === null && item.failure === null);
     if (matching) {
       matching.responseStatus = response.status();
       matching.responseEndMsFromNavigation = Math.max(0, Date.now() - navigationStartEpoch);
-    }
-    if (/fonts\.googleapis\.com\/css2/i.test(url)) {
-      pendingCssReads.push((async () => {
-        try {
-          const css = await response.text();
-          const faces = [...css.matchAll(/@font-face\s*\{([^}]+)\}/g)].map(match => {
-            const body = match[1];
-            const get = (pattern) => (body.match(pattern) || [])[1] || null;
-            return {
-              family: get(/font-family:\s*['"]?([^;'"]+)['"]?\s*;/i),
-              style: get(/font-style:\s*([^;]+);/i),
-              weight: get(/font-weight:\s*([^;]+);/i),
-              srcUrl: get(/src:\s*url\((['"]?)(https:\/\/fonts\.gstatic\.com\/[^)'"]+)\1\)/i),
-              unicodeRange: get(/unicode-range:\s*([^;]+);/i),
-            };
-          });
-          fontCssResponses.push({ url, status: response.status(), bytes: new TextEncoder().encode(css).length, faceCount: faces.length, faces });
-        } catch (error) {
-          fontCssResponses.push({ url, status: response.status(), error: String(error.message || error) });
-        }
-      })());
     }
   });
   page.on('requestfailed', request => {
@@ -207,6 +183,49 @@ async function browserSmoke(name, url) {
   const earlyScreenshot = path.join(resultsDir, `${safeName}-mobile-early.png`);
   await page.screenshot({ path: earlyScreenshot, fullPage: false }).catch(() => {});
 
+  const googleFontCssResponses = await page.evaluate(async () => {
+    const links = Array.from(document.querySelectorAll('link[href*="fonts.googleapis.com/css2"]'));
+    const parseFaces = (css) => [...css.matchAll(/@font-face\s*\{([^}]+)\}/g)].map(match => {
+      const body = match[1];
+      const get = (pattern) => (body.match(pattern) || [])[1] || null;
+      const srcRaw = get(/src:\s*url\(([^)]+)\)/i);
+      return {
+        family: get(/font-family:\s*['"]?([^;'"]+)['"]?\s*;/i)?.trim() || null,
+        style: get(/font-style:\s*([^;]+);/i)?.trim() || null,
+        weight: get(/font-weight:\s*([^;]+);/i)?.trim() || null,
+        display: get(/font-display:\s*([^;]+);/i)?.trim() || null,
+        srcUrl: srcRaw ? srcRaw.replace(/^['"]|['"]$/g, '') : null,
+        unicodeRange: get(/unicode-range:\s*([^;]+);/i)?.trim() || null,
+      };
+    });
+    return await Promise.all(links.map(async link => {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 10000);
+      try {
+        const response = await fetch(link.href, {
+          mode: 'cors',
+          credentials: 'omit',
+          cache: 'force-cache',
+          signal: controller.signal,
+        });
+        const css = await response.text();
+        const faces = parseFaces(css);
+        return {
+          url: link.href,
+          status: response.status,
+          bytes: new TextEncoder().encode(css).length,
+          accessControlAllowOrigin: response.headers.get('access-control-allow-origin'),
+          faceCount: faces.length,
+          faces,
+        };
+      } catch (error) {
+        return { url: link.href, error: String(error.message || error) };
+      } finally {
+        clearTimeout(timer);
+      }
+    }));
+  }).catch(error => [{ error: String(error.message || error) }]);
+
   phase = 'after-initial-viewport-scrolling';
   await page.evaluate(async () => {
     const step = Math.max(350, Math.floor(window.innerHeight * 0.72));
@@ -264,7 +283,6 @@ async function browserSmoke(name, url) {
     };
   }).catch(error => ({ evaluationError: String(error.message || error) }));
 
-  await Promise.allSettled(pendingCssReads);
   const layoutShifts = await page.evaluate(() => window.__fontAuditLayoutShifts || []).catch(() => []);
   const fontRequestSummary = fontRequestEvents.map(event => ({ ...event }));
   const settledScreenshot = path.join(resultsDir, `${safeName}-mobile-settled.png`);
@@ -298,7 +316,7 @@ async function browserSmoke(name, url) {
     fontsReady,
     settled,
     fontRequestEvents: fontRequestSummary,
-    googleFontCssResponses: fontCssResponses,
+    googleFontCssResponses,
     clsObservedFromBrowser: round(layoutShifts.reduce((a, b) => a + b, 0), 5),
     layoutShiftEntries: layoutShifts.length,
     jsErrors,

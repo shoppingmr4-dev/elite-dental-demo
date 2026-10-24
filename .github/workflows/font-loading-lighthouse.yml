@@ -10,7 +10,7 @@ permissions:
 
 concurrency:
   group: font-loading-audit
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   compare:
