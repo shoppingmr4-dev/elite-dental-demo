@@ -183,18 +183,46 @@ async function browserSmoke(name, url) {
   const earlyScreenshot = path.join(resultsDir, `${safeName}-mobile-early.png`);
   await page.screenshot({ path: earlyScreenshot, fullPage: false }).catch(() => {});
 
+  let firstPaintReached = false;
+  try {
+    await page.waitForFunction(() => performance.getEntriesByType('paint').some(entry => entry.name === 'first-contentful-paint'), null, { timeout: 10000 });
+    firstPaintReached = true;
+  } catch {}
+  const firstPaint = await page.evaluate(() => {
+    const round = (value) => Number.isFinite(value) ? Number(value.toFixed(2)) : null;
+    const paints = performance.getEntriesByType('paint');
+    const heading = document.querySelector('h1');
+    const r = heading?.getBoundingClientRect();
+    return {
+      paintTimesMs: Object.fromEntries(paints.map(entry => [entry.name, round(entry.startTime)])),
+      fontStatus: document.fonts?.status || 'unavailable',
+      bodyFont: getComputedStyle(document.body).fontFamily,
+      h1Font: heading ? getComputedStyle(heading).fontFamily : null,
+      h1Weight: heading ? getComputedStyle(heading).fontWeight : null,
+      h1Text: heading?.textContent?.trim() || null,
+      h1Box: r ? { x: round(r.x), y: round(r.y), width: round(r.width), height: round(r.height) } : null,
+      alexandria700Loaded: document.fonts ? document.fonts.check('700 24px Alexandria', heading?.textContent || '') : false,
+    };
+  }).catch(error => ({ evaluationError: String(error.message || error) }));
+  const firstPaintScreenshot = path.join(resultsDir, safeName + '-mobile-first-paint.png');
+  await page.screenshot({ path: firstPaintScreenshot, fullPage: false }).catch(() => {});
+
   const googleFontCssResponses = await page.evaluate(async () => {
     const links = Array.from(document.querySelectorAll('link[href*="fonts.googleapis.com/css2"]'));
     const parseFaces = (css) => [...css.matchAll(/@font-face\s*\{([^}]+)\}/g)].map(match => {
       const body = match[1];
       const get = (pattern) => (body.match(pattern) || [])[1] || null;
-      const srcRaw = get(/src:\s*url\(([^)]+)\)/i);
+      const srcMatch = body.match(/src:\s*([^;]+);/i);
+      const srcRaw = srcMatch?.[1] || null;
+      const srcUrlMatch = srcRaw?.match(/https:\/\/fonts\.gstatic\.com\/[^)\s]+\.woff2/i);
       return {
         family: get(/font-family:\s*['"]?([^;'"]+)['"]?\s*;/i)?.trim() || null,
         style: get(/font-style:\s*([^;]+);/i)?.trim() || null,
         weight: get(/font-weight:\s*([^;]+);/i)?.trim() || null,
         display: get(/font-display:\s*([^;]+);/i)?.trim() || null,
-        srcUrl: srcRaw ? srcRaw.replace(/^['"]|['"]$/g, '') : null,
+        display: get(/font-display:\s*([^;]+);/i)?.trim() || null,
+        srcUrl: srcUrlMatch?.[0] || null,
+        srcDescriptor: srcRaw,
         unicodeRange: get(/unicode-range:\s*([^;]+);/i)?.trim() || null,
       };
     });
@@ -313,6 +341,8 @@ async function browserSmoke(name, url) {
     url,
     navigationError,
     early,
+    firstPaintReached,
+    firstPaint,
     fontsReady,
     settled,
     fontRequestEvents: fontRequestSummary,
@@ -323,7 +353,7 @@ async function browserSmoke(name, url) {
     failedExternalRequests: failedExternalRequests.slice(0, 30),
     failedExternalRequestCount: failedExternalRequests.length,
     menuInteraction,
-    screenshots: { early: path.basename(earlyScreenshot), settled: path.basename(settledScreenshot) },
+    screenshots: { domContentLoaded: path.basename(earlyScreenshot), firstPaint: path.basename(firstPaintScreenshot), settled: path.basename(settledScreenshot) },
   };
   await context.close();
   await browser.close();
