@@ -1,4 +1,4 @@
-name: Controlled mobile Lighthouse comparison
+name: Critical first-viewport WOFF2 preload comparison
 
 on:
   push:
@@ -56,7 +56,7 @@ jobs:
           echo "Selected browser binary: $CHROME_BIN"
           echo "CHROME_PATH=$CHROME_BIN" >> "$GITHUB_ENV"
 
-      - name: Record tested source commits
+      - name: Record tested source commits and experiment parameters
         shell: bash
         run: |
           echo "BASELINE_REF=perf/nonblocking-google-fonts" >> "$GITHUB_ENV"
