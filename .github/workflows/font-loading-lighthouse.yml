@@ -1,0 +1,105 @@
+name: Controlled mobile Lighthouse comparison
+
+on:
+  push:
+    branches:
+      - audit/font-loading-lighthouse
+
+permissions:
+  contents: read
+
+concurrency:
+  group: font-loading-audit
+  cancel-in-progress: false
+
+jobs:
+  compare:
+    name: Compare main vs font-loading candidate
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout baseline (main)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: baseline
+
+      - name: Checkout candidate (PR #6 branch)
+        uses: actions/checkout@v4
+        with:
+          ref: perf/nonblocking-google-fonts
+          path: candidate
+
+      - name: Checkout test harness
+        uses: actions/checkout@v4
+        with:
+          ref: audit/font-loading-lighthouse
+          path: harness
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install pinned test dependencies
+        working-directory: harness
+        shell: bash
+        run: |
+          npm init -y
+          npm install --no-save lighthouse@13.5.0 playwright@1.64.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+          echo "CHROME_PATH=$(node -e "process.stdout.write(require('playwright').chromium.executablePath())")" >> "$GITHUB_ENV"
+
+      - name: Record tested source commits
+        shell: bash
+        run: |
+          echo "BASELINE_SHA=$(git -C baseline rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "CANDIDATE_SHA=$(git -C candidate rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "Harness commit: $(git -C harness rev-parse HEAD)"
+          echo "Baseline commit: $(git -C baseline rev-parse HEAD)"
+          echo "Candidate commit: $(git -C candidate rev-parse HEAD)"
+
+      - name: Start identical static servers
+        shell: bash
+        run: |
+          mkdir -p results
+          nohup python3 -m http.server 4173 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE/baseline" >/tmp/font-audit-main-server.log 2>&1 &
+          echo $! >/tmp/font-audit-main-server.pid
+          nohup python3 -m http.server 4174 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE/candidate" >/tmp/font-audit-candidate-server.log 2>&1 &
+          echo $! >/tmp/font-audit-candidate-server.pid
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null && curl --fail --silent http://127.0.0.1:4174/ >/dev/null; then
+              echo "Both local site servers are responding."
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/font-audit-main-server.log || true
+          cat /tmp/font-audit-candidate-server.log || true
+          echo "One or both local static servers failed to start."
+          exit 1
+
+      - name: Run browser smoke checks and six Lighthouse mobile tests
+        working-directory: harness
+        env:
+          BASELINE_URL: http://127.0.0.1:4173/
+          CANDIDATE_URL: http://127.0.0.1:4174/
+          RESULTS_DIR: ${{ github.workspace }}/results
+        run: node scripts/compare-font-loading.mjs
+
+      - name: Append server logs
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p results
+          cp /tmp/font-audit-main-server.log results/main-server.log 2>/dev/null || true
+          cp /tmp/font-audit-candidate-server.log results/candidate-server.log 2>/dev/null || true
+
+      - name: Upload Lighthouse reports, screenshots, and summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: font-loading-lighthouse-comparison
+          path: results/
+          if-no-files-found: warn
+          retention-days: 14
