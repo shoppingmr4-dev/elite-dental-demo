@@ -151,6 +151,7 @@ async function browserSmoke(name, url) {
   await page.waitForTimeout(1100).catch(() => {});
 
   const settled = await page.evaluate(() => {
+    const round = (value) => Number.isFinite(value) ? Number(value.toFixed(2)) : null;
     const images = Array.from(document.images);
     const faces = document.fonts ? Array.from(document.fonts).map(face => ({ family: face.family, weight: face.weight, status: face.status })) : [];
     const entries = performance.getEntriesByType('resource');
@@ -239,6 +240,8 @@ async function main() {
     console.log(`[browser-smoke] ${name}: ${url}`);
     visual.push(await browserSmoke(name, url));
   }
+  fs.writeFileSync(path.join(resultsDir, 'browser-smoke.json'), JSON.stringify(visual, null, 2));
+  console.log('[browser-smoke-summary] ' + JSON.stringify(visual.map(v => ({variant:v.variant, early:v.early, settled:v.settled, fontsReady:v.fontsReady, clsObservedFromBrowser:v.clsObservedFromBrowser, layoutShiftEntries:v.layoutShiftEntries, jsErrors:v.jsErrors, failedExternalRequestCount:v.failedExternalRequestCount}))));
 
   const lighthouseRuns = [];
   for (let run = 1; run <= 3; run++) {
