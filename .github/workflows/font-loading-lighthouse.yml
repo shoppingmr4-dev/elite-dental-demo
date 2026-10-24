@@ -18,16 +18,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - name: Checkout baseline (main)
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          path: baseline
-
-      - name: Checkout candidate (PR #6 branch)
+      - name: Checkout PR #6 candidate as the baseline
         uses: actions/checkout@v4
         with:
           ref: perf/nonblocking-google-fonts
+          path: baseline
+
+      - name: Checkout critical WOFF2 preload experiment
+        uses: actions/checkout@v4
+        with:
+          ref: experiment/critical-font-preload
           path: candidate
 
       - name: Checkout test harness
@@ -59,6 +59,8 @@ jobs:
       - name: Record tested source commits
         shell: bash
         run: |
+          echo "BASELINE_REF=perf/nonblocking-google-fonts" >> "$GITHUB_ENV"
+          echo "CANDIDATE_REF=experiment/critical-font-preload" >> "$GITHUB_ENV"
           echo "BASELINE_SHA=$(git -C baseline rev-parse HEAD)" >> "$GITHUB_ENV"
           echo "CANDIDATE_SHA=$(git -C candidate rev-parse HEAD)" >> "$GITHUB_ENV"
           echo "Harness commit: $(git -C harness rev-parse HEAD)"
