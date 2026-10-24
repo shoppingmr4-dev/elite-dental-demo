@@ -48,7 +48,13 @@ jobs:
           npm init -y
           npm install --no-save lighthouse@13.5.0 playwright@1.64.1 pngjs@7.0.0
           npx playwright install --with-deps chromium
-          echo "CHROME_PATH=$(node -e "process.stdout.write(require('playwright').chromium.executablePath())")" >> "$GITHUB_ENV"
+          CHROME_BIN="$(find "$HOME/.cache/ms-playwright" -type f \( -name 'chrome-headless-shell' -o -name 'headless_shell' \) -perm -u+x -print -quit)"
+          if [ -z "$CHROME_BIN" ]; then
+            CHROME_BIN="$(node -e "process.stdout.write(require('playwright').chromium.executablePath())")"
+          fi
+          test -x "$CHROME_BIN"
+          echo "Selected browser binary: $CHROME_BIN"
+          echo "CHROME_PATH=$CHROME_BIN" >> "$GITHUB_ENV"
 
       - name: Record tested source commits
         shell: bash
