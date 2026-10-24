@@ -38,6 +38,8 @@ function metricsFromLighthouse(report) {
       networkRequestTime: item.networkRequestTime ?? null,
       networkEndTime: item.networkEndTime ?? null,
     }));
+  const fontFileRequests = fontRequests.filter(item => item.resourceType === 'Font' || /\.woff2(?:$|\?)/i.test(item.url || ''));
+  const fontTransferBytes = fontFileRequests.reduce((sum, item) => sum + (Number.isFinite(item.transferSize) ? item.transferSize : 0), 0);
   const renderBlocking = {
     auditId: blockingInsight?.[0] || (blockingAudit ? 'render-blocking-resources' : null),
     title: blockingInsight?.[1]?.title || blockingAudit?.title || null,
@@ -62,6 +64,8 @@ function metricsFromLighthouse(report) {
     tbtMs: metric('total-blocking-time'),
     renderBlocking,
     fontRequests,
+    fontFileRequestCount: fontFileRequests.length,
+    fontTransferBytes,
     lighthouseVersion: report.lighthouseVersion || null,
     userAgent: report.environment?.hostUserAgent || null,
     benchmarkIndex: report.environment?.benchmarkIndex || null,
@@ -366,7 +370,7 @@ async function main() {
   if (!process.env.CHROME_PATH || !fs.existsSync(process.env.CHROME_PATH)) throw new Error('CHROME_PATH does not point to an installed Chrome binary');
 
   const visual = [];
-  for (const [name, url] of [['main', baselineUrl], ['candidate', candidateUrl]]) {
+  for (const [name, url] of [['baseline', baselineUrl], ['candidate', candidateUrl]]) {
     console.log(`[browser-smoke] ${name}: ${url}`);
     visual.push(await browserSmoke(name, url));
   }
@@ -377,7 +381,7 @@ async function main() {
   for (let run = 1; run <= 3; run++) {
     const order = run % 2 === 1
       ? [['main', baselineUrl], ['candidate', candidateUrl]]
-      : [['candidate', candidateUrl], ['main', baselineUrl]];
+      : [['candidate', candidateUrl], ['baseline', baselineUrl]];
     for (const [name, url] of order) {
       const reportPath = path.join(resultsDir, `lighthouse-${name}-run-${run}.json`);
       const args = [
@@ -410,14 +414,14 @@ async function main() {
     }
   }
 
-  const finalShots = {
-    main: path.join(resultsDir, 'main-mobile-settled.png'),
-    candidate: path.join(resultsDir, 'candidate-mobile-settled.png'),
+  const screenshotComparisons = {
+    domContentLoaded: diffPng(path.join(resultsDir, 'baseline-mobile-early.png'), path.join(resultsDir, 'candidate-mobile-early.png')),
+    firstContentfulPaint: diffPng(path.join(resultsDir, 'baseline-mobile-first-paint.png'), path.join(resultsDir, 'candidate-mobile-first-paint.png')),
+    settledFullPage: diffPng(path.join(resultsDir, 'baseline-mobile-settled.png'), path.join(resultsDir, 'candidate-mobile-settled.png')),
   };
-  const screenshots = diffPng(finalShots.main, finalShots.candidate);
 
   const averages = {};
-  for (const variant of ['main', 'candidate']) {
+  for (const variant of ['baseline', 'candidate']) {
     const records = lighthouseRuns.filter(r => r.variant === variant);
     averages[variant] = {
       runs: records.length,
@@ -428,12 +432,14 @@ async function main() {
       speedIndexMs: round(mean(records.map(r => r.speedIndexMs)), 0),
       tbtMs: round(mean(records.map(r => r.tbtMs)), 0),
       renderBlockingSavingsMs: round(mean(records.map(r => r.renderBlocking?.overallSavingsMs).filter(Number.isFinite)), 0),
+      fontFileRequestCount: round(mean(records.map(r => r.fontFileRequestCount).filter(Number.isFinite)), 1),
+      fontTransferBytes: round(mean(records.map(r => r.fontTransferBytes).filter(Number.isFinite)), 0),
     };
   }
 
   const delta = {};
-  for (const key of ['performanceScore', 'fcpMs', 'lcpMs', 'cls', 'speedIndexMs', 'tbtMs', 'renderBlockingSavingsMs']) {
-    const a = averages.main[key];
+  for (const key of ['performanceScore', 'fcpMs', 'lcpMs', 'cls', 'speedIndexMs', 'tbtMs', 'renderBlockingSavingsMs', 'fontTransferBytes']) {
+    const a = averages.baseline[key];
     const b = averages.candidate[key];
     delta[key] = a == null || b == null ? null : round(b - a, key === 'cls' ? 5 : 1);
   }
@@ -442,17 +448,17 @@ async function main() {
     generatedAt: new Date().toISOString(),
     environment: { node: process.version, platform: process.platform, arch: process.arch, baselineSha: process.env.BASELINE_SHA || null, candidateSha: process.env.CANDIDATE_SHA || null, chromePath: process.env.CHROME_PATH, lighthouseVersion: '13.5.0', playwrightVersion: '1.64.1', method: 'Lighthouse mobile preset with simulated throttling; 3 fresh Lighthouse CLI runs per version, alternating order' },
     visual,
-    screenshotComparison: screenshots,
+    screenshotComparisons,
     lighthouseRuns,
     averages,
-    candidateMinusMain: delta,
+    candidateMinusBaseline: delta,
     interpretation: 'This is a controlled comparative run against local static servers in a GitHub-hosted runner, not a Google PageSpeed Insights production URL test. External images and Google Fonts are requested normally. A pixel difference is a diagnostic signal, not by itself proof of a regression.',
   };
 
   fs.writeFileSync(path.join(resultsDir, 'summary.json'), JSON.stringify(summary, null, 2));
   const f = (value, unit = '') => value == null ? 'n/a' : `${value}${unit}`;
   const rows = lighthouseRuns.map(r => `| ${r.variant} | ${r.run} | ${f(r.performanceScore)} | ${f(round(r.fcpMs / 1000, 2), ' s')} | ${f(round(r.lcpMs / 1000, 2), ' s')} | ${f(r.cls)} | ${f(round(r.speedIndexMs / 1000, 2), ' s')} | ${f(r.tbtMs, ' ms')} | ${f(r.renderBlocking?.overallSavingsMs, ' ms')} |`).join('\n');
-  const averageRows = ['main', 'candidate'].map(name => {
+  const averageRows = ['baseline', 'candidate'].map(name => {
     const a = averages[name];
     return `| ${name} | ${f(a.performanceScore)} | ${f(round(a.fcpMs / 1000, 2), ' s')} | ${f(round(a.lcpMs / 1000, 2), ' s')} | ${f(a.cls)} | ${f(round(a.speedIndexMs / 1000, 2), ' s')} | ${f(a.tbtMs, ' ms')} | ${f(a.renderBlockingSavingsMs, ' ms')} |`;
   }).join('\n');
@@ -461,7 +467,7 @@ async function main() {
     return `| ${v.variant} | ${f(s.lang)} / ${f(s.dir)} | ${f(s.fontsStatus)} | ${f(s.imagesLoaded)} / ${f(s.imageCount)} | ${f(v.clsObservedFromBrowser)} | ${v.jsErrors?.length || 0} | ${v.failedExternalRequestCount || 0} | ${f(v.menuInteraction?.result)} |`;
   }).join('\n');
 
-  const md = `# Mobile font-loading comparison\n\n- Generated: ${summary.generatedAt}\n- Baseline commit: ${summary.environment.baselineSha || 'unknown'}\n- Candidate commit: ${summary.environment.candidateSha || 'unknown'}\n- Method: ${summary.environment.method}\n- Chrome: ${summary.environment.chromePath}\n- Important: controlled local-server comparison in GitHub Actions; this is not the same as a production PageSpeed Insights report.\n\n## Individual Lighthouse runs\n\n| Version | Run | Performance | FCP | LCP | CLS | Speed Index | TBT | Render-blocking savings estimate |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|\n${rows}\n\n## Averages\n\n| Version | Performance | FCP | LCP | CLS | Speed Index | TBT | Render-blocking savings estimate |\n|---|---:|---:|---:|---:|---:|---:|---:|\n${averageRows}\n\n## Candidate minus main (lower is generally better except Performance)\n\n${Object.entries(delta).map(([key, value]) => `- ${key}: ${f(value)}`).join('\n')}\n\n## Browser smoke check\n\n| Version | lang / dir | Font status after settling | Images loaded | Observed browser CLS | JS errors | Failed external requests | Menu toggle |\n|---|---|---|---|---:|---:|---:|---|\n${visualRows}\n\n## Screenshot comparison\n\n${JSON.stringify(screenshots, null, 2)}\n\nEarly and settled viewport/full-page screenshots are included as PNG files in this artifact. Check the screenshots as well as the pixel-difference percentage; an image difference can include font rasterization and animation.\n\n## Risks and limits\n\n- The browser tests record early font state and settled rendering, but do not prove that every user experiences no flash under every connection.\n- Lighthouse uses default mobile emulation and simulated network/CPU throttling.\n- Local-server comparison controls the code and runner but will not numerically match PSI's production URL test.\n- Network requests that fail are recorded in summary.json.\n`;
+  const md = `# Mobile font-loading comparison\n\n- Generated: ${summary.generatedAt}\n- Baseline commit: ${summary.environment.baselineSha || 'unknown'}\n- Candidate commit: ${summary.environment.candidateSha || 'unknown'}\n- Method: ${summary.environment.method}\n- Chrome: ${summary.environment.chromePath}\n- Important: controlled local-server comparison in GitHub Actions; this is not the same as a production PageSpeed Insights report.\n\n## Individual Lighthouse runs\n\n| Version | Run | Performance | FCP | LCP | CLS | Speed Index | TBT | Font files | Font bytes | Render-blocking savings estimate |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n${rows}\n\n## Averages\n\n| Version | Performance | FCP | LCP | CLS | Speed Index | TBT | Render-blocking savings estimate |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n${averageRows}\n\n## Candidate minus PR #6 baseline (lower is generally better except Performance)\n\n${Object.entries(delta).map(([key, value]) => `- ${key}: ${f(value)}`).join('\n')}\n\n## Browser smoke check\n\n| Version | lang / dir | Font status after settling | Images loaded | Observed browser CLS | JS errors | Failed external requests | Menu toggle |\n|---|---|---|---|---:|---:|---:|---|\n${visualRows}\n\n## Screenshot comparisons: DOMContentLoaded, first paint, settled page\n\n${JSON.stringify(screenshotComparisons, null, 2)}\n\nDOMContentLoaded, first-contentful-paint, and settled full-page screenshots are included as PNG files in this artifact. Check the screenshots as well as the pixel-difference percentage; an image difference can include font rasterization and animation.\n\n## Risks and limits\n\n- The browser tests record early font state and settled rendering, but do not prove that every user experiences no flash under every connection.\n- Lighthouse uses default mobile emulation and simulated network/CPU throttling.\n- Local-server comparison controls the code and runner but will not numerically match PSI's production URL test.\n- Network requests that fail are recorded in summary.json.\n`;
   fs.writeFileSync(path.join(resultsDir, 'summary.md'), md);
   console.log('\n' + md);
 }
