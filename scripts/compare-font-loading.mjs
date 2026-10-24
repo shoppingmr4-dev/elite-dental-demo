@@ -230,7 +230,7 @@ async function browserSmoke(name, url) {
 }
 
 async function main() {
-  const lighthouseBin = path.join(here, 'node_modules', '.bin', 'lighthouse');
+  const lighthouseBin = path.join(here, '..', 'node_modules', '.bin', 'lighthouse');
   if (!fs.existsSync(lighthouseBin)) throw new Error('Lighthouse CLI was not installed');
   if (!process.env.CHROME_PATH || !fs.existsSync(process.env.CHROME_PATH)) throw new Error('CHROME_PATH does not point to an installed Chrome binary');
 
