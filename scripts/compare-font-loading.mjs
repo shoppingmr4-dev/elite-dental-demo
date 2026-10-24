@@ -126,15 +126,15 @@ async function browserSmoke(name, url) {
       pendingCssReads.push((async () => {
         try {
           const css = await response.text();
-          const faces = [...css.matchAll(/@font-face\\s*\\{([^}]+)\\}/g)].map(match => {
+          const faces = [...css.matchAll(/@font-face\s*\{([^}]+)\}/g)].map(match => {
             const body = match[1];
             const get = (pattern) => (body.match(pattern) || [])[1] || null;
             return {
-              family: get(/font-family:\\s*['"]?([^;'"]+)['"]?\\s*;/i),
-              style: get(/font-style:\\s*([^;]+);/i),
-              weight: get(/font-weight:\\s*([^;]+);/i),
-              srcUrl: get(/src:\\s*url\\((['"]?)(https:\\/\\/fonts\\.gstatic\\.com\\/[^)'"]+)\\1\\)/i),
-              unicodeRange: get(/unicode-range:\\s*([^;]+);/i),
+              family: get(/font-family:\s*['"]?([^;'"]+)['"]?\s*;/i),
+              style: get(/font-style:\s*([^;]+);/i),
+              weight: get(/font-weight:\s*([^;]+);/i),
+              srcUrl: get(/src:\s*url\((['"]?)(https:\/\/fonts\.gstatic\.com\/[^)'"]+)\1\)/i),
+              unicodeRange: get(/unicode-range:\s*([^;]+);/i),
             };
           });
           fontCssResponses.push({ url, status: response.status(), bytes: new TextEncoder().encode(css).length, faceCount: faces.length, faces });
@@ -148,7 +148,7 @@ async function browserSmoke(name, url) {
     const address = request.url();
     const matching = fontRequestEvents.findLast(item => item.url === address && item.failure === null);
     if (matching) matching.failure = request.failure()?.errorText || 'request failed';
-    if (/fonts\\.|images\\./i.test(address) || request.failure()?.errorText) {
+    if (/fonts\.|images\./i.test(address) || request.failure()?.errorText) {
       failedExternalRequests.push({ url: address, error: request.failure()?.errorText || 'request failed' });
     }
   });
@@ -176,7 +176,7 @@ async function browserSmoke(name, url) {
   const early = await page.evaluate(() => {
     const paints = performance.getEntriesByType('paint');
     const resources = performance.getEntriesByType('resource')
-      .filter(entry => /fonts\\.(?:googleapis|gstatic)\\.com/i.test(entry.name))
+      .filter(entry => /fonts\.(?:googleapis|gstatic)\.com/i.test(entry.name))
       .map(entry => ({
         url: entry.name,
         startTimeMs: Number(entry.startTime.toFixed(2)),
