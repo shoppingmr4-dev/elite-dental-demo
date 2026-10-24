@@ -95,10 +95,60 @@ async function browserSmoke(name, url) {
   const page = await context.newPage();
   const jsErrors = [];
   const failedExternalRequests = [];
+  const fontRequestEvents = [];
+  const fontCssResponses = [];
+  const pendingCssReads = [];
+  let phase = 'before-navigation';
+  let navigationStartEpoch = Date.now();
   page.on('pageerror', error => jsErrors.push(String(error.message || error)));
+  page.on('request', request => {
+    if (/fonts\.(?:googleapis|gstatic)\.com/i.test(request.url())) {
+      fontRequestEvents.push({
+        url: request.url(),
+        resourceType: request.resourceType(),
+        phase,
+        requestStartMsFromNavigation: Math.max(0, Date.now() - navigationStartEpoch),
+        responseStatus: null,
+        responseEndMsFromNavigation: null,
+        failure: null,
+      });
+    }
+  });
+  page.on('response', response => {
+    const request = response.request();
+    const url = response.url();
+    const matching = fontRequestEvents.findLast(item => item.url === url && item.responseStatus === null && item.failure === null);
+    if (matching) {
+      matching.responseStatus = response.status();
+      matching.responseEndMsFromNavigation = Math.max(0, Date.now() - navigationStartEpoch);
+    }
+    if (/fonts\.googleapis\.com\/css2/i.test(url)) {
+      pendingCssReads.push((async () => {
+        try {
+          const css = await response.text();
+          const faces = [...css.matchAll(/@font-face\\s*\\{([^}]+)\\}/g)].map(match => {
+            const body = match[1];
+            const get = (pattern) => (body.match(pattern) || [])[1] || null;
+            return {
+              family: get(/font-family:\\s*['"]?([^;'"]+)['"]?\\s*;/i),
+              style: get(/font-style:\\s*([^;]+);/i),
+              weight: get(/font-weight:\\s*([^;]+);/i),
+              srcUrl: get(/src:\\s*url\\((['"]?)(https:\\/\\/fonts\\.gstatic\\.com\\/[^)'"]+)\\1\\)/i),
+              unicodeRange: get(/unicode-range:\\s*([^;]+);/i),
+            };
+          });
+          fontCssResponses.push({ url, status: response.status(), bytes: new TextEncoder().encode(css).length, faceCount: faces.length, faces });
+        } catch (error) {
+          fontCssResponses.push({ url, status: response.status(), error: String(error.message || error) });
+        }
+      })());
+    }
+  });
   page.on('requestfailed', request => {
     const address = request.url();
-    if (/fonts\.|images\./i.test(address) || request.failure()?.errorText) {
+    const matching = fontRequestEvents.findLast(item => item.url === address && item.failure === null);
+    if (matching) matching.failure = request.failure()?.errorText || 'request failed';
+    if (/fonts\\.|images\\./i.test(address) || request.failure()?.errorText) {
       failedExternalRequests.push({ url: address, error: request.failure()?.errorText || 'request failed' });
     }
   });
@@ -115,22 +165,49 @@ async function browserSmoke(name, url) {
 
   let navigationError = null;
   try {
+    phase = 'navigation';
+    navigationStartEpoch = Date.now();
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
   } catch (error) {
     navigationError = String(error.message || error);
   }
+  phase = 'initial-viewport-before-scroll';
 
-  const early = await page.evaluate(() => ({
-    fontStatus: document.fonts?.status || 'unavailable',
-    fontFaces: document.fonts ? Array.from(document.fonts).map(face => ({ family: face.family, weight: face.weight, status: face.status })) : [],
-    bodyFont: getComputedStyle(document.body).fontFamily,
-    h1Font: document.querySelector('h1') ? getComputedStyle(document.querySelector('h1')).fontFamily : null,
-  })).catch(() => null);
+  const early = await page.evaluate(() => {
+    const paints = performance.getEntriesByType('paint');
+    const resources = performance.getEntriesByType('resource')
+      .filter(entry => /fonts\\.(?:googleapis|gstatic)\\.com/i.test(entry.name))
+      .map(entry => ({
+        url: entry.name,
+        startTimeMs: Number(entry.startTime.toFixed(2)),
+        durationMs: Number(entry.duration.toFixed(2)),
+        transferSize: entry.transferSize ?? null,
+        encodedBodySize: entry.encodedBodySize ?? null,
+      }));
+    const heading = document.querySelector('h1');
+    const visibleText = Array.from(document.querySelectorAll('body *'))
+      .filter(el => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el); return r.width > 0 && r.height > 0 && r.top < innerHeight && r.bottom > 0 && s.visibility !== 'hidden' && s.display !== 'none' && el.children.length === 0; })
+      .map(el => ({ text: (el.textContent || '').trim(), family: getComputedStyle(el).fontFamily, weight: getComputedStyle(el).fontWeight }))
+      .filter(el => el.text).slice(0, 50);
+    return {
+      fontStatus: document.fonts?.status || 'unavailable',
+      fontFaces: document.fonts ? Array.from(document.fonts).map(face => ({ family: face.family, weight: face.weight, status: face.status })) : [],
+      bodyFont: getComputedStyle(document.body).fontFamily,
+      h1Font: heading ? getComputedStyle(heading).fontFamily : null,
+      h1Weight: heading ? getComputedStyle(heading).fontWeight : null,
+      h1Text: heading?.textContent?.trim() || null,
+      headingUsesAlexandriaLoaded: !!heading && !!document.fonts?.check('700 24px Alexandria', heading.textContent || ''),
+      visibleText,
+      paintTimesMs: Object.fromEntries(paints.map(entry => [entry.name, Number(entry.startTime.toFixed(2))])),
+      fontResourcesAtDomContentLoaded: resources,
+    };
+  }).catch(error => ({ evaluationError: String(error.message || error) }));
 
   const safeName = name.toLowerCase().replace(/[^a-z0-9-]/g, '-');
   const earlyScreenshot = path.join(resultsDir, `${safeName}-mobile-early.png`);
   await page.screenshot({ path: earlyScreenshot, fullPage: false }).catch(() => {});
 
+  phase = 'after-initial-viewport-scrolling';
   await page.evaluate(async () => {
     const step = Math.max(350, Math.floor(window.innerHeight * 0.72));
     const height = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
@@ -141,6 +218,7 @@ async function browserSmoke(name, url) {
     window.scrollTo(0, 0);
   }).catch(() => {});
 
+  phase = 'after-scroll-font-settle';
   let fontsReady = false;
   try {
     fontsReady = await Promise.race([
@@ -186,7 +264,9 @@ async function browserSmoke(name, url) {
     };
   }).catch(error => ({ evaluationError: String(error.message || error) }));
 
+  await Promise.allSettled(pendingCssReads);
   const layoutShifts = await page.evaluate(() => window.__fontAuditLayoutShifts || []).catch(() => []);
+  const fontRequestSummary = fontRequestEvents.map(event => ({ ...event }));
   const settledScreenshot = path.join(resultsDir, `${safeName}-mobile-settled.png`);
   await page.screenshot({ path: settledScreenshot, fullPage: true, animations: 'disabled' }).catch(() => {});
 
@@ -217,6 +297,8 @@ async function browserSmoke(name, url) {
     early,
     fontsReady,
     settled,
+    fontRequestEvents: fontRequestSummary,
+    googleFontCssResponses: fontCssResponses,
     clsObservedFromBrowser: round(layoutShifts.reduce((a, b) => a + b, 0), 5),
     layoutShiftEntries: layoutShifts.length,
     jsErrors,
@@ -241,7 +323,7 @@ async function main() {
     visual.push(await browserSmoke(name, url));
   }
   fs.writeFileSync(path.join(resultsDir, 'browser-smoke.json'), JSON.stringify(visual, null, 2));
-  console.log('[browser-smoke-summary] ' + JSON.stringify(visual.map(v => ({variant:v.variant, early:v.early, settled:v.settled, fontsReady:v.fontsReady, clsObservedFromBrowser:v.clsObservedFromBrowser, layoutShiftEntries:v.layoutShiftEntries, jsErrors:v.jsErrors, failedExternalRequestCount:v.failedExternalRequestCount}))));
+  console.log('[browser-smoke-summary] ' + JSON.stringify(visual.map(v => ({variant:v.variant, early:v.early, settled:v.settled, fontsReady:v.fontsReady, fontRequestEvents:v.fontRequestEvents, googleFontCssResponses:v.googleFontCssResponses, clsObservedFromBrowser:v.clsObservedFromBrowser, layoutShiftEntries:v.layoutShiftEntries, jsErrors:v.jsErrors, failedExternalRequestCount:v.failedExternalRequestCount}))));
 
   const lighthouseRuns = [];
   for (let run = 1; run <= 3; run++) {
