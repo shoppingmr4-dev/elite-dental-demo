@@ -28,7 +28,7 @@ function metricsFromLighthouse(report) {
   );
   const networkItems = audits['network-requests']?.details?.items || [];
   const fontRequests = networkItems
-    .filter(item => /fonts\\.(googleapis|gstatic)\\.com/i.test(item.url || ''))
+    .filter(item => /fonts\.(googleapis|gstatic)\.com/i.test(item.url || ''))
     .map(item => ({
       url: item.url,
       resourceType: item.resourceType || null,
@@ -98,7 +98,7 @@ async function browserSmoke(name, url) {
   page.on('pageerror', error => jsErrors.push(String(error.message || error)));
   page.on('requestfailed', request => {
     const address = request.url();
-    if (/fonts\\.|images\\./i.test(address) || request.failure()?.errorText) {
+    if (/fonts\.|images\./i.test(address) || request.failure()?.errorText) {
       failedExternalRequests.push({ url: address, error: request.failure()?.errorText || 'request failed' });
     }
   });
@@ -155,7 +155,7 @@ async function browserSmoke(name, url) {
     const faces = document.fonts ? Array.from(document.fonts).map(face => ({ family: face.family, weight: face.weight, status: face.status })) : [];
     const entries = performance.getEntriesByType('resource');
     const fontResources = entries
-      .filter(entry => /fonts\\.(googleapis|gstatic)\\.com/i.test(entry.name))
+      .filter(entry => /fonts\.(googleapis|gstatic)\.com/i.test(entry.name))
       .map(entry => ({ name: entry.name, durationMs: Math.round(entry.duration), transferSize: entry.transferSize ?? null }));
     const imagesLoaded = images.filter(image => image.complete && image.naturalWidth > 0).length;
     const menu = document.querySelector('.menu-toggle');
