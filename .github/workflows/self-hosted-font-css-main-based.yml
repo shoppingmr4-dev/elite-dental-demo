@@ -1,0 +1,122 @@
+name: Self-hosted font CSS candidate — isolated mobile comparison
+
+on:
+  push:
+    branches:
+      - experiment/self-hosted-font-css-main-based
+
+permissions:
+  contents: read
+
+concurrency:
+  group: self-hosted-font-css-main-based
+  cancel-in-progress: false
+
+jobs:
+  compare:
+    name: Verify eight font assets and compare main vs candidate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout candidate commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: candidate
+          fetch-depth: 0
+
+      - name: Checkout immutable main baseline
+        uses: actions/checkout@v4
+        with:
+          ref: fa087349b6f4a3cce16d28f0823b94157d6866cc
+          path: baseline
+
+      - name: Confirm exact parent/base SHA
+        shell: bash
+        run: |
+          test "$(git -C baseline rev-parse HEAD)" = "fa087349b6f4a3cce16d28f0823b94157d6866cc"
+          test "$(git -C candidate rev-parse HEAD^)" = "fa087349b6f4a3cce16d28f0823b94157d6866cc"
+          echo "BASELINE_SHA=$(git -C baseline rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "CANDIDATE_SHA=$(git -C candidate rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "Baseline and candidate parent are pinned to the requested main SHA."
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install pinned Lighthouse and browser test tools
+        working-directory: candidate
+        shell: bash
+        run: |
+          npm install --no-save lighthouse@13.5.0 playwright@1.64.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+          CHROME_BIN="$(find "$HOME/.cache/ms-playwright" -type f \( -name 'chrome-headless-shell' -o -name 'headless_shell' \) -perm -u+x -print -quit)"
+          if [ -z "$CHROME_BIN" ]; then
+            CHROME_BIN="$(node -e "process.stdout.write(require('playwright').chromium.executablePath())")"
+          fi
+          test -x "$CHROME_BIN"
+          "$CHROME_BIN" --version
+          node -e "console.log('Lighthouse=' + require('lighthouse/package.json').version)"
+          node -e "console.log('Playwright=' + require('playwright/package.json').version)"
+          echo "CHROME_PATH=$CHROME_BIN" >> "$GITHUB_ENV"
+
+      - name: Verify capture, exactly eight font assets, descriptors, licenses, RTL and unchanged source
+        working-directory: candidate
+        env:
+          BASELINE_INDEX_PATH: ${{ github.workspace }}/baseline/index.html
+        run: node scripts/verify-selfhost-fonts.mjs
+
+      - name: Start identical local static servers
+        shell: bash
+        run: |
+          mkdir -p results
+          nohup python3 -m http.server 4173 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE/baseline" >/tmp/selfhost-baseline.log 2>&1 &
+          echo $! >/tmp/selfhost-baseline.pid
+          nohup python3 -m http.server 4174 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE/candidate" >/tmp/selfhost-candidate.log 2>&1 &
+          echo $! >/tmp/selfhost-candidate.pid
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null && curl --fail --silent http://127.0.0.1:4174/ >/dev/null && curl --fail --silent http://127.0.0.1:4174/assets/fonts/local-fonts.css >/dev/null; then
+              echo "Both source-controlled servers and the candidate local stylesheet are responding."
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/selfhost-baseline.log || true
+          cat /tmp/selfhost-candidate.log || true
+          exit 1
+
+      - name: Run browser font checks, screenshots, and six alternating Lighthouse mobile runs
+        working-directory: candidate
+        env:
+          BASELINE_URL: http://127.0.0.1:4173/
+          CANDIDATE_URL: http://127.0.0.1:4174/
+          RESULTS_DIR: ${{ github.workspace }}/results
+        run: node scripts/compare-selfhost-fonts.mjs
+
+      - name: Enforce repeatable gain and no-regression acceptance gates
+        working-directory: candidate
+        env:
+          RESULTS_DIR: ${{ github.workspace }}/results
+        run: node scripts/selfhost-quality-gate.mjs
+
+      - name: Preserve source hashes, server logs and exact font list
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p results
+          cp /tmp/selfhost-baseline.log results/baseline-server.log 2>/dev/null || true
+          cp /tmp/selfhost-candidate.log results/candidate-server.log 2>/dev/null || true
+          git -C baseline rev-parse HEAD > results/baseline-source-sha.txt
+          git -C candidate rev-parse HEAD > results/candidate-source-sha.txt
+          git -C candidate status --short > results/candidate-working-tree-status.txt
+          find candidate/assets/fonts -maxdepth 1 -type f -name '*.woff2' -printf '%f\n' | sort > results/candidate-woff2-files.txt
+
+      - name: Upload reports, screenshots and source evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: self-hosted-font-css-main-based-comparison
+          path: results/
+          if-no-files-found: warn
+          retention-days: 14

@@ -1,0 +1,304 @@
+{
+  "baselineSha": "fa087349b6f4a3cce16d28f0823b94157d6866cc",
+  "previousCaptureRunId": 40146994831,
+  "cssResponseUrl": "https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap",
+  "cssResponseStatus": 200,
+  "cssResponseBytes": 19668,
+  "cssResponseSha256": "9c4d0550b224c77ba3719ab56fc1f76dc02d635dcf59657f0927aef751d4d0d6",
+  "sameBodyAcrossAllRuns": true,
+  "exactSameEightWoff2UrlsAcrossAllRuns": true,
+  "originalCssFaceRuleCount": 36,
+  "selectedFaceRuleCount": 16,
+  "selectedWoff2UrlCount": 8,
+  "localCssBytes": 9959,
+  "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Mobile Safari/537.36",
+  "lighthouseVersion": "13.5.0",
+  "chromeHostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+  "fontAssets": [
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/alexandria/v6/UMBXrPdDqW66y0Y2usFeaijdA5E64BdCIg.woff2",
+      "fileName": "UMBXrPdDqW66y0Y2usFeaijdA5E64BdCIg.woff2",
+      "faceRules": [
+        {
+          "sourceFaceIndex": 1,
+          "family": "Alexandria",
+          "style": "normal",
+          "weight": "400",
+          "display": "swap",
+          "unicodeRange": "U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1"
+        },
+        {
+          "sourceFaceIndex": 5,
+          "family": "Alexandria",
+          "style": "normal",
+          "weight": "500",
+          "display": "swap",
+          "unicodeRange": "U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1"
+        },
+        {
+          "sourceFaceIndex": 9,
+          "family": "Alexandria",
+          "style": "normal",
+          "weight": "600",
+          "display": "swap",
+          "unicodeRange": "U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1"
+        },
+        {
+          "sourceFaceIndex": 13,
+          "family": "Alexandria",
+          "style": "normal",
+          "weight": "700",
+          "display": "swap",
+          "unicodeRange": "U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1"
+        },
+        {
+          "sourceFaceIndex": 17,
+          "family": "Alexandria",
+          "style": "normal",
+          "weight": "800",
+          "display": "swap",
+          "unicodeRange": "U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1"
+        }
+      ],
+      "downloadedBytes": 31188,
+      "sha256": "ef0ea68f2c0a45efe1a6fa5a63bdf8d95429cdbc741fa77e597119c66b02b894",
+      "magic": "wOF2"
+    },
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/alexandria/v6/UMBXrPdDqW66y0Y2usFeai3dA5E64Bc.woff2",
+      "fileName": "UMBXrPdDqW66y0Y2usFeai3dA5E64Bc.woff2",
+      "faceRules": [
+        {
+          "sourceFaceIndex": 4,
+          "family": "Alexandria",
+          "style": "normal",
+          "weight": "400",
+          "display": "swap",
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
+        },
+        {
+          "sourceFaceIndex": 8,
+          "family": "Alexandria",
+          "style": "normal",
+          "weight": "500",
+          "display": "swap",
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
+        },
+        {
+          "sourceFaceIndex": 12,
+          "family": "Alexandria",
+          "style": "normal",
+          "weight": "600",
+          "display": "swap",
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
+        },
+        {
+          "sourceFaceIndex": 16,
+          "family": "Alexandria",
+          "style": "normal",
+          "weight": "700",
+          "display": "swap",
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
+        },
+        {
+          "sourceFaceIndex": 20,
+          "family": "Alexandria",
+          "style": "normal",
+          "weight": "800",
+          "display": "swap",
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
+        }
+      ],
+      "downloadedBytes": 30128,
+      "sha256": "3c87a4fbe5f104fdc9ed5e3636d07aaa8336da7981e4dfbefcfd6a6f41ef1895",
+      "magic": "wOF2"
+    },
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys43PW5fslBEg0.woff2",
+      "fileName": "Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys43PW5fslBEg0.woff2",
+      "faceRules": [
+        {
+          "sourceFaceIndex": 21,
+          "family": "IBM Plex Sans Arabic",
+          "style": "normal",
+          "weight": "400",
+          "display": "swap",
+          "unicodeRange": "U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1"
+        }
+      ],
+      "downloadedBytes": 33512,
+      "sha256": "4ed189e8653e9303ec1e1448a6025f838ecd19fe4a5f4f7889b8394b3c5378fb",
+      "magic": "wOF2"
+    },
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys93PW5fslB.woff2",
+      "fileName": "Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys93PW5fslB.woff2",
+      "faceRules": [
+        {
+          "sourceFaceIndex": 24,
+          "family": "IBM Plex Sans Arabic",
+          "style": "normal",
+          "weight": "400",
+          "display": "swap",
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
+        }
+      ],
+      "downloadedBytes": 13944,
+      "sha256": "4a917a99a5b6acbe3b56887d1a8396fcd7d2112e0e4796f252c0859106679153",
+      "magic": "wOF2"
+    },
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YPi-OCRXMRrKATtYV0.woff2",
+      "fileName": "Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YPi-OCRXMRrKATtYV0.woff2",
+      "faceRules": [
+        {
+          "sourceFaceIndex": 29,
+          "family": "IBM Plex Sans Arabic",
+          "style": "normal",
+          "weight": "600",
+          "display": "swap",
+          "unicodeRange": "U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1"
+        }
+      ],
+      "downloadedBytes": 35884,
+      "sha256": "0ccee44455f545eb6b4083f77e5d15e7c9cd514007870167c8c69d1ba7631e26",
+      "magic": "wOF2"
+    },
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YPi-OCUXMRrKATt.woff2",
+      "fileName": "Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YPi-OCUXMRrKATt.woff2",
+      "faceRules": [
+        {
+          "sourceFaceIndex": 32,
+          "family": "IBM Plex Sans Arabic",
+          "style": "normal",
+          "weight": "600",
+          "display": "swap",
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
+        }
+      ],
+      "downloadedBytes": 15092,
+      "sha256": "08b108227ae9cd53d2b8e9fc442e06a1f4884e5cf2d26c9216ec386227de74fd",
+      "magic": "wOF2"
+    },
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCRXMRrKATtYV0.woff2",
+      "fileName": "Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCRXMRrKATtYV0.woff2",
+      "faceRules": [
+        {
+          "sourceFaceIndex": 33,
+          "family": "IBM Plex Sans Arabic",
+          "style": "normal",
+          "weight": "700",
+          "display": "swap",
+          "unicodeRange": "U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1"
+        }
+      ],
+      "downloadedBytes": 33628,
+      "sha256": "c6e0419cba62fba9e573686eaa1b503cae2f332e4ab1b0acff5cde599dee5d7a",
+      "magic": "wOF2"
+    },
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCUXMRrKATt.woff2",
+      "fileName": "Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCUXMRrKATt.woff2",
+      "faceRules": [
+        {
+          "sourceFaceIndex": 36,
+          "family": "IBM Plex Sans Arabic",
+          "style": "normal",
+          "weight": "700",
+          "display": "swap",
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
+        }
+      ],
+      "downloadedBytes": 14208,
+      "sha256": "1b848320d4a6ae56cec60b521703b649a677d9ab70be2dfa0fe43088efa50073",
+      "magic": "wOF2"
+    }
+  ],
+  "generatedAt": "2026-10-25T21:45:22.552Z",
+  "downloads": [
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/alexandria/v6/UMBXrPdDqW66y0Y2usFeaijdA5E64BdCIg.woff2",
+      "fileName": "UMBXrPdDqW66y0Y2usFeaijdA5E64BdCIg.woff2",
+      "status": 200,
+      "finalUrl": "https://fonts.gstatic.com/s/alexandria/v6/UMBXrPdDqW66y0Y2usFeaijdA5E64BdCIg.woff2",
+      "redirected": false,
+      "bytes": 31188,
+      "sha256": "ef0ea68f2c0a45efe1a6fa5a63bdf8d95429cdbc741fa77e597119c66b02b894",
+      "magic": "wOF2"
+    },
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/alexandria/v6/UMBXrPdDqW66y0Y2usFeai3dA5E64Bc.woff2",
+      "fileName": "UMBXrPdDqW66y0Y2usFeai3dA5E64Bc.woff2",
+      "status": 200,
+      "finalUrl": "https://fonts.gstatic.com/s/alexandria/v6/UMBXrPdDqW66y0Y2usFeai3dA5E64Bc.woff2",
+      "redirected": false,
+      "bytes": 30128,
+      "sha256": "3c87a4fbe5f104fdc9ed5e3636d07aaa8336da7981e4dfbefcfd6a6f41ef1895",
+      "magic": "wOF2"
+    },
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys43PW5fslBEg0.woff2",
+      "fileName": "Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys43PW5fslBEg0.woff2",
+      "status": 200,
+      "finalUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys43PW5fslBEg0.woff2",
+      "redirected": false,
+      "bytes": 33512,
+      "sha256": "4ed189e8653e9303ec1e1448a6025f838ecd19fe4a5f4f7889b8394b3c5378fb",
+      "magic": "wOF2"
+    },
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys93PW5fslB.woff2",
+      "fileName": "Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys93PW5fslB.woff2",
+      "status": 200,
+      "finalUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys93PW5fslB.woff2",
+      "redirected": false,
+      "bytes": 13944,
+      "sha256": "4a917a99a5b6acbe3b56887d1a8396fcd7d2112e0e4796f252c0859106679153",
+      "magic": "wOF2"
+    },
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YPi-OCRXMRrKATtYV0.woff2",
+      "fileName": "Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YPi-OCRXMRrKATtYV0.woff2",
+      "status": 200,
+      "finalUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YPi-OCRXMRrKATtYV0.woff2",
+      "redirected": false,
+      "bytes": 35884,
+      "sha256": "0ccee44455f545eb6b4083f77e5d15e7c9cd514007870167c8c69d1ba7631e26",
+      "magic": "wOF2"
+    },
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YPi-OCUXMRrKATt.woff2",
+      "fileName": "Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YPi-OCUXMRrKATt.woff2",
+      "status": 200,
+      "finalUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YPi-OCUXMRrKATt.woff2",
+      "redirected": false,
+      "bytes": 15092,
+      "sha256": "08b108227ae9cd53d2b8e9fc442e06a1f4884e5cf2d26c9216ec386227de74fd",
+      "magic": "wOF2"
+    },
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCRXMRrKATtYV0.woff2",
+      "fileName": "Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCRXMRrKATtYV0.woff2",
+      "status": 200,
+      "finalUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCRXMRrKATtYV0.woff2",
+      "redirected": false,
+      "bytes": 33628,
+      "sha256": "c6e0419cba62fba9e573686eaa1b503cae2f332e4ab1b0acff5cde599dee5d7a",
+      "magic": "wOF2"
+    },
+    {
+      "sourceUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCUXMRrKATt.woff2",
+      "fileName": "Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCUXMRrKATt.woff2",
+      "status": 200,
+      "finalUrl": "https://fonts.gstatic.com/s/ibmplexsansarabic/v15/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCUXMRrKATt.woff2",
+      "redirected": false,
+      "bytes": 14208,
+      "sha256": "1b848320d4a6ae56cec60b521703b649a677d9ab70be2dfa0fe43088efa50073",
+      "magic": "wOF2"
+    }
+  ],
+  "allDownloadsExact200": true,
+  "noFontPreload": true
+}
