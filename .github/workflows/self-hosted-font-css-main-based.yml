@@ -35,7 +35,7 @@ jobs:
         shell: bash
         run: |
           test "$(git -C baseline rev-parse HEAD)" = "fa087349b6f4a3cce16d28f0823b94157d6866cc"
-          test "$(git -C candidate merge-base HEAD baseline)" = "fa087349b6f4a3cce16d28f0823b94157d6866cc"
+          test "$(git -C candidate merge-base HEAD fa087349b6f4a3cce16d28f0823b94157d6866cc)" = "fa087349b6f4a3cce16d28f0823b94157d6866cc"
           git -C candidate merge-base --is-ancestor fa087349b6f4a3cce16d28f0823b94157d6866cc HEAD
           echo "BASELINE_SHA=$(git -C baseline rev-parse HEAD)" >> "$GITHUB_ENV"
           echo "CANDIDATE_SHA=$(git -C candidate rev-parse HEAD)" >> "$GITHUB_ENV"
