@@ -21,7 +21,6 @@ try {
     const page = await browser.newPage({
       viewport: { width: viewport.width, height: viewport.height },
       deviceScaleFactor: 1,
-      isMobile: viewport.mobile,
       reducedMotion: "reduce"
     });
     const pageErrors = [];
@@ -60,7 +59,26 @@ try {
         ctaCount: ctas.length,
         allCtasWhatsapp: ctas.every(a => a.href.startsWith("https://wa.me/")),
         scrollWidth: document.documentElement.scrollWidth,
-        viewportWidth: window.innerWidth,
+        viewportWidth: document.documentElement.clientWidth,
+        windowInnerWidth: window.innerWidth,
+        overflowingElements: [...document.querySelectorAll("body *")].map(el => {
+          const rect = el.getBoundingClientRect();
+          const style = getComputedStyle(el);
+          return {
+            tag: el.tagName.toLowerCase(),
+            id: el.id || "",
+            classes: typeof el.className === "string" ? el.className.slice(0, 150) : "",
+            left: Math.round(rect.left * 10) / 10,
+            right: Math.round(rect.right * 10) / 10,
+            width: Math.round(rect.width * 10) / 10,
+            position: style.position,
+            overflowX: style.overflowX,
+            parentTag: el.parentElement?.tagName.toLowerCase() || "",
+            parentClasses: typeof el.parentElement?.className === "string" ? el.parentElement.className.slice(0, 120) : "",
+            parentOverflowX: el.parentElement ? getComputedStyle(el.parentElement).overflowX : ""
+          };
+        }).filter(el => el.right > document.documentElement.clientWidth + 1 && el.width > 0)
+          .sort((a, b) => b.right - a.right).slice(0, 18),
         missingAnchors: [...document.querySelectorAll('a[href^="#"]')]
           .map(a => a.getAttribute("href").slice(1))
           .filter(id => id && !document.getElementById(id)),
@@ -75,7 +93,7 @@ try {
     if (!initial.allImagesUnsplash || initial.imageCount !== 6) failures.push(`${viewport.name}: expected six Unsplash image sources`);
     if (initial.imagesWithAlt !== initial.imageCount) failures.push(`${viewport.name}: one or more images lack useful alt text`);
     if (initial.ctaCount < 3 || !initial.allCtasWhatsapp) failures.push(`${viewport.name}: WhatsApp CTA links missing or invalid`);
-    if (initial.scrollWidth > initial.viewportWidth + 1) failures.push(`${viewport.name}: horizontal overflow ${initial.scrollWidth}px > ${initial.viewportWidth}px`);
+    if (initial.scrollWidth > initial.viewportWidth + 1) failures.push(viewport.name + ': horizontal overflow ' + initial.scrollWidth + 'px > ' + initial.viewportWidth + 'px; elements=' + JSON.stringify(initial.overflowingElements));
     if (initial.missingAnchors.length) failures.push(`${viewport.name}: broken anchors: ${initial.missingAnchors.join(", ")}`);
     if (!initial.sectionComments) failures.push(`${viewport.name}: descriptive HTML section comments missing`);
     if (pageErrors.length) failures.push(`${viewport.name}: uncaught page errors: ${pageErrors.join(" | ")}`);
@@ -105,8 +123,24 @@ try {
     }
 
     await page.goto(BASE_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
+    // Scroll through the document so native loading="lazy" images get a chance to request and paint.
+    await page.evaluate(async () => {
+      const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
+      const step = Math.max(320, Math.floor(window.innerHeight * 0.8));
+      const end = document.documentElement.scrollHeight;
+      for (let y = 0; y < end; y += step) {
+        window.scrollTo(0, y);
+        await pause(90);
+      }
+      window.scrollTo(0, 0);
+    });
+    try {
+      await page.waitForFunction(() => [...document.images].every(img => img.complete), null, { timeout: 10000 });
+    } catch {
+      // Report incomplete third-party image requests separately from layout failures.
+    }
     await page.waitForTimeout(250);
-    await page.screenshot({ path: `${ARTIFACT_DIR}/${viewport.name}.png`, fullPage: true, animations: "disabled" });
+    await page.screenshot({ path: ARTIFACT_DIR + "/" + viewport.name + ".png", fullPage: true, animations: "disabled" });
 
     // Image requests can be blocked or rate-limited by third-party CDNs. Record load counts
     // separately rather than misreporting third-party availability as a layout failure.
