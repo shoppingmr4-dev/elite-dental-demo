@@ -18,3 +18,4 @@ npm run build:css
 - All image elements use direct `images.unsplash.com` URLs, responsive-friendly image sizes, and lazy loading for non-hero photos.
 - WhatsApp links retain the generic pre-filled message. No clinic phone number was supplied, and the site footer identifies the clinic as a demo.
 - The mobile navigation updates `aria-expanded`, supports Escape-to-close, and respects reduced-motion preferences.
+\n## Responsive and Lighthouse QA\n\nThe `Browser QA & Lighthouse (Tailwind UX)` GitHub Actions workflow checks the landing page at 360, 390, 768, and 1440 CSS pixels, validates the mobile menu interactions and internal anchors, captures full-page screenshots, and publishes mobile/desktop Lighthouse HTML and JSON reports as a workflow artifact. Third-party image load counts are recorded separately so a transient CDN failure is not confused with a layout regression.\n

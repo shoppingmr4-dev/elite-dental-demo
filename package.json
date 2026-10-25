@@ -5,10 +5,13 @@
   "description": "Arabic RTL landing page built with Tailwind CSS v4.",
   "scripts": {
     "build:css": "tailwindcss -i ./src/tailwind.css -o ./assets/css/site.css --minify",
-    "watch:css": "tailwindcss -i ./src/tailwind.css -o ./assets/css/site.css --watch"
+    "watch:css": "tailwindcss -i ./src/tailwind.css -o ./assets/css/site.css --watch",
+    "test:responsive": "node tests/responsive-smoke.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "4.3.3",
-    "tailwindcss": "4.3.3"
+    "tailwindcss": "4.3.3",
+    "playwright": "1.64.1",
+    "lighthouse": "13.5.0"
   }
 }

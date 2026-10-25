@@ -1,0 +1,69 @@
+name: Browser QA & Lighthouse (Tailwind UX)
+
+on:
+  push:
+    branches:
+      - upgrade/elite-dental-tailwind-ux
+    paths:
+      - "index.html"
+      - "assets/css/site.css"
+      - "assets/fonts/**"
+      - "src/**"
+      - "package.json"
+      - "tests/**"
+      - ".github/workflows/browser-qa-tailwind-ux.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: browser-qa-tailwind-ux
+  cancel-in-progress: true
+
+jobs:
+  browser-and-lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out candidate
+        uses: actions/checkout@v4
+        with:
+          ref: upgrade/elite-dental-tailwind-ux
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install test and build dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install Chromium and its system dependencies
+        run: npx playwright install --with-deps chromium
+      - name: Start local preview server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/elite-dental-http.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/elite-dental-http.log
+          exit 1
+      - name: Test responsive layouts, navigation and markup
+        run: npm run test:responsive
+      - name: Configure Lighthouse to use Playwright Chromium
+        run: echo "CHROME_PATH=$(node -e "process.stdout.write(require('playwright').chromium.executablePath())")" >> "$GITHUB_ENV"
+      - name: Run mobile Lighthouse audit
+        run: |
+          npx lighthouse http://127.0.0.1:4173/ --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" --only-categories=performance,accessibility,best-practices,seo --output=html,json --output-path=./artifacts/lighthouse-mobile --quiet
+      - name: Run desktop Lighthouse audit
+        run: |
+          npx lighthouse http://127.0.0.1:4173/ --preset=desktop --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" --only-categories=performance,accessibility,best-practices,seo --output=html,json --output-path=./artifacts/lighthouse-desktop --quiet
+      - name: Publish browser screenshots and Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: elite-dental-tailwind-ux-browser-qa
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 14
