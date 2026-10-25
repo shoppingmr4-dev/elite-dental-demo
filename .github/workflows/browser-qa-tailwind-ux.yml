@@ -35,6 +35,8 @@ jobs:
           node-version: "22"
       - name: Install test and build dependencies
         run: npm install --no-audit --no-fund
+      - name: Compile Tailwind stylesheet for the browser preview
+        run: npm run build:css
       - name: Install Chromium and its system dependencies
         run: npx playwright install chromium
       - name: Start local preview server
