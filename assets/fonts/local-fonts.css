@@ -1,4 +1,4 @@
-/* Exact applicable @font-face rules captured in Lighthouse 13.5.0 / Chrome 156. Only the eight observed WOFF2 files are included. All descriptors are preserved; URLs are local. No font preload is used. */
+/* Exact applicable @font-face rules captured in Lighthouse 13.5.0 / Chrome 156. Only the eight observed WOFF2 files are included. All descriptors are preserved; URLs are local. The two critical Arabic faces are preloaded in index.html. */
 @font-face {
   font-family: 'Alexandria';
   font-style: normal;
