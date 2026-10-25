@@ -4,8 +4,8 @@
   "version": "2.0.0",
   "description": "Arabic RTL landing page built with Tailwind CSS v4.",
   "scripts": {
-    "build:css": "@tailwindcss/cli -i ./src/tailwind.css -o ./assets/css/site.css --minify",
-    "watch:css": "@tailwindcss/cli -i ./src/tailwind.css -o ./assets/css/site.css --watch"
+    "build:css": "tailwindcss -i ./src/tailwind.css -o ./assets/css/site.css --minify",
+    "watch:css": "tailwindcss -i ./src/tailwind.css -o ./assets/css/site.css --watch"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.10",
