@@ -1,0 +1,16 @@
+@import "tailwindcss";
+@source "../index.html";
+
+@theme {
+  --font-sans: "IBM Plex Sans Arabic", "Alexandria", ui-sans-serif, system-ui, sans-serif;
+  --color-clinic-navy: #102b43;
+  --color-clinic-blue: #2268a6;
+  --color-clinic-sky: #eaf4fb;
+  --color-clinic-mint: #d8f1e8;
+  --color-clinic-cta: #087f5b;
+  --color-clinic-cta-dark: #066649;
+  --color-clinic-paper: #f8fbfd;
+  --color-clinic-ink: #24394a;
+  --color-clinic-muted: #657b8e;
+  --color-clinic-line: #dce7ef;
+}

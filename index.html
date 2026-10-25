@@ -1,588 +1,169 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="motion-safe:scroll-smooth">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f7fbff">
-<meta name="description" content="Elite Dental Clinic — معلومات واضحة عن خدمات العناية بالأسنان وخيارات التواصل للاستفسار عن موعد.">
-<title>Elite Dental Clinic | عناية عصرية بصحة الفم والأسنان</title>
-<link rel="preload" as="image" fetchpriority="high" href="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=2200&q=90" media="(min-width: 721px)">
-<link rel="preload" as="image" fetchpriority="high" href="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=85" media="(max-width: 720px)">
-<link href="assets/fonts/local-fonts.css" rel="stylesheet">
-<style>
-:focus-visible{outline:3px solid #c59a50;outline-offset:4px;border-radius:5px}html{scroll-behavior:smooth} @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
-:root{--blue:#174d8c;--blue2:#2675bb;--navy:#14304d;--sky:#eaf5ff;--pale:#f5faff;--gold:#c59a50;--ink:#20354b;--muted:#65798d;--white:#fff;--line:#e0eaf3;--shadow:0 18px 55px rgba(27,73,116,.11);--radius:26px}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;background:#fff;color:var(--ink);font-family:"IBM Plex Sans Arabic","Alexandria",sans-serif;line-height:1.85}img{display:block;max-width:100%}a{color:inherit;text-decoration:none}button,a{ -webkit-tap-highlight-color:transparent}button{font:inherit}.container{width:min(1160px,calc(100% - 40px));margin-inline:auto}.section{padding:96px 0}.section.soft{background:linear-gradient(180deg,#f7fbff,#edf6ff)}.eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--blue2);font-weight:700;font-size:.88rem;letter-spacing:.02em}.eyebrow:before{content:"";width:25px;height:2px;background:var(--gold);border-radius:9px}.section-head{max-width:700px;margin-bottom:38px}.section-head.center{text-align:center;margin-inline:auto}.section-head.center .eyebrow{justify-content:center}.section h2{font-family:Alexandria,"IBM Plex Sans Arabic",sans-serif;color:var(--navy);font-size:clamp(1.8rem,3.5vw,2.75rem);line-height:1.45;margin:12px 0 14px;letter-spacing:-.04em}.section-head p,.muted{color:var(--muted);margin:0}.top-note{background:#eaf5ff;color:#335875;text-align:center;font-size:.82rem;padding:6px 12px}.header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(214,229,241,.8)}.nav{height:82px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;align-items:center;gap:12px;font-family:Alexandria,sans-serif;font-weight:800;color:var(--navy);font-size:1.05rem;white-space:nowrap}.brand-mark{width:44px;height:44px;border-radius:15px;background:linear-gradient(145deg,var(--blue),#2e80c4);display:grid;place-items:center;color:#fff;box-shadow:0 8px 20px #174d8c30}.brand-mark svg{width:25px;height:25px}.nav-links{display:flex;align-items:center;gap:24px;font-size:.92rem;font-weight:600;color:#496176}.nav-links a:hover{color:var(--blue2)}.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:0;border-radius:13px;padding:13px 21px;font-weight:700;cursor:pointer;transition:transform .25s,box-shadow .25s,background .25s}.btn:hover{transform:translateY(-2px)}.btn.primary{background:var(--blue);color:#fff;box-shadow:0 9px 22px #174d8c26}.btn.primary:hover{background:#0e3c70;box-shadow:0 13px 28px #174d8c35}.btn.secondary{background:#fff;color:var(--blue);border:1px solid #cbdff1}.btn.light{background:#fff;color:var(--blue);box-shadow:0 8px 24px #123a5c18}.menu-toggle{display:none;width:44px;height:44px;border:1px solid var(--line);background:white;border-radius:12px;color:var(--blue);font-size:1.4rem}
-.hero{padding:54px 0 74px;background:radial-gradient(ellipse at 5% 15%,#e3f3ff 0,transparent 34%),linear-gradient(180deg,#f8fcff,#fff);overflow:hidden}
-.hero-fullscreen{position:relative;isolation:isolate;min-height:calc(100svh - 106px);padding:0;display:flex;align-items:center;background:#dcebf6;overflow:hidden}
-.hero-fullscreen .hero-backdrop{position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(8,28,50,.68) 0%,rgba(8,28,50,.42) 48%,rgba(8,28,50,.12) 100%),url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=2200&q=90') center 48%/cover no-repeat;transform:scale(1.01)}
-.hero-fullscreen:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(8,28,50,.24),transparent 40%);pointer-events:none}
-.hero-fullscreen .hero-grid{position:relative;z-index:1;display:flex;align-items:center;min-height:calc(100svh - 106px);width:min(1160px,calc(100% - 40px));padding:70px 0}
-.hero-fullscreen .hero-copy{max-width:760px;color:white;padding:20px 0}
-.hero-fullscreen .hero-tag{background:rgba(255,255,255,.93);border-color:rgba(255,255,255,.65)}
-.hero-fullscreen h1,.hero-fullscreen .hero-copy>p,.hero-fullscreen .hero-proof,.hero-fullscreen .hero-proof strong{color:#fff!important;text-shadow:0 2px 18px rgba(0,0,0,.22)}
-.hero-fullscreen h1 span{color:#f3d49a}
-.hero-fullscreen .hero-proof .proof-icon{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.4)}
-.hero-fullscreen .hero-media{display:none}
-.hero-fullscreen .btn.secondary{background:rgba(255,255,255,.95);border-color:white}
-.hero-grid{display:grid;grid-template-columns:.92fr 1.08fr;align-items:center;gap:48px}.hero-copy{padding:20px 0}.hero-tag{display:inline-flex;align-items:center;gap:8px;background:#e8f4ff;color:#1d609c;border:1px solid #d2e8fa;padding:7px 13px;border-radius:99px;font-size:.85rem;font-weight:700}.hero-tag i{width:7px;height:7px;border-radius:50%;background:#4c9c70}.hero h1{font-family:Alexandria,sans-serif;font-size:clamp(2.25rem,4.5vw,4.25rem);line-height:1.35;letter-spacing:-.055em;color:var(--navy);margin:20px 0}.hero h1 span{color:var(--blue2);position:relative}.hero-copy>p{font-size:1.08rem;color:#62788d;max-width:530px;margin:0 0 27px}.hero-actions{display:flex;gap:12px;flex-wrap:wrap}.hero-proof{display:flex;align-items:center;gap:15px;margin-top:28px;color:#667c90;font-size:.87rem}.proof-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:#fff;color:var(--blue);border:1px solid #e0edf7}.hero-media{position:relative;min-width:0}.hero-photo-wrap{height:clamp(390px,45vw,570px);position:relative;border-radius:34px;overflow:hidden;box-shadow:0 26px 75px #174d8c22;border:8px solid white;background:#d9eaf7}.hero-photo{width:100%;height:100%;object-fit:cover;object-position:center;transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}.hero-media:hover .hero-photo{transform:scale(1.035)}.photo-label{position:absolute;bottom:22px;right:22px;left:22px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.93);backdrop-filter:blur(12px);border:1px solid #fff;border-radius:18px;padding:14px 17px;box-shadow:0 10px 35px #163a5b1a}.photo-label strong{display:block;color:var(--navy)}.photo-label span{font-size:.8rem;color:var(--muted)}.label-symbol{flex:0 0 44px;width:44px;height:44px;display:grid;place-items:center;border-radius:14px;background:#eaf5ff;color:var(--blue)}.float-chip{position:absolute;top:26px;left:-16px;background:#fff;border:1px solid #e2edf6;border-radius:17px;padding:12px 16px;box-shadow:var(--shadow);font-size:.82rem;color:var(--navy);font-weight:700}.float-chip span{display:block;color:var(--muted);font-weight:400;font-size:.74rem}
-.trust-strip{padding:24px 0;border-block:1px solid #e9f0f6;background:white}.trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.trust-item{display:flex;justify-content:center;align-items:center;gap:12px;color:#516b81;font-weight:600}.trust-item svg{color:var(--blue2);width:25px;height:25px;flex-shrink:0}
-.service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.service-card{background:#fff;border:1px solid #e5edf5;border-radius:22px;overflow:hidden;transition:transform .35s,box-shadow .35s;box-shadow:0 6px 24px #214d7310}.service-card:hover{transform:translateY(-7px);box-shadow:var(--shadow)}.service-image{height:215px;overflow:hidden;background:#e4f0f8}.service-image img{width:100%;height:100%;object-fit:cover;transition:transform .65s}.service-card:hover .service-image img{transform:scale(1.06)}.service-content{padding:23px}.service-content h3{color:var(--navy);margin:0 0 8px;font-size:1.15rem}.service-content p{color:var(--muted);font-size:.92rem;margin:0 0 14px}.text-link{color:var(--blue2);font-weight:700;font-size:.9rem;display:inline-flex;align-items:center;gap:7px}
-.tech-grid{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center}.tech-photo{position:relative;padding:0 0 26px 26px}.tech-photo img{height:490px;width:100%;object-fit:cover;border-radius:30px;box-shadow:var(--shadow)}.tech-photo:after{content:"";position:absolute;z-index:-1;left:0;bottom:0;width:68%;height:70%;background:#d9edfc;border-radius:28px}.feature-list{display:grid;gap:19px;margin-top:28px}.feature{display:flex;gap:15px;align-items:flex-start}.feature-icon{width:46px;height:46px;flex:0 0 46px;border-radius:15px;display:grid;place-items:center;background:#e8f4ff;color:var(--blue2)}.feature h3{font-size:1rem;margin:0 0 4px;color:var(--navy)}.feature p{margin:0;color:var(--muted);font-size:.9rem}
-.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.why-card{padding:28px;background:#fff;border:1px solid #e1edf6;border-radius:22px}.why-number{font-family:Alexandria,sans-serif;font-size:1.8rem;font-weight:800;color:#b4d6f0}.why-card h3{margin:7px 0;color:var(--navy);font-size:1.1rem}.why-card p{margin:0;color:var(--muted);font-size:.92rem}
-.gallery-grid{display:grid;grid-template-columns:1.2fr .8fr .8fr;grid-template-rows:220px 220px;gap:16px}.gallery-item{position:relative;border-radius:22px;overflow:hidden;background:#dfeefa}.gallery-item:first-child{grid-row:span 2}.gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform .7s}.gallery-item:hover img{transform:scale(1.06)}.gallery-caption{position:absolute;bottom:12px;right:12px;left:12px;padding:9px 13px;border-radius:12px;background:#ffffffeb;color:var(--navy);font-weight:700;font-size:.83rem;backdrop-filter:blur(8px)}
-.experience-grid{display:grid;grid-template-columns:1fr 1fr;gap:42px;align-items:center}.experience-image img{height:420px;width:100%;object-fit:cover;border-radius:30px;box-shadow:var(--shadow)}.steps{display:grid;gap:18px;margin-top:25px}.step{display:flex;gap:14px}.step-no{width:38px;height:38px;flex:0 0 38px;border-radius:50%;display:grid;place-items:center;background:var(--blue);color:white;font-weight:700}.step h3{margin:0 0 4px;font-size:1rem;color:var(--navy)}.step p{margin:0;color:var(--muted);font-size:.9rem}
-.faq-list{max-width:850px;margin:auto;display:grid;gap:12px}.faq-list details{background:#fff;border:1px solid #dfeaf4;border-radius:16px;padding:0 20px}.faq-list summary{cursor:pointer;list-style:none;position:relative;padding:18px 0;font-weight:700;color:var(--navy);padding-left:28px}.faq-list summary::-webkit-details-marker{display:none}.faq-list summary:after{content:"＋";position:absolute;left:0;color:var(--blue2);font-size:1.1rem}.faq-list details[open] summary:after{content:"−"}.faq-list details p{margin:0;padding:0 0 18px;color:var(--muted);font-size:.94rem}
-.contact-card{background:linear-gradient(120deg,#e9f5ff,#f8fcff);border:1px solid #d8eafa;border-radius:30px;padding:42px;display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center}.contact-card h2{margin:7px 0 10px}.contact-card p{color:var(--muted);margin:0;max-width:620px}.contact-actions{display:flex;gap:12px;flex-wrap:wrap}.footer{background:#14304d;color:#dbe9f6;padding:44px 0 24px}.footer-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;padding-bottom:28px;border-bottom:1px solid #ffffff24}.footer .brand{color:white}.footer p{color:#b7cbdc;max-width:450px;font-size:.9rem}.footer-links{display:flex;gap:20px;flex-wrap:wrap;font-size:.88rem}.footer-bottom{padding-top:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#a9c0d3;font-size:.78rem}
-html.js-enabled .reveal{opacity:0;transform:translateY(24px);transition:opacity .75s ease,transform .75s cubic-bezier(.2,.7,.2,1)}html.js-enabled .reveal.is-visible{opacity:1;transform:translateY(0)}.reveal[data-delay="1"]{transition-delay:.12s}.reveal[data-delay="2"]{transition-delay:.22s}.reveal[data-delay="3"]{transition-delay:.32s}html.js-enabled .image-reveal{clip-path:inset(0 0 10% 0 round 24px);transition:clip-path .9s ease,opacity .8s,transform .8s}html.js-enabled .image-reveal.is-visible{clip-path:inset(0 0 0 0 round 24px)}
-.demo-note{font-size:.75rem;color:#6d8499;background:#f6faff;text-align:center;padding:8px 12px;border-top:1px solid #e5eef6}
-@media(max-width:950px){.nav-links{gap:13px;font-size:.84rem}.nav>.btn{display:none}.hero-grid{gap:28px}.hero h1{font-size:clamp(2.1rem,5vw,3.3rem)}.service-grid{grid-template-columns:repeat(2,1fr)}.tech-grid,.experience-grid{gap:32px}.contact-card{grid-template-columns:1fr}.gallery-grid{grid-template-rows:190px 190px}}
-@media(max-width:720px){.hero-fullscreen{min-height:calc(100svh - 94px)}.hero-fullscreen .hero-grid{min-height:calc(100svh - 94px);width:min(100% - 30px,560px);padding:48px 0}.hero-fullscreen .hero-copy{max-width:100%}.hero-fullscreen .hero-backdrop{background-position:58% center;background-image:linear-gradient(90deg,rgba(8,28,50,.74),rgba(8,28,50,.42)),url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=85')}}
-@media(max-width:720px){.container{width:min(100% - 30px,560px)}.section{padding:68px 0}.top-note{font-size:.73rem}.nav{height:70px}.brand{font-size:.9rem;gap:8px}.brand-mark{width:39px;height:39px}.menu-toggle{display:block}.nav-links{display:none;position:absolute;top:70px;right:15px;left:15px;padding:15px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);flex-direction:column;align-items:stretch;gap:0}.nav-links.open{display:flex}.nav-links a{padding:11px 10px;border-bottom:1px solid #edf2f7}.nav-links a:last-child{border-bottom:0}.hero{padding:30px 0 45px}.hero-grid{grid-template-columns:1fr;gap:25px}.hero-copy{padding:0}.hero h1{font-size:clamp(2.15rem,10vw,3.15rem);margin:16px 0}.hero-copy>p{font-size:1rem}.hero-photo-wrap{height:390px;border-width:5px;border-radius:25px}.float-chip{left:7px;top:13px}.photo-label{bottom:12px;right:12px;left:12px;padding:10px 12px}.hero-proof{margin-top:20px}.trust-grid{grid-template-columns:1fr;gap:14px}.trust-item{justify-content:flex-start}.service-grid{grid-template-columns:1fr;gap:16px}.service-image{height:230px}.tech-grid,.experience-grid{grid-template-columns:1fr;gap:28px}.tech-photo{padding:0 0 18px 18px}.tech-photo img{height:340px}.why-grid{grid-template-columns:1fr;gap:14px}.gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:210px 150px 150px;gap:10px}.gallery-item:first-child{grid-row:span 2}.gallery-item:last-child{grid-column:span 2}.experience-image img{height:320px}.contact-card{padding:25px 21px;border-radius:23px}.contact-actions{flex-direction:column;align-items:stretch}.footer-top{flex-direction:column}.footer-links{gap:14px}.footer-bottom{flex-direction:column}.section h2{font-size:1.8rem}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}.image-reveal{clip-path:none}}
-
-/* Final hero layout override: put the photo directly on the full-screen section. */
-.hero-fullscreen{
-  position:relative!important;
-  isolation:isolate!important;
-  display:flex!important;
-  align-items:center!important;
-  width:100%!important;
-  height:calc(100svh - 106px)!important;
-  min-height:560px!important;
-  padding:0!important;
-  margin:0!important;
-  overflow:hidden!important;
-  background:#17314d!important;
-  background-image:linear-gradient(90deg,rgba(8,28,50,.78) 0%,rgba(8,28,50,.58) 48%,rgba(8,28,50,.24) 100%),url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=2200&q=90')!important;
-  background-size:cover!important;
-  background-position:center 48%!important;
-  background-repeat:no-repeat!important;
-}
-.hero-fullscreen .hero-grid{
-  display:flex!important;
-  align-items:center!important;
-  width:min(1160px,calc(100% - 40px))!important;
-  min-height:100%!important;
-  height:100%!important;
-  margin-inline:auto!important;
-  padding:56px 0!important;
-  position:relative!important;
-  z-index:2!important;
-}
-.hero-fullscreen .hero-copy{max-width:760px!important;color:#fff!important;position:relative!important;z-index:3!important}
-.hero-fullscreen h1,.hero-fullscreen .hero-copy>p,.hero-fullscreen .hero-proof{color:#fff!important}
-.hero-fullscreen .hero-proof strong{color:#fff!important}
-.hero-fullscreen h1 span{color:#f3d49a!important}
-.hero-fullscreen .hero-media,.hero-fullscreen .hero-backdrop{display:none!important}
-@media(max-width:720px){
-  .hero-fullscreen{
-    height:calc(100svh - 102px)!important;
-    min-height:600px!important;
-    background-image:linear-gradient(90deg,rgba(8,28,50,.78),rgba(8,28,50,.56)),url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=85')!important;
-    background-position:58% center!important;
-  }
-  .hero-fullscreen .hero-grid{width:calc(100% - 30px)!important;padding:42px 0!important}
-  .hero-fullscreen .hero-copy{max-width:100%!important}
-}
-
-
-/* Conversion-focused CTA styling */
-.whatsapp-btn{background:#16834a!important;color:#fff!important;border:1px solid #16834a!important;box-shadow:0 9px 22px rgba(22,131,74,.22)!important;white-space:nowrap}
-.whatsapp-btn:hover{background:#116d3d!important;box-shadow:0 13px 28px rgba(22,131,74,.28)!important}
-@media(max-width:950px){.nav>.btn{display:inline-flex}}
-@media(max-width:720px){.nav{gap:8px}.brand{font-size:.78rem;gap:6px}.brand-mark{width:34px;height:34px;border-radius:11px}.nav>.btn{display:none}.nav>.whatsapp-btn{display:inline-flex;padding:10px 12px;font-size:.78rem;white-space:nowrap}.menu-toggle{display:none}}
-@media(max-width:720px){
-  .nav{height:auto;min-height:70px;flex-wrap:wrap;padding:8px 0}
-  .nav-links,.nav-links.open{display:flex;position:static;order:3;flex:0 0 100%;width:100%;min-width:0;overflow-x:auto;overscroll-behavior-x:contain;white-space:nowrap;flex-direction:row;align-items:center;gap:8px;padding:5px 0 7px;background:transparent;border:0;border-radius:0;box-shadow:none;scrollbar-width:thin}
-  .nav-links a,.nav-links a:last-child{flex:0 0 auto;padding:7px 10px;border:1px solid var(--line);border-radius:10px;font-size:.78rem}
-  .nav>.whatsapp-btn{max-width:52%;padding:9px 10px;font-size:.74rem}
-  html{scroll-padding-top:145px}
-}</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b43">
+  <meta name="description" content="تعرّف على خدمات العناية بالأسنان، وافهم خياراتك، وابدأ استفسارك مع Elite Dental Clinic.">
+  <title>Elite Dental Clinic | عناية تبدأ بالثقة</title>
+  <link rel="preload" as="image" fetchpriority="high" href="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1400&q=88">
+  <link rel="stylesheet" href="assets/fonts/local-fonts.css">
+  <link rel="stylesheet" href="assets/css/site.css">
 </head>
-<body>
-<div class="top-note">رعاية الأسنان تبدأ بفهم احتياجاتك</div>
-<header class="header">
- <div class="container nav">
-  <a class="brand" href="#home" aria-label="Elite Dental Clinic الصفحة الرئيسية"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3.5c-2.8 0-4 2.4-3.2 5.2l2.7 9.2c.6 2.1 2.2 2.8 3.1.5l1.2-3.2c.4-1.1 1.8-1.1 2.2 0l1.2 3.2c.9 2.3 2.5 1.6 3.1-.5L20 8.7c.8-2.8-.4-5.2-3.2-5.2-1.9 0-3.1 1.2-4.8 1.2S8.9 3.5 7 3.5Z"/></svg></span><span>Elite Dental Clinic</span></a>
-  <nav class="nav-links" id="site-nav" aria-label="التنقل الرئيسي">
-   <a href="#services">الخدمات</a>
-   <a href="#technology">التقنيات</a>
-   <a href="#gallery">معرض الصور</a>
-   <a href="#experience">خطوات العناية</a>
-   <a href="#faq">الأسئلة الشائعة</a>
-   <a href="#contact">تواصل معنا</a>
-  </nav>
-  <a class="btn primary whatsapp-btn" data-whatsapp-cta href="https://wa.me/?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%88%D8%B9%D8%AF%20%D9%81%D9%8A%20Elite%20Dental%20Clinic." target="_blank" rel="noopener noreferrer">اطلب موعدك عبر واتساب</a>
-  <button class="menu-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="فتح القائمة">☰</button>
- </div>
-</header>
-<main id="home">
-<section class="hero hero-fullscreen">
- <div class="container hero-grid">
-  <div class="hero-copy reveal">
-   <span class="hero-tag"><i></i> فحص الأسنان · الترميم · تجميل الابتسامة</span>
-   <h1>رعاية متكاملة<br><span>لصحة أسنانك</span></h1>
-   <p>تعرّف على خيارات العناية الوقائية وترميم الأسنان وتجميل الابتسامة، ثم ناقش ما يناسب احتياجاتك مع طبيب الأسنان بعد التقييم.</p>
-   <div class="hero-actions"><a class="btn primary whatsapp-btn" data-whatsapp-cta href="https://wa.me/?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%88%D8%B9%D8%AF%20%D9%81%D9%8A%20Elite%20Dental%20Clinic." target="_blank" rel="noopener noreferrer">اطلب موعدك عبر واتساب</a></div>
-   <div class="hero-proof"><span class="proof-icon" aria-hidden="true">✓</span><span>خطوات واضحة<br><strong>معلومات تساعدك على الاستفسار</strong></span></div>
-  </div>
- </div>
-</section>
-<div class="trust-strip"><div class="container trust-grid"><div class="trust-item"><span aria-hidden="true">◇</span><span>معلومات واضحة عن خيارات العناية</span></div><div class="trust-item"><span aria-hidden="true">◇</span><span>اختيار العلاج بعد التقييم</span></div><div class="trust-item"><span aria-hidden="true">◇</span><span>طريقة مباشرة للاستفسار</span></div></div></div>
-<section class="section" id="services"><div class="container"><div class="section-head center reveal"><span class="eyebrow">خدمات العناية</span><h2>خدمات العناية بصحة الأسنان</h2><p>تختلف الخيارات بحسب احتياجات كل شخص، ويحدد طبيب الأسنان المناسب بعد تقييم الحالة.</p></div>
-<div class="service-grid">
-<article class="service-card reveal"><div class="service-image"><img class="image-reveal" src="https://images.pexels.com/photos/6812572/pexels-photo-6812572.jpeg?auto=compress&cs=tinysrgb&w=900" alt="طبيب أسنان يفحص مريضًا بالغًا" loading="lazy"></div><div class="service-content"><h3>الفحص والعناية الوقائية</h3><p>متابعة صحة الفم والأسنان، ومناقشة عادات العناية اليومية وخيارات الوقاية المناسبة.</p><a class="text-link" data-whatsapp-cta href="https://wa.me/?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%88%D8%B9%D8%AF%20%D9%81%D9%8A%20Elite%20Dental%20Clinic." target="_blank" rel="noopener noreferrer">اطلب موعدك عبر واتساب ←</a></div></article>
-<article class="service-card reveal" data-delay="1"><div class="service-image"><img class="image-reveal" src="https://images.pexels.com/photos/6812523/pexels-photo-6812523.jpeg?auto=compress&cs=tinysrgb&w=900" alt="طبيب أسنان ومساعده أثناء علاج مريض بالغ" loading="lazy"></div><div class="service-content"><h3>ترميم الأسنان</h3><p>خيارات علاجية يشرحها المختص بناءً على الفحص والاحتياجات الفردية لكل حالة.</p><a class="text-link" data-whatsapp-cta href="https://wa.me/?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%88%D8%B9%D8%AF%20%D9%81%D9%8A%20Elite%20Dental%20Clinic." target="_blank" rel="noopener noreferrer">اطلب موعدك عبر واتساب ←</a></div></article>
-<article class="service-card reveal" data-delay="2"><div class="service-image"><img class="image-reveal" src="https://images.pexels.com/photos/37458047/pexels-photo-37458047.jpeg?auto=compress&cs=tinysrgb&w=900" alt="طبيب أسنان بالغ في عيادة حديثة" loading="lazy"></div><div class="service-content"><h3>تجميل الابتسامة</h3><p>مناقشة الخيارات التجميلية المتاحة وتوقعاتها الواقعية مع فريق الرعاية المختص.</p><a class="text-link" data-whatsapp-cta href="https://wa.me/?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%88%D8%B9%D8%AF%20%D9%81%D9%8A%20Elite%20Dental%20Clinic." target="_blank" rel="noopener noreferrer">اطلب موعدك عبر واتساب ←</a></div></article>
-</div></div></section>
-<section class="section soft" id="technology"><div class="container tech-grid"><div class="tech-photo reveal"><img class="image-reveal" src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=85" alt="غرفة علاج في عيادة أسنان عصرية" loading="lazy"></div><div class="reveal" data-delay="1"><span class="eyebrow">المكان والتقنيات</span><h2>بيئة حديثة تجعل التفاصيل أكثر وضوحًا</h2><p class="muted">يبدأ الانطباع الجيد من المكان المنظم، والمعلومات الواضحة، وشرح الخيارات قبل اتخاذ أي قرار علاجي.</p><div class="feature-list"><div class="feature"><span class="feature-icon">✦</span><div><h3>مساحات منظمة</h3><p>تصميم هادئ يساعد على تقديم تجربة استقبال أكثر راحة ووضوحًا.</p></div></div><div class="feature"><span class="feature-icon">⌕</span><div><h3>شرح الخيارات ببساطة</h3><p>عرض الخطوات المتوقعة ومناقشة الأسئلة قبل بدء أي إجراء.</p></div></div><div class="feature"><span class="feature-icon">◇</span><div><h3>اهتمام بالتفاصيل</h3><p>إبراز النظافة والتنظيم وسهولة الوصول إلى المعلومات المهمة.</p></div></div></div></div></div></section>
-<section class="section"><div class="container"><div class="section-head center reveal"><span class="eyebrow">قبل اتخاذ القرار</span><h2>الثقة تبدأ من المعلومات الواضحة</h2><p>أساسيات تساعدك على فهم خيارات العناية قبل مناقشتها مع طبيب الأسنان.</p></div><div class="why-grid"><article class="why-card reveal"><div class="why-number">01</div><h3>شرح مفهوم</h3><p>فهم الفحص والخطوات التالية بلغة بسيطة يساعدك على طرح الأسئلة المناسبة.</p></article><article class="why-card reveal" data-delay="1"><div class="why-number">02</div><h3>خيارات حسب الحالة</h3><p>تختلف الاحتياجات من شخص لآخر، وتُناقش الخيارات بعد التقييم.</p></article><article class="why-card reveal" data-delay="2"><div class="why-number">03</div><h3>توقعات واقعية</h3><p>من المهم فهم فوائد كل خيار وحدوده وبدائله قبل اتخاذ القرار.</p></article></div></div></section>
-<section class="section soft" id="gallery"><div class="container"><div class="section-head reveal"><span class="eyebrow">معرض الصور</span><h2>نظرة أقرب إلى الأجواء</h2><p>صور توضيحية لمساحات وتجهيزات مرتبطة بالعناية بالأسنان.</p></div><div class="gallery-grid"><div class="gallery-item reveal"><img class="image-reveal" src="https://images.pexels.com/photos/37458044/pexels-photo-37458044.jpeg?auto=compress&cs=tinysrgb&w=900" alt="طبيب أسنان في مساحة عمل طبية حديثة" loading="lazy"><div class="gallery-caption">مساحات عصرية</div></div><div class="gallery-item reveal" data-delay="1"><img class="image-reveal" src="https://images.pexels.com/photos/6812572/pexels-photo-6812572.jpeg?auto=compress&cs=tinysrgb&w=800" alt="فحص أسنان لمريض بالغ" loading="lazy"><div class="gallery-caption">تجهيزات العناية</div></div><div class="gallery-item reveal" data-delay="2"><img class="image-reveal" src="https://images.pexels.com/photos/6812523/pexels-photo-6812523.jpeg?auto=compress&cs=tinysrgb&w=800" alt="فريق طبي أثناء إجراء علاج الأسنان" loading="lazy"><div class="gallery-caption">تفاصيل طبية</div></div><div class="gallery-item reveal" data-delay="1"><img class="image-reveal" src="https://images.pexels.com/photos/37458047/pexels-photo-37458047.jpeg?auto=compress&cs=tinysrgb&w=800" alt="طبيب أسنان بالغ في عيادته" loading="lazy"><div class="gallery-caption">بيئة الرعاية</div></div><div class="gallery-item reveal" data-delay="2"><img class="image-reveal" src="https://images.pexels.com/photos/6812572/pexels-photo-6812572.jpeg?auto=compress&cs=tinysrgb&w=900" alt="فحص أسنان داخل عيادة مجهزة" loading="lazy"><div class="gallery-caption">تصميم هادئ</div></div></div></div></section>
-<section class="section" id="experience"><div class="container experience-grid"><div class="experience-image reveal"><img class="image-reveal" src="https://images.pexels.com/photos/37458044/pexels-photo-37458044.jpeg?auto=compress&cs=tinysrgb&w=1100" alt="طبيب أسنان ومعدات عيادة حديثة" loading="lazy"></div><div class="reveal" data-delay="1"><span class="eyebrow">خطوات العناية</span><h2>افهم الخطوة التالية بوضوح</h2><p class="muted">ابدأ بالاستفسار، ثم ناقش احتياجاتك وخيارات العناية مع طبيب الأسنان بعد التقييم.</p><div class="steps"><div class="step"><span class="step-no">١</span><div><h3>استفسر عن موعد</h3><p>استخدم زر واتساب لإعداد رسالة استفسار عن الموعد.</p></div></div><div class="step"><span class="step-no">٢</span><div><h3>ناقش احتياجاتك</h3><p>جهّز أسئلتك وناقش الخيارات المناسبة مع طبيب الأسنان.</p></div></div><div class="step"><span class="step-no">٣</span><div><h3>افهم الخيارات</h3><p>اطلب شرحًا واضحًا للفوائد والحدود والخطوات التالية.</p></div></div></div></div></div></section>
-<section class="section soft" id="faq"><div class="container"><div class="section-head center reveal"><span class="eyebrow">أسئلة شائعة</span><h2>إجابات عن العناية بالأسنان</h2><p>معلومات عامة تساعدك على الاستعداد لمناقشة خيارات الرعاية مع المختص.</p></div><div class="faq-list reveal"><details><summary>كيف أعرف العلاج المناسب لحالتي؟</summary><p>يحدد طبيب الأسنان الخيارات المناسبة بعد فحص الحالة ومناقشة التاريخ الصحي والأهداف والتوقعات.</p></details><details><summary>هل تكفي المعلومات المنشورة لاختيار العلاج؟</summary><p>المعلومات العامة لا تغني عن فحص الأسنان وتقييم الحالة ومناقشة الخيارات مع طبيب الأسنان.</p></details></div></div></section>
-<section class="section" id="contact"><div class="container"><div class="contact-card reveal"><div><span class="eyebrow">الخطوة التالية</span><h2>استفسر عن موعدك</h2><p>اكتب استفسارك عبر واتساب للبدء بمحادثة حول الموعد والمعلومات التي تحتاج إليها.</p></div><div class="contact-actions"><a class="btn primary whatsapp-btn" data-whatsapp-cta href="https://wa.me/?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%88%D8%B9%D8%AF%20%D9%81%D9%8A%20Elite%20Dental%20Clinic." target="_blank" rel="noopener noreferrer">اطلب موعدك عبر واتساب</a></div></div></div></section>
-</main>
-<footer class="footer"><div class="container"><div class="footer-top"><div><a class="brand" href="#home"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3.5c-2.8 0-4 2.4-3.2 5.2l2.7 9.2c.6 2.1 2.2 2.8 3.1.5l1.2-3.2c.4-1.1 1.8-1.1 2.2 0l1.2 3.2c.9 2.3 2.5 1.6 3.1-.5L20 8.7c.8-2.8-.4-5.2-3.2-5.2-1.9 0-3.1 1.2-4.8 1.2S8.9 3.5 7 3.5Z"/></svg></span>Elite Dental Clinic</a><p>مساحة رقمية تهتم بوضوح المعلومات وسهولة التصفح وتجربة الزائر.</p></div></div><div class="footer-bottom"><span>© 2026 Elite Dental Clinic</span><span>المحتوى لأغراض العرض فقط، وليس نصيحة طبية.</span></div></div></footer>
-<div class="demo-note">Elite Dental Clinic علامة افتراضية صُممت لأغراض العرض ضمن معرض أعمال Apex Pages. لا تتوفر حجوزات فعلية عبر هذا الموقع.</div>
-<script>
-(function () {
-  'use strict';
+<body class="bg-clinic-paper font-sans text-clinic-ink antialiased selection:bg-clinic-mint selection:text-clinic-navy">
+  <a href="#main-content" class="sr-only z-50 rounded-xl bg-white px-5 py-3 text-clinic-navy shadow-lg focus:not-sr-only focus:fixed focus:right-4 focus:top-4">تجاوز إلى المحتوى</a>
 
-  const root = document.documentElement;
-  const targets = Array.from(document.querySelectorAll('.reveal,.image-reveal'));
-  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const SCRIPT_TIMEOUT_MS = 10000;
-  const pendingLoads = new Map();
+  <!-- Announcement Bar -->
+  <div class="bg-clinic-navy px-4 py-2 text-center text-xs leading-6 text-white sm:text-sm">عناية واضحة واهتمام بالتفاصيل — لأن الاطمئنان يبدأ من أول سؤال</div>
 
-  let generation = 0;
-  let enhancement = null;
-  let fallbackObserver = null;
-  let scheduledInit = null;
+  <!-- Header & Navigation -->
+  <header class="sticky top-0 z-40 border-b border-clinic-line/80 bg-white/95 shadow-sm shadow-clinic-navy/5 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:flex-nowrap lg:px-8">
+      <a href="#home" class="inline-flex items-center gap-3" aria-label="Elite Dental Clinic — الرئيسية">
+        <span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-clinic-navy text-white shadow-lg shadow-clinic-navy/15 sm:size-12" aria-hidden="true"><svg viewBox="0 0 24 24" class="size-7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5c-2.8 0-4 2.4-3.2 5.2l2.7 9.2c.6 2.1 2.2 2.8 3.1.5l1.2-3.2c.4-1.1 1.8-1.1 2.2 0l1.2 3.2c.9 2.3 2.5 1.6 3.1-.5L20 8.7c.8-2.8-.4-5.2-3.2-5.2-1.9 0-3.1 1.2-4.8 1.2S8.9 3.5 7 3.5Z"/></svg></span>
+        <span><strong class="block text-sm font-extrabold tracking-tight text-clinic-navy sm:text-base">Elite Dental Clinic</strong><span class="block text-[11px] text-clinic-muted sm:text-xs">رعاية تبدأ بالثقة</span></span>
+      </a>
+      <button id="nav-toggle" type="button" class="inline-flex size-11 items-center justify-center rounded-xl border border-clinic-line bg-white text-clinic-navy md:hidden" aria-label="فتح القائمة" aria-expanded="false" aria-controls="primary-navigation">
+        <svg data-menu-icon viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg data-close-icon viewBox="0 0 24 24" class="hidden size-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+      <nav id="primary-navigation" aria-label="التنقل الرئيسي" class="flex w-full flex-col gap-1 pb-2 pt-2 text-sm font-semibold text-clinic-muted md:w-auto md:flex-row md:items-center md:gap-1 md:pb-0 md:pt-0">
+        <a class="rounded-full px-3 py-2.5 transition hover:bg-clinic-paper hover:text-clinic-navy focus-visible:outline-2 focus-visible:outline-clinic-cta" href="#services">الخدمات</a>
+        <a class="rounded-full px-3 py-2.5 transition hover:bg-clinic-paper hover:text-clinic-navy focus-visible:outline-2 focus-visible:outline-clinic-cta" href="#approach">نهجنا</a>
+        <a class="rounded-full px-3 py-2.5 transition hover:bg-clinic-paper hover:text-clinic-navy focus-visible:outline-2 focus-visible:outline-clinic-cta" href="#journey">خطوات العناية</a>
+        <a class="rounded-full px-3 py-2.5 transition hover:bg-clinic-paper hover:text-clinic-navy focus-visible:outline-2 focus-visible:outline-clinic-cta" href="#faq">الأسئلة الشائعة</a>
+        <a class="rounded-full px-3 py-2.5 transition hover:bg-clinic-paper hover:text-clinic-navy focus-visible:outline-2 focus-visible:outline-clinic-cta" href="#contact">تواصل معنا</a>
+        <a class="mt-2 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-clinic-cta px-5 py-3 text-sm font-extrabold text-white shadow-lg shadow-clinic-cta/20 transition hover:bg-clinic-cta-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clinic-cta md:mt-0 md:mr-2" href="https://wa.me/?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%88%D8%B9%D8%AF%20%D9%81%D9%8A%20Elite%20Dental%20Clinic." target="_blank" rel="noopener noreferrer">استفسر عبر واتساب <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
 
-  const showAll = () => targets.forEach(el => el.classList.add('is-visible'));
+  <main id="main-content">
+    <!-- Hero Section -->
+    <section id="home" class="relative isolate overflow-hidden bg-white">
+      <div class="pointer-events-none absolute -right-40 -top-32 -z-10 size-[28rem] rounded-full bg-clinic-mint/65 blur-3xl" aria-hidden="true"></div>
+      <div class="pointer-events-none absolute -bottom-40 -left-32 -z-10 size-[30rem] rounded-full bg-clinic-sky/75 blur-3xl" aria-hidden="true"></div>
+      <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.02fr_0.98fr] lg:gap-16 lg:px-8 lg:py-24">
+        <div data-reveal>
+          <span class="inline-flex items-center gap-2 rounded-full border border-clinic-line bg-white/90 px-4 py-2 text-xs font-extrabold text-clinic-blue shadow-sm sm:text-sm"><span class="size-2 rounded-full bg-clinic-cta ring-4 ring-clinic-mint" aria-hidden="true"></span>مساحة أهدأ لاتخاذ قرار مطمئن</span>
+          <h1 class="mt-6 max-w-3xl text-4xl font-extrabold leading-[1.3] tracking-tight text-clinic-navy sm:text-5xl md:text-6xl lg:text-7xl lg:leading-[1.22]">ابتسامتك تستحق <span class="text-clinic-blue">عناية تُبنى على الثقة</span></h1>
+          <p class="mt-6 max-w-2xl text-base leading-8 text-clinic-muted sm:text-lg sm:leading-9">اكتشف تجربة عناية بالأسنان تضع الوضوح والاهتمام بالتفاصيل في المقدمة. تعرّف على خيارات الرعاية، واسأل عمّا يهمك قبل اتخاذ خطوتك التالية.</p>
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <a class="inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-clinic-cta px-7 py-4 text-base font-extrabold text-white shadow-xl shadow-clinic-cta/25 transition hover:-translate-y-0.5 hover:bg-clinic-cta-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-clinic-cta motion-reduce:transform-none" href="https://wa.me/?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%88%D8%B9%D8%AF%20%D9%81%D9%8A%20Elite%20Dental%20Clinic." target="_blank" rel="noopener noreferrer">استفسر عن موعد <span aria-hidden="true">←</span></a>
+            <a class="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-clinic-line bg-white px-7 py-4 text-base font-bold text-clinic-navy transition hover:bg-clinic-paper focus-visible:outline-2 focus-visible:outline-clinic-blue" href="#services">استكشف الخدمات <span aria-hidden="true">⌄</span></a>
+          </div>
+          <div class="mt-10 flex flex-wrap gap-x-6 gap-y-3 border-t border-clinic-line pt-6 text-sm text-clinic-muted sm:mt-12 sm:pt-7"><span class="inline-flex items-center gap-2"><span class="text-clinic-cta" aria-hidden="true">✓</span><strong class="text-clinic-navy">شرح واضح</strong></span><span class="inline-flex items-center gap-2"><span class="text-clinic-cta" aria-hidden="true">✓</span><strong class="text-clinic-navy">توقعات واقعية</strong></span><span class="inline-flex items-center gap-2"><span class="text-clinic-cta" aria-hidden="true">✓</span><strong class="text-clinic-navy">وقت لأسئلتك</strong></span></div>
+        </div>
+        <div class="relative mx-auto w-full max-w-2xl" data-reveal>
+          <div class="absolute -right-4 top-10 -z-10 h-3/4 w-3/4 rounded-[2.5rem] bg-clinic-mint sm:-right-7 sm:top-14" aria-hidden="true"></div><div class="absolute -bottom-5 -left-4 -z-10 h-2/5 w-2/5 rounded-[2rem] bg-clinic-sky sm:-bottom-7 sm:-left-7" aria-hidden="true"></div>
+          <div class="relative overflow-hidden rounded-[2rem] border-4 border-white bg-clinic-sky shadow-2xl shadow-clinic-navy/15 sm:rounded-[2.5rem]">
+            <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1400&q=88" alt="مساحة علاج أسنان حديثة ومضيئة" width="1400" height="1600" fetchpriority="high" decoding="async" class="aspect-[4/4.6] w-full object-cover sm:aspect-[4/4.2]">
+            <div class="absolute inset-x-3 bottom-3 grid grid-cols-2 gap-3 sm:inset-x-5 sm:bottom-5 sm:gap-4">
+              <div class="rounded-2xl border border-white/70 bg-white/95 p-4 shadow-lg backdrop-blur-md sm:rounded-3xl sm:p-5"><span class="mb-2 grid size-9 place-items-center rounded-xl bg-clinic-mint font-extrabold text-clinic-cta">✓</span><strong class="block text-sm font-extrabold text-clinic-navy sm:text-base">وضوح في كل خطوة</strong><span class="mt-1 block text-xs leading-6 text-clinic-muted sm:text-sm">معلومات تساعدك على الفهم</span></div>
+              <div class="rounded-2xl border border-white/70 bg-white/95 p-4 shadow-lg backdrop-blur-md sm:rounded-3xl sm:p-5"><span class="mb-2 grid size-9 place-items-center rounded-xl bg-clinic-sky font-extrabold text-clinic-blue">＋</span><strong class="block text-sm font-extrabold text-clinic-navy sm:text-base">قرار أكثر اطلاعًا</strong><span class="mt-1 block text-xs leading-6 text-clinic-muted sm:text-sm">ناقش الخيارات مع المختص</span></div>
+            </div>
+          </div>
+          <div class="absolute -top-4 left-3 hidden items-center gap-3 rounded-2xl border border-clinic-line bg-white px-4 py-3 shadow-xl shadow-clinic-navy/10 sm:flex lg:-left-5 lg:top-8"><span class="grid size-10 place-items-center rounded-full bg-clinic-mint text-lg font-bold text-clinic-cta">✦</span><span><strong class="block text-sm font-extrabold text-clinic-navy">نهج يضعك أولًا</strong><span class="block text-xs text-clinic-muted">أسئلة، شرح، خيارات</span></span></div>
+        </div>
+      </div>
+    </section>
 
-  const stopFallback = () => {
-    if (fallbackObserver) {
-      fallbackObserver.disconnect();
-      fallbackObserver = null;
-    }
-  };
+    <!-- Trust & Value Strip -->
+    <section aria-label="قيم تجربة العناية" class="border-y border-clinic-line bg-white"><div class="mx-auto grid max-w-7xl gap-0 px-4 py-5 sm:grid-cols-3 sm:px-6 lg:px-8 lg:py-7">
+      <div class="flex items-center justify-center gap-3 border-b border-clinic-line py-4 sm:border-b-0 sm:border-l sm:py-2"><span class="grid size-11 place-items-center rounded-2xl bg-clinic-paper text-xl text-clinic-blue">✓</span><span><strong class="block text-sm font-extrabold text-clinic-navy">معلومات مسؤولة</strong><span class="mt-1 block text-xs text-clinic-muted">دون وعود علاجية مبالغ فيها</span></span></div>
+      <div class="flex items-center justify-center gap-3 border-b border-clinic-line py-4 sm:border-b-0 sm:border-l sm:py-2"><span class="grid size-11 place-items-center rounded-2xl bg-clinic-paper text-xl text-clinic-blue">◷</span><span><strong class="block text-sm font-extrabold text-clinic-navy">وقت لفهم الخيارات</strong><span class="mt-1 block text-xs text-clinic-muted">ناقش ما يناسب حالتك مع المختص</span></span></div>
+      <div class="flex items-center justify-center gap-3 py-4 sm:py-2"><span class="grid size-11 place-items-center rounded-2xl bg-clinic-paper text-xl text-clinic-blue">↗</span><span><strong class="block text-sm font-extrabold text-clinic-navy">تواصل بسيط</strong><span class="mt-1 block text-xs text-clinic-muted">ابدأ بسؤال واضح عبر واتساب</span></span></div>
+    </div></section>
 
-  function restoreOriginalStyles(current) {
-    current.originalStyles.forEach((styleText, element) => {
-      if (styleText === null) element.removeAttribute('style');
-      else element.setAttribute('style', styleText);
-    });
-  }
+    <!-- Services Section -->
+    <section id="services" class="scroll-mt-28 py-20 sm:py-24 lg:py-32"><div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto mb-12 max-w-3xl text-center sm:mb-16" data-reveal><span class="inline-flex rounded-full bg-clinic-mint px-4 py-2 text-xs font-extrabold text-clinic-cta-dark sm:text-sm">خدمات العناية</span><h2 class="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-clinic-navy sm:text-4xl lg:text-5xl">خيارات واضحة لاحتياجات مختلفة</h2><p class="mx-auto mt-5 max-w-2xl text-base leading-8 text-clinic-muted sm:text-lg sm:leading-9">تعرّف على مجالات الرعاية الشائعة، ثم ناقش احتياجاتك وخياراتك مع طبيب الأسنان بعد التقييم.</p></div>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
+        <article class="group overflow-hidden rounded-[1.75rem] border border-clinic-line bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-clinic-navy/10 motion-reduce:transform-none" data-reveal><div class="overflow-hidden bg-clinic-sky"><img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=1000&q=85" alt="أدوات وتجهيزات لفحص الأسنان والعناية الوقائية" width="1000" height="720" loading="lazy" decoding="async" class="aspect-[5/3] w-full object-cover transition duration-700 group-hover:scale-105 motion-reduce:transform-none"></div><div class="p-6 sm:p-7"><span class="grid size-11 place-items-center rounded-2xl bg-clinic-mint text-xl font-bold text-clinic-cta">✓</span><h3 class="mt-5 text-xl font-extrabold text-clinic-navy">الفحص والعناية الوقائية</h3><p class="mt-3 text-sm leading-7 text-clinic-muted">فهم حالة الفم والأسنان والتعرّف على خطوات العناية اليومية والوقاية المناسبة لاحتياجاتك.</p><a href="#contact" class="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-clinic-blue transition group-hover:gap-3">استفسر عن الخدمة <span aria-hidden="true">←</span></a></div></article>
+        <article class="group overflow-hidden rounded-[1.75rem] border border-clinic-line bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-clinic-navy/10 motion-reduce:transform-none" data-reveal><div class="overflow-hidden bg-clinic-sky"><img src="https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&w=1000&q=85" alt="تجهيزات حديثة في مساحة لعلاج الأسنان" width="1000" height="720" loading="lazy" decoding="async" class="aspect-[5/3] w-full object-cover transition duration-700 group-hover:scale-105 motion-reduce:transform-none"></div><div class="p-6 sm:p-7"><span class="grid size-11 place-items-center rounded-2xl bg-clinic-sky text-xl font-bold text-clinic-blue">＋</span><h3 class="mt-5 text-xl font-extrabold text-clinic-navy">ترميم الأسنان</h3><p class="mt-3 text-sm leading-7 text-clinic-muted">ناقش الخيارات المتاحة لمعالجة مشكلات الأسنان واستعادة الوظيفة وفق التشخيص والتقييم.</p><a href="#contact" class="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-clinic-blue transition group-hover:gap-3">استفسر عن الخدمة <span aria-hidden="true">←</span></a></div></article>
+        <article class="group overflow-hidden rounded-[1.75rem] border border-clinic-line bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-clinic-navy/10 motion-reduce:transform-none sm:col-span-2 lg:col-span-1" data-reveal><div class="overflow-hidden bg-clinic-sky"><img src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?auto=format&fit=crop&w=1000&q=85" alt="بيئة عناية مناسبة لمناقشة خيارات تحسين الابتسامة" width="1000" height="720" loading="lazy" decoding="async" class="aspect-[5/3] w-full object-cover transition duration-700 group-hover:scale-105 motion-reduce:transform-none"></div><div class="p-6 sm:p-7"><span class="grid size-11 place-items-center rounded-2xl bg-amber-50 text-xl font-bold text-amber-700">✦</span><h3 class="mt-5 text-xl font-extrabold text-clinic-navy">تجميل الابتسامة</h3><p class="mt-3 text-sm leading-7 text-clinic-muted">تعرّف على الخيارات التجميلية الممكنة ومزاياها وحدودها مع مراعاة صحة الأسنان وتوقعاتك.</p><a href="#contact" class="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-clinic-blue transition group-hover:gap-3">استفسر عن الخدمة <span aria-hidden="true">←</span></a></div></article>
+      </div>
+    </div></section>
 
-  function disposeEnhancement(current) {
-    if (!current || current.cleaned) return;
-    current.cleaned = true;
+    <!-- Approach & Technology Section -->
+    <section id="approach" class="scroll-mt-28 overflow-hidden bg-clinic-navy py-20 text-white sm:py-24 lg:py-32"><div class="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
+      <div class="relative" data-reveal><div class="absolute -bottom-5 -right-5 -z-0 h-2/3 w-2/3 rounded-[2rem] bg-clinic-blue/60 sm:-bottom-7 sm:-right-7" aria-hidden="true"></div><div class="relative overflow-hidden rounded-[2rem] border border-white/15 bg-white/10 shadow-2xl shadow-black/20 sm:rounded-[2.5rem]"><img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=85" alt="غرفة عناية بالأسنان بتجهيزات معاصرة وإضاءة مريحة" width="1200" height="1000" loading="lazy" decoding="async" class="aspect-[5/4] w-full object-cover"></div><div class="absolute inset-x-4 bottom-4 rounded-2xl border border-white/20 bg-clinic-navy/90 p-4 backdrop-blur sm:inset-x-6 sm:bottom-6 sm:p-5"><p class="text-sm font-extrabold text-white">التقنية وسيلة لشرح أفضل</p><p class="mt-1 text-xs leading-6 text-slate-200 sm:text-sm">الأدوات تساعد المختص؛ والتقييم المهني أساس التوصية.</p></div></div>
+      <div data-reveal><span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold text-clinic-mint sm:text-sm"><span class="size-2 rounded-full bg-clinic-cta" aria-hidden="true"></span>نهجنا في الرعاية</span><h2 class="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">تجربة أكثر هدوءًا، ومعلومات أكثر وضوحًا</h2><p class="mt-5 text-base leading-8 text-slate-300 sm:text-lg sm:leading-9">فهم الخطوات والبدائل يساعدك على المشاركة في القرار. لذلك نركز على شرح ما تحتاج معرفته دون تعقيد أو وعود لا يمكن ضمانها.</p>
+        <div class="mt-8 space-y-5 sm:mt-10 sm:space-y-6"><div class="flex gap-4"><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-lg text-clinic-mint">◎</span><div><h3 class="text-base font-extrabold text-white sm:text-lg">شرح مفهوم</h3><p class="mt-1 text-sm leading-7 text-slate-300">اطلب شرحًا مبسطًا للتوصيات والمخاطر والبدائل قبل اتخاذ القرار.</p></div></div><div class="flex gap-4"><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-lg text-clinic-mint">＋</span><div><h3 class="text-base font-extrabold text-white sm:text-lg">خيارات حسب الحالة</h3><p class="mt-1 text-sm leading-7 text-slate-300">تختلف الخطة من شخص لآخر، ويحددها الفحص ومناقشة احتياجاتك.</p></div></div><div class="flex gap-4"><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-lg text-clinic-mint">✓</span><div><h3 class="text-base font-extrabold text-white sm:text-lg">توقعات واقعية</h3><p class="mt-1 text-sm leading-7 text-slate-300">لكل إجراء فوائد وحدود؛ وفهمهما جزء من الاختيار المستنير.</p></div></div></div>
+        <a href="#contact" class="mt-9 inline-flex min-h-13 items-center justify-center gap-3 rounded-full bg-clinic-cta px-6 py-3.5 text-sm font-extrabold text-white shadow-lg transition hover:bg-clinic-cta-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-clinic-mint">ابدأ باستفسارك <span aria-hidden="true">←</span></a>
+      </div>
+    </div></section>
 
-    try {
-      if (typeof current.unsubscribe === 'function') current.unsubscribe();
-    } catch (error) {
-      console.warn('Could not unsubscribe from Lenis scroll events.', error);
-    }
+    <!-- Care Journey Section -->
+    <section id="journey" class="scroll-mt-28 py-20 sm:py-24 lg:py-32"><div class="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
+      <div class="order-2 lg:order-1" data-reveal><span class="inline-flex rounded-full bg-clinic-mint px-4 py-2 text-xs font-extrabold text-clinic-cta-dark sm:text-sm">خطوات العناية</span><h2 class="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-clinic-navy sm:text-4xl lg:text-5xl">اعرف خطوتك التالية ببساطة</h2><p class="mt-5 text-base leading-8 text-clinic-muted sm:text-lg sm:leading-9">ابدأ بسؤال، ثم اطلب المعلومات التي تحتاجها لمناقشة الخيارات المناسبة مع طبيب الأسنان.</p>
+        <ol class="mt-8 space-y-6 sm:mt-10 sm:space-y-7"><li class="flex gap-4"><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-clinic-navy text-sm font-extrabold text-white">١</span><div><h3 class="text-base font-extrabold text-clinic-navy sm:text-lg">ابدأ بالاستفسار</h3><p class="mt-1 text-sm leading-7 text-clinic-muted">أرسل سؤالك العام عبر واتساب لمعرفة معلومات الموعد المتاحة.</p></div></li><li class="flex gap-4"><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-clinic-navy text-sm font-extrabold text-white">٢</span><div><h3 class="text-base font-extrabold text-clinic-navy sm:text-lg">ناقش احتياجاتك</h3><p class="mt-1 text-sm leading-7 text-clinic-muted">جهّز أسئلتك واطلب توضيح المصطلحات غير المفهومة.</p></div></li><li class="flex gap-4"><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-clinic-navy text-sm font-extrabold text-white">٣</span><div><h3 class="text-base font-extrabold text-clinic-navy sm:text-lg">افهم الخيارات قبل القرار</h3><p class="mt-1 text-sm leading-7 text-clinic-muted">ناقش الفوائد والمخاطر والبدائل والتكلفة مع المختص بعد التقييم.</p></div></li></ol>
+      </div>
+      <div class="order-1 relative lg:order-2" data-reveal><div class="absolute -bottom-5 -left-5 -z-10 h-2/3 w-2/3 rounded-[2rem] bg-clinic-sky sm:-bottom-7 sm:-left-7" aria-hidden="true"></div><div class="overflow-hidden rounded-[2rem] bg-clinic-sky shadow-2xl shadow-clinic-navy/10 sm:rounded-[2.5rem]"><img src="https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&w=1200&q=85" alt="مساحة عمل احترافية للعناية بالأسنان" width="1200" height="1000" loading="lazy" decoding="async" class="aspect-[5/4] w-full object-cover"></div><div class="absolute -bottom-3 right-4 rounded-2xl border border-clinic-line bg-white px-4 py-3 shadow-xl sm:bottom-5 sm:right-5 sm:px-5 sm:py-4"><strong class="block text-sm font-extrabold text-clinic-navy">أنت جزء من القرار</strong><span class="mt-1 block text-xs text-clinic-muted">اسأل حتى تتضح الصورة</span></div></div>
+    </div></section>
 
-    try {
-      if (current.lenis && typeof current.lenis.destroy === 'function') current.lenis.destroy();
-    } catch (error) {
-      console.warn('Could not destroy the Lenis instance cleanly.', error);
-    }
+    <!-- FAQ Section -->
+    <section id="faq" class="scroll-mt-28 bg-clinic-sky/50 py-20 sm:py-24 lg:py-32"><div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto mb-10 max-w-2xl text-center sm:mb-14" data-reveal><span class="inline-flex rounded-full bg-white px-4 py-2 text-xs font-extrabold text-clinic-blue shadow-sm sm:text-sm">أسئلة شائعة</span><h2 class="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-clinic-navy sm:text-4xl lg:text-5xl">إجابات تساعدك على الاستعداد</h2><p class="mt-4 text-base leading-8 text-clinic-muted">معلومات عامة لا تغني عن الفحص والتقييم لدى طبيب الأسنان.</p></div>
+      <div class="space-y-3" data-reveal>
+        <details class="group rounded-2xl border border-clinic-line bg-white px-5 shadow-sm open:shadow-md sm:px-7"><summary class="flex cursor-pointer list-none items-center justify-between gap-5 py-5 text-sm font-extrabold leading-7 text-clinic-navy sm:text-base"><span>كيف أعرف العلاج المناسب لحالتي؟</span><span class="grid size-8 shrink-0 place-items-center rounded-full bg-clinic-paper text-clinic-blue transition group-open:rotate-45" aria-hidden="true">＋</span></summary><p class="border-t border-clinic-line pb-5 pt-4 text-sm leading-7 text-clinic-muted">يحدد طبيب الأسنان الخيارات بعد فحص الحالة ومناقشة تاريخك الصحي واحتياجاتك والأهداف المتوقعة.</p></details>
+        <details class="group rounded-2xl border border-clinic-line bg-white px-5 shadow-sm open:shadow-md sm:px-7"><summary class="flex cursor-pointer list-none items-center justify-between gap-5 py-5 text-sm font-extrabold leading-7 text-clinic-navy sm:text-base"><span>هل تكفي المعلومات المنشورة لاختيار العلاج؟</span><span class="grid size-8 shrink-0 place-items-center rounded-full bg-clinic-paper text-clinic-blue transition group-open:rotate-45" aria-hidden="true">＋</span></summary><p class="border-t border-clinic-line pb-5 pt-4 text-sm leading-7 text-clinic-muted">لا. تساعد المعلومات العامة على طرح الأسئلة، لكنها لا تستبدل الفحص المهني أو التوصية الملائمة لحالتك.</p></details>
+        <details class="group rounded-2xl border border-clinic-line bg-white px-5 shadow-sm open:shadow-md sm:px-7"><summary class="flex cursor-pointer list-none items-center justify-between gap-5 py-5 text-sm font-extrabold leading-7 text-clinic-navy sm:text-base"><span>ما الأسئلة التي يجدر بي طرحها قبل الإجراء؟</span><span class="grid size-8 shrink-0 place-items-center rounded-full bg-clinic-paper text-clinic-blue transition group-open:rotate-45" aria-hidden="true">＋</span></summary><p class="border-t border-clinic-line pb-5 pt-4 text-sm leading-7 text-clinic-muted">اسأل عن الهدف من الإجراء والبدائل والفوائد والمخاطر وفترة التعافي والتكلفة والرعاية اللاحقة.</p></details>
+      </div>
+    </div></section>
 
-    try {
-      if (current.ticker && window.gsap && window.gsap.ticker) {
-        window.gsap.ticker.remove(current.ticker);
-      }
-    } catch (error) {
-      console.warn('Could not remove the Lenis GSAP ticker callback.', error);
-    }
+    <!-- Contact & Primary CTA Section -->
+    <section id="contact" class="scroll-mt-28 px-4 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-32"><div class="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-clinic-navy px-6 py-10 text-white shadow-2xl shadow-clinic-navy/15 sm:rounded-[2.5rem] sm:px-10 sm:py-14 lg:px-16 lg:py-16" data-reveal>
+      <div class="pointer-events-none absolute -left-20 -top-28 size-80 rounded-full bg-clinic-blue/50 blur-3xl" aria-hidden="true"></div><div class="pointer-events-none absolute -bottom-36 right-1/3 size-80 rounded-full bg-clinic-cta/25 blur-3xl" aria-hidden="true"></div>
+      <div class="relative grid items-center gap-8 lg:grid-cols-[1fr_auto] lg:gap-12"><div class="max-w-3xl"><span class="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold text-clinic-mint sm:text-sm">الخطوة التالية</span><h2 class="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">ابدأ بسؤال، وخذ وقتك لفهم الخيارات</h2><p class="mt-4 max-w-2xl text-sm leading-8 text-slate-300 sm:text-base sm:leading-9">اكتب استفسارك عبر واتساب لبدء محادثة عامة حول الموعد والمعلومات التي تحتاج إليها.</p></div>
+        <div class="flex flex-col gap-3 sm:flex-row lg:flex-col"><a class="inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-clinic-cta px-6 py-4 text-sm font-extrabold text-white shadow-xl transition hover:-translate-y-0.5 hover:bg-clinic-cta-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-clinic-mint motion-reduce:transform-none" href="https://wa.me/?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%88%D8%B9%D8%AF%20%D9%81%D9%8A%20Elite%20Dental%20Clinic." target="_blank" rel="noopener noreferrer">استفسر عبر واتساب <span aria-hidden="true">←</span></a><a href="#services" class="inline-flex min-h-14 items-center justify-center rounded-full border border-white/20 px-6 py-4 text-sm font-bold text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-clinic-mint">راجع الخدمات</a></div>
+      </div>
+    </div></section>
+  </main>
 
-    try {
-      if (current.context && typeof current.context.revert === 'function') current.context.revert();
-    } catch (error) {
-      console.warn('GSAP context rollback failed; restoring saved inline styles.', error);
-    }
+  <!-- Footer -->
+  <footer class="bg-clinic-navy text-white"><div class="mx-auto max-w-7xl px-4 pb-7 pt-12 sm:px-6 lg:px-8 lg:pb-8 lg:pt-16">
+    <div class="grid gap-8 border-b border-white/15 pb-9 md:grid-cols-[1fr_auto] md:items-start md:gap-12 lg:pb-12"><div class="max-w-xl"><a href="#home" class="inline-flex items-center gap-3"><span class="grid size-11 place-items-center rounded-2xl bg-white/10 text-white">✦</span><span><strong class="block text-base font-extrabold">Elite Dental Clinic</strong><span class="mt-1 block text-xs text-slate-300">عناية تبدأ بالثقة</span></span></a><p class="mt-5 text-sm leading-7 text-slate-300">مساحة رقمية تهتم بوضوح المعلومات وسهولة التصفح وتساعدك على الاستعداد لمناقشة رعاية أسنانك مع المختص.</p></div>
+      <nav aria-label="روابط تذييل الصفحة" class="flex flex-wrap gap-x-5 gap-y-3 text-sm font-semibold text-slate-200"><a class="transition hover:text-clinic-mint" href="#services">الخدمات</a><a class="transition hover:text-clinic-mint" href="#approach">نهجنا</a><a class="transition hover:text-clinic-mint" href="#journey">خطوات العناية</a><a class="transition hover:text-clinic-mint" href="#faq">الأسئلة الشائعة</a><a class="transition hover:text-clinic-mint" href="#contact">تواصل معنا</a></nav>
+    </div><div class="flex flex-col gap-3 pt-6 text-xs leading-6 text-slate-300 sm:flex-row sm:items-center sm:justify-between"><span>© <span data-current-year>2026</span> Elite Dental Clinic</span><span>المحتوى لأغراض العرض فقط، وليس نصيحة طبية.</span></div>
+  </div></footer>
+  <div class="bg-[#081a2b] px-4 py-3 text-center text-[11px] leading-6 text-slate-300">Elite Dental Clinic علامة افتراضية صُممت لأغراض العرض ضمن معرض أعمال Apex Pages. لا تتوفر حجوزات فعلية عبر هذا الموقع.</div>
 
-    restoreOriginalStyles(current);
-
-    if (current.changedLagSmoothing && window.gsap && window.gsap.ticker) {
-      try {
-        window.gsap.ticker.lagSmoothing(500, 33);
-      } catch (error) {
-        console.warn('Could not restore GSAP ticker lag smoothing.', error);
-      }
-    }
-
-    if (enhancement === current) enhancement = null;
-    root.classList.remove('js-enabled');
-    showAll();
-  }
-
-  function cancelPendingLoads() {
-    Array.from(pendingLoads.values()).forEach(cancel => cancel());
-  }
-
-  function cancelScheduledInit() {
-    if (!scheduledInit) return;
-
-    if (scheduledInit.type === 'load') {
-      window.removeEventListener('load', scheduledInit.callback);
-    } else if (scheduledInit.type === 'idle' && typeof window.cancelIdleCallback === 'function') {
-      window.cancelIdleCallback(scheduledInit.id);
-    } else if (scheduledInit.type === 'timeout') {
-      window.clearTimeout(scheduledInit.id);
-    }
-
-    scheduledInit = null;
-  }
-
-  function scheduleEnhancements(options) {
-    const settings = options || {};
-    cancelScheduledInit();
-
-    const run = () => {
-      scheduledInit = null;
-      initEnhancements(settings);
-    };
-
-    if (settings.restoredFromBFCache) {
-      run();
-      return;
-    }
-
-    if (document.readyState !== 'complete') {
-      const onLoad = () => {
-        scheduledInit = null;
-        scheduleEnhancements(settings);
+  <!-- Accessible interaction: mobile menu, current year, and optional reveal motion -->
+  <script>
+    (() => {
+      'use strict';
+      const toggle = document.getElementById('nav-toggle');
+      const nav = document.getElementById('primary-navigation');
+      const menuIcon = document.querySelector('[data-menu-icon]');
+      const closeIcon = document.querySelector('[data-close-icon]');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const setMenuOpen = (open) => {
+        if (!toggle || !nav) return;
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'إغلاق القائمة' : 'فتح القائمة');
+        nav.classList.toggle('hidden', !open);
+        menuIcon?.classList.toggle('hidden', open);
+        closeIcon?.classList.toggle('hidden', !open);
       };
-      scheduledInit = { type: 'load', callback: onLoad };
-      window.addEventListener('load', onLoad, { once: true });
-      return;
-    }
-
-    if (typeof window.requestIdleCallback === 'function') {
-      const id = window.requestIdleCallback(run, { timeout: 1800 });
-      scheduledInit = { type: 'idle', id };
-    } else {
-      const id = window.setTimeout(run, 700);
-      scheduledInit = { type: 'timeout', id };
-    }
-  }
-
-  function cleanupEnhancements() {
-    cancelScheduledInit();
-    generation += 1;
-    cancelPendingLoads();
-    stopFallback();
-
-    if (enhancement) disposeEnhancement(enhancement);
-    root.classList.remove('js-enabled');
-    showAll();
-  }
-
-  function loadScript(src, token) {
-    return new Promise((resolve, reject) => {
-      if (token !== generation) {
-        reject(new Error('Animation library load was cancelled before it started.'));
-        return;
+      if (toggle && nav) {
+        if (window.innerWidth < 768) setMenuOpen(false);
+        toggle.addEventListener('click', () => setMenuOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+        nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenuOpen(false)));
+        document.addEventListener('keydown', (event) => { if (event.key === 'Escape') setMenuOpen(false); });
+        document.addEventListener('click', (event) => { if (toggle.getAttribute('aria-expanded') === 'true' && !nav.contains(event.target) && !toggle.contains(event.target)) setMenuOpen(false); });
+        window.addEventListener('resize', () => { if (window.innerWidth >= 768) setMenuOpen(false); });
       }
-
-      const script = document.createElement('script');
-      let timeoutId = 0;
-      let settled = false;
-
-      const finish = error => {
-        if (settled) return;
-        settled = true;
-        window.clearTimeout(timeoutId);
-        script.removeEventListener('load', onLoad);
-        script.removeEventListener('error', onError);
-        pendingLoads.delete(script);
-
-        if (error) {
-          script.remove();
-          reject(error);
-        } else {
-          resolve();
-        }
-      };
-
-      const onLoad = () => {
-        if (token !== generation) {
-          finish(new Error('Animation library load completed for a stale initialization.'));
-        } else {
-          finish();
-        }
-      };
-      const onError = () => finish(new Error('Could not load animation library: ' + src));
-
-      script.async = true;
-      script.src = src;
-      script.addEventListener('load', onLoad);
-      script.addEventListener('error', onError);
-      timeoutId = window.setTimeout(
-        () => finish(new Error('Timed out loading animation library: ' + src)),
-        SCRIPT_TIMEOUT_MS
-      );
-      pendingLoads.set(script, () => finish(new Error('Animation library load was cancelled.')));
-
-      if (token !== generation) {
-        finish(new Error('Animation library load was cancelled before insertion.'));
-        return;
-      }
-      document.head.appendChild(script);
-    });
-  }
-
-  function startFallback() {
-    stopFallback();
-    root.classList.remove('js-enabled');
-    showAll();
-
-    if (motionQuery.matches || !('IntersectionObserver' in window)) return;
-
-    try {
-      const visibleNow = new Set(targets.filter(element => {
-        const rect = element.getBoundingClientRect();
-        return rect.bottom >= 0 && rect.top <= window.innerHeight;
-      }));
-
-      targets.forEach(element => {
-        if (visibleNow.has(element)) element.classList.add('is-visible');
-        else element.classList.remove('is-visible');
-      });
-
-      fallbackObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            if (fallbackObserver) fallbackObserver.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.12, rootMargin: '0px 0px -35px 0px' });
-
-      targets.forEach(element => fallbackObserver.observe(element));
-      root.classList.add('js-enabled');
-    } catch (error) {
-      stopFallback();
-      root.classList.remove('js-enabled');
-      showAll();
-      console.warn('IntersectionObserver fallback unavailable; all content remains visible.', error);
-    }
-  }
-
-  async function initEnhancements(options) {
-    const restoredFromBFCache = Boolean(options && options.restoredFromBFCache);
-
-    if (enhancement || motionQuery.matches) {
-      if (motionQuery.matches) {
-        root.classList.remove('js-enabled');
-        showAll();
-      }
-      return;
-    }
-
-    stopFallback();
-    root.classList.remove('js-enabled');
-    showAll();
-
-    const token = ++generation;
-    const current = {
-      cleaned: false,
-      context: null,
-      lenis: null,
-      ticker: null,
-      unsubscribe: null,
-      changedLagSmoothing: false,
-      originalStyles: new Map()
-    };
-    enhancement = current;
-
-    try {
-      if (!window.gsap) {
-        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js', token);
-      }
-      if (!window.ScrollTrigger) {
-        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js', token);
-      }
-      if (!window.Lenis) {
-        await loadScript('https://unpkg.com/lenis@1.3.11/dist/lenis.min.js', token);
-      }
-
-      if (token !== generation || enhancement !== current || current.cleaned) return;
-      if (!window.gsap || !window.ScrollTrigger || !window.Lenis) {
-        throw new Error('One or more animation libraries did not expose their expected global.');
-      }
-
-      const gsap = window.gsap;
-      const ScrollTrigger = window.ScrollTrigger;
-      const Lenis = window.Lenis;
-      const heroItems = Array.from(document.querySelectorAll(
-        '.hero-copy .hero-tag,.hero-copy h1,.hero-copy>p,.hero-copy .hero-actions,.hero-copy .hero-proof'
-      ));
-      const revealTargets = Array.from(document.querySelectorAll(
-        '.section-head.reveal,.service-card.reveal,.tech-grid>.reveal,.why-card.reveal,.gallery-item.reveal,.experience-grid>.reveal,.faq-list.reveal,.contact-card.reveal,.trust-item'
-      )).filter(element => !element.closest('.hero-fullscreen'));
-      const imageTargets = Array.from(document.querySelectorAll('.image-reveal'));
-
-      if (!restoredFromBFCache) {
-        const animatedElements = new Set([...heroItems, ...revealTargets, ...imageTargets]);
-        animatedElements.forEach(element => {
-          current.originalStyles.set(
-            element,
-            element.hasAttribute('style') ? element.getAttribute('style') : null
-          );
-        });
-      }
-
-      current.context = gsap.context(() => {}, root);
-      gsap.registerPlugin(ScrollTrigger);
-      root.classList.add('js-enabled');
-
-      if (!restoredFromBFCache) {
-        targets.forEach(element => element.classList.remove('is-visible'));
-        document.querySelectorAll('.hero-copy.reveal').forEach(element => {
-          element.classList.add('is-visible');
-        });
-      }
-
-      current.context.add(() => {
-        if (!restoredFromBFCache) {
-          gsap.set(heroItems, { autoAlpha: 0, y: 18 });
-          gsap.to(heroItems, {
-            autoAlpha: 1,
-            y: 0,
-            duration: 0.72,
-            stagger: 0.12,
-            ease: 'power2.out',
-            delay: 0.12,
-            clearProps: 'transform'
-          });
-
-          revealTargets.forEach(element => {
-            gsap.fromTo(
-              element,
-              { autoAlpha: 0, y: 22 },
-              {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.7,
-                ease: 'power2.out',
-                clearProps: 'transform',
-                scrollTrigger: { trigger: element, start: 'top 88%', once: true }
-              }
-            );
-          });
-
-          imageTargets.forEach(element => {
-            gsap.fromTo(
-              element,
-              { clipPath: 'inset(0 0 10% 0 round 24px)' },
-              {
-                clipPath: 'inset(0 0 0% 0 round 24px)',
-                duration: 0.9,
-                ease: 'power2.out',
-                scrollTrigger: { trigger: element, start: 'top 90%', once: true }
-              }
-            );
-          });
-        }
-
-        const lenis = new Lenis({
-          duration: 1.05,
-          smoothWheel: true,
-          syncTouch: false,
-          anchors: true
-        });
-        current.lenis = lenis;
-
-        const onLenisScroll = () => ScrollTrigger.update();
-        const unsubscribe = lenis.on('scroll', onLenisScroll);
-        current.unsubscribe = typeof unsubscribe === 'function'
-          ? unsubscribe
-          : () => {
-              if (typeof lenis.off === 'function') lenis.off('scroll', onLenisScroll);
-            };
-
-        current.ticker = time => lenis.raf(time * 1000);
-        gsap.ticker.add(current.ticker);
-        gsap.ticker.lagSmoothing(0);
-        current.changedLagSmoothing = true;
-
-        if (restoredFromBFCache && typeof ScrollTrigger.refresh === 'function') {
-          ScrollTrigger.refresh();
-        }
-      });
-    } catch (error) {
-      if (token !== generation || enhancement !== current || current.cleaned) return;
-
-      disposeEnhancement(current);
-      startFallback();
-      console.warn('Animation enhancement unavailable; page content remains visible.', error);
-    }
-  }
-
-  document.querySelectorAll('img').forEach(image => {
-    image.loading = 'lazy';
-    image.decoding = 'async';
-    image.addEventListener('error', () => {
-      image.dataset.imageError = 'true';
-      if (!image.alt.includes('تعذر تحميل الصورة')) {
-        image.alt = image.alt + ' (تعذر تحميل الصورة)';
-      }
-    }, { once: true });
-  });
-
-  window.addEventListener('pagehide', cleanupEnhancements);
-  window.addEventListener('pageshow', event => {
-    if (event.persisted) scheduleEnhancements({ restoredFromBFCache: true });
-  });
-
-  const onMotionPreferenceChange = event => {
-    if (event.matches) cleanupEnhancements();
-    else initEnhancements({ restoredFromBFCache: false });
-  };
-
-  if (typeof motionQuery.addEventListener === 'function') {
-    motionQuery.addEventListener('change', onMotionPreferenceChange);
-  } else if (typeof motionQuery.addListener === 'function') {
-    motionQuery.addListener(onMotionPreferenceChange);
-  }
-
-  const menuToggle = document.querySelector('.menu-toggle');
-  const siteNav = document.querySelector('#site-nav');
-
-  if (menuToggle && siteNav) {
-    const setMenuOpen = open => {
-      siteNav.classList.toggle('open', open);
-      menuToggle.setAttribute('aria-expanded', String(open));
-      menuToggle.setAttribute('aria-label', open ? 'إغلاق القائمة' : 'فتح القائمة');
-      menuToggle.textContent = open ? '×' : '☰';
-    };
-
-    menuToggle.addEventListener('click', () => {
-      setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true');
-    });
-    siteNav.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => setMenuOpen(false));
-    });
-    document.addEventListener('keydown', event => {
-      if (event.key === 'Escape') setMenuOpen(false);
-    });
-    document.addEventListener('click', event => {
-      if (!siteNav.contains(event.target) && !menuToggle.contains(event.target)) {
-        setMenuOpen(false);
-      }
-    });
-  }
-
-  scheduleEnhancements({ restoredFromBFCache: false });
-})();
-</script>
-
-
+      const year = document.querySelector('[data-current-year]');
+      if (year) year.textContent = String(new Date().getFullYear());
+      const targets = Array.from(document.querySelectorAll('[data-reveal]'));
+      if (reducedMotion.matches || !('IntersectionObserver' in window)) return;
+      const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) { entry.target.classList.add('opacity-100', 'translate-y-0'); observer.unobserve(entry.target); }
+      }), { rootMargin: '0px 0px -36px 0px', threshold: 0.08 });
+      targets.forEach((element) => { element.classList.add('opacity-0', 'translate-y-4', 'transition-all', 'duration-700', 'motion-reduce:opacity-100', 'motion-reduce:translate-y-0'); observer.observe(element); });
+      reducedMotion.addEventListener?.('change', (event) => { if (event.matches) { observer.disconnect(); targets.forEach((element) => element.classList.add('opacity-100', 'translate-y-0')); } });
+    })();
+  </script>
 </body>
 </html>

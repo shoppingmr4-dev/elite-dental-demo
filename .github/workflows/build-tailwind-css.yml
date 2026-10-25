@@ -1,0 +1,44 @@
+name: Build Tailwind CSS (UX candidate)
+
+on:
+  push:
+    branches:
+      - upgrade/elite-dental-tailwind-ux
+    paths:
+      - "index.html"
+      - "src/tailwind.css"
+      - "package.json"
+      - ".github/workflows/build-tailwind-css.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build-css:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out candidate branch
+        uses: actions/checkout@v4
+        with:
+          ref: upgrade/elite-dental-tailwind-ux
+          persist-credentials: true
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Tailwind CSS
+        run: npm install --no-package-lock --no-audit --no-fund
+      - name: Compile production stylesheet
+        run: npm run build:css
+      - name: Commit compiled stylesheet to candidate branch
+        shell: bash
+        run: |
+          if git diff --quiet -- assets/css/site.css && git ls-files --error-unmatch assets/css/site.css >/dev/null 2>&1; then
+            echo "The compiled stylesheet is already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/css/site.css
+          git commit -m "build: compile Tailwind stylesheet for UX candidate"
+          git push origin HEAD:upgrade/elite-dental-tailwind-ux
