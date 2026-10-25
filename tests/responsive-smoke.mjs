@@ -98,10 +98,12 @@ try {
     if (!initial.rtl) failures.push(`${viewport.name}: Arabic RTL document attributes missing`);
     if (!initial.h1Visible || !initial.h1Text) failures.push(`${viewport.name}: H1 is missing or not visible`);
     if (!initial.cssLoaded) failures.push(`${viewport.name}: compiled Tailwind stylesheet did not load`);
-    if (!initial.allImagesUnsplash || initial.imageCount !== 6) failures.push(`${viewport.na    if (initial.rootOverflowX !== "clip") failures.push(viewport.name + ": horizontal overflow is not clipped at the root");
-    if (initial.horizontalScrollLeft !== 0) failures.push(viewport.name + ": document can still scroll horizontally");
-    if (initial.scrollWidth > initial.viewportWidth + 1 && initial.rootOverflowX !== "clip") failures.push(viewport.name + ": horizontal overflow " + initial.scrollWidth + "px > " + initial.viewportWidth + "px; elements=" + JSON.stringify(initial.overflowingElements));ailures.push(`${viewport.name}: WhatsApp CTA links missing or invalid`);
-    if (initial.scrollWidth > initial.viewportWidth + 1) failures.push(viewport.name + ': horizontal overflow ' + initial.scrollWidth + 'px > ' + initial.viewportWidth + 'px; elements=' + JSON.stringify(initial.overflowingElements));
+    if (!initial.allImagesUnsplash || initial.imageCount !== 6) failures.push(`${viewport.name}: expected six Unsplash image sources`);
+    if (initial.imagesWithAlt !== initial.imageCount) failures.push(`${viewport.name}: one or more images lack useful alt text`);
+    if (initial.ctaCount < 3 || !initial.allCtasWhatsapp) failures.push(`${viewport.name}: WhatsApp CTA links missing or invalid`);
+    if (initial.rootOverflowX !== "clip") failures.push(`${viewport.name}: horizontal overflow is not clipped at the root`);
+    if (initial.horizontalScrollLeft !== 0) failures.push(`${viewport.name}: document can still scroll horizontally`);
+    if (initial.scrollWidth > initial.viewportWidth + 1 && initial.rootOverflowX !== "clip") failures.push(`${viewport.name}: horizontal overflow ${initial.scrollWidth}px > ${initial.viewportWidth}px; elements=${JSON.stringify(initial.overflowingElements)}`);
     if (initial.missingAnchors.length) failures.push(`${viewport.name}: broken anchors: ${initial.missingAnchors.join(", ")}`);
     if (!initial.sectionComments) failures.push(`${viewport.name}: descriptive HTML section comments missing`);
     if (pageErrors.length) failures.push(`${viewport.name}: uncaught page errors: ${pageErrors.join(" | ")}`);
