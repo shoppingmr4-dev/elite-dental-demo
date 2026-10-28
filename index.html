@@ -12,6 +12,24 @@
   <link rel="preload" href="assets/fonts/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCRXMRrKATtYV0.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/fonts/local-fonts.css">
   <link rel="stylesheet" href="assets/css/site.css">
+  <style>
+    .hero-photo-wash{background-image:linear-gradient(112deg,rgba(248,251,253,.97) 4%,rgba(248,251,253,.88) 56%,rgba(248,251,253,.74) 100%),url("https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1600&q=80");background-position:center;background-size:cover}
+    .clinic-glass{background:rgba(255,255,255,.78)!important;border-color:rgba(255,255,255,.88)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+    .premium-card{background:rgba(255,255,255,.88);border:1px solid rgba(220,231,239,.95);box-shadow:0 12px 36px rgba(16,43,67,.07);transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease}
+    .premium-card:hover{transform:translateY(-5px);border-color:rgba(8,127,91,.35);box-shadow:0 20px 46px rgba(16,43,67,.13)}
+    .team-photo{aspect-ratio:4/3;object-fit:cover;object-position:center 30%;transition:transform .6s ease}
+    .team-card:hover .team-photo{transform:scale(1.035)}
+    .reveal-pending{opacity:0;transform:translate3d(0,22px,0);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.75,.25,1)}
+    .reveal-pending.reveal-visible{opacity:1;transform:translate3d(0,0,0)}
+    .floating-contact{position:fixed;z-index:60;right:calc(1rem + env(safe-area-inset-right,0px));bottom:calc(1rem + env(safe-area-inset-bottom,0px));display:grid;width:60px;height:60px;place-items:center;border:1px solid rgba(255,255,255,.8);border-radius:9999px;background:#20bd63;color:#fff;box-shadow:0 12px 30px rgba(8,90,53,.28);transition:transform .22s ease,box-shadow .22s ease}
+    .floating-contact:hover{transform:translateY(-3px) scale(1.035);box-shadow:0 16px 34px rgba(8,90,53,.34)}
+    .floating-contact:focus-visible{outline:3px solid #102b43;outline-offset:4px}
+    [data-testimonial] summary{list-style:none}
+    [data-testimonial] summary::-webkit-details-marker{display:none}
+    [data-testimonial][open] .testimonial-chevron{transform:rotate(180deg)}
+    @media(prefers-reduced-motion:reduce){.reveal-pending{opacity:1;transform:none;transition:none}.premium-card,.team-photo,.floating-contact{transition:none}.premium-card:hover,.floating-contact:hover,.team-card:hover .team-photo{transform:none}}
+  </style>
+
 </head>
 <body class="bg-clinic-paper font-sans text-clinic-ink antialiased selection:bg-clinic-mint selection:text-clinic-navy">
   <a href="#main-content" class="sr-only z-50 rounded-xl bg-white px-5 py-3 text-clinic-navy shadow-lg focus:not-sr-only focus:fixed focus:right-4 focus:top-4">تجاوز إلى المحتوى</a>
@@ -21,7 +39,7 @@
 
   <!-- Header & Responsive Navigation -->
   <header class="sticky top-0 z-40 border-b border-clinic-line/80 bg-white/95 shadow-sm shadow-clinic-navy/5 backdrop-blur-xl">
-    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:flex-nowrap lg:px-8">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6 xl:flex-nowrap lg:px-8">
       <a href="#home" class="inline-flex items-center gap-3" aria-label="Elite Dental Clinic — الرئيسية">
         <span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-clinic-navy text-white shadow-lg shadow-clinic-navy/15 sm:size-12" aria-hidden="true"><svg viewBox="0 0 24 24" class="size-7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5c-2.8 0-4 2.4-3.2 5.2l2.7 9.2c.6 2.1 2.2 2.8 3.1.5l1.2-3.2c.4-1.1 1.8-1.1 2.2 0l1.2 3.2c.9 2.3 2.5 1.6 3.1-.5L20 8.7c.8-2.8-.4-5.2-3.2-5.2-1.9 0-3.1 1.2-4.8 1.2S8.9 3.5 7 3.5Z"/></svg></span>
         <span><strong class="block text-sm font-extrabold tracking-tight text-clinic-navy sm:text-base">Elite Dental Clinic</strong><span class="block text-[11px] text-clinic-muted sm:text-xs">رعاية تبدأ بالثقة</span></span>
@@ -30,9 +48,11 @@
         <svg data-menu-icon viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         <svg data-close-icon viewBox="0 0 24 24" class="hidden size-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg>
       </button>
-      <nav id="primary-navigation" aria-label="التنقل الرئيسي" class="hidden w-full flex-col gap-1 pb-2 pt-2 text-sm font-semibold text-clinic-muted md:flex md:w-auto md:flex-row md:items-center md:gap-1 md:pb-0 md:pt-0">
+      <nav id="primary-navigation" aria-label="التنقل الرئيسي" class="hidden w-full flex-col gap-1 pb-2 pt-2 text-sm font-semibold text-clinic-muted md:flex md:w-auto md:flex-row md:flex-wrap md:items-center md:gap-1 md:pb-0 md:pt-0 xl:flex-nowrap">
         <a class="rounded-full px-3 py-2.5 transition hover:bg-clinic-paper hover:text-clinic-navy focus-visible:outline-2 focus-visible:outline-clinic-cta" href="#services">الخدمات</a>
         <a class="rounded-full px-3 py-2.5 transition hover:bg-clinic-paper hover:text-clinic-navy focus-visible:outline-2 focus-visible:outline-clinic-cta" href="#approach">نهجنا</a>
+        <a class="rounded-full px-2 py-2.5 text-xs transition hover:bg-clinic-paper hover:text-clinic-navy focus-visible:outline-2 focus-visible:outline-clinic-cta" href="#doctors">الفريق الطبي</a>
+        <a class="rounded-full px-2 py-2.5 text-xs transition hover:bg-clinic-paper hover:text-clinic-navy focus-visible:outline-2 focus-visible:outline-clinic-cta" href="#reviews">آراء المراجعين</a>
         <a class="rounded-full px-3 py-2.5 transition hover:bg-clinic-paper hover:text-clinic-navy focus-visible:outline-2 focus-visible:outline-clinic-cta" href="#journey">خطوات العناية</a>
         <a class="rounded-full px-3 py-2.5 transition hover:bg-clinic-paper hover:text-clinic-navy focus-visible:outline-2 focus-visible:outline-clinic-cta" href="#faq">الأسئلة الشائعة</a>
         <a class="rounded-full px-3 py-2.5 transition hover:bg-clinic-paper hover:text-clinic-navy focus-visible:outline-2 focus-visible:outline-clinic-cta" href="#contact">تواصل معنا</a>
@@ -44,6 +64,7 @@
   <main id="main-content">
     <!-- Hero Section -->
     <section id="home" class="relative isolate overflow-hidden bg-white">
+      <div class="hero-photo-wash pointer-events-none absolute inset-0 -z-10 opacity-35" aria-hidden="true"></div>
       <div class="pointer-events-none absolute right-0 -top-32 -z-10 size-[28rem] rounded-full bg-clinic-mint/65 blur-3xl" aria-hidden="true"></div>
       <div class="pointer-events-none absolute -bottom-40 -left-32 -z-10 size-[30rem] rounded-full bg-clinic-sky/75 blur-3xl" aria-hidden="true"></div>
       <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.02fr_0.98fr] lg:gap-16 lg:px-8 lg:py-24">
@@ -98,6 +119,65 @@
     </div></section>
 
     <!-- Care Journey Section -->
+    <!-- Team Section: illustrative placeholders, not real staff profiles -->
+    <section id="doctors" class="scroll-mt-28 bg-white py-20 sm:py-24 lg:py-32">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-12 max-w-3xl text-center sm:mb-16" data-reveal>
+          <span class="inline-flex rounded-full bg-clinic-mint px-4 py-2 text-xs font-extrabold text-clinic-cta-dark sm:text-sm">الفريق الطبي</span>
+          <h2 class="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-clinic-navy sm:text-4xl lg:text-5xl">تعرّف على من يرافقك في رحلة العناية</h2>
+          <p class="mx-auto mt-5 max-w-2xl text-base leading-8 text-clinic-muted sm:text-lg sm:leading-9">تُعرض هنا ملفات تعريفية للفريق بعد اعتماد المعلومات المهنية. الصور والبطاقات الحالية توضيحية فقط ولا تمثل أطباء أو مؤهلات حقيقية.</p>
+        </div>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
+          <article class="team-card premium-card group overflow-hidden rounded-[1.75rem]" data-reveal>
+            <div class="relative overflow-hidden bg-clinic-sky"><img class="team-photo w-full" src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=760&q=80" alt="صورة توضيحية لشخص يعمل في الرعاية الصحية" width="760" height="570" loading="lazy" decoding="async"><span class="absolute right-4 top-4 rounded-full border border-white/80 bg-white/85 px-3 py-1.5 text-xs font-extrabold text-clinic-navy backdrop-blur">صورة توضيحية</span></div>
+            <div class="p-6 sm:p-7"><span class="inline-flex rounded-full bg-clinic-sky px-3 py-1.5 text-xs font-bold text-clinic-blue">ملف تعريفي تجريبي</span><h3 class="mt-4 text-xl font-extrabold text-clinic-navy">طب الأسنان العام</h3><p class="mt-2 text-sm leading-7 text-clinic-muted">يُضاف الاسم والمؤهل والترخيص المهني المعتمد هنا بعد التحقق من البيانات.</p><p class="mt-4 border-t border-clinic-line pt-4 text-xs leading-6 text-clinic-muted">هذا الملف توضيحي وليس سيرة طبيب حقيقي.</p></div>
+          </article>
+          <article class="team-card premium-card group overflow-hidden rounded-[1.75rem]" data-reveal>
+            <div class="relative overflow-hidden bg-clinic-sky"><img class="team-photo w-full" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=760&q=80" alt="صورة توضيحية لمقدم رعاية صحية" width="760" height="570" loading="lazy" decoding="async"><span class="absolute right-4 top-4 rounded-full border border-white/80 bg-white/85 px-3 py-1.5 text-xs font-extrabold text-clinic-navy backdrop-blur">صورة توضيحية</span></div>
+            <div class="p-6 sm:p-7"><span class="inline-flex rounded-full bg-clinic-sky px-3 py-1.5 text-xs font-bold text-clinic-blue">ملف تعريفي تجريبي</span><h3 class="mt-4 text-xl font-extrabold text-clinic-navy">تجميل الابتسامة</h3><p class="mt-2 text-sm leading-7 text-clinic-muted">تُضاف الخبرات والتخصصات الفعلية بعد مراجعة المستندات والموافقة على النشر.</p><p class="mt-4 border-t border-clinic-line pt-4 text-xs leading-6 text-clinic-muted">هذا الملف توضيحي وليس سيرة طبيب حقيقي.</p></div>
+          </article>
+          <article class="team-card premium-card group overflow-hidden rounded-[1.75rem] sm:col-span-2 lg:col-span-1" data-reveal>
+            <div class="relative overflow-hidden bg-clinic-sky"><img class="team-photo w-full" src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=760&q=80" alt="صورة توضيحية لشخص ضمن فريق رعاية صحية" width="760" height="570" loading="lazy" decoding="async"><span class="absolute right-4 top-4 rounded-full border border-white/80 bg-white/85 px-3 py-1.5 text-xs font-extrabold text-clinic-navy backdrop-blur">صورة توضيحية</span></div>
+            <div class="p-6 sm:p-7"><span class="inline-flex rounded-full bg-clinic-sky px-3 py-1.5 text-xs font-bold text-clinic-blue">ملف تعريفي تجريبي</span><h3 class="mt-4 text-xl font-extrabold text-clinic-navy">الرعاية الوقائية</h3><p class="mt-2 text-sm leading-7 text-clinic-muted">تُستبدل هذه المساحة ببيانات الفريق الصحي المعتمدة قبل استخدام الموقع فعليًا.</p><p class="mt-4 border-t border-clinic-line pt-4 text-xs leading-6 text-clinic-muted">هذا الملف توضيحي وليس سيرة طبيب حقيقي.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive testimonials: no fabricated names, ratings, or quotes -->
+    <section id="reviews" class="scroll-mt-28 bg-clinic-paper py-20 sm:py-24 lg:py-32">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-12 max-w-3xl text-center sm:mb-16" data-reveal>
+          <span class="inline-flex rounded-full bg-white px-4 py-2 text-xs font-extrabold text-clinic-blue shadow-sm sm:text-sm">آراء المراجعين</span>
+          <h2 class="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-clinic-navy sm:text-4xl lg:text-5xl">تجارب حقيقية، عندما تصبح موثّقة</h2>
+          <p class="mx-auto mt-5 max-w-2xl text-base leading-8 text-clinic-muted sm:text-lg sm:leading-9">هذه بطاقات تفاعلية جاهزة للمحتوى المعتمد. لن نعرض أسماء أو اقتباسات أو تقييمات مختلقة؛ تُنشر آراء المراجعين بعد التحقق والحصول على موافقتهم.</p>
+        </div>
+        <div class="grid gap-5 lg:grid-cols-3 lg:gap-7">
+          <details data-testimonial class="premium-card rounded-[1.75rem] p-6 sm:p-7" data-reveal>
+            <summary class="flex cursor-pointer items-start justify-between gap-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-clinic-cta">
+              <span><span class="inline-flex rounded-full bg-clinic-mint px-3 py-1.5 text-xs font-extrabold text-clinic-cta-dark">بانتظار التوثيق</span><strong class="mt-4 block text-lg font-extrabold text-clinic-navy">تجربة زيارة العيادة</strong><span class="mt-2 block text-sm leading-7 text-clinic-muted">مساحة مخصّصة لتجربة مراجعة موثّقة.</span></span>
+              <span class="testimonial-chevron mt-1 grid size-9 shrink-0 place-items-center rounded-full bg-white text-clinic-blue transition" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="mt-5 border-t border-clinic-line pt-4"><p class="text-sm leading-7 text-clinic-muted">سيظهر نص المراجعة هنا بعد استلامه والتحقق من صحته والحصول على إذن صاحبه للنشر.</p><p class="mt-3 text-xs font-bold text-clinic-muted">الاسم والتقييم: لا يُعرضان قبل التحقق والموافقة.</p></div>
+          </details>
+          <details data-testimonial class="premium-card rounded-[1.75rem] p-6 sm:p-7" data-reveal>
+            <summary class="flex cursor-pointer items-start justify-between gap-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-clinic-cta">
+              <span><span class="inline-flex rounded-full bg-clinic-mint px-3 py-1.5 text-xs font-extrabold text-clinic-cta-dark">بانتظار التوثيق</span><strong class="mt-4 block text-lg font-extrabold text-clinic-navy">تجربة شرح الخيارات</strong><span class="mt-2 block text-sm leading-7 text-clinic-muted">مساحة مخصّصة لتجربة مراجعة موثّقة.</span></span>
+              <span class="testimonial-chevron mt-1 grid size-9 shrink-0 place-items-center rounded-full bg-white text-clinic-blue transition" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="mt-5 border-t border-clinic-line pt-4"><p class="text-sm leading-7 text-clinic-muted">يُضاف الاقتباس الحقيقي بعد موافقة المراجع، مع توضيح أي تعديل لغوي لا يغيّر المعنى.</p><p class="mt-3 text-xs font-bold text-clinic-muted">الاسم والتقييم: لا يُعرضان قبل التحقق والموافقة.</p></div>
+          </details>
+          <details data-testimonial class="premium-card rounded-[1.75rem] p-6 sm:p-7" data-reveal>
+            <summary class="flex cursor-pointer items-start justify-between gap-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-clinic-cta">
+              <span><span class="inline-flex rounded-full bg-clinic-mint px-3 py-1.5 text-xs font-extrabold text-clinic-cta-dark">بانتظار التوثيق</span><strong class="mt-4 block text-lg font-extrabold text-clinic-navy">تجربة التواصل والحجز</strong><span class="mt-2 block text-sm leading-7 text-clinic-muted">مساحة مخصّصة لتجربة مراجعة موثّقة.</span></span>
+              <span class="testimonial-chevron mt-1 grid size-9 shrink-0 place-items-center rounded-full bg-white text-clinic-blue transition" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="mt-5 border-t border-clinic-line pt-4"><p class="text-sm leading-7 text-clinic-muted">يمكن نشر التقييم فقط بعد التحقق من مصدره وتأكيد موافقة صاحبه على النص الظاهر.</p><p class="mt-3 text-xs font-bold text-clinic-muted">الاسم والتقييم: لا يُعرضان قبل التحقق والموافقة.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
     <section id="journey" class="scroll-mt-28 py-20 sm:py-24 lg:py-32"><div class="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
       <div class="order-2 lg:order-1" data-reveal><span class="inline-flex rounded-full bg-clinic-mint px-4 py-2 text-xs font-extrabold text-clinic-cta-dark sm:text-sm">خطوات العناية</span><h2 class="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-clinic-navy sm:text-4xl lg:text-5xl">اعرف خطوتك التالية ببساطة</h2><p class="mt-5 text-base leading-8 text-clinic-muted sm:text-lg sm:leading-9">ابدأ بسؤال، ثم اطلب المعلومات التي تحتاجها لمناقشة الخيارات المناسبة مع طبيب الأسنان.</p>
         <ol class="mt-8 space-y-6 sm:mt-10 sm:space-y-7"><li class="flex gap-4"><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-clinic-navy text-sm font-extrabold text-white">١</span><div><h3 class="text-base font-extrabold text-clinic-navy sm:text-lg">ابدأ بالاستفسار</h3><p class="mt-1 text-sm leading-7 text-clinic-muted">أرسل سؤالك العام عبر واتساب لمعرفة معلومات الموعد المتاحة.</p></div></li><li class="flex gap-4"><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-clinic-navy text-sm font-extrabold text-white">٢</span><div><h3 class="text-base font-extrabold text-clinic-navy sm:text-lg">ناقش احتياجاتك</h3><p class="mt-1 text-sm leading-7 text-clinic-muted">جهّز أسئلتك واطلب توضيح المصطلحات غير المفهومة.</p></div></li><li class="flex gap-4"><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-clinic-navy text-sm font-extrabold text-white">٣</span><div><h3 class="text-base font-extrabold text-clinic-navy sm:text-lg">افهم الخيارات قبل القرار</h3><p class="mt-1 text-sm leading-7 text-clinic-muted">ناقش الفوائد والمخاطر والبدائل والتكلفة مع المختص بعد التقييم.</p></div></li></ol>
@@ -162,11 +242,15 @@
       const targets = Array.from(document.querySelectorAll('[data-reveal]'));
       if (reducedMotion.matches || !('IntersectionObserver' in window)) return;
       const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
-        if (entry.isIntersecting) { entry.target.classList.add('opacity-100'); observer.unobserve(entry.target); }
+        if (entry.isIntersecting) { entry.target.classList.add('reveal-visible'); observer.unobserve(entry.target); }
       }), { rootMargin: '0px 0px -36px 0px', threshold: 0.08 });
-      targets.forEach((element) => { element.classList.add('opacity-0', 'transition-opacity', 'duration-500', 'motion-reduce:opacity-100'); observer.observe(element); });
-      reducedMotion.addEventListener?.('change', (event) => { if (event.matches) { observer.disconnect(); targets.forEach((element) => element.classList.add('opacity-100')); } });
+      targets.forEach((element) => { element.classList.add('reveal-pending'); observer.observe(element); });
+      reducedMotion.addEventListener?.('change', (event) => { if (event.matches) { observer.disconnect(); targets.forEach((element) => element.classList.add('reveal-visible')); } });
     })();
   </script>
+
+  <a class="floating-contact" href="https://wa.me/?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%88%D8%B9%D8%AF%20%D9%81%D9%8A%20Elite%20Dental%20Clinic." target="_blank" rel="noopener noreferrer" aria-label="ابدأ استفسارًا عبر واتساب">
+    <svg viewBox="0 0 24 24" width="29" height="29" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.3 11.7a8.1 8.1 0 0 1-11.9 7.1L4 20l1.2-4.1A8.1 8.1 0 1 1 20.3 11.7Z"/><path d="M8.6 8.1c.2-.4.4-.4.7-.4h.4c.2 0 .3.1.4.4l.6 1.4c.1.2.1.3 0 .5l-.5.6c-.1.2-.2.3 0 .5.5.9 1.2 1.5 2.1 2 .2.1.4.1.5-.1l.7-.8c.1-.2.3-.2.5-.1l1.3.6c.2.1.3.2.3.4 0 .4-.2 1-.6 1.3-.4.4-1 .6-1.6.5-1-.2-2.2-.8-3.3-1.7-1.1-1-1.9-2.2-2.1-3.1-.2-.8.1-1.5.6-2Z"/></svg>
+  </a>
 </body>
 </html>
