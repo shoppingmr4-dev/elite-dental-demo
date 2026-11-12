@@ -108,7 +108,7 @@ button{font:inherit}
 @media(max-width:980px){.nav{gap:15px}.hero-grid{gap:28px}.hero-art{min-height:440px}.float-card.first{right:-3%}.float-card.second{left:-4%}}
 @media(max-width:760px){
  .topline{height:auto;min-height:34px;font-size:10px}
- .header-inner{height:72px;gap:12px}.nav{display:none}.header-actions{margin-inline-start:auto}.header-actions .contact-btn{min-height:42px;padding:0 12px;font-size:11px}.menu{display:block}
+ .header-inner{height:72px;gap:12px;position:relative}.nav{position:absolute;top:calc(100% + 1px);right:0;left:0;display:none;flex-direction:column;align-items:stretch;gap:2px;padding:12px;border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:0 16px 40px rgba(16,45,80,.13)}.nav a{padding:11px 13px;border-radius:10px}.header-actions{margin-inline-start:auto}.header-actions .contact-btn{min-height:42px;padding:0 12px;font-size:11px}.menu{display:block}
  .hero{min-height:unset}.hero-grid{grid-template-columns:1fr;gap:10px;padding-block:47px 94px}
  .hero-copy{max-width:660px;margin-inline:auto;text-align:center}
  .eyebrow{font-size:10px}.hero h1{margin:20px auto 14px;font-size:clamp(35px,9vw,53px);line-height:1.38}
@@ -123,7 +123,7 @@ button{font:inherit}
  .disclosure{font-size:9px;line-height:1.8}
 }
 @media(max-width:760px){.approach{padding:49px 0}.steps{grid-template-columns:1fr;gap:9px}.step{min-height:unset;padding:17px}.step h3{margin-top:10px}.contact-panel{padding-bottom:35px}.contact-inner{align-items:flex-start;flex-direction:column;padding:21px}.contact-label{align-self:stretch;text-align:center}}
-@media(max-width:420px){:root{--gutter:18px}.brand-mark{width:39px;height:39px}.brand-copy strong{font-size:12px}.brand-copy small{font-size:9px}.header-actions .contact-btn{padding:0 10px}.hero-grid{padding-top:40px}.hero-art{min-height:330px}.float-card b{font-size:10px}.float-card small{font-size:8px}.float-card .icon{width:28px;height:28px}.actions{gap:8px}.primary-btn,.secondary-btn{padding-inline:13px}.micro-trust{font-size:9px}}
+@media(max-width:420px){.header-actions .contact-btn{width:42px;padding:0;font-size:0;gap:0}.header-actions .contact-btn svg{flex:none}:root{--gutter:18px}.brand-mark{width:39px;height:39px}.brand-copy strong{font-size:12px}.brand-copy small{font-size:9px}.header-actions .contact-btn{padding:0 10px}.hero-grid{padding-top:40px}.hero-art{min-height:330px}.float-card b{font-size:10px}.float-card small{font-size:8px}.float-card .icon{width:28px;height:28px}.actions{gap:8px}.primary-btn,.secondary-btn{padding-inline:13px}.micro-trust{font-size:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.tooth-stage{animation:none}*{transition-duration:.01ms!important}}
 </style>
 </head>
