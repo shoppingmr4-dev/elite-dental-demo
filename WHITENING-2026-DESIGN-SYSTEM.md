@@ -50,8 +50,8 @@ The prior blue-gradient / teal-lime concepts are superseded. Do not reintroduce 
 
 - Hero image: Kaboompics / Pexels, photo ID 6627598 — close-up still-life of a dental shade guide. Pexels listing states free use and original dimensions 6720 × 4480.
 - Source page: https://www.pexels.com/photo/samples-of-teeth-6627598/
-- The image illustrates a shade-selection tool; it is not a patient before/after result or proof of clinical outcome.
-- Hero image is placed as a photographic editorial panel with art-directed crop and graphic framing. It is requested at 1600px width for reasonable transfer size, with its original 3:2 ratio declared. It must not look like an unrelated stock-image card.
+- The image is illustrative stock photography; it is not the actual dentist or staff of the fictional demo clinic and must not be presented as such.
+- Hero image is placed as a photographic editorial panel with art-directed crop and graphic framing. It is requested at 1500px width for reasonable transfer size, with its portrait aspect ratio declared. It must not look like an unrelated stock-image card.
 - Do not use identifiable patients, fake clinicians, before/after imagery, or stock photos as testimonials.
 
 ## Current page architecture
@@ -108,5 +108,5 @@ This is a staged visual approval page, not yet the full production landing page.
 ## Current QA record
 
 - Latest source inspection confirmed Arabic RTL, local font stylesheet use, three content sections, responsive breakpoints, mobile navigation handling, reduced-motion support, and no broken in-page anchors in the preceding revision.
-- The latest revision uses a compressed Pexels shade-guide image, a custom tooth-and-sparkle mark, entrance motion, keyboard focus styling, and a refreshed editorial visual direction. It has not yet had a browser-rendered screenshot review, Playwright run, or Lighthouse run in this session.
+- The latest revision uses a compressed Pexels male dentist portrait, a custom tooth-and-sparkle mark, entrance motion, keyboard focus styling, and a refreshed editorial visual direction. It has not yet had a browser-rendered screenshot review, Playwright run, or Lighthouse run in this session.
 - The main branch homepage must remain byte-for-byte unchanged.
