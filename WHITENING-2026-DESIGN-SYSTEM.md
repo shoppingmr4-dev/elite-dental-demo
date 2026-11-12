@@ -108,5 +108,5 @@ This is a staged visual approval page, not yet the full production landing page.
 ## Current QA record
 
 - Latest source inspection confirmed Arabic RTL, local font stylesheet use, three content sections, responsive breakpoints, mobile navigation handling, reduced-motion support, and no broken in-page anchors in the preceding revision.
-- The latest revision uses a compressed Pexels shade-guide image, a custom sparkle mark, entrance motion, keyboard focus styling, and a refreshed editorial visual direction. It has not yet had a browser-rendered screenshot review, Playwright run, or Lighthouse run in this session.
+- The latest revision uses a compressed Pexels shade-guide image, a custom tooth-and-sparkle mark, entrance motion, keyboard focus styling, and a refreshed editorial visual direction. It has not yet had a browser-rendered screenshot review, Playwright run, or Lighthouse run in this session.
 - The main branch homepage must remain byte-for-byte unchanged.
