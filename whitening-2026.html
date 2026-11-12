@@ -88,6 +88,21 @@ button{font:inherit}
 .foot-note{display:flex;align-items:center;gap:9px;color:#6F879E;font-size:10px}
 .foot-note svg{width:17px;height:17px;color:#4D96C8;flex:none}
 .foot-index{color:#91AAC0;font-family:var(--display);font-size:10px;font-weight:800;letter-spacing:.16em;direction:ltr}
+.approach{padding:66px 0 72px;background:#fff;border-top:1px solid #E3EFF8}
+.approach-head{max-width:700px;margin:0 auto 30px;text-align:center}
+.approach-head .tag{display:inline-block;color:#2879C6;font-size:10px;font-weight:800;letter-spacing:.12em}
+.approach-head h2{margin:11px 0 8px;color:var(--navy);font-family:var(--display);font-size:clamp(25px,3vw,36px);line-height:1.45}
+.approach-head p{margin:0;color:#6B839A;font-size:13px;line-height:1.95}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.step{min-height:150px;padding:22px;border:1px solid #E0EDF7;border-radius:19px;background:linear-gradient(150deg,#fff,#F5FAFF)}
+.step-num{display:grid;place-items:center;width:31px;height:31px;border-radius:10px;background:#E5F2FC;color:#2879C6;font-family:var(--display);font-size:11px;font-weight:800;direction:ltr}
+.step h3{margin:14px 0 6px;color:var(--navy);font-family:var(--display);font-size:14px}
+.step p{margin:0;color:#6D8398;font-size:11px;line-height:1.9}
+.contact-panel{padding:0 0 54px;background:#fff}
+.contact-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:25px 28px;border:1px solid #D8EAF7;border-radius:20px;background:#F0F8FE}
+.contact-inner h2{margin:0 0 5px;color:var(--navy);font-family:var(--display);font-size:17px}
+.contact-inner p{margin:0;color:#6C8398;font-size:11px;line-height:1.8}
+.contact-label{flex:none;padding:11px 15px;border:1px solid #C5E8D0;border-radius:12px;background:#E5F8EC;color:#14663A;font-size:11px;font-weight:800}
 .disclosure{padding:13px 20px;text-align:center;color:#7B90A4;background:#fff;font-size:10px;border-top:1px solid #E4EEF6}
 @keyframes float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-10px) rotate(1deg)}}
 @media(max-width:980px){.nav{gap:15px}.hero-grid{gap:28px}.hero-art{min-height:440px}.float-card.first{right:-3%}.float-card.second{left:-4%}}
@@ -107,6 +122,7 @@ button{font:inherit}
  .hero-foot-inner{min-height:62px;justify-content:center}.foot-note{font-size:9px;text-align:center}.foot-index{display:none}
  .disclosure{font-size:9px;line-height:1.8}
 }
+@media(max-width:760px){.approach{padding:49px 0}.steps{grid-template-columns:1fr;gap:9px}.step{min-height:unset;padding:17px}.step h3{margin-top:10px}.contact-panel{padding-bottom:35px}.contact-inner{align-items:flex-start;flex-direction:column;padding:21px}.contact-label{align-self:stretch;text-align:center}}
 @media(max-width:420px){:root{--gutter:18px}.brand-mark{width:39px;height:39px}.brand-copy strong{font-size:12px}.brand-copy small{font-size:9px}.header-actions .contact-btn{padding:0 10px}.hero-grid{padding-top:40px}.hero-art{min-height:330px}.float-card b{font-size:10px}.float-card small{font-size:8px}.float-card .icon{width:28px;height:28px}.actions{gap:8px}.primary-btn,.secondary-btn{padding-inline:13px}.micro-trust{font-size:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.tooth-stage{animation:none}*{transition-duration:.01ms!important}}
 </style>
@@ -121,7 +137,7 @@ button{font:inherit}
    <span class="brand-copy"><strong>ELITE DENTAL</strong><small>TEETH WHITENING</small></span>
   </a>
   <nav class="nav" aria-label="التنقل الرئيسي">
-   <a href="#top">الرئيسية</a><a href="#approach">نهج التقييم</a><a href="#options">خيارات التبييض</a><a href="#faq">أسئلة شائعة</a>
+   <a href="#top">الرئيسية</a><a href="#approach">كيف نبدأ؟</a><a href="#contact">التواصل</a>
   </nav>
   <div class="header-actions">
    <a class="contact-btn" href="#contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 11.7a8.2 8.2 0 0 1-12.1 7.2L4 20l1.1-4A8.2 8.2 0 1 1 20.2 11.7Z"/><path d="M9 9.1c.4 2.1 2 3.7 4.1 4.1l1.2-1.1 2 .9c-.1 1.2-1 2-2.2 2-3.4-.2-6.8-3.6-7-7 0-1.2.8-2.1 2-2.2l.9 2L9 9.1Z"/></svg>تواصل عبر واتساب</a>
@@ -176,7 +192,27 @@ button{font:inherit}
  </div>
  <div class="hero-foot"><div class="wrap hero-foot-inner"><span class="foot-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>النتائج تختلف حسب الحالة، ويحدد الطبيب مدى ملاءمة التبييض بعد الفحص.</span><span class="foot-index">ELITE / WHITENING</span></div></div>
 </section>
+<section class="approach" id="approach">
+ <div class="wrap">
+  <div class="approach-head">
+   <span class="tag">A CLEAR, CONSIDERED PROCESS</span>
+   <h2>الخطوة الصحيحة تبدأ بفهم الحالة</h2>
+   <p>لا توجد طريقة واحدة تناسب الجميع. يبدأ القرار بفحص الأسنان واللثة، ثم شرح الخيارات والاعتبارات المرتبطة بها.</p>
+  </div>
+  <div class="steps">
+   <article class="step"><span class="step-num">01</span><h3>تقييم صحة الفم</h3><p>فحص الأسنان واللثة ومناقشة الحساسية أو الترميمات الموجودة.</p></article>
+   <article class="step"><span class="step-num">02</span><h3>فهم الخيارات</h3><p>شرح ما يمكن أن يقدمه التبييض وما لا يمكنه تغييره، مع توضيح الآثار المحتملة.</p></article>
+   <article class="step"><span class="step-num">03</span><h3>اختيار الخطوة التالية</h3><p>تحديد ما إذا كان التبييض مناسباً، أو مناقشة بدائل أخرى مع طبيب الأسنان.</p></article>
+  </div>
+ </div>
+</section>
+<section class="contact-panel" id="contact">
+ <div class="wrap contact-inner">
+  <div><h2>جاهز لمعرفة الخيارات المناسبة لك؟</h2><p>هذه معاينة تصميم فقط. يُفعّل التواصل عبر واتساب بعد إضافة رقم العيادة الحقيقي وموافقة صاحبها.</p></div>
+  <span class="contact-label">قناة التواصل تُضاف قبل النشر</span>
+ </div>
+</section>
 </main>
-<div class="disclosure">نموذج تصميم تجريبي من Apex Studio — لا يمثل عيادة حقيقية أو نتائج علاجية أو توصية طبية فردية.</div>
+<div class="disclosure" id="demo-note">نموذج تصميم تجريبي من Apex Studio — لا يمثل عيادة حقيقية أو نتائج علاجية أو توصية طبية فردية.</div>نموذج تصميم تجريبي من Apex Studio — لا يمثل عيادة حقيقية أو نتائج علاجية أو توصية طبية فردية.</div>
 </body>
 </html>
