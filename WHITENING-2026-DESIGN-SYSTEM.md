@@ -48,17 +48,17 @@ The prior blue-gradient / teal-lime concepts are superseded. Do not reintroduce 
 
 ## Image direction
 
-- Hero image: Kaboompics / Pexels, photo ID 6627598 — close-up still-life of a dental shade guide. Pexels listing states free use and original dimensions 6720 × 4480.
-- Source page: https://www.pexels.com/photo/samples-of-teeth-6627598/
-- The image is illustrative stock photography; it is not the actual dentist or staff of the fictional demo clinic and must not be presented as such.
-- Hero image is placed as a photographic editorial panel with art-directed crop and graphic framing. It is requested at 1500px width for reasonable transfer size, with its portrait aspect ratio declared. It must not look like an unrelated stock-image card.
-- Do not use identifiable patients, fake clinicians, before/after imagery, or stock photos as testimonials.
+- Hero image: Emily Gaibor / Pexels, photo ID 37458050 — illustrative portrait of a male dentist standing in a modern dental office. The Pexels listing identifies the photo as free to use and reports original dimensions of 4000 × 6000.
+- Source page: https://www.pexels.com/photo/dentist-in-a-modern-dental-office-37458050/
+- This is stock photography for the demo only. It is not the actual dentist or staff of the fictional clinic and must not be presented as such.
+- Hero image is placed as a photographic editorial panel with an art-directed crop and graphic framing. The page requests a 1500px-wide compressed version and declares its 2:3 portrait ratio.
+- Do not use identifiable patients, fake before/after imagery, or stock photos as testimonials.
 
 ## Current page architecture
 
 1. Slim announcement strip.
 2. Minimal branded navigation with a mobile menu.
-3. Editorial hero: bold Arabic headline, explanation, one dominant assessment CTA, photo composition, and short clinical notes.
+3. Editorial hero: bold Arabic headline, explanation, one dominant assessment CTA, male dentist portrait photo composition, and short clinical notes.
 4. Short assessment approach: understand the cause, explain suitable options, decide the next step.
 5. Compact consultation placeholder with a clear notice that verified clinic details are required before launch.
 6. Demo disclosure and Pexels image attribution.
