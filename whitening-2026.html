@@ -7,7 +7,7 @@
 <meta name="description" content="تعرّف على خيارات تبييض الأسنان، وافهم ما يناسب حالتك بعد تقييم صحة الأسنان واللثة.">
 <meta property="og:title" content="تبييض الأسنان — ELITE DENTAL">
 <meta property="og:description" content="لا نبدأ باللون. نبدأ بفهم الحالة.">
-<meta property="og:image" content="https://images.pexels.com/photos/6627598/pexels-photo-6627598.jpeg?cs=srgb&dl=pexels-karola-g-6627598.jpg&fm=jpg">
+<meta property="og:image" content="https://images.pexels.com/photos/37458050/pexels-photo-37458050/free-photo-of-dentist-in-a-modern-dental-office.jpeg?auto=compress&cs=tinysrgb&w=1500">
 <title>تبييض الأسنان | ELITE DENTAL</title>
 <link rel="preload" as="image" fetchpriority="high" href="https://images.pexels.com/photos/37458050/pexels-photo-37458050/free-photo-of-dentist-in-a-modern-dental-office.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1500">
 <link rel="preload" href="assets/fonts/UMBXrPdDqW66y0Y2usFeaijdA5E64BdCIg.woff2" as="font" type="font/woff2" crossorigin>
@@ -48,10 +48,9 @@ img{display:block;max-width:100%}
 .header-action svg{width:17px;height:17px}
 .menu-toggle{display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--ink)}
 .menu-toggle svg{width:19px;height:19px;margin:auto}
-.hero{position:relative;overflow:hidden;isolation:isolate;padding-block:clamp(38px,5.8vw,76px) clamp(28px,4vw,52px);background:var(--canvas)}
-.hero:before{content:"";position:absolute;z-index:-1;top:-250px;left:-170px;width:550px;height:550px;border:1px solid rgba(49,86,232,.2);border-radius:50%;box-shadow:0 0 0 34px rgba(49,86,232,.025),0 0 0 90px rgba(49,86,232,.02)}
-.hero-grid{display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);align-items:center;gap:clamp(38px,6vw,86px)}
-.hero-copy{position:relative;z-index:2;max-width:620px;padding-block:15px 38px;animation:copyEnter .72s cubic-bezier(.2,.75,.25,1) both}
+.hero{position:relative;overflow:hidden;background:var(--canvas)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:stretch;gap:0;min-height:620px;max-width:1600px;margin-inline:auto}
+.hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;width:min(620px,calc(100% - var(--gutter)*2));max-width:620px;margin-inline:auto;padding-block:clamp(52px,7vw,94px);animation:copyEnter .72s cubic-bezier(.2,.75,.25,1) both}
 .eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--blue);font-size:10px;font-weight:800;letter-spacing:.12em}
 .eyebrow:before{content:"";width:26px;height:2px;background:var(--coral)}
 .hero h1{margin:24px 0 18px;font-family:var(--display);font-size:clamp(42px,6.05vw,78px);line-height:1.27;font-weight:800;letter-spacing:-.075em;color:var(--ink)}
@@ -68,18 +67,10 @@ img{display:block;max-width:100%}
 .hero-notes{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:28px;padding-top:17px;border-top:1px solid var(--line);color:#6D7068;font-size:10px}
 .hero-notes span{display:inline-flex;align-items:center;gap:7px}
 .note-dot{width:6px;height:6px;border-radius:50%;background:var(--coral)}
-.hero-visual{position:relative;min-width:0;min-height:540px;display:flex;align-items:center;justify-content:center}
-.visual-backdrop{position:absolute;inset:6% 4% 5% 9%;background:var(--blue);border-radius:48% 48% 6px 6px;transform:rotate(-3deg)}
-.visual-outline{position:absolute;z-index:0;inset:1% 0 0 3%;border:1px solid var(--ink);border-radius:48% 48% 6px 6px;transform:rotate(2deg)}
-.photo-frame{position:relative;z-index:1;width:min(88%,560px);height:clamp(390px,43vw,545px);overflow:hidden;border-radius:46% 46% 7px 7px;box-shadow:0 24px 55px rgba(21,25,22,.15);animation:photoEnter .95s .08s cubic-bezier(.2,.75,.25,1) both}
-.photo-frame img{width:100%;height:100%;object-fit:cover;object-position:center 24%;filter:saturate(.72) contrast(1.05)}
-.photo-frame:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,20,18,.02) 35%,rgba(15,20,18,.36) 100%);pointer-events:none}
-.photo-label{position:absolute;z-index:2;right:7%;bottom:7%;left:7%;display:flex;align-items:end;justify-content:space-between;gap:12px;color:#fff}
-.photo-label strong{max-width:235px;font-family:var(--display);font-size:clamp(18px,2vw,25px);line-height:1.45}
-.photo-label span{font-size:9px;letter-spacing:.12em;direction:ltr;white-space:nowrap}
-.visual-index{position:absolute;z-index:3;top:8%;right:0;width:74px;height:74px;display:grid;place-items:center;border-radius:50%;background:var(--coral);color:var(--ink);font-family:var(--display);font-size:19px;font-weight:800;transform:rotate(9deg)}
-.visual-caption{position:absolute;z-index:3;bottom:8%;left:0;max-width:170px;padding:12px 14px;background:var(--lime);color:var(--ink);font-size:10px;font-weight:800;line-height:1.7;transform:rotate(-4deg)}
-.visual-side-note{position:absolute;top:23%;left:2%;writing-mode:vertical-rl;transform:rotate(180deg);font-size:9px;letter-spacing:.2em;font-weight:800;color:var(--blue);direction:ltr}
+.hero-visual{position:relative;min-width:0;min-height:620px;display:flex;align-items:stretch;justify-content:stretch;overflow:hidden;background:#E7E8E4}
+.photo-frame{position:absolute;inset:0;z-index:1;width:100%;height:100%;margin:0;overflow:hidden;border-radius:0;box-shadow:none;animation:photoEnter .95s .08s cubic-bezier(.2,.75,.25,1) both}
+.photo-frame img{width:100%;height:100%;object-fit:cover;object-position:center 24%;filter:none}
+.photo-disclosure{position:absolute;z-index:2;right:16px;bottom:14px;margin:0;padding:6px 9px;border-radius:3px;background:rgba(21,25,22,.72);color:#fff;font-size:9px;line-height:1.6}
 .hero-bottom{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin-top:clamp(35px,5vw,62px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .hero-bottom-item{min-height:76px;display:flex;align-items:center;gap:12px;padding-inline:clamp(10px,2vw,22px)}
 .hero-bottom-item+.hero-bottom-item{border-right:1px solid var(--line)}
@@ -106,7 +97,7 @@ img{display:block;max-width:100%}
 .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:9px}
 .footer a{color:#DDF078;text-decoration:underline;text-underline-offset:3px}\n:focus-visible{outline:3px solid var(--coral);outline-offset:4px}\n@keyframes copyEnter{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}\n@keyframes photoEnter{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}\n@media(hover:hover){.photo-frame img{transition:transform .8s cubic-bezier(.2,.7,.2,1)}.photo-frame:hover img{transform:scale(1.035)}}
 @media(max-width:920px){
- .hero-grid{gap:27px}.hero-visual{min-height:450px}.photo-frame{height:440px}.visual-caption{max-width:145px}
+ .hero-grid{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);min-height:540px}.hero-visual{min-height:540px}
  .hero h1{font-size:clamp(39px,5.7vw,58px)}
 }
 @media(max-width:720px){
@@ -118,20 +109,17 @@ img{display:block;max-width:100%}
  .nav a:last-child{border-bottom:0}
  .header-action{min-height:40px;padding:0 12px;font-size:10px}
  .menu-toggle{display:block}
- .hero{padding-top:31px}
- .hero-grid{grid-template-columns:1fr;gap:20px}
- .hero-copy{max-width:650px;margin-inline:auto;padding:0;text-align:center}
+ .hero{padding-top:0}
+ .hero-grid{grid-template-columns:1fr;gap:0;min-height:0}
+ .hero-copy{width:calc(100% - var(--gutter)*2);max-width:650px;margin-inline:auto;padding:45px 0 34px;text-align:center;align-items:center}
  .eyebrow{justify-content:center}
  .hero h1{max-width:590px;margin:19px auto 13px;font-size:clamp(38px,9.5vw,57px);line-height:1.36}
  .hero-lead{margin-inline:auto;font-size:14px}
  .hero-actions{justify-content:center;margin-top:22px;gap:16px}
  .hero-notes{justify-content:center;margin-top:21px;padding-top:14px}
- .hero-visual{min-height:380px;width:min(100%,520px);margin-inline:auto}
- .visual-backdrop{inset:6% 4% 5% 9%}
- .photo-frame{width:82%;height:390px}
- .visual-index{width:60px;height:60px;font-size:16px}
- .visual-caption{bottom:6%;left:1%;max-width:135px;padding:9px 10px;font-size:9px}
- .visual-side-note{left:0;font-size:8px}
+ .hero-visual{min-height:390px;width:100%;margin:0}
+ .photo-frame{width:100%;height:100%}
+ .photo-disclosure{right:12px;bottom:10px;font-size:8px}
  .hero-bottom{margin-top:28px}
  .hero-bottom-item{min-height:65px;gap:8px;padding-inline:8px}
  .hero-bottom-item b{font-size:10px}
@@ -148,8 +136,8 @@ img{display:block;max-width:100%}
  .brand-name strong{font-size:11px}.brand-name small{font-size:8px}
  .header-action{font-size:9px;padding:0 9px}
  .hero h1{font-size:36px}
- .hero-visual{min-height:330px}
- .photo-frame{height:330px}
+ .hero-visual{min-height:315px}
+ .photo-frame{height:100%}
  .hero-bottom-item{align-items:flex-start;flex-direction:column;justify-content:center;gap:3px}
  .hero-bottom-item b{font-size:9px}
  .hero-bottom-item span{font-size:8px}
@@ -180,14 +168,13 @@ img{display:block;max-width:100%}
 </header>
 <main id="main">
  <section class="hero" id="top" aria-labelledby="hero-title">
-  <div class="wrap">
-   <div class="hero-grid">
+  <div class="hero-grid">
     <div class="hero-copy">
      <span class="eyebrow">THE WHITENING EDIT <span aria-hidden="true">/ 01</span></span>
      <h1 id="hero-title">التبييض،<br>لكن <span class="accent">بفهمٍ أعمق.</span></h1>
      <p class="hero-lead">لا توجد طريقة واحدة تناسب الجميع. ابدأ بفهم سبب تغيّر اللون وصحة الأسنان واللثة، ثم ناقش مع طبيب الأسنان الخيارات التي تناسب حالتك.</p>
      <div class="hero-actions">
-      <a class="primary-cta" href="#consultation">ابدأ بطلب تقييم <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="primary-cta" href="#consultation">اطلب موعد تقييم <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       <a class="text-link" href="#approach">كيف نبدأ؟ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14m-7-7 7 7 7-7"/></svg></a>
      </div>
      <div class="hero-notes">
@@ -196,17 +183,13 @@ img{display:block;max-width:100%}
      </div>
     </div>
     <div class="hero-visual">
-     <div class="visual-backdrop" aria-hidden="true"></div>
-     <div class="visual-outline" aria-hidden="true"></div>
-     <div class="photo-frame">
+     <figure class="photo-frame">
       <img src="https://images.pexels.com/photos/37458050/pexels-photo-37458050/free-photo-of-dentist-in-a-modern-dental-office.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1500" alt="صورة توضيحية لطبيب أسنان يقف داخل عيادة حديثة" width="1000" height="1500" fetchpriority="high" decoding="async">
-      <div class="photo-label"><strong>تقييم واضح.<br>ورعاية تبدأ بالثقة.</strong><span>DENTAL CARE / 01</span></div>
-     </div>
-     <span class="visual-index" aria-hidden="true">01</span>
-     <span class="visual-caption">صورة توضيحية من Pexels، وليست طبيب العيادة الحقيقي.</span>
-     <span class="visual-side-note" aria-hidden="true">CLINICAL · CONSIDERED · CLEAR</span>
+     </figure>
+     <p class="photo-disclosure">صورة توضيحية، وليست طبيب العيادة الحقيقي.</p>
     </div>
    </div>
+   <div class="wrap">
    <div class="hero-bottom" aria-label="مبادئ التقييم">
     <div class="hero-bottom-item"><b>01</b><span>فهم سبب تغيّر اللون</span></div>
     <div class="hero-bottom-item"><b>02</b><span>فحص الأسنان واللثة</span></div>
