@@ -9,7 +9,7 @@
 <meta property="og:description" content="لا نبدأ باللون. نبدأ بفهم الحالة.">
 <meta property="og:image" content="https://images.pexels.com/photos/6627598/pexels-photo-6627598.jpeg?cs=srgb&dl=pexels-karola-g-6627598.jpg&fm=jpg">
 <title>تبييض الأسنان | ELITE DENTAL</title>
-<link rel="preload" as="image" fetchpriority="high" href="https://images.pexels.com/photos/6627598/pexels-photo-6627598.jpeg?cs=srgb&amp;dl=pexels-karola-g-6627598.jpg&amp;fm=jpg">
+<link rel="preload" as="image" fetchpriority="high" href="https://images.pexels.com/photos/6627598/pexels-photo-6627598.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1600">
 <link rel="preload" href="assets/fonts/UMBXrPdDqW66y0Y2usFeaijdA5E64BdCIg.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCRXMRrKATtYV0.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/fonts/local-fonts.css">
@@ -51,7 +51,7 @@ img{display:block;max-width:100%}
 .hero{position:relative;overflow:hidden;isolation:isolate;padding-block:clamp(38px,5.8vw,76px) clamp(28px,4vw,52px);background:var(--canvas)}
 .hero:before{content:"";position:absolute;z-index:-1;top:-250px;left:-170px;width:550px;height:550px;border:1px solid rgba(49,86,232,.2);border-radius:50%;box-shadow:0 0 0 34px rgba(49,86,232,.025),0 0 0 90px rgba(49,86,232,.02)}
 .hero-grid{display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);align-items:center;gap:clamp(38px,6vw,86px)}
-.hero-copy{position:relative;z-index:2;max-width:620px;padding-block:15px 38px}
+.hero-copy{position:relative;z-index:2;max-width:620px;padding-block:15px 38px;animation:copyEnter .72s cubic-bezier(.2,.75,.25,1) both}
 .eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--blue);font-size:10px;font-weight:800;letter-spacing:.12em}
 .eyebrow:before{content:"";width:26px;height:2px;background:var(--coral)}
 .hero h1{margin:24px 0 18px;font-family:var(--display);font-size:clamp(42px,6.05vw,78px);line-height:1.27;font-weight:800;letter-spacing:-.075em;color:var(--ink)}
@@ -71,7 +71,7 @@ img{display:block;max-width:100%}
 .hero-visual{position:relative;min-width:0;min-height:540px;display:flex;align-items:center;justify-content:center}
 .visual-backdrop{position:absolute;inset:6% 4% 5% 9%;background:var(--blue);border-radius:48% 48% 6px 6px;transform:rotate(-3deg)}
 .visual-outline{position:absolute;z-index:0;inset:1% 0 0 3%;border:1px solid var(--ink);border-radius:48% 48% 6px 6px;transform:rotate(2deg)}
-.photo-frame{position:relative;z-index:1;width:min(88%,560px);height:clamp(390px,43vw,545px);overflow:hidden;border-radius:46% 46% 7px 7px;box-shadow:0 24px 55px rgba(21,25,22,.15)}
+.photo-frame{position:relative;z-index:1;width:min(88%,560px);height:clamp(390px,43vw,545px);overflow:hidden;border-radius:46% 46% 7px 7px;box-shadow:0 24px 55px rgba(21,25,22,.15);animation:photoEnter .95s .08s cubic-bezier(.2,.75,.25,1) both}
 .photo-frame img{width:100%;height:100%;object-fit:cover;object-position:center 53%;filter:saturate(.72) contrast(1.05)}
 .photo-frame:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,20,18,.02) 35%,rgba(15,20,18,.36) 100%);pointer-events:none}
 .photo-label{position:absolute;z-index:2;right:7%;bottom:7%;left:7%;display:flex;align-items:end;justify-content:space-between;gap:12px;color:#fff}
@@ -104,7 +104,7 @@ img{display:block;max-width:100%}
 .contact-band a svg{width:16px;height:16px}
 .footer{padding:19px 0 25px;background:var(--ink);color:rgba(255,255,255,.73)}
 .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:9px}
-.footer a{color:#DDF078;text-decoration:underline;text-underline-offset:3px}
+.footer a{color:#DDF078;text-decoration:underline;text-underline-offset:3px}\n:focus-visible{outline:3px solid var(--coral);outline-offset:4px}\n@keyframes copyEnter{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}\n@keyframes photoEnter{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}\n@media(hover:hover){.photo-frame img{transition:transform .8s cubic-bezier(.2,.7,.2,1)}.photo-frame:hover img{transform:scale(1.035)}}
 @media(max-width:920px){
  .hero-grid{gap:27px}.hero-visual{min-height:450px}.photo-frame{height:440px}.visual-caption{max-width:145px}
  .hero h1{font-size:clamp(39px,5.7vw,58px)}
@@ -156,7 +156,7 @@ img{display:block;max-width:100%}
 }
 @media(prefers-reduced-motion:reduce){
  html{scroll-behavior:auto}
- *,*:before,*:after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
+ *,*:before,*:after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}.hero-copy,.photo-frame{animation:none!important}.photo-frame img{transition:none!important}
 }
 </style>
 </head>
@@ -166,7 +166,7 @@ img{display:block;max-width:100%}
 <header class="site-header">
  <div class="wrap header-inner">
   <a class="brand" href="#top" aria-label="Elite Dental، الرئيسية">
-   <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v18M3 12h18"/><path d="m5.5 5.5 13 13m0-13-13 13"/></svg></span>
+   <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8c.9 4.7 2.5 7.3 9.2 9.2-6.7 1.9-8.3 4.5-9.2 9.2-.9-4.7-2.5-7.3-9.2-9.2 6.7-1.9 8.3-4.5 9.2-9.2Z"/><path d="M18.3 3.8v3.4m-1.7-1.7H20M5.7 16.8v3m-1.5-1.5h3"/></svg></span>
    <span class="brand-name"><strong>ELITE DENTAL</strong><small>WHITENING STUDIO</small></span>
   </a>
   <nav class="nav" id="main-nav" aria-label="التنقل الرئيسي">
@@ -199,7 +199,7 @@ img{display:block;max-width:100%}
      <div class="visual-backdrop" aria-hidden="true"></div>
      <div class="visual-outline" aria-hidden="true"></div>
      <div class="photo-frame">
-      <img src="https://images.pexels.com/photos/6627598/pexels-photo-6627598.jpeg?cs=srgb&amp;dl=pexels-karola-g-6627598.jpg&amp;fm=jpg" alt="لقطة قريبة لدليل درجات ألوان الأسنان المستخدم في التقييم التجميلي" width="6720" height="4480" fetchpriority="high" decoding="async">
+      <img src="https://images.pexels.com/photos/6627598/pexels-photo-6627598.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1600" alt="دليل درجات ألوان الأسنان المستخدم في التقييم التجميلي" width="1600" height="1067" fetchpriority="high" decoding="async">
       <div class="photo-label"><strong>اختيار اللون<br>يبدأ من التفاصيل.</strong><span>SHADE STUDY / 01</span></div>
      </div>
      <span class="visual-index" aria-hidden="true">01</span>
@@ -237,7 +237,7 @@ img{display:block;max-width:100%}
   </div>
  </section>
 </main>
-<footer class="footer"><div class="wrap footer-inner"><span>© 2026 ELITE DENTAL — نموذج تجريبي من Apex Studio.</span><span>الصورة: <a href="https://www.pexels.com/photo/samples-of-teeth-6627598/" target="_blank" rel="noopener noreferrer">Karola G. / Pexels</a></span></div></footer>
+<footer class="footer"><div class="wrap footer-inner"><span>© 2026 ELITE DENTAL — نموذج تجريبي من Apex Studio.</span><span>الصورة: <a href="https://www.pexels.com/photo/samples-of-teeth-6627598/" target="_blank" rel="noopener noreferrer">Kaboompics / Pexels</a></span></div></footer>
 <script>
 (function(){
  const button=document.getElementById("menu-toggle");
