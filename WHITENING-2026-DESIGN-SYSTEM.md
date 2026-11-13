@@ -35,7 +35,7 @@ These are directional references only. Do not copy proprietary artwork, page lay
 | Paper | `#FFFFFF` | Content surfaces |
 | Ink | `#142D38` | Primary text and dark contact panel |
 | Ink 2 | `#304A54` | Secondary text |
-| Muted | `#64757A` | Supporting text |
+| Muted | `#5C6D72` | Supporting text |
 | Line | `#DDE6E3` | Borders and separators |
 | Teal | `#187A80` | Primary action and key accents |
 | Deep teal | `#115A60` | Hover and deeper accents |
@@ -124,7 +124,7 @@ Primary references:
 
 The prior approved preview revision passed Playwright and Lighthouse. The expanded page now adds five educational sections, six FAQ entries, additional navigation targets, and tablet navigation behavior. The browser QA script has been extended to test those additions.
 
-**The Cairo/IBM Plex typography revision is awaiting its own full browser and Lighthouse run.** Do not carry forward previous Lighthouse scores as if they measured this font update. Record the new revision and results here only after the new workflow completes successfully.
+**Verified:** Playwright and Lighthouse passed on code commit `c1a4b051b95ded4f1a29a39bbf2add94ebdb6ca2`. Browser checks passed at 360×800, 390×844, 768×1024, and 1440×900; both Cairo and IBM Plex Sans Arabic loaded locally, with no browser errors or horizontal overflow. Lighthouse: mobile Performance 96; desktop Performance 100; Accessibility, Best Practices, and SEO 100 on both. The following documentation-only commit does not change the tested page or test script. Record the new revision and results here only after the new workflow completes successfully.
 
 The dedicated workflow checks 360×800, 390×844, 768×1024, and 1440×900. It checks protected headline text, Cairo heading loading, IBM Plex body loading, local font loading, responsive navigation, all in-page anchors, section/card counts, FAQ open/close behavior, inquiry-message preparation, image loading, reduced-motion behavior, JavaScript errors, and horizontal overflow. It also creates mobile and desktop Lighthouse reports.
 
