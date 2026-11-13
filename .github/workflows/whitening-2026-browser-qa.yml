@@ -11,6 +11,7 @@ on:
       - "tests/whitening-2026-browser-qa.mjs"
       - ".github/workflows/whitening-2026-browser-qa.yml"
   pull_request:
+    types: [opened, synchronize, reopened, edited]
     branches:
       - main
     paths:
