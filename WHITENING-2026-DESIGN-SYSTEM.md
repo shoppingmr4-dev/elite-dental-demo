@@ -51,7 +51,7 @@ The identity is intentionally restrained. Avoid reintroducing the previous cobal
 - Body, navigation, controls, and supporting text: **IBM Plex Sans Arabic**, loaded locally.
 - Numeric and Latin-only labels stay on the body stack so Arabic-only Cairo files are not requested for Latin glyphs.
 - Fallbacks: Tahoma and sans-serif.
-- Protected headline text: **«التبييض، لكن بفهمٍ أعمق.»** The wording stays unchanged; Cairo is the approved display face.
+- Current hero headline: **«اكتشف خيارات تبييض الأسنان لابتسامة أكثر إشراقًا»**. The three-tier hierarchy sets «تبييض الأسنان» as the dominant service phrase, with a quieter lead-in and a teal-highlighted benefit phrase; Cairo 800 is the approved display face.
 - Type scale: hero 42–72px, section headings 30–44px, card headings 17–19px, body 14–16px, controls 13–14px, metadata 10–13px.
 - Arabic display text uses neutral letter spacing (no negative tracking) and generous line height.
 - Keep Arabic copy natural, concise, readable on mobile, and appropriate for Saudi visitors.
@@ -69,7 +69,7 @@ The identity is intentionally restrained. Avoid reintroducing the previous cobal
 
 1. Slim announcement strip.
 2. Responsive branded navigation with compact menu behavior on phone and tablet.
-3. Hero: protected headline, supporting explanation, primary assessment CTA, editorial image, and three guiding principles.
+3. Hero: three-tier service-first headline, supporting explanation, primary assessment CTA, editorial image, and three guiding principles.
 4. Assessment approach: understand the case, explain possible options, and identify the next step.
 5. Causes of discoloration: surface staining compared with deeper changes in natural tooth color.
 6. Treatment options: in-office professional whitening, dentist-supervised custom take-home trays, and care for surface staining.
@@ -126,7 +126,7 @@ The prior approved preview revision passed Playwright and Lighthouse. The expand
 
 **Verified:** Playwright and Lighthouse passed on code commit `c1a4b051b95ded4f1a29a39bbf2add94ebdb6ca2`. Browser checks passed at 360×800, 390×844, 768×1024, and 1440×900; both Cairo and IBM Plex Sans Arabic loaded locally, with no browser errors or horizontal overflow. Lighthouse: mobile Performance 96; desktop Performance 100; Accessibility, Best Practices, and SEO 100 on both. The following documentation-only commit does not change the tested page or test script. Record the new revision and results here only after the new workflow completes successfully.
 
-The dedicated workflow checks 360×800, 390×844, 768×1024, and 1440×900. It checks protected headline text, Cairo heading loading, IBM Plex body loading, local font loading, responsive navigation, all in-page anchors, section/card counts, FAQ open/close behavior, inquiry-message preparation, image loading, reduced-motion behavior, JavaScript errors, and horizontal overflow. It also creates mobile and desktop Lighthouse reports.
+The dedicated workflow checks 360×800, 390×844, 768×1024, 1024×900, and 1440×900. It checks exact hero headline text and its three-tier hierarchy, Cairo heading loading, IBM Plex body loading, local font loading, responsive navigation, all in-page anchors, section/card counts, FAQ open/close behavior, inquiry-message preparation, image loading, reduced-motion behavior, JavaScript errors, and horizontal overflow. It also creates mobile and desktop Lighthouse reports.
 
 ## Before any real-client launch
 
