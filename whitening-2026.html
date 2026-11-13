@@ -280,40 +280,49 @@ body,button,input,select,textarea{font-family:var(--body)}
 @media(max-width:400px){.hero h1{font-size:39px}.hero-bottom-item span{font-size:10px}}
 
 
-/* Hero headline: two deliberate editorial lines with a restrained clinical accent. */
+/* Hero headline: service-first hierarchy with precise Arabic display typography. */
 .hero h1{
- display:flex;flex-direction:column;align-items:flex-start;gap:clamp(2px,.38vw,6px);
- max-width:100%;font-size:clamp(42px,5.6vw,72px);line-height:1.18;
+ display:flex;flex-direction:column;align-items:flex-start;gap:0;
+ max-width:100%;font-size:clamp(44px,5.45vw,72px);line-height:1.16;
  font-weight:800;letter-spacing:0;text-wrap:balance;
 }
-.hero-title-line{display:block;max-width:100%}
-.hero-title-line--second{
- display:flex;align-items:baseline;justify-content:flex-start;flex-wrap:wrap;
- gap:clamp(8px,1vw,13px);font-size:.92em;line-height:1.3;
+.hero-title-kicker{
+ display:block;color:var(--blue);font-size:.49em;font-weight:700;
+ line-height:1.5;margin-block-end:.08em;
 }
-.hero-title-bridge{
- color:var(--muted);font-size:.68em;font-weight:700;white-space:nowrap;
+.hero-title-main{
+ display:block;max-width:100%;color:var(--ink);
+ font-size:1em;font-weight:800;line-height:1.18;white-space:nowrap;
 }
-.hero h1 .accent{
- display:inline-block;position:relative;color:var(--blue);font-size:1em;
- white-space:nowrap;
+.hero-title-benefit{
+ display:block;color:var(--ink2);font-size:.58em;font-weight:700;
+ line-height:1.55;margin-block-start:.12em;
 }
-.hero h1 .accent:after{
- content:"";position:absolute;right:0;bottom:-.055em;width:38%;height:3px;
- background:var(--coral);border-radius:99px;z-index:-1;transform:none;
+.hero-title-benefit .accent{
+ display:inline-block;position:relative;color:var(--blue);
+ font-size:1em;white-space:nowrap;
+}
+.hero-title-benefit .accent:after{
+ content:"";position:absolute;right:0;bottom:-.08em;width:34%;height:3px;
+ background:var(--coral);border-radius:99px;z-index:-1;
 }
 @media(max-width:920px){
- .hero h1{font-size:clamp(39px,5.7vw,58px)}
+ .hero h1{font-size:clamp(39px,5.45vw,58px)}
+ .hero-title-kicker{font-size:.5em}
+ .hero-title-benefit{font-size:.57em}
 }
 @media(max-width:720px){
  .hero h1{
-  align-items:center;gap:2px;text-align:center;
-  font-size:clamp(38px,9vw,56px);line-height:1.2;
+  align-items:center;gap:0;text-align:center;
+  font-size:clamp(38px,9vw,56px);line-height:1.17;
  }
- .hero-title-line{margin-inline:auto}
- .hero-title-line--second{justify-content:center;gap:8px;font-size:.92em}
+ .hero-title-main{white-space:nowrap}
+ .hero-title-benefit{font-size:.6em;margin-block-start:.12em}
 }
-@media(max-width:400px){.hero h1{font-size:39px}}
+@media(max-width:400px){
+ .hero h1{font-size:38px}
+ .hero-title-benefit{font-size:.56em}
+}
 
 </style>
 </head>
@@ -345,8 +354,9 @@ body,button,input,select,textarea{font-family:var(--body)}
     <div class="hero-copy">
      <span class="eyebrow">دليل تبييض الأسنان <span aria-hidden="true">/ 01</span></span>
      <h1 id="hero-title">
-      <span class="hero-title-line">التبييض،</span>
-      <span class="hero-title-line hero-title-line--second"><span class="hero-title-bridge">لكن</span><span class="accent">بفهمٍ أعمق.</span></span>
+      <span class="hero-title-kicker">اكتشف خيارات</span>
+      <span class="hero-title-main">تبييض الأسنان</span>
+      <span class="hero-title-benefit">لابتسامة <span class="accent">أكثر إشراقًا</span></span>
      </h1>
      <p class="hero-lead">تختلف أسباب تغيّر لون الأسنان من شخص لآخر. يبدأ الاختيار بفحص الأسنان واللثة، ثم مناقشة الخيارات المناسبة لحالتك مع طبيب الأسنان.</p>
      <div class="hero-actions">
