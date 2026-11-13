@@ -72,7 +72,7 @@ try {
         scrollWidth:document.documentElement.scrollWidth,
         clientWidth:document.documentElement.clientWidth,
         skipLink:Boolean(document.querySelector("a.skip[href='#main']")),
-        reducedMotion:getComputedStyle(copy).animationName === "none" && getComputedStyle(visual).animationName === "none",
+        reducedMotion:matchMedia("(prefers-reduced-motion: reduce)").matches && Number.parseFloat(getComputedStyle(copy).animationDuration) <= 0.00002 && Number.parseFloat(getComputedStyle(visual).animationDuration) <= 0.00002,
         ctaHref:document.querySelector(".primary-cta")?.getAttribute("href") || "",
         viewport:window.innerWidth
       };
