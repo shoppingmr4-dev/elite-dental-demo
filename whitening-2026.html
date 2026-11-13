@@ -34,7 +34,7 @@ img{display:block;max-width:100%}
 .skip{position:absolute;top:-100px;right:18px;z-index:100;padding:11px 15px;background:#fff;border-radius:10px}
 .skip:focus{top:12px}
 .announcement{height:34px;display:flex;align-items:center;justify-content:center;padding:0 14px;background:var(--ink);color:#F8F5EC;text-align:center;font-size:10px;letter-spacing:.035em}
-.site-header{position:relative;z-index:30;background:rgba(245,241,232,.94);border-bottom:1px solid rgba(21,25,22,.1);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.site-header{position:relative;z-index:30;background:rgba(244,247,246,.96);border-bottom:1px solid rgba(20,45,56,.1);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 .header-inner{height:78px;display:flex;align-items:center;justify-content:space-between;gap:25px}
 .brand{display:flex;align-items:center;gap:11px;flex:none}
 .brand-mark{width:42px;height:42px;display:grid;place-items:center;background:linear-gradient(145deg,#238B8C,#145F69);color:white;border-radius:13px;box-shadow:0 7px 16px rgba(24,122,128,.18)}
@@ -52,8 +52,8 @@ img{display:block;max-width:100%}
 .header-action svg{width:17px;height:17px}
 .menu-toggle{display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--ink)}
 .menu-toggle svg{width:19px;height:19px;margin:auto}
-.hero{position:relative;overflow:hidden;isolation:isolate;padding-block:clamp(38px,5.8vw,76px) clamp(28px,4vw,52px);background:radial-gradient(ellipse at 84% 18%,rgba(49,86,232,.055) 0%,rgba(49,86,232,0) 42%),radial-gradient(ellipse at 10% 82%,rgba(239,112,88,.04) 0%,rgba(239,112,88,0) 34%),var(--canvas)}
-.hero:before{content:"";position:absolute;z-index:-1;top:-250px;left:-170px;width:550px;height:550px;border:1px solid rgba(49,86,232,.2);border-radius:50%;box-shadow:0 0 0 34px rgba(49,86,232,.025),0 0 0 90px rgba(49,86,232,.02)}
+.hero{position:relative;overflow:hidden;isolation:isolate;padding-block:clamp(38px,5.8vw,76px) clamp(28px,4vw,52px);background:radial-gradient(ellipse at 84% 18%,rgba(24,122,128,.075) 0%,rgba(24,122,128,0) 42%),radial-gradient(ellipse at 10% 82%,rgba(184,93,74,.035) 0%,rgba(184,93,74,0) 34%),var(--canvas)}
+.hero:before{content:"";position:absolute;z-index:-1;top:-250px;left:-170px;width:550px;height:550px;border:1px solid rgba(24,122,128,.18);border-radius:50%;box-shadow:0 0 0 34px rgba(24,122,128,.025),0 0 0 90px rgba(24,122,128,.02)}
 .hero-grid{display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);align-items:center;gap:clamp(38px,6vw,86px)}
 .hero-copy{position:relative;z-index:2;max-width:620px;padding-block:15px 38px;animation:copyEnter .72s cubic-bezier(.2,.75,.25,1) both}
 .eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--blue);font-size:10px;font-weight:800;letter-spacing:.12em}
@@ -89,7 +89,7 @@ img{display:block;max-width:100%}
 .hero-bottom-item{position:relative;min-height:82px;display:flex;align-items:center;gap:14px;padding-inline:clamp(14px,2.4vw,28px)}
 .hero-bottom-item+.hero-bottom-item{border-right:0}
 .hero-bottom-item+.hero-bottom-item:before{content:"";position:absolute;right:0;top:50%;width:1px;height:30px;background:var(--line);transform:translateY(-50%)}
-.hero-bottom-item b{display:inline-flex;flex:none;align-items:center;justify-content:center;width:29px;height:29px;border:1px solid rgba(49,86,232,.2);border-radius:50%;background:rgba(49,86,232,.045);font-family:var(--display);font-size:11px;color:var(--blue);direction:ltr}
+.hero-bottom-item b{display:inline-flex;flex:none;align-items:center;justify-content:center;width:29px;height:29px;border:1px solid rgba(24,122,128,.2);border-radius:50%;background:rgba(24,122,128,.05);font-family:var(--display);font-size:11px;color:var(--blue);direction:ltr}
 .hero-bottom-item span{font-size:11px;color:#5E645C;font-weight:700}
 .section{padding-block:clamp(65px,8vw,108px)}
 .approach{background:var(--paper)}
@@ -119,9 +119,76 @@ img{display:block;max-width:100%}
 .inquiry-status{grid-column:1/-1;min-height:18px;margin:0;color:rgba(255,255,255,.84);font-size:10px;line-height:1.8}
 .inquiry-message{grid-column:1/-1;width:100%;min-height:75px;padding:11px;border:1px solid rgba(255,255,255,.25);border-radius:9px;background:rgba(255,255,255,.08);color:#FFFFFF;font:inherit;font-size:11px;line-height:1.8;resize:vertical}
 .inquiry-message[hidden]{display:none}
+
+/* Content sections: informative, clinically cautious, and visually consistent. */
+.content-section{padding-block:clamp(62px,7.5vw,100px)}
+.section-head{max-width:710px;margin:0 auto clamp(28px,4vw,46px);text-align:center}
+.section-head .eyebrow{justify-content:center}
+.section-head h2{margin:16px 0 12px;font-family:var(--display);font-size:clamp(27px,4.2vw,46px);line-height:1.4;letter-spacing:-.055em}
+.section-head p{max-width:620px;margin:0 auto;color:var(--muted);font-size:14px;line-height:2}
+.cause-section{background:var(--paper)}
+.cause-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.info-card{position:relative;min-height:220px;padding:clamp(22px,3vw,32px);border:1px solid var(--line);border-radius:18px;background:#FFFFFF}
+.info-card .card-index{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;margin-bottom:20px;border-radius:12px;background:var(--lime);color:var(--blue-deep);font-family:var(--display);font-size:12px;font-weight:800;direction:ltr}
+.info-card h3{margin:0 0 10px;font-family:var(--display);font-size:17px;line-height:1.6}
+.info-card p{margin:0;color:var(--muted);font-size:13px;line-height:2}
+.options-section{background:var(--canvas)}
+.options-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.option-card{display:flex;flex-direction:column;min-height:290px;padding:25px 23px;border:1px solid var(--line);border-radius:17px;background:#FFFFFF}
+.option-card .option-number{margin-bottom:27px;color:var(--blue);font-family:var(--display);font-size:12px;font-weight:800;direction:ltr}
+.option-card h3{margin:0 0 10px;font-family:var(--display);font-size:16px;line-height:1.6}
+.option-card p{margin:0;color:var(--muted);font-size:13px;line-height:2}
+.option-card .option-note{margin-top:auto;padding-top:20px;color:var(--blue-deep);font-size:11px;font-weight:800}
+.suitability-section{background:var(--paper)}
+.suitability-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:start;gap:clamp(24px,5vw,68px)}
+.suitability-copy h2{margin:16px 0 13px;font-family:var(--display);font-size:clamp(26px,3.7vw,42px);line-height:1.45;letter-spacing:-.05em}
+.suitability-copy p{margin:0;color:var(--muted);font-size:14px;line-height:2}
+.check-list{display:grid;gap:0;border-top:1px solid var(--line)}
+.check-item{display:grid;grid-template-columns:30px minmax(0,1fr);gap:14px;padding:17px 0;border-bottom:1px solid var(--line)}
+.check-item .check-mark{display:grid;place-items:center;width:27px;height:27px;border-radius:50%;background:var(--lime);color:var(--blue-deep);font-weight:800;font-size:13px}
+.check-item h3{margin:0 0 5px;font-family:var(--display);font-size:14px}
+.check-item p{margin:0;color:var(--muted);font-size:12px;line-height:1.9}
+.clinical-note{margin-top:24px;padding:17px 19px;border-right:3px solid var(--coral);border-radius:10px;background:#F4F7F6;color:var(--ink2);font-size:12px;line-height:2}
+.expect-section{background:var(--ink);color:#FFFFFF}
+.expect-section .section-head p{color:rgba(255,255,255,.78)}
+.expect-section .section-head .eyebrow{color:#A9DCD2}
+.expect-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.expect-card{padding:24px 22px;border:1px solid rgba(255,255,255,.16);border-radius:15px;background:rgba(255,255,255,.045)}
+.expect-card h3{margin:0 0 9px;font-family:var(--display);font-size:15px}
+.expect-card p{margin:0;color:rgba(255,255,255,.78);font-size:12px;line-height:2}
+.faq-section{background:var(--canvas)}
+.faq-list{max-width:900px;margin-inline:auto;border-top:1px solid var(--line)}
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-item summary{position:relative;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:21px 3px;cursor:pointer;list-style:none;font-family:var(--display);font-size:14px;font-weight:700;line-height:1.8}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary:after{content:"+";flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--lime);color:var(--blue-deep);font-family:var(--body);font-size:19px;font-weight:500}
+.faq-item[open] summary:after{content:"−"}
+.faq-item summary:focus-visible{outline-offset:2px;border-radius:5px}
+.faq-answer{max-width:790px;padding:0 3px 20px;color:var(--muted);font-size:13px;line-height:2}
+.faq-answer a{color:var(--blue-deep);text-decoration:underline;text-underline-offset:3px}
+.reference-note{max-width:900px;margin:30px auto 0;color:var(--muted);font-size:10px;line-height:1.9}
+.reference-note a{color:var(--blue-deep);text-decoration:underline;text-underline-offset:3px}
+@media(max-width:850px){
+ .options-grid{grid-template-columns:1fr 1fr}
+ .options-grid .option-card:last-child{grid-column:1/-1;min-height:220px}
+ .suitability-grid{grid-template-columns:1fr;gap:26px}
+}
+@media(max-width:600px){
+ .cause-grid,.options-grid,.expect-grid{grid-template-columns:1fr}
+ .options-grid .option-card:last-child{grid-column:auto}
+ .info-card{min-height:0}
+ .option-card{min-height:0}
+ .option-card .option-note{padding-top:15px}
+ .section-head{text-align:right;margin-bottom:28px}
+ .section-head .eyebrow{justify-content:flex-start}
+ .section-head p{margin:0}
+ .expect-card{padding:21px}
+ .faq-item summary{font-size:13px}
+}
+
 .footer{padding:19px 0 25px;background:var(--ink);color:rgba(255,255,255,.73)}
 .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:9px}
-.footer a{color:#DDF078;text-decoration:underline;text-underline-offset:3px}
+.footer a{color:#A9DCD2;text-decoration:underline;text-underline-offset:3px}
 :focus-visible{outline:3px solid var(--coral);outline-offset:4px}
 @keyframes copyEnter{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes photoEnter{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
@@ -195,6 +262,9 @@ img{display:block;max-width:100%}
   <nav class="nav" id="main-nav" aria-label="التنقل الرئيسي">
    <a href="#top">الرئيسية</a>
    <a href="#approach">طريقة التقييم</a>
+   <a href="#options">خيارات التبييض</a>
+   <a href="#suitability">هل يناسبك؟</a>
+   <a href="#faq">الأسئلة الشائعة</a>
    <a href="#consultation">طلب التقييم</a>
   </nav>
   <a class="header-action" href="#consultation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.2 11.7a8.2 8.2 0 0 1-12.1 7.2L4 20l1.1-4A8.2 8.2 0 1 1 20.2 11.7Z"/></svg>اطلب تقييماً</a>
@@ -251,6 +321,149 @@ img{display:block;max-width:100%}
    </div>
   </div>
  </section>
+
+ <section class="content-section cause-section" id="causes" aria-labelledby="causes-title">
+  <div class="wrap">
+   <div class="section-head">
+    <span class="eyebrow">فهم اللون / 03</span>
+    <h2 id="causes-title">ليس كل تغيّر في اللون من السبب نفسه.</h2>
+    <p>قد يكون التغيّر على سطح السن، أو أعمق داخل بنيته. معرفة مصدره تساعد طبيب الأسنان على اختيار الطريقة المناسبة، وتحديد ما يمكن توقعه بواقعية.</p>
+   </div>
+   <div class="cause-grid">
+    <article class="info-card">
+     <span class="card-index">01</span>
+     <h3>تصبغات سطحية</h3>
+     <p>قد ترتبط بالقهوة والشاي وبعض الأطعمة أو التبغ. يبدأ التقييم بتحديد ما إذا كانت المشكلة تصبغًا خارجيًا يمكن التعامل معه بالتنظيف أو يحتاج إلى خيار آخر.</p>
+    </article>
+    <article class="info-card">
+     <span class="card-index">02</span>
+     <h3>تغيّر أعمق في لون السن</h3>
+     <p>قد يتأثر اللون بالعمر أو بعوامل مرتبطة بتكوّن الأسنان أو إصابة سابقة. تختلف الاستجابة بحسب السبب، ولا يمكن ضمان درجة موحّدة للجميع.</p>
+    </article>
+   </div>
+  </div>
+ </section>
+
+ <section class="content-section options-section" id="options" aria-labelledby="options-title">
+  <div class="wrap">
+   <div class="section-head">
+    <span class="eyebrow">الخيارات المتاحة / 04</span>
+    <h2 id="options-title">لكل حالة طريق مختلف.</h2>
+    <p>هذه أمثلة على الخيارات التي قد يناقشها طبيب الأسنان بعد الفحص. ليست قائمة توصيات ذاتية، ولا يعني ظهور خيار هنا أنه مناسب لكل شخص.</p>
+   </div>
+   <div class="options-grid">
+    <article class="option-card">
+     <span class="option-number">OPTION / 01</span>
+     <h3>التبييض داخل العيادة</h3>
+     <p>يطبّق الطبيب مادة التبييض وفق بروتوكول يناسب حالة الأسنان واللثة، مع اتخاذ إجراءات حماية الأنسجة المحيطة ومتابعة الاستجابة.</p>
+     <span class="option-note">إجراء تحت إشراف طبيب الأسنان</span>
+    </article>
+    <article class="option-card">
+     <span class="option-number">OPTION / 02</span>
+     <h3>قوالب مخصّصة للاستخدام المنزلي</h3>
+     <p>قد يصف الطبيب قوالب مصممة للمريض مع تعليمات محددة للمادة ومدة الاستخدام والمتابعة. لا تُستبدل هذه الخطة بتجربة عشوائية من الإنترنت.</p>
+     <span class="option-note">خطة يحددها الطبيب ويتابعها</span>
+    </article>
+    <article class="option-card">
+     <span class="option-number">OPTION / 03</span>
+     <h3>العناية بالتصبغات السطحية</h3>
+     <p>عندما يكون التغيّر سطحيًا، قد يكون التنظيف المهني أو تعديل روتين العناية كافيًا. معاجين التبييض قد تساعد على إزالة بعض التصبغات الخارجية، لكنها لا تغيّر لون السن الداخلي مثل مواد التبييض.</p>
+     <span class="option-note">ليس كل تصبّغ يحتاج إلى تبييض</span>
+    </article>
+   </div>
+  </div>
+ </section>
+
+ <section class="content-section suitability-section" id="suitability" aria-labelledby="suitability-title">
+  <div class="wrap suitability-grid">
+   <div class="suitability-copy">
+    <span class="eyebrow">قبل اتخاذ القرار / 05</span>
+    <h2 id="suitability-title">السلامة أولًا، ثم اختيار اللون.</h2>
+    <p>الفحص المسبق يساعد على اكتشاف ما قد يؤثر في أمان الإجراء أو النتيجة، مثل حالة اللثة والأسنان والحشوات الموجودة. القرار النهائي فردي ويعود إلى طبيب الأسنان.</p>
+    <div class="clinical-note">إذا وُجد تسوّس غير معالج أو التهاب في اللثة أو مشكلة في السن، فقد يلزم التعامل معها أولًا قبل التفكير في التبييض.</div>
+   </div>
+   <div class="check-list">
+    <article class="check-item">
+     <span class="check-mark" aria-hidden="true">✓</span>
+     <div><h3>صحة الأسنان واللثة</h3><p>يتحقق الطبيب من عدم وجود مشكلات تحتاج إلى علاج قبل أي إجراء تجميلي.</p></div>
+    </article>
+    <article class="check-item">
+     <span class="check-mark" aria-hidden="true">✓</span>
+     <div><h3>الحساسية أو التشققات</h3><p>تُناقش الحساسية وأي ألم أو تشققات؛ فقد تؤثر في اختيار الخطة أو توقيتها.</p></div>
+    </article>
+    <article class="check-item">
+     <span class="check-mark" aria-hidden="true">✓</span>
+     <div><h3>الحشوات والتيجان والقشور</h3><p>مواد الترميم لا يتغير لونها بالتبييض مثل الأسنان الطبيعية، وقد يظهر اختلاف في الدرجة بعد الإجراء.</p></div>
+    </article>
+    <article class="check-item">
+     <span class="check-mark" aria-hidden="true">✓</span>
+     <div><h3>الحمل أو الرضاعة</h3><p>يُفضّل مناقشة الأمر مع طبيب الأسنان؛ وتوصي إرشادات NHS بتأجيل التبييض خلال الحمل والرضاعة.</p></div>
+    </article>
+   </div>
+  </div>
+ </section>
+
+ <section class="content-section expect-section" id="expectations" aria-labelledby="expectations-title">
+  <div class="wrap">
+   <div class="section-head">
+    <span class="eyebrow">توقعات واقعية / 06</span>
+    <h2 id="expectations-title">ما الذي ينبغي معرفته قبل البدء؟</h2>
+    <p>التبييض إجراء تجميلي له حدود وآثار محتملة. فهمها جزء من القرار، وليس تفصيلًا يأتي بعده.</p>
+   </div>
+   <div class="expect-grid">
+    <article class="expect-card">
+     <h3>قد تحدث حساسية مؤقتة</h3>
+     <p>قد يشعر بعض الأشخاص بحساسية في الأسنان أو تهيّج في اللثة. إذا كانت الأعراض شديدة أو مستمرة، يجب التواصل مع طبيب الأسنان.</p>
+    </article>
+    <article class="expect-card">
+     <h3>النتيجة تختلف من شخص لآخر</h3>
+     <p>سبب التصبغ ولون الأسنان الأساسي وطبيعة الحالة عوامل تؤثر في الاستجابة. لا توجد درجة نهائية مضمونة للجميع.</p>
+    </article>
+    <article class="expect-card">
+     <h3>الترميمات لا تبيض</h3>
+     <p>الحشوات والتيجان والقشور لا تستجيب لمواد تبييض الأسنان الطبيعية؛ لذلك يجب مناقشة توافق اللون قبل الإجراء.</p>
+    </article>
+   </div>
+  </div>
+ </section>
+
+ <section class="content-section faq-section" id="faq" aria-labelledby="faq-title">
+  <div class="wrap">
+   <div class="section-head">
+    <span class="eyebrow">إجابات واضحة / 07</span>
+    <h2 id="faq-title">أسئلة قد تخطر ببالك.</h2>
+    <p>إجابات عامة تساعدك على فهم الإجراء. تبقى التوصية المناسبة مرتبطة بفحص حالتك لدى طبيب الأسنان.</p>
+   </div>
+   <div class="faq-list">
+    <details class="faq-item">
+     <summary>هل تبييض الأسنان مناسب للجميع؟</summary>
+     <div class="faq-answer">لا. يعتمد ذلك على صحة الأسنان واللثة، وسبب تغيّر اللون، والحساسية، والترميمات الموجودة، وعوامل أخرى يراجعها الطبيب قبل تحديد الملاءمة.</div>
+    </details>
+    <details class="faq-item">
+     <summary>هل يسبب التبييض حساسية؟</summary>
+     <div class="faq-answer">قد تحدث حساسية مؤقتة للأسنان أو تهيّج في اللثة لدى بعض الأشخاص. أخبر طبيب الأسنان بتاريخ الحساسية أو أي ألم قبل البدء، وراجعه إذا كانت الأعراض مزعجة أو مستمرة.</div>
+    </details>
+    <details class="faq-item">
+     <summary>هل تتغير ألوان الحشوات والتيجان مع التبييض؟</summary>
+     <div class="faq-answer">لا. مواد الترميم مثل الحشوات والتيجان والقشور لا تفتح درجتها بمواد تبييض الأسنان الطبيعية. لذلك من المهم إخبار الطبيب بها ومناقشة النتيجة المتوقعة.</div>
+    </details>
+    <details class="faq-item">
+     <summary>هل معجون التبييض يعطي نتيجة التبييض نفسه؟</summary>
+     <div class="faq-answer">ليس بالضرورة. تعمل كثير من معاجين التبييض أساسًا على إزالة بعض التصبغات السطحية، بينما تستهدف مواد التبييض لون الأسنان الطبيعي بدرجات مختلفة. يشرح الطبيب الفرق بحسب الحالة.</div>
+    </details>
+    <details class="faq-item">
+     <summary>كم تدوم نتيجة التبييض؟</summary>
+     <div class="faq-answer">تختلف المدة باختلاف طريقة التبييض والعادات اليومية وطبيعة التصبغ والعناية اللاحقة. لا يصح الوعد بمدة واحدة أو نتيجة ثابتة لكل شخص.</div>
+    </details>
+    <details class="faq-item">
+     <summary>هل يمكنني اختيار طريقة التبييض بنفسي؟</summary>
+     <div class="faq-answer">الأفضل عدم اختيار مواد أو مجموعات تبييض عشوائيًا. ابدأ بفحص الأسنان واللثة، ثم ناقش الخيارات المعتمدة مع طبيب الأسنان.</div>
+    </details>
+   </div>
+   <p class="reference-note">للقراءة التثقيفية: <a href="https://www.nhs.uk/tests-and-treatments/teeth-whitening/" target="_blank" rel="noopener noreferrer">إرشادات NHS حول تبييض الأسنان</a> و<a href="https://www.ada.org/resources/ada-library/oral-health-topics/whitening" target="_blank" rel="noopener noreferrer">المعلومات العلمية للجمعية الأمريكية لطب الأسنان (ADA)</a>. هذه الصفحة توعوية ولا تغني عن التقييم السريري.</p>
+  </div>
+ </section>
+
  <section class="contact-section" id="consultation" aria-labelledby="consultation-title">
   <div class="wrap">
    <div class="contact-band">
