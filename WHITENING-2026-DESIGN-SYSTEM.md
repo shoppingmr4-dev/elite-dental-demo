@@ -47,11 +47,13 @@ The identity is intentionally restrained. Avoid reintroducing the previous cobal
 
 ## Typography
 
-- Headline: **Alexandria**, loaded from local repository assets.
-- Body: **IBM Plex Sans Arabic**, loaded locally.
+- Arabic display/headings: **Cairo**, self-hosted locally in WOFF2 weights 700 and 800.
+- Body, navigation, controls, and supporting text: **IBM Plex Sans Arabic**, loaded locally.
+- Numeric and Latin-only labels stay on the body stack so Arabic-only Cairo files are not requested for Latin glyphs.
 - Fallbacks: Tahoma and sans-serif.
-- Protected headline text: **«التبييض، لكن بفهمٍ أعمق.»**
-- The exact headline wording and Alexandria font family are protected; do not change them without explicit user approval.
+- Protected headline text: **«التبييض، لكن بفهمٍ أعمق.»** The wording stays unchanged; Cairo is the approved display face.
+- Type scale: hero 42–72px, section headings 30–44px, card headings 17–19px, body 14–16px, controls 13–14px, metadata 10–13px.
+- Arabic display text uses neutral letter spacing (no negative tracking) and generous line height.
 - Keep Arabic copy natural, concise, readable on mobile, and appropriate for Saudi visitors.
 
 ## Image art direction
@@ -122,9 +124,9 @@ Primary references:
 
 The prior approved preview revision passed Playwright and Lighthouse. The expanded page now adds five educational sections, six FAQ entries, additional navigation targets, and tablet navigation behavior. The browser QA script has been extended to test those additions.
 
-**The expanded revision is awaiting its new full browser and Lighthouse run.** Do not carry forward old QA scores as if they measured the expanded page. Record the new revision and results here only after the new workflow completes successfully.
+**The Cairo/IBM Plex typography revision is awaiting its own full browser and Lighthouse run.** Do not carry forward previous Lighthouse scores as if they measured this font update. Record the new revision and results here only after the new workflow completes successfully.
 
-The dedicated workflow checks 360×800, 390×844, 768×1024, and 1440×900. It checks protected headline text and font, local font loading, responsive navigation, all in-page anchors, section/card counts, FAQ open/close behavior, inquiry-message preparation, image loading, reduced-motion behavior, JavaScript errors, and horizontal overflow. It also creates mobile and desktop Lighthouse reports.
+The dedicated workflow checks 360×800, 390×844, 768×1024, and 1440×900. It checks protected headline text, Cairo heading loading, IBM Plex body loading, local font loading, responsive navigation, all in-page anchors, section/card counts, FAQ open/close behavior, inquiry-message preparation, image loading, reduced-motion behavior, JavaScript errors, and horizontal overflow. It also creates mobile and desktop Lighthouse reports.
 
 ## Before any real-client launch
 
