@@ -14,7 +14,7 @@ const viewports = [
   { name: "desktop-1440", width: 1440, height: 900, mobile: false }
 ];
 
-const expectedHeading = "التبييض، لكن بفهمٍ أعمق.";
+const expectedHeading = "اكتشف خيارات تبييض الأسنان لابتسامة أكثر إشراقًا";
 const failures = [];
 const results = [];
 const browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
@@ -57,10 +57,15 @@ try {
         lang:document.documentElement.lang,
         dir:document.documentElement.dir,
         heading:heading?.innerText?.replace(/\s+/g," ").trim() || "",
-        headlineLines:heading?.querySelectorAll(".hero-title-line").length || 0,
-        headlineBridge:heading?.querySelector(".hero-title-bridge")?.innerText?.trim() || "",
-        headlineAccent:heading?.querySelector(".accent")?.innerText?.trim() || "",
-        headlineOverflow:Boolean(heading && heading.scrollWidth > heading.clientWidth + 1),
+        headlineLines:heading?.querySelectorAll(":scope > .hero-title-kicker, :scope > .hero-title-main, :scope > .hero-title-benefit").length || 0,
+        headlineKicker:heading?.querySelector(".hero-title-kicker")?.innerText?.trim() || "",
+        headlineService:heading?.querySelector(".hero-title-main")?.innerText?.trim() || "",
+        headlineBenefit:heading?.querySelector(".hero-title-benefit")?.innerText?.trim() || "",
+        headlineOverflow:Boolean(heading && (
+          heading.scrollWidth > heading.clientWidth + 1 ||
+          [...heading.querySelectorAll(".hero-title-kicker,.hero-title-main,.hero-title-benefit")]
+            .some(el => el.scrollWidth > el.clientWidth + 1)
+        )),
         headingFont:getComputedStyle(heading).fontFamily,
         headingFontLoaded:document.fonts.check('800 48px "Cairo"', "التبييض"),
         bodyFont:getComputedStyle(document.body).fontFamily,
@@ -119,9 +124,10 @@ try {
     assert.equal(state.lang, "ar-SA", `${vp.name}: Arabic language metadata missing`);
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
-    assert.equal(state.headlineLines, 2, `${vp.name}: headline must use the intended two-line composition`);
-    assert.equal(state.headlineBridge, "لكن", `${vp.name}: headline bridge phrase changed`);
-    assert.equal(state.headlineAccent, "بفهمٍ أعمق.", `${vp.name}: headline accent phrase changed`);
+    assert.equal(state.headlineLines, 3, `${vp.name}: headline must use the intended three-level composition`);
+    assert.equal(state.headlineKicker, "اكتشف خيارات", `${vp.name}: headline introduction changed`);
+    assert.equal(state.headlineService, "تبييض الأسنان", `${vp.name}: primary service phrase changed`);
+    assert.equal(state.headlineBenefit, "لابتسامة أكثر إشراقًا", `${vp.name}: headline benefit phrase changed`);
     assert.equal(state.headlineOverflow, false, `${vp.name}: headline content overflows its box`);
     assert.ok(state.headingVisible, `${vp.name}: headline is not visible`);
     assert.ok(state.headingFont.includes("Cairo"), `${vp.name}: expected Cairo headline font`);
