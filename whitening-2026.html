@@ -61,7 +61,7 @@ img{display:block;max-width:100%}
 .hero h1{margin:24px 0 18px;font-family:var(--display);font-size:clamp(42px,6.05vw,78px);line-height:1.27;font-weight:800;letter-spacing:-.075em;color:var(--ink)}
 .hero h1 .accent{display:inline-block;position:relative;color:var(--blue)}
 .hero h1 .accent:after{content:"";position:absolute;right:0;bottom:-3px;width:100%;height:9px;background:var(--lime);z-index:-1;transform:rotate(-1.6deg);border-radius:2px}
-.hero-lead{max-width:510px;margin:0;color:#62675F;font-size:clamp(14px,1.35vw,17px);line-height:2.1}
+.hero-lead{max-width:510px;margin:0;color:#52656A;font-size:clamp(14px,1.35vw,17px);line-height:2.1}
 .hero-actions{display:flex;align-items:center;flex-wrap:wrap;gap:18px;margin-top:27px}
 .primary-cta{min-height:53px;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:0 20px;border-radius:999px;background:var(--blue);color:#FFFFFF;font-size:12px;font-weight:800;box-shadow:0 7px 18px rgba(24,122,128,.17);transition:transform .24s cubic-bezier(.2,.7,.2,1),box-shadow .24s cubic-bezier(.2,.7,.2,1)}
 .primary-cta:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(24,122,128,.23)}
@@ -70,7 +70,7 @@ img{display:block;max-width:100%}
 .text-link{display:inline-flex;align-items:center;gap:8px;color:var(--ink);font-size:12px;font-weight:800;border-bottom:1px solid #A9AAA0;padding-bottom:5px}
 .text-link svg{width:15px;height:15px;transition:transform .2s}
 .text-link:hover svg{transform:translateY(3px)}
-.hero-notes{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:28px;padding-top:17px;border-top:1px solid var(--line);color:#6D7068;font-size:10px}
+.hero-notes{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:28px;padding-top:17px;border-top:1px solid var(--line);color:#53666B;font-size:11px}
 .hero-notes span{display:inline-flex;align-items:center;gap:7px}
 .note-dot{width:6px;height:6px;border-radius:50%;background:var(--coral)}
 .hero-visual{position:relative;min-width:0;min-height:540px;display:flex;align-items:center;justify-content:center}
@@ -90,11 +90,11 @@ img{display:block;max-width:100%}
 .hero-bottom-item+.hero-bottom-item{border-right:0}
 .hero-bottom-item+.hero-bottom-item:before{content:"";position:absolute;right:0;top:50%;width:1px;height:30px;background:var(--line);transform:translateY(-50%)}
 .hero-bottom-item b{display:inline-flex;flex:none;align-items:center;justify-content:center;width:29px;height:29px;border:1px solid rgba(24,122,128,.2);border-radius:50%;background:rgba(24,122,128,.05);font-family:var(--display);font-size:11px;color:var(--blue);direction:ltr}
-.hero-bottom-item span{font-size:11px;color:#5E645C;font-weight:700}
+.hero-bottom-item span{font-size:11px;color:#465E64;font-weight:700}
 .section{padding-block:clamp(65px,8vw,108px)}
 .approach{background:var(--paper)}
 .approach-grid{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(35px,7vw,95px);align-items:start}
-.approach-intro .eyebrow{color:#B54B3B}
+.approach-intro .eyebrow{color:var(--coral)}
 .approach h2{max-width:500px;margin:16px 0 14px;font-family:var(--display);font-size:clamp(27px,4vw,48px);line-height:1.4;letter-spacing:-.06em}
 .approach-intro p{max-width:430px;margin:0;color:var(--muted);font-size:13px;line-height:2}
 .step-list{border-top:1px solid var(--line)}
@@ -194,6 +194,11 @@ img{display:block;max-width:100%}
 @keyframes photoEnter{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(hover:hover){.photo-frame img{transition:transform .8s cubic-bezier(.2,.7,.2,1)}.photo-frame:hover img{transform:scale(1.035)}}
 @media(max-width:920px){
+ .nav{display:none;position:absolute;top:calc(100% + 1px);right:var(--gutter);left:var(--gutter);flex-direction:column;align-items:stretch;gap:0;padding:9px;border:1px solid var(--line);background:var(--paper);box-shadow:0 18px 34px rgba(20,45,56,.12)}
+ .nav.open{display:flex}
+ .nav a{padding:12px;border-bottom:1px solid var(--line);font-size:12px}
+ .nav a:last-child{border-bottom:0}
+ .menu-toggle{display:block}
  .hero-grid{gap:27px}.hero-visual{min-height:450px}.photo-frame{height:440px}.visual-caption{max-width:145px}
  .hero h1{font-size:clamp(39px,5.7vw,58px)}
 }
