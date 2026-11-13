@@ -126,6 +126,10 @@ try {
     }
 
     await page.locator("#prepare-inquiry").click();
+    await page.waitForFunction(() => {
+      const status=document.querySelector("#inquiry-status")?.textContent || "";
+      return status.includes("تم نسخ") || status.includes("جهّزنا");
+    }, null, { timeout: 5000 });
     const inquiryResult = await page.evaluate(() => ({
       message:document.querySelector("#inquiry-message")?.value || "",
       status:document.querySelector("#inquiry-status")?.textContent || "",
