@@ -54,7 +54,7 @@ try {
       return {
         lang:document.documentElement.lang,
         dir:document.documentElement.dir,
-        heading:heading?.innerText?.replace(/\\s+/g," ").trim() || "",
+        heading:heading?.innerText?.replace(/\s+/g," ").trim() || "",
         headingFont:getComputedStyle(heading).fontFamily,
         headingFontLoaded:document.fonts.check('800 48px "Alexandria"', "التبييض"),
         headingVisible:Boolean(heading && rect(heading).height > 0),
@@ -145,6 +145,6 @@ try {
   throw error;
 } finally {
   await browser.close();
-  await writeFile(`${OUT}/report.json`, JSON.stringify({ url:BASE_URL, generatedAt:new Date().toISOString(), results, failures }, null, 2) + "\\n");
+  await writeFile(`${OUT}/report.json`, JSON.stringify({ url:BASE_URL, generatedAt:new Date().toISOString(), results, failures }, null, 2) + "\n");
 }
 console.log(`All ${results.length} responsive browser checks passed.`);
