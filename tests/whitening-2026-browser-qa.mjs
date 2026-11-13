@@ -78,6 +78,11 @@ try {
         inquiryButton:Boolean(document.querySelector("#prepare-inquiry")),
         inquiryTopicLabel:Boolean(document.querySelector('label[for="inquiry-topic"]')),
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
+        contentSections:["causes","options","suitability","expectations","faq"].map(id=>Boolean(document.getElementById(id))),
+        optionCards:document.querySelectorAll(".option-card").length,
+        causeCards:document.querySelectorAll(".info-card").length,
+        faqItems:document.querySelectorAll(".faq-item").length,
+        clinicalReferences:[...document.querySelectorAll(".reference-note a")].map(a=>a.href),
         viewport:window.innerWidth
       };
     });
@@ -93,6 +98,11 @@ try {
     assert.equal(state.ctaHref, "#consultation", `${vp.name}: primary CTA target changed unexpectedly`);
     assert.ok(state.inquiryButton && state.inquiryTopicLabel, `${vp.name}: interactive inquiry control or label missing`);
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
+    assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
+    assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
+    assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);
+    assert.equal(state.faqItems, 6, `${vp.name}: FAQ entries are incomplete`);
+    assert.ok(state.clinicalReferences.some(url=>url.includes("nhs.uk")) && state.clinicalReferences.some(url=>url.includes("ada.org")), `${vp.name}: clinical reference links are missing`);
     assert.equal(state.missingAnchors.length, 0, `${vp.name}: broken in-page anchors: ${state.missingAnchors.join(", ")}`);
     assert.ok(state.skipLink, `${vp.name}: skip link missing`);
     assert.ok(state.faviconHref.endsWith("assets/elite-dental-mark.svg"), `${vp.name}: branded favicon link is missing`);
@@ -124,6 +134,12 @@ try {
       assert.ok(state.copy.right <= state.visual.left + 1 || state.visual.right <= state.copy.left + 1,
         `${vp.name}: hero text and image columns overlap`);
     }
+
+    const faqQuestion=page.locator(".faq-item summary").first();
+    await faqQuestion.click();
+    assert.equal(await faqQuestion.locator("xpath=..").getAttribute("open"), "", `${vp.name}: first FAQ item did not open`);
+    await faqQuestion.click();
+    assert.equal(await faqQuestion.locator("xpath=..").getAttribute("open"), null, `${vp.name}: first FAQ item did not close`);
 
     await page.locator("#prepare-inquiry").click();
     await page.waitForFunction(() => {
