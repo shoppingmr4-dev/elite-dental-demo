@@ -10,6 +10,15 @@ on:
       - "assets/elite-dental-mark.svg"
       - "tests/whitening-2026-browser-qa.mjs"
       - ".github/workflows/whitening-2026-browser-qa.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "whitening-2026.html"
+      - "assets/fonts/**"
+      - "assets/elite-dental-mark.svg"
+      - "tests/whitening-2026-browser-qa.mjs"
+      - ".github/workflows/whitening-2026-browser-qa.yml"
 
 permissions:
   contents: read
