@@ -84,7 +84,7 @@ try {
         faqItems:document.querySelectorAll(".faq-item").length,
         clinicalReferences:[...document.querySelectorAll(".reference-note a")].map(a=>a.href),
         contrastChecks:(()=>{
-          const parse=color=>{const m=color.match(/[\\d.]+/g)?.map(Number)||[];return m.slice(0,3).map(v=>v/255)};
+          const parse=color=>{const m=color.match(/[\d.]+/g)?.map(Number)||[];return m.slice(0,3).map(v=>v/255)};
           const luminance=color=>{
             const rgb=parse(color).map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4);
             return 0.2126*rgb[0]+0.7152*rgb[1]+0.0722*rgb[2];
