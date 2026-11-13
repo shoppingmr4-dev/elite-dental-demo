@@ -1,17 +1,8 @@
 name: Elite Whitening Browser QA
 
 on:
-  push:
-    branches:
-      - feature/elite-whitening-world-class-2026
-    paths:
-      - "whitening-2026.html"
-      - "assets/fonts/**"
-      - "assets/elite-dental-mark.svg"
-      - "tests/whitening-2026-browser-qa.mjs"
-      - ".github/workflows/whitening-2026-browser-qa.yml"
   pull_request:
-    types: [opened, synchronize, reopened, edited]
+    types: [opened, synchronize, reopened]
     branches:
       - main
     paths:
