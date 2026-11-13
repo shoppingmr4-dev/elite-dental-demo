@@ -73,11 +73,26 @@ try {
         headingVisible:Boolean(heading && rect(heading).height > 0),
         eyebrowLabel:document.querySelector(".hero-eyebrow-label")?.innerText?.trim() || "",
         eyebrowIndex:document.querySelector(".hero-eyebrow-index")?.innerText?.trim() || "",
-        eyebrowHasCrystal:Boolean(document.querySelector(".hero-eyebrow-icon svg path")),
+        eyebrowHasMinimalMark:Boolean(document.querySelector(".hero-eyebrow-icon svg path")),
         eyebrowStartAligned:Boolean(
           document.querySelector(".hero-eyebrow") && copy &&
           Math.abs(rect(document.querySelector(".hero-eyebrow")).right - rect(copy).right) <= 3
         ),
+        eyebrowNumberFirst:Boolean((()=>{
+          const number=document.querySelector(".hero-eyebrow-index");
+          const icon=document.querySelector(".hero-eyebrow-icon");
+          const label=document.querySelector(".hero-eyebrow-label");
+          return number&&icon&&label&&rect(number).right>=rect(icon).right&&rect(icon).right>=rect(label).right;
+        })()),
+        eyebrowTransparent:Boolean((()=>{
+          const badge=document.querySelector(".hero-eyebrow");
+          const icon=document.querySelector(".hero-eyebrow-icon");
+          if(!badge||!icon)return false;
+          const b=getComputedStyle(badge),i=getComputedStyle(icon);
+          return b.backgroundColor==="rgba(0, 0, 0, 0)"&&i.backgroundColor==="rgba(0, 0, 0, 0)"&&
+            b.borderTopWidth==="0px"&&i.borderTopWidth==="0px"&&
+            Number.parseFloat(getComputedStyle(icon.querySelector("svg")).width)<=16;
+        })()),
         copy:copy ? rect(copy) : null,
         visual:visual ? rect(visual) : null,
         imageCount:document.images.length,
@@ -139,8 +154,10 @@ try {
     assert.ok(state.headingVisible, `${vp.name}: headline is not visible`);
     assert.equal(state.eyebrowLabel, "دليل الابتسامة", `${vp.name}: hero eyebrow label changed`);
     assert.equal(state.eyebrowIndex, "01", `${vp.name}: hero eyebrow sequence marker is missing`);
-    assert.ok(state.eyebrowHasCrystal, `${vp.name}: crystalline hero icon is missing`);
+    assert.ok(state.eyebrowHasMinimalMark, `${vp.name}: minimal hero icon is missing`);
     assert.ok(state.eyebrowStartAligned, `${vp.name}: hero eyebrow is not aligned to the RTL line start`);
+    assert.ok(state.eyebrowNumberFirst, `${vp.name}: section number is not first at the RTL line start`);
+    assert.ok(state.eyebrowTransparent, `${vp.name}: eyebrow or icon is not transparent and compact`);
     assert.ok(state.headingFont.includes("Cairo"), `${vp.name}: expected Cairo headline font`);
     assert.ok(state.bodyFont.includes("IBM Plex Sans Arabic"), `${vp.name}: expected IBM Plex Sans Arabic body font`);
     assert.ok(state.headingFontLoaded, `${vp.name}: local Cairo heading font failed to load`);
