@@ -63,6 +63,7 @@ try {
         imageCount:document.images.length,
         imageAlt:image?.alt || "",
         imageSrc:image?.currentSrc || image?.src || "",
+        faviconHref:document.querySelector('link[rel="icon"]')?.getAttribute("href") || "",
         imageLoaded:Boolean(image?.complete && image.naturalWidth > 0),
         navDisplay:nav ? getComputedStyle(nav).display : "missing",
         toggleDisplay:toggle ? getComputedStyle(toggle).display : "missing",
@@ -89,6 +90,7 @@ try {
     assert.equal(state.ctaHref, "#consultation", `${vp.name}: primary CTA target changed unexpectedly`);
     assert.equal(state.missingAnchors.length, 0, `${vp.name}: broken in-page anchors: ${state.missingAnchors.join(", ")}`);
     assert.ok(state.skipLink, `${vp.name}: skip link missing`);
+    assert.ok(state.faviconHref.endsWith("assets/elite-dental-mark.svg"), `${vp.name}: branded favicon link is missing`);
     assert.ok(state.reducedMotion, `${vp.name}: reduced-motion fallback is not active`);
     assert.ok(state.scrollWidth <= state.clientWidth + 1, `${vp.name}: horizontal overflow ${state.scrollWidth}px > ${state.clientWidth}px`);
 
@@ -134,6 +136,8 @@ try {
       const img = document.querySelector(".photo-frame img");
       return { loaded:Boolean(img?.complete && img.naturalWidth>0), naturalWidth:img?.naturalWidth || 0, src:img?.currentSrc || img?.src || "" };
     });
+    assert.ok(imageLoad.loaded, `${vp.name}: hero image failed to load`);
+    assert.ok(/w=(640|1100|1500)/.test(imageLoad.src), `${vp.name}: responsive hero image variant was not selected`);
     results.push({ ...vp, ...state, imageLoad, pageErrors, localErrors });
     assert.equal(pageErrors.length, 0, `${vp.name}: JavaScript errors: ${pageErrors.join(" | ")}`);
     assert.equal(localErrors.length, 0, `${vp.name}: local resource errors: ${JSON.stringify(localErrors)}`);
