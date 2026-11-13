@@ -1,15 +1,14 @@
 # Apex Studio — Elite Dental Whitening Landing Page
 
-**Project status:** Staged portfolio concept; browser and Lighthouse QA passed  
+**Project status:** Expanded landing page in staged review; retesting the new educational content  
 **Page:** `whitening-2026.html`  
 **Branch:** `feature/elite-whitening-world-class-2026`  
-**Preview revision:** `7682704d5fe9784c6f7ecd363049f7251a92f90f`  
 **Locale:** Saudi Arabic, right-to-left  
 **Project type:** Fictional-clinic portfolio demonstration, not commissioned client work
 
 ## Purpose and positioning
 
-Apex Studio created this concept to demonstrate a clear, contemporary Arabic landing-page experience for a dental whitening service. The page explains why assessment should come before selecting a whitening option, then guides visitors to a low-friction inquiry-preparation interaction.
+Apex Studio created this concept to demonstrate a considered Arabic landing-page experience for a dental whitening service. The page explains why an oral-health assessment should precede treatment selection, outlines common professional options and limitations, answers common questions, and provides a transparent inquiry-preparation interaction.
 
 The clinic name **ELITE DENTAL** is fictional. This project must never be represented as a real clinic, a completed client engagement, or a live booking service.
 
@@ -17,11 +16,11 @@ The clinic name **ELITE DENTAL** is fictional. This project must never be repres
 
 **Modern Clinical Editorial.**
 
-The current direction uses a calm, light clinical canvas, deep blue-green typography, a restrained teal accent, and carefully limited warm details. The result should feel current and trustworthy without looking like a generic medical template.
+The page uses a calm light clinical canvas, deep blue-green typography, a restrained teal accent, and limited warm details. The visual hierarchy starts with the protected headline and hero image, moves to patient education, then ends with a clear next step.
 
-Transferable design principles:
+Transferable reference principles:
 - **Apple:** deliberate image composition, whitespace, hierarchy, and visual restraint.
-- **Stripe:** clear value proposition and a single primary visitor action.
+- **Stripe:** clear value proposition and a focused primary visitor action.
 - **Notion:** simple components and consistent visual language.
 - **Linear:** careful spacing, states, focus behavior, and motion details.
 - **Vercel:** lightweight implementation and dependable technical execution.
@@ -40,12 +39,11 @@ These are directional references only. Do not copy proprietary artwork, page lay
 | Line | `#DDE6E3` | Borders and separators |
 | Teal | `#187A80` | Primary action and key accents |
 | Deep teal | `#115A60` | Hover and deeper accents |
-| Warm accent | `#B85D4A` | Small eyebrow / editorial detail |
+| Warm accent | `#B85D4A` | Small editorial details |
 | Soft mint | `#E3F2E9` | Subtle highlight |
 | WhatsApp green | `#25D366` | Reserved token only; no live WhatsApp destination is configured |
-| WhatsApp ink | `#073A26` | Reserved supporting token |
 
-The identity is intentionally restrained. Do not reintroduce the previous cobalt/coral/acid-lime mix or add decorative effects that compete with the headline and primary action.
+The identity is intentionally restrained. Avoid reintroducing the previous cobalt/coral/acid-lime mix or decorative elements that compete with the headline and primary action.
 
 ## Typography
 
@@ -53,8 +51,8 @@ The identity is intentionally restrained. Do not reintroduce the previous cobalt
 - Body: **IBM Plex Sans Arabic**, loaded locally.
 - Fallbacks: Tahoma and sans-serif.
 - Protected headline text: **«التبييض، لكن بفهمٍ أعمق.»**
-- The headline font family and exact Arabic wording are protected; do not change them without explicit user approval.
-- Keep Arabic copy natural, concise, and appropriate for Saudi visitors.
+- The exact headline wording and Alexandria font family are protected; do not change them without explicit user approval.
+- Keep Arabic copy natural, concise, readable on mobile, and appropriate for Saudi visitors.
 
 ## Image art direction
 
@@ -65,77 +63,72 @@ The identity is intentionally restrained. Do not reintroduce the previous cobalt
 - Keep the visible credit and stock-photo disclosure. Never present this image as a real employee, patient, testimonial, or treatment result.
 - Do not create before/after claims or imply guaranteed clinical outcomes.
 
-## Page structure
+## Page architecture
 
 1. Slim announcement strip.
-2. Minimal identity and responsive navigation.
-3. Hero with protected Arabic headline, supporting explanation, primary inquiry CTA, and editorial portrait.
-4. Three concise assessment principles.
-5. Short approach section: understand the case, explain options, identify the next step.
-6. Inquiry-preparation panel.
-7. Footer with fictional-demo disclosure and image attribution.
+2. Responsive branded navigation with compact menu behavior on phone and tablet.
+3. Hero: protected headline, supporting explanation, primary assessment CTA, editorial image, and three guiding principles.
+4. Assessment approach: understand the case, explain possible options, and identify the next step.
+5. Causes of discoloration: surface staining compared with deeper changes in natural tooth color.
+6. Treatment options: in-office professional whitening, dentist-supervised custom take-home trays, and care for surface staining.
+7. Suitability: oral health, sensitivity or cracks, existing restorations, and pregnancy/breastfeeding considerations.
+8. Realistic expectations: possible temporary sensitivity, gum irritation, individual variation, and the fact that restorations do not whiten like natural teeth.
+9. FAQ: six concise questions with native, keyboard-operable disclosure controls.
+10. Inquiry-preparation panel and footer with the fictional-demo disclosure and image attribution.
 
-Keep the current page focused. Do not add unrequested sections merely to increase page length.
+The aim is to answer real visitor questions without adding fake proof points, fabricated clinic credentials, testimonials, ratings, or statistics.
+
+## Clinical content guardrails
+
+The educational copy is intentionally general and non-diagnostic:
+- A dental examination and history help identify causes of discoloration and factors that may affect suitability.
+- Options may include professionally administered whitening, dentist-supplied custom take-home trays, and management of surface stains. These are not interchangeable and are not suitable for everyone.
+- Whitening toothpastes mainly help remove some external stains; they should not be described as equivalent to professional bleaching.
+- Only natural teeth change shade with bleaching; fillings, crowns, veneers, and implant restorations do not whiten in the same way.
+- Temporary tooth sensitivity and gum irritation are possible adverse effects.
+- Untreated dental disease or unhealthy gums may need attention before cosmetic whitening is considered.
+- Pregnancy and breastfeeding are presented as matters to discuss with a clinician; the NHS advises against whitening during those periods.
+- Never promise an exact shade, a guaranteed outcome, or a fixed duration for every patient.
+
+The page includes educational links to the NHS and American Dental Association. All medical copy must be reviewed by a licensed dentist in the intended jurisdiction before use by a real clinic.
+
+Primary references:
+- NHS, “Teeth whitening” (reviewed 19 August 2025): https://www.nhs.uk/tests-and-treatments/teeth-whitening/
+- American Dental Association, “Whitening” (updated 11 November 2026): https://www.ada.org/resources/ada-library/oral-health-topics/whitening
+- ADA public guide, “Teeth Whitening”: https://www.mouthhealthy.org/all-topics-a-z/teeth-whitening
 
 ## Interaction behavior
 
-- The mobile navigation supports open/close state, `aria-expanded`, Escape-to-close, and closes after a navigation selection.
-- The main CTA scrolls to the inquiry-preparation panel.
+- Navigation links point to real in-page sections.
+- The compact navigation supports open/close state, `aria-expanded`, Escape-to-close, and closes after a selection.
+- FAQ entries use native `details` and `summary` elements.
+- The primary CTA scrolls to the inquiry-preparation panel.
 - Visitors select an inquiry topic and prepare a copy-ready Arabic message.
-- The interaction copies the message when clipboard access is available and exposes a manual-copy fallback otherwise.
+- The message is copied when clipboard access is available, with a manual-copy fallback otherwise.
 - **No information is transmitted, stored, or submitted.**
 - A real WhatsApp link, phone number, booking workflow, or backend must only be added after the real clinic supplies and approves its verified contact details.
 - Do not describe the current interaction as a completed booking or sent inquiry.
 
 ## Engineering constraints
 
-- Preserve the repository's static HTML/CSS/JavaScript and GitHub Pages architecture.
+- Preserve static HTML/CSS/JavaScript and the existing GitHub Pages architecture.
 - Reuse local font assets.
 - Avoid unnecessary dependencies or UI frameworks.
 - Keep all work on the feature branch.
 - Do not alter `main`, `index.html`, production routing, or live deployment settings without explicit approval.
 - Do not invent clinic staff, credentials, address, reviews, ratings, patient counts, or treatment results.
 
-## Verified QA snapshot
+## Quality assurance
 
-Latest full workflow run: https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/43512839827  
-Run date: 13 November 2026  
-Tested page revision: `7682704d5fe9784c6f7ecd363049f7251a92f90f`
+The prior approved preview revision passed Playwright and Lighthouse. The expanded page now adds five educational sections, six FAQ entries, additional navigation targets, and tablet navigation behavior. The browser QA script has been extended to test those additions.
 
-### Responsive browser checks
+**The expanded revision is awaiting its new full browser and Lighthouse run.** Do not carry forward old QA scores as if they measured the expanded page. Record the new revision and results here only after the new workflow completes successfully.
 
-All checks passed at 360×800, 390×844, 768×1024, and 1440×900:
-- No horizontal overflow.
-- No missing in-page anchors.
-- No browser JavaScript errors or local HTTP resource errors.
-- Local headline font loaded.
-- Hero image loaded at all tested viewport sizes.
-- Mobile navigation opened, navigated, and closed correctly.
-- Inquiry message interaction prepared the expected copy-ready message.
-- Reduced-motion behavior and protected headline were checked.
+The dedicated workflow checks 360×800, 390×844, 768×1024, and 1440×900. It checks protected headline text and font, local font loading, responsive navigation, all in-page anchors, section/card counts, FAQ open/close behavior, inquiry-message preparation, image loading, reduced-motion behavior, JavaScript errors, and horizontal overflow. It also creates mobile and desktop Lighthouse reports.
 
-### Lighthouse lab snapshot
+## Before any real-client launch
 
-| Category | Mobile | Desktop |
-|---|---:|---:|
-| Performance | 97 | 100 |
-| Accessibility | 100 | 100 |
-| Best Practices | 77 | 77 |
-| SEO | 100 | 100 |
-
-| Metric | Mobile | Desktop |
-|---|---:|---:|
-| First Contentful Paint | 1.7 s | 0.4 s |
-| Largest Contentful Paint | 2.4 s | 0.5 s |
-| Speed Index | 1.7 s | 0.4 s |
-| Total Blocking Time | 0 ms | 0 ms |
-| Cumulative Layout Shift | 0.011 | 0.008 |
-
-These are one controlled Lighthouse lab run, not a guarantee of field performance for every device or network. The Best Practices score remains 77; the report flags one third-party cookie from the externally hosted Pexels image, alongside further image/cache/rendering diagnostics. Do not claim a perfect Lighthouse score.
-
-## Next step before any real-client launch
-
-Replace only demo-specific material after the actual clinic approves it:
+Replace demo-specific material only after the actual clinic approves it:
 1. Approved clinic identity, location, and verified contact details.
 2. Real team photography and credentials, with permission.
 3. Clinically reviewed service copy and approved claims.
