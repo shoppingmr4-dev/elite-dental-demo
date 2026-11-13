@@ -71,6 +71,13 @@ try {
         bodyFont:getComputedStyle(document.body).fontFamily,
         bodyFontLoaded:document.fonts.check('400 16px "IBM Plex Sans Arabic"', "رعاية الأسنان"),
         headingVisible:Boolean(heading && rect(heading).height > 0),
+        eyebrowLabel:document.querySelector(".hero-eyebrow-label")?.innerText?.trim() || "",
+        eyebrowIndex:document.querySelector(".hero-eyebrow-index")?.innerText?.trim() || "",
+        eyebrowHasCrystal:Boolean(document.querySelector(".hero-eyebrow-icon svg path")),
+        eyebrowStartAligned:Boolean(
+          document.querySelector(".hero-eyebrow") && copy &&
+          Math.abs(rect(document.querySelector(".hero-eyebrow")).right - rect(copy).right) <= 3
+        ),
         copy:copy ? rect(copy) : null,
         visual:visual ? rect(visual) : null,
         imageCount:document.images.length,
@@ -130,6 +137,10 @@ try {
     assert.equal(state.headlineBenefit, "لابتسامة أكثر إشراقًا", `${vp.name}: headline benefit phrase changed`);
     assert.equal(state.headlineOverflow, false, `${vp.name}: headline content overflows its box`);
     assert.ok(state.headingVisible, `${vp.name}: headline is not visible`);
+    assert.equal(state.eyebrowLabel, "دليل الابتسامة", `${vp.name}: hero eyebrow label changed`);
+    assert.equal(state.eyebrowIndex, "01", `${vp.name}: hero eyebrow sequence marker is missing`);
+    assert.ok(state.eyebrowHasCrystal, `${vp.name}: crystalline hero icon is missing`);
+    assert.ok(state.eyebrowStartAligned, `${vp.name}: hero eyebrow is not aligned to the RTL line start`);
     assert.ok(state.headingFont.includes("Cairo"), `${vp.name}: expected Cairo headline font`);
     assert.ok(state.bodyFont.includes("IBM Plex Sans Arabic"), `${vp.name}: expected IBM Plex Sans Arabic body font`);
     assert.ok(state.headingFontLoaded, `${vp.name}: local Cairo heading font failed to load`);
