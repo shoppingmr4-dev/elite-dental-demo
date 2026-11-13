@@ -83,6 +83,27 @@ try {
         causeCards:document.querySelectorAll(".info-card").length,
         faqItems:document.querySelectorAll(".faq-item").length,
         clinicalReferences:[...document.querySelectorAll(".reference-note a")].map(a=>a.href),
+        contrastChecks:(()=>{
+          const parse=color=>{const m=color.match(/[\\d.]+/g)?.map(Number)||[];return m.slice(0,3).map(v=>v/255)};
+          const luminance=color=>{
+            const rgb=parse(color).map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4);
+            return 0.2126*rgb[0]+0.7152*rgb[1]+0.0722*rgb[2];
+          };
+          return [
+            "#approach .approach-intro .eyebrow",
+            "#approach .step p",
+            "#options .section-head p",
+            "#faq .reference-note"
+          ].map(selector=>{
+            const el=document.querySelector(selector);
+            if(!el)return {selector,ratio:0};
+            const section=el.closest("section");
+            const fg=getComputedStyle(el).color;
+            const bg=section?getComputedStyle(section).backgroundColor:"rgb(255,255,255)";
+            const a=luminance(fg),b=luminance(bg);
+            return {selector,ratio:(Math.max(a,b)+0.05)/(Math.min(a,b)+0.05)};
+          });
+        })(),
         viewport:window.innerWidth
       };
     });
@@ -103,6 +124,7 @@ try {
     assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);
     assert.equal(state.faqItems, 6, `${vp.name}: FAQ entries are incomplete`);
     assert.ok(state.clinicalReferences.some(url=>url.includes("nhs.uk")) && state.clinicalReferences.some(url=>url.includes("ada.org")), `${vp.name}: clinical reference links are missing`);
+    assert.ok(state.contrastChecks.every(item=>item.ratio>=4.5), `${vp.name}: text contrast below WCAG AA: ${JSON.stringify(state.contrastChecks)}`);
     assert.equal(state.missingAnchors.length, 0, `${vp.name}: broken in-page anchors: ${state.missingAnchors.join(", ")}`);
     assert.ok(state.skipLink, `${vp.name}: skip link missing`);
     assert.ok(state.faviconHref.endsWith("assets/elite-dental-mark.svg"), `${vp.name}: branded favicon link is missing`);
