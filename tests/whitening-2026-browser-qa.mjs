@@ -46,7 +46,8 @@ try {
       const image = document.querySelector(".photo-frame img");
       const nav = document.querySelector("#main-nav");
       const toggle = document.querySelector("#menu-toggle");
-      await document.fonts.load('800 48px "Alexandria"', "التبييض");
+      await document.fonts.load('800 48px "Cairo"', "التبييض");
+      await document.fonts.load('400 16px "IBM Plex Sans Arabic"', "رعاية الأسنان");
       const rect = el => {
         const r = el.getBoundingClientRect();
         return { left:r.left, right:r.right, top:r.top, bottom:r.bottom, width:r.width, height:r.height };
@@ -56,7 +57,9 @@ try {
         dir:document.documentElement.dir,
         heading:heading?.innerText?.replace(/\s+/g," ").trim() || "",
         headingFont:getComputedStyle(heading).fontFamily,
-        headingFontLoaded:document.fonts.check('800 48px "Alexandria"', "التبييض"),
+        headingFontLoaded:document.fonts.check('800 48px "Cairo"', "التبييض"),
+        bodyFont:getComputedStyle(document.body).fontFamily,
+        bodyFontLoaded:document.fonts.check('400 16px "IBM Plex Sans Arabic"', "رعاية الأسنان"),
         headingVisible:Boolean(heading && rect(heading).height > 0),
         copy:copy ? rect(copy) : null,
         visual:visual ? rect(visual) : null,
@@ -112,8 +115,10 @@ try {
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
     assert.ok(state.headingVisible, `${vp.name}: headline is not visible`);
-    assert.ok(state.headingFont.includes("Alexandria"), `${vp.name}: expected Alexandria headline font`);
-    assert.ok(state.headingFontLoaded, `${vp.name}: local Alexandria font failed to load`);
+    assert.ok(state.headingFont.includes("Cairo"), `${vp.name}: expected Cairo headline font`);
+    assert.ok(state.bodyFont.includes("IBM Plex Sans Arabic"), `${vp.name}: expected IBM Plex Sans Arabic body font`);
+    assert.ok(state.headingFontLoaded, `${vp.name}: local Cairo heading font failed to load`);
+    assert.ok(state.bodyFontLoaded, `${vp.name}: local IBM Plex Sans Arabic font failed to load`);
     assert.equal(state.imageCount, 1, `${vp.name}: unexpected number of hero images`);
     assert.ok(state.imageAlt.length > 10, `${vp.name}: image alt text is missing`);
     assert.equal(state.ctaHref, "#consultation", `${vp.name}: primary CTA target changed unexpectedly`);
@@ -199,7 +204,7 @@ try {
     results.push({ ...vp, ...state, imageLoad, pageErrors, localErrors });
     assert.equal(pageErrors.length, 0, `${vp.name}: JavaScript errors: ${pageErrors.join(" | ")}`);
     assert.equal(localErrors.length, 0, `${vp.name}: local resource errors: ${JSON.stringify(localErrors)}`);
-    console.log(`[PASS] ${vp.name}: RTL, headline, local font, layout, anchors, menu, motion and overflow`);
+    console.log(`[PASS] ${vp.name}: RTL, Cairo + IBM Plex fonts, layout, anchors, menu, motion and overflow`);
     await page.close();
   }
 } catch (error) {
