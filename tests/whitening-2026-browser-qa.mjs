@@ -10,6 +10,7 @@ const viewports = [
   { name: "mobile-360", width: 360, height: 800, mobile: true },
   { name: "mobile-390", width: 390, height: 844, mobile: true },
   { name: "tablet-768", width: 768, height: 1024, mobile: false },
+  { name: "laptop-1024", width: 1024, height: 900, mobile: false },
   { name: "desktop-1440", width: 1440, height: 900, mobile: false }
 ];
 
@@ -56,6 +57,10 @@ try {
         lang:document.documentElement.lang,
         dir:document.documentElement.dir,
         heading:heading?.innerText?.replace(/\s+/g," ").trim() || "",
+        headlineLines:heading?.querySelectorAll(".hero-title-line").length || 0,
+        headlineBridge:heading?.querySelector(".hero-title-bridge")?.innerText?.trim() || "",
+        headlineAccent:heading?.querySelector(".accent")?.innerText?.trim() || "",
+        headlineOverflow:Boolean(heading && heading.scrollWidth > heading.clientWidth + 1),
         headingFont:getComputedStyle(heading).fontFamily,
         headingFontLoaded:document.fonts.check('800 48px "Cairo"', "التبييض"),
         bodyFont:getComputedStyle(document.body).fontFamily,
@@ -114,6 +119,10 @@ try {
     assert.equal(state.lang, "ar-SA", `${vp.name}: Arabic language metadata missing`);
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
+    assert.equal(state.headlineLines, 2, `${vp.name}: headline must use the intended two-line composition`);
+    assert.equal(state.headlineBridge, "لكن", `${vp.name}: headline bridge phrase changed`);
+    assert.equal(state.headlineAccent, "بفهمٍ أعمق.", `${vp.name}: headline accent phrase changed`);
+    assert.equal(state.headlineOverflow, false, `${vp.name}: headline content overflows its box`);
     assert.ok(state.headingVisible, `${vp.name}: headline is not visible`);
     assert.ok(state.headingFont.includes("Cairo"), `${vp.name}: expected Cairo headline font`);
     assert.ok(state.bodyFont.includes("IBM Plex Sans Arabic"), `${vp.name}: expected IBM Plex Sans Arabic body font`);
