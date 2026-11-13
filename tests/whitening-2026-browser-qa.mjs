@@ -109,7 +109,7 @@ try {
     assert.ok(state.reducedMotion, `${vp.name}: reduced-motion fallback is not active`);
     assert.ok(state.scrollWidth <= state.clientWidth + 1, `${vp.name}: horizontal overflow ${state.scrollWidth}px > ${state.clientWidth}px`);
 
-    if (vp.mobile) {
+    if (vp.width <= 920) {
       assert.equal(state.navDisplay, "none", `${vp.name}: mobile navigation should start collapsed`);
       assert.notEqual(state.toggleDisplay, "none", `${vp.name}: mobile menu button should be visible`);
       await page.locator("#menu-toggle").click();
@@ -128,7 +128,9 @@ try {
       assert.equal(closed.expanded, "false", `${vp.name}: mobile menu aria state did not close`);
       assert.equal(closed.display, "none", `${vp.name}: mobile menu remained open after selection`);
       assert.equal(closed.hash, "#approach", `${vp.name}: navigation target failed`);
-    } else {
+    }
+
+    if (vp.width > 920) {
       assert.notEqual(state.navDisplay, "none", `${vp.name}: desktop navigation should be visible`);
       assert.equal(state.toggleDisplay, "none", `${vp.name}: mobile menu button should be hidden`);
       assert.ok(state.copy.right <= state.visual.left + 1 || state.visual.right <= state.copy.left + 1,
