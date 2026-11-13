@@ -75,6 +75,9 @@ try {
         skipLink:Boolean(document.querySelector("a.skip[href='#main']")),
         reducedMotion:matchMedia("(prefers-reduced-motion: reduce)").matches && Number.parseFloat(getComputedStyle(copy).animationDuration) <= 0.00002 && Number.parseFloat(getComputedStyle(visual).animationDuration) <= 0.00002,
         ctaHref:document.querySelector(".primary-cta")?.getAttribute("href") || "",
+        inquiryButton:Boolean(document.querySelector("#prepare-inquiry")),
+        inquiryTopicLabel:Boolean(document.querySelector('label[for="inquiry-topic"]')),
+        contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
         viewport:window.innerWidth
       };
     });
@@ -88,6 +91,8 @@ try {
     assert.equal(state.imageCount, 1, `${vp.name}: unexpected number of hero images`);
     assert.ok(state.imageAlt.length > 10, `${vp.name}: image alt text is missing`);
     assert.equal(state.ctaHref, "#consultation", `${vp.name}: primary CTA target changed unexpectedly`);
+    assert.ok(state.inquiryButton && state.inquiryTopicLabel, `${vp.name}: interactive inquiry control or label missing`);
+    assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
     assert.equal(state.missingAnchors.length, 0, `${vp.name}: broken in-page anchors: ${state.missingAnchors.join(", ")}`);
     assert.ok(state.skipLink, `${vp.name}: skip link missing`);
     assert.ok(state.faviconHref.endsWith("assets/elite-dental-mark.svg"), `${vp.name}: branded favicon link is missing`);
@@ -119,6 +124,15 @@ try {
       assert.ok(state.copy.right <= state.visual.left + 1 || state.visual.right <= state.copy.left + 1,
         `${vp.name}: hero text and image columns overlap`);
     }
+
+    await page.locator("#prepare-inquiry").click();
+    const inquiryResult = await page.evaluate(() => ({
+      message:document.querySelector("#inquiry-message")?.value || "",
+      status:document.querySelector("#inquiry-status")?.textContent || "",
+      fallbackVisible:!document.querySelector("#inquiry-message")?.hidden
+    }));
+    assert.ok(inquiryResult.message.includes("تبييض الأسنان"), `${vp.name}: inquiry message was not prepared`);
+    assert.ok(inquiryResult.status.includes("نسخ") || inquiryResult.status.includes("جهّزنا"), `${vp.name}: inquiry feedback is missing`);
 
     await page.goto(BASE_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
     await page.evaluate(async () => {
