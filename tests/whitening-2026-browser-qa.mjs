@@ -72,6 +72,13 @@ try {
         lang:document.documentElement.lang,
         announcementText:document.querySelector(".announcement")?.innerText?.trim() || "",
         headerPosition:getComputedStyle(document.querySelector(".site-header")).position,
+        headerRect:rect(document.querySelector(".site-header")),
+        headerInnerRect:rect(document.querySelector(".header-inner")),
+        heroWrapRect:rect(document.querySelector(".hero .wrap")),
+        headerPanelRadius:getComputedStyle(document.querySelector(".site-header"),"::before").borderTopLeftRadius,
+        headerPanelTopInset:Number.parseFloat(getComputedStyle(document.querySelector(".site-header"),"::before").top),
+        headerCompactInitially:document.querySelector(".site-header")?.classList.contains("is-compact") || false,
+        headerActionHeight:rect(document.querySelector(".header-action")).height,
         headerActionText:document.querySelector(".header-action")?.innerText?.trim() || "",
         headerActionHref:document.querySelector(".header-action")?.getAttribute("href") || "",
         headerActionTag:document.querySelector(".header-action")?.tagName || "",
@@ -210,6 +217,11 @@ try {
     assert.equal(state.lang, "ar-SA", `${vp.name}: Arabic language metadata missing`);
     assert.equal(state.announcementText, "تبييض الأسنان يبدأ بفهم الحالة", `${vp.name}: announcement copy is incorrect`);
     assert.equal(state.headerPosition, "sticky", `${vp.name}: header should remain accessible while scrolling`);
+    assert.ok(state.headerRect.width < state.heroWrapRect.width, `${vp.name}: floating header must be narrower than the hero container`);
+    assert.equal(state.headerRect.height, state.headerInnerRect.height, `${vp.name}: header shell must reserve a stable layout height`);
+    assert.ok(Number.parseFloat(state.headerPanelRadius) >= 18, `${vp.name}: floating header needs rounded outer corners`);
+    assert.equal(state.headerPanelTopInset, 0, `${vp.name}: header should start in its full-size state`);
+    assert.equal(state.headerCompactInitially, false, `${vp.name}: header must not start in the compact state`);
     assert.equal(state.headerActionText, "تواصل عبر واتساب", `${vp.name}: header CTA copy is incorrect`);
     assert.equal(state.headerActionHref, "", `${vp.name}: demo header CTA must not contain a fake external destination`);
     assert.equal(state.headerActionTag, "BUTTON", `${vp.name}: header CTA must open the local demo dialog`);
@@ -303,6 +315,52 @@ try {
     assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("primary-cta")), true, `${vp.name}: dialog action must restore focus to the hero trigger`);
     assert.equal(new URL(page.url()).hash, "", `${vp.name}: demo CTA must not create an unrelated anchor navigation`);
     await page.evaluate(() => window.scrollTo(0, 0));
+    const initialHeaderMetrics = await page.evaluate(() => {
+      const header=document.querySelector(".site-header");
+      const action=document.querySelector(".header-action");
+      const wordmark=document.querySelector(".brand-name strong");
+      const panel=getComputedStyle(header,"::before");
+      return {
+        layoutHeight:header.getBoundingClientRect().height,
+        innerHeight:header.querySelector(".header-inner").getBoundingClientRect().height,
+        actionHeight:action.getBoundingClientRect().height,
+        wordmarkSize:Number.parseFloat(getComputedStyle(wordmark).fontSize),
+        panelTop:Number.parseFloat(panel.top),
+        panelLeft:Number.parseFloat(panel.left)
+      };
+    });
+    await page.evaluate(() => window.scrollTo(0, 240));
+    await page.waitForFunction(() => document.querySelector(".site-header")?.classList.contains("is-compact"), null, { timeout: 3000 });
+    const compactHeaderMetrics = await page.evaluate(() => {
+      const header=document.querySelector(".site-header");
+      const action=document.querySelector(".header-action");
+      const wordmark=document.querySelector(".brand-name strong");
+      const panel=getComputedStyle(header,"::before");
+      return {
+        layoutHeight:header.getBoundingClientRect().height,
+        innerHeight:header.querySelector(".header-inner").getBoundingClientRect().height,
+        actionHeight:action.getBoundingClientRect().height,
+        wordmarkSize:Number.parseFloat(getComputedStyle(wordmark).fontSize),
+        panelTop:Number.parseFloat(panel.top),
+        panelLeft:Number.parseFloat(panel.left)
+      };
+    });
+    assert.equal(compactHeaderMetrics.layoutHeight, initialHeaderMetrics.layoutHeight, `${vp.name}: compacting the header must not shift page layout`);
+    assert.equal(compactHeaderMetrics.innerHeight, initialHeaderMetrics.innerHeight, `${vp.name}: header's reserved inner height must remain stable`);
+    assert.ok(compactHeaderMetrics.panelTop > initialHeaderMetrics.panelTop, `${vp.name}: floating shell did not visually shrink on scroll`);
+    assert.ok(compactHeaderMetrics.panelLeft > initialHeaderMetrics.panelLeft, `${vp.name}: floating shell did not become narrower on scroll`);
+    assert.ok(compactHeaderMetrics.actionHeight < initialHeaderMetrics.actionHeight, `${vp.name}: header CTA did not become more compact on scroll`);
+    assert.ok(compactHeaderMetrics.wordmarkSize < initialHeaderMetrics.wordmarkSize, `${vp.name}: brand wordmark did not become more compact on scroll`);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForFunction(() => !document.querySelector(".site-header")?.classList.contains("is-compact"), null, { timeout: 3000 });
+    const restoredHeaderMetrics = await page.evaluate(() => ({
+      actionHeight:document.querySelector(".header-action").getBoundingClientRect().height,
+      wordmarkSize:Number.parseFloat(getComputedStyle(document.querySelector(".brand-name strong")).fontSize),
+      panelTop:Number.parseFloat(getComputedStyle(document.querySelector(".site-header"),"::before").top)
+    }));
+    assert.equal(restoredHeaderMetrics.actionHeight, initialHeaderMetrics.actionHeight, `${vp.name}: header CTA did not restore at the top`);
+    assert.equal(restoredHeaderMetrics.wordmarkSize, initialHeaderMetrics.wordmarkSize, `${vp.name}: brand wordmark did not restore at the top`);
+    assert.equal(restoredHeaderMetrics.panelTop, initialHeaderMetrics.panelTop, `${vp.name}: floating shell did not restore at the top`);
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
