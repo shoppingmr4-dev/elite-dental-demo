@@ -49,6 +49,7 @@ try {
       const toggle = document.querySelector("#menu-toggle");
       await document.fonts.load('800 48px "Cairo"', "التبييض");
       await document.fonts.load('400 16px "IBM Plex Sans Arabic"', "رعاية الأسنان");
+      await document.fonts.load('400 33px "Great Vibes"', "Ruwa");
       const rect = el => {
         const r = el.getBoundingClientRect();
         return { left:r.left, right:r.right, top:r.top, bottom:r.bottom, width:r.width, height:r.height };
@@ -124,6 +125,7 @@ try {
         brandMarkLoaded:Boolean(document.querySelector(".brand-mark img")?.complete && document.querySelector(".brand-mark img")?.naturalWidth > 0),
         brandNameFontSize:Number.parseFloat(getComputedStyle(document.querySelector(".brand-name strong")).fontSize),
         brandNameFontFamily:getComputedStyle(document.querySelector(".brand-name strong")).fontFamily,
+        brandScriptFontLoaded:document.fonts.check('400 33px "Great Vibes"',"Ruwa"),
         logoReferenceMatch,
         logoTransparent:logoCornerPixel[3]===0,
         logoNavyExact:logoNavyPixel[0]===12 && logoNavyPixel[1]===45 && logoNavyPixel[2]===63 && logoNavyPixel[3]>=250,
@@ -207,7 +209,7 @@ try {
     assert.equal(state.missingAnchors.length, 0, `${vp.name}: broken in-page anchors: ${state.missingAnchors.join(", ")}`);
     assert.ok(state.skipLink, `${vp.name}: skip link missing`);
     assert.ok(state.faviconHref.endsWith("assets/ruwa-mark.png"), `${vp.name}: RUWA favicon link is missing`);
-    assert.equal(state.brandName, "RUWA", `${vp.name}: English brand wordmark is incorrect`);
+    assert.equal(state.brandName, "Ruwa", `${vp.name}: English brand wordmark is incorrect`);
     assert.equal(state.brandArabic, "رُواء لطب الأسنان", `${vp.name}: Arabic clinic name is incorrect`);
     assert.equal(state.brandMarkSrc, "assets/ruwa-mark.png", `${vp.name}: header logo asset is incorrect`);
     assert.ok(state.brandMarkLoaded, `${vp.name}: header logo asset failed to load`);
@@ -216,8 +218,9 @@ try {
     assert.ok(state.logoTransparent, `${vp.name}: RUWA logo background is not transparent`);
     assert.ok(state.logoNavyExact, `${vp.name}: RUWA navy mark color differs from reference`);
     assert.ok(state.logoSmileExact, `${vp.name}: RUWA smile color differs from reference`);
-    assert.equal(state.brandNameFontSize, vp.width <= 390 ? 15 : 21, `${vp.name}: RUWA wordmark size is not correct for this viewport`);
-    assert.ok(state.brandNameFontFamily.includes("IBM Plex Sans Arabic"), `${vp.name}: RUWA wordmark should use the local interface typeface`);
+    assert.equal(state.brandNameFontSize, vp.width <= 390 ? 26 : 33, `${vp.name}: Ruwa script wordmark size is not correct for this viewport`);
+    assert.ok(state.brandNameFontFamily.includes("Great Vibes"), `${vp.name}: Ruwa wordmark is not using Great Vibes`);
+    assert.ok(state.brandScriptFontLoaded, `${vp.name}: Great Vibes script font failed to load`);
     assert.ok(state.reducedMotion, `${vp.name}: reduced-motion fallback is not active`);
     assert.ok(state.scrollWidth <= state.clientWidth + 1, `${vp.name}: horizontal overflow ${state.scrollWidth}px > ${state.clientWidth}px`);
 
