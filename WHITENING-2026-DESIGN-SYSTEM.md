@@ -53,7 +53,7 @@ These are directional references only. Do not copy proprietary artwork, page lay
 | Deep teal | `#115A60` | Hover and deeper accents |
 | Warm accent | `#B85D4A` | Small editorial details |
 | Soft mint | `#E3F2E9` | Subtle highlight |
-| WhatsApp green | `#25D366` | Reserved token only; no live WhatsApp destination is configured |
+| WhatsApp green | `#25D366` | Brand icon accent only in the portfolio demo; no live WhatsApp destination is configured |
 
 The identity is intentionally restrained. Avoid reintroducing the previous cobalt/coral/acid-lime mix or decorative elements that compete with the headline and primary action.
 
@@ -82,7 +82,7 @@ The identity is intentionally restrained. Avoid reintroducing the previous cobal
 
 1. Slim announcement strip with a single concise whitening message, without repeating the clinic name or decorative glyphs.
 2. Sticky branded navigation with a white translucent surface, refined spacing, and a compact rounded menu panel on tablet and phone.
-3. Hero: three-tier service-first headline, supporting explanation, a primary CTA labelled «ابدأ استفسارك» that scrolls to the transparent demo inquiry-preparation panel, a secondary guide link, and an editorial image with a quiet stock-photo disclosure.
+3. Hero: three-tier service-first headline, supporting explanation, a primary «تواصل عبر واتساب» demo CTA with a WhatsApp icon, a secondary guide link, and an editorial image with a quiet stock-photo disclosure. Both primary CTAs open the same transparent portfolio-preview dialog.
 4. Assessment approach: understand the case, explain possible options, and identify the next step.
 5. Causes of discoloration: surface staining compared with deeper changes in natural tooth color.
 6. Treatment options: in-office professional whitening, dentist-supervised custom take-home trays, and care for surface staining.
@@ -117,12 +117,13 @@ Primary references:
 - Navigation links follow the visitor journey: assessment steps, causes of discoloration, whitening options, suitability, and FAQs. The wordmark links back to the top, so no duplicate “Home” link is needed; the assessment CTA remains a separate, clearly labelled button.
 - The compact navigation supports open/close state, `aria-expanded`, Escape-to-close, and closes after a selection.
 - FAQ entries use native `details` and `summary` elements.
-- The primary CTA is labelled “ابدأ استفسارك” and scrolls to the inquiry-preparation panel. It does not imply a real clinical assessment, live contact, or booking.
-- Visitors select an inquiry topic and prepare a copy-ready Arabic message.
-- The message is copied when clipboard access is available, with a manual-copy fallback otherwise.
-- **No information is transmitted, stored, or submitted.**
-- A real WhatsApp link, phone number, booking workflow, or backend must only be added after the real clinic supplies and approves its verified contact details.
-- Do not describe the current interaction as a completed booking or sent inquiry.
+- The header and hero CTAs both use **«تواصل عبر واتساب»** with the recognizable WhatsApp brand glyph, while retaining RUWA's teal button surface (`#187A80`).
+- Both CTAs are native buttons that open one shared HTML `dialog`; neither contains a phone number, external URL, or live WhatsApp destination.
+- The dialog is visibly labeled as an Apex Studio portfolio preview and explains that a real clinic's approved WhatsApp Business account will be connected at handoff.
+- The dialog explicitly states that no conversation is opened and no visitor data is sent or stored in this demo.
+- The dialog supports close buttons, Escape, backdrop click, focus placement on its heading, and focus restoration to the exact trigger. Background scrolling is locked only while the dialog is open.
+- A live WhatsApp destination must only be added after the real clinic supplies and approves its verified business contact details and response process.
+- Do not describe the current interaction as a live message, clinical assessment, or completed booking.
 
 ## Live-clinic contact-channel strategy (future production use)
 
@@ -134,7 +135,7 @@ Before enabling a live contact CTA, obtain the clinic's approved destination and
 
 Use chat for basic service questions and appointment coordination, not as a substitute for clinical assessment. Do not prompt visitors to send dental photographs, detailed medical histories, diagnoses, or other sensitive health information through an ordinary chat flow. Saudi SDAIA guidance identifies data related to an individual's health as sensitive personal data under the PDPL and describes additional safeguards for processing it: https://dgp.sdaia.gov.sa/wps/portal/pdp/knowledgecenter/details/PDPL/. Any collection of clinical information must use a clinic-approved, privacy-compliant channel and workflow.
 
-Until real clinic contact details and operational readiness are provided, keep the current demo CTA **«ابدأ استفسارك»** linked to `#consultation`; retain the visible disclosure that the message is prepared for copying only and is not sent or stored.
+Until real clinic contact details and operational readiness are provided, keep both demo CTAs **«تواصل عبر واتساب»** opening the local explanatory preview dialog only. Do not attach a fake `wa.me` URL or imply that a conversation has started.
 
 ## Engineering constraints
 
@@ -151,7 +152,7 @@ The prior approved preview revision passed Playwright and Lighthouse. The expand
 
 **Verified:** Playwright and Lighthouse passed on code commit `c1a4b051b95ded4f1a29a39bbf2add94ebdb6ca2`. Browser checks passed at 360×800, 390×844, 768×1024, and 1440×900; both Cairo and IBM Plex Sans Arabic loaded locally, with no browser errors or horizontal overflow. Lighthouse: mobile Performance 96; desktop Performance 100; Accessibility, Best Practices, and SEO 100 on both. The following documentation-only commit does not change the tested page or test script. Record the new revision and results here only after the new workflow completes successfully.
 
-The dedicated workflow checks 360×800, 390×844, 768×1024, 1024×900, and 1440×900. It checks exact hero headline text and its three-tier hierarchy, Cairo heading loading, IBM Plex body loading, local font loading, responsive navigation, all in-page anchors, section/card counts, FAQ open/close behavior, inquiry-message preparation, image loading, reduced-motion behavior, JavaScript errors, and horizontal overflow. It also creates mobile and desktop Lighthouse reports.
+The dedicated workflow checks 360×800, 390×844, 768×1024, 1024×900, and 1440×900. It checks exact hero headline text and its three-tier hierarchy, Cairo heading loading, IBM Plex body loading, local font loading, responsive navigation, all in-page anchors, section/card counts, FAQ open/close behavior, both WhatsApp CTAs, native dialog semantics, explanatory copy, Escape and close-button behavior, focus restoration, absence of fake contact destinations, image loading, reduced-motion behavior, JavaScript errors, and horizontal overflow. It also creates mobile and desktop Lighthouse reports.
 
 ## Before any real-client launch
 
