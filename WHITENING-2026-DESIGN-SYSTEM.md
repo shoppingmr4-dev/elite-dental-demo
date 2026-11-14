@@ -82,7 +82,7 @@ The identity is intentionally restrained. Avoid reintroducing the previous cobal
 
 1. Slim announcement strip with a single concise whitening message, without repeating the clinic name or decorative glyphs.
 2. Sticky branded navigation with a white translucent surface, refined spacing, and a compact rounded menu panel on tablet and phone.
-3. Hero: three-tier service-first headline, supporting explanation, a primary CTA labelled «اطلب تقييمًا», a secondary guide link, and an editorial image with a quiet stock-photo disclosure.
+3. Hero: three-tier service-first headline, supporting explanation, a primary CTA labelled «ابدأ استفسارك» that scrolls to the transparent demo inquiry-preparation panel, a secondary guide link, and an editorial image with a quiet stock-photo disclosure.
 4. Assessment approach: understand the case, explain possible options, and identify the next step.
 5. Causes of discoloration: surface staining compared with deeper changes in natural tooth color.
 6. Treatment options: in-office professional whitening, dentist-supervised custom take-home trays, and care for surface staining.
@@ -123,6 +123,18 @@ Primary references:
 - **No information is transmitted, stored, or submitted.**
 - A real WhatsApp link, phone number, booking workflow, or backend must only be added after the real clinic supplies and approves its verified contact details.
 - Do not describe the current interaction as a completed booking or sent inquiry.
+
+## Live-clinic contact-channel strategy (future production use)
+
+For this dental-whitening landing-page use case, the preferred default primary channel is **the clinic's verified official WhatsApp Business account**, but only when the clinic confirms that reception actively monitors it during published hours and has a clear response owner. The live CTA should then read **«تواصل عبر واتساب»**, open the verified click-to-chat destination, and use a recognizable WhatsApp mark. Keep the button surface in RUWA teal (`#187A80`) so the page retains its visual identity; the channel label and icon provide the functional distinction. Do not use the WhatsApp green token merely to make the button more noticeable.
+
+This is a strategic default, not a claim that WhatsApp will always produce the highest conversion. If the clinic cannot answer messages reliably, do not make WhatsApp the primary action. Use a real online booking system instead only when it displays genuine appointment availability and completes the booking with a clear confirmation; otherwise use a verified, staffed phone line with a `tel:` link. Never label an inquiry as a confirmed appointment.
+
+Before enabling a live contact CTA, obtain the clinic's approved destination and confirm ownership, operating hours, response responsibility, and the exact post-click behavior. Do not invent numbers or point to a personal/unmonitored account.
+
+Use chat for basic service questions and appointment coordination, not as a substitute for clinical assessment. Do not prompt visitors to send dental photographs, detailed medical histories, diagnoses, or other sensitive health information through an ordinary chat flow. Saudi SDAIA guidance identifies data related to an individual's health as sensitive personal data under the PDPL and describes additional safeguards for processing it: https://dgp.sdaia.gov.sa/wps/portal/pdp/knowledgecenter/details/PDPL/. Any collection of clinical information must use a clinic-approved, privacy-compliant channel and workflow.
+
+Until real clinic contact details and operational readiness are provided, keep the current demo CTA **«ابدأ استفسارك»** linked to `#consultation`; retain the visible disclosure that the message is prepared for copying only and is not sent or stored.
 
 ## Engineering constraints
 
