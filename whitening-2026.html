@@ -53,6 +53,39 @@ img{display:block;max-width:100%}
 .header-action:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(24,122,128,.18)}
 .header-action:active{transform:translateY(0);box-shadow:0 2px 7px rgba(24,122,128,.12)}
 .header-action svg{width:17px;height:17px}
+.header-action,.primary-cta{appearance:none;-webkit-appearance:none;border:0;font-family:var(--body);text-align:center;cursor:pointer}
+.whatsapp-brand-icon{width:19px;height:19px;flex:none;display:block}
+.header-action .whatsapp-brand-icon{width:18px;height:18px}
+.header-action{gap:9px}
+.primary-cta{gap:10px}
+body.dialog-open{overflow:hidden}
+.whatsapp-demo-dialog{
+ width:min(520px,calc(100% - 32px));max-width:none;max-height:calc(100dvh - 32px);
+ margin:auto;padding:0;overflow:auto;border:1px solid rgba(20,45,56,.12);
+ border-radius:24px;background:var(--paper);color:var(--ink);
+ box-shadow:0 28px 90px rgba(7,25,31,.28);direction:rtl
+}
+.whatsapp-demo-dialog::backdrop{background:rgba(8,25,31,.62);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.whatsapp-demo-dialog[open]{animation:whatsappDialogIn .22s cubic-bezier(.2,.75,.25,1) both}
+.whatsapp-demo-panel{position:relative;padding:clamp(26px,5vw,38px);text-align:center}
+.whatsapp-demo-close{
+ position:absolute;top:15px;left:15px;width:38px;height:38px;display:grid;place-items:center;
+ border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--ink);cursor:pointer;
+ transition:background .18s,border-color .18s
+}
+.whatsapp-demo-close:hover{background:var(--lime);border-color:rgba(24,122,128,.25)}
+.whatsapp-demo-close svg{width:17px;height:17px}
+.whatsapp-demo-kicker{display:inline-flex;align-items:center;gap:7px;margin:2px 0 19px;color:var(--blue);font-size:10px;font-weight:800;letter-spacing:.04em}
+.whatsapp-demo-kicker:before{content:"";width:18px;height:2px;border-radius:2px;background:var(--coral)}
+.whatsapp-demo-symbol{width:58px;height:58px;display:grid;place-items:center;margin:0 auto 17px;border-radius:19px;background:var(--lime);color:var(--blue-deep)}
+.whatsapp-demo-symbol svg{width:30px;height:30px}
+.whatsapp-demo-title{margin:0 0 13px;font-family:var(--display);font-size:clamp(21px,4vw,27px);font-weight:800;line-height:1.5}
+.whatsapp-demo-description{max-width:410px;margin:0 auto;color:var(--ink2);font-size:14px;line-height:2}
+.whatsapp-demo-note{margin:17px 0 22px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#F7F9F8;color:var(--muted);font-size:11px;line-height:1.9}
+.whatsapp-demo-dismiss{min-height:46px;min-width:142px;padding:0 22px;border:0;border-radius:13px;background:var(--blue);color:#fff;font:700 13px var(--body);cursor:pointer;transition:background .18s,transform .18s}
+.whatsapp-demo-dismiss:hover{background:var(--blue-deep);transform:translateY(-1px)}
+.whatsapp-demo-dismiss:active{transform:translateY(0)}
+@keyframes whatsappDialogIn{from{opacity:0;transform:translateY(9px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 .menu-toggle{display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--ink)}
 .menu-toggle svg{width:19px;height:19px;margin:auto}
 .hero{position:relative;overflow:hidden;isolation:isolate;padding-block:clamp(38px,5.8vw,76px) clamp(28px,4vw,52px);background:radial-gradient(ellipse at 84% 18%,rgba(24,122,128,.075) 0%,rgba(24,122,128,0) 42%),radial-gradient(ellipse at 10% 82%,rgba(184,93,74,.035) 0%,rgba(184,93,74,0) 34%),var(--canvas)}
@@ -173,6 +206,12 @@ img{display:block;max-width:100%}
  .options-grid .option-card:last-child{grid-column:1/-1;min-height:220px}
  .suitability-grid{grid-template-columns:1fr;gap:26px}
 }
+@media(max-width:520px){
+ .whatsapp-demo-dialog{width:calc(100% - 28px);max-height:calc(100dvh - 28px);border-radius:20px}
+ .whatsapp-demo-panel{padding:28px 22px 23px}
+ .whatsapp-demo-description{font-size:13px}
+ .whatsapp-demo-dismiss{width:100%}
+}
 @media(max-width:600px){
  .cause-grid,.options-grid,.expect-grid{grid-template-columns:1fr}
  .options-grid .option-card:last-child{grid-column:auto}
@@ -190,6 +229,10 @@ img{display:block;max-width:100%}
 .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:9px}
 .footer a{color:#A9DCD2;text-decoration:underline;text-underline-offset:3px}
 :focus-visible{outline:3px solid var(--coral);outline-offset:4px}
+@media(prefers-reduced-motion:reduce){
+ .whatsapp-demo-dialog[open]{animation:none}
+ .whatsapp-demo-close,.whatsapp-demo-dismiss{transition:none}
+}
 @keyframes copyEnter{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes photoEnter{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(hover:hover){.photo-frame img{transition:transform .8s cubic-bezier(.2,.7,.2,1)}.photo-frame:hover img{transform:scale(1.035)}}
@@ -386,7 +429,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    <a href="#suitability">هل يناسبك؟</a>
    <a href="#faq">الأسئلة الشائعة</a>
   </nav>
-  <a class="header-action" href="#consultation">ابدأ استفسارك</a>
+  <button class="header-action whatsapp-cta" type="button" data-open-whatsapp-demo aria-haspopup="dialog" aria-controls="whatsapp-demo-dialog"><svg class="whatsapp-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2.01c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.47 1.34 4.98L2 22l5.2-1.37c1.43.78 3.1 1.19 4.84 1.19h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.91Zm0 18.1h-.01c-1.51 0-2.99-.4-4.28-1.17l-.31-.18-3.09.81.83-3.01-.2-.31a8.26 8.26 0 0 1-1.27-4.39c0-4.57 3.72-8.29 8.3-8.29 2.21 0 4.29.86 5.85 2.43a8.24 8.24 0 0 1 2.43 5.86c0 4.57-3.72 8.29-8.29 8.29Zm4.55-6.21c-.25-.12-1.48-.73-1.71-.81-.23-.08-.4-.12-.57.12-.17.25-.65.81-.8.98-.15.17-.3.19-.55.06-.25-.12-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.38.11-.5.11-.11.25-.3.37-.45.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.57-1.37-.78-1.88-.21-.49-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.53.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.21-1.1.15-1.2-.06-.1-.23-.16-.48-.28Z"/></svg>تواصل عبر واتساب</button>
   <button class="menu-toggle" id="menu-toggle" type="button" aria-label="فتح القائمة" aria-expanded="false" aria-controls="main-nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
  </div>
 </header>
@@ -412,7 +455,7 @@ body,button,input,select,textarea{font-family:var(--body)}
      </h1>
      <p class="hero-lead">تختلف أسباب تغيّر لون الأسنان ونتائج التبييض من حالة لأخرى. لذلك يبدأ التقييم بفحص الأسنان واللثة، ثم يشرح لك طبيب الأسنان الخيارات المناسبة لحالتك وما يمكن توقعه من كل خيار.</p>
      <div class="hero-actions">
-      <a class="primary-cta" href="#consultation">ابدأ استفسارك <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5m6-6-6 6 6 6"/></svg></a>
+      <button class="primary-cta whatsapp-cta" type="button" data-open-whatsapp-demo aria-haspopup="dialog" aria-controls="whatsapp-demo-dialog"><svg class="whatsapp-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2.01c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.47 1.34 4.98L2 22l5.2-1.37c1.43.78 3.1 1.19 4.84 1.19h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.91Zm0 18.1h-.01c-1.51 0-2.99-.4-4.28-1.17l-.31-.18-3.09.81.83-3.01-.2-.31a8.26 8.26 0 0 1-1.27-4.39c0-4.57 3.72-8.29 8.3-8.29 2.21 0 4.29.86 5.85 2.43a8.24 8.24 0 0 1 2.43 5.86c0 4.57-3.72 8.29-8.29 8.29Zm4.55-6.21c-.25-.12-1.48-.73-1.71-.81-.23-.08-.4-.12-.57.12-.17.25-.65.81-.8.98-.15.17-.3.19-.55.06-.25-.12-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.38.11-.5.11-.11.25-.3.37-.45.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.57-1.37-.78-1.88-.21-.49-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.53.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.21-1.1.15-1.2-.06-.1-.23-.16-.48-.28Z"/></svg>تواصل عبر واتساب</button>
       <a class="text-link" href="#approach">تعرّف على خطوات التقييم <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14m-7-7 7 7 7-7"/></svg></a>
      </div>
     </div>
@@ -617,6 +660,19 @@ body,button,input,select,textarea{font-family:var(--body)}
   </div>
  </section>
 </main>
+<dialog class="whatsapp-demo-dialog" id="whatsapp-demo-dialog" aria-labelledby="whatsapp-demo-title" aria-describedby="whatsapp-demo-description" aria-modal="true">
+ <div class="whatsapp-demo-panel">
+  <button class="whatsapp-demo-close" id="whatsapp-demo-close" type="button" aria-label="إغلاق نافذة معاينة واتساب">
+   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+  </button>
+  <span class="whatsapp-demo-kicker">معاينة من Apex Studio</span>
+  <div class="whatsapp-demo-symbol" aria-hidden="true"><svg class="whatsapp-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2.01c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.47 1.34 4.98L2 22l5.2-1.37c1.43.78 3.1 1.19 4.84 1.19h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.91Zm0 18.1h-.01c-1.51 0-2.99-.4-4.28-1.17l-.31-.18-3.09.81.83-3.01-.2-.31a8.26 8.26 0 0 1-1.27-4.39c0-4.57 3.72-8.29 8.3-8.29 2.21 0 4.29.86 5.85 2.43a8.24 8.24 0 0 1 2.43 5.86c0 4.57-3.72 8.29-8.29 8.29Zm4.55-6.21c-.25-.12-1.48-.73-1.71-.81-.23-.08-.4-.12-.57.12-.17.25-.65.81-.8.98-.15.17-.3.19-.55.06-.25-.12-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.38.11-.5.11-.11.25-.3.37-.45.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.57-1.37-.78-1.88-.21-.49-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.53.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.21-1.1.15-1.2-.06-.1-.23-.16-.48-.28Z"/></svg></div>
+  <h2 class="whatsapp-demo-title" id="whatsapp-demo-title" tabindex="-1">تجربة التواصل عبر واتساب</h2>
+  <p class="whatsapp-demo-description" id="whatsapp-demo-description">هذه معاينة تجريبية لتجربة التواصل عبر واتساب. عند تطبيق الصفحة لعيادة حقيقية، سيتم ربط الزر بحساب واتساب الرسمي للعيادة لبدء المحادثة مباشرة.</p>
+  <p class="whatsapp-demo-note">لا يتم فتح محادثة فعلية أو إرسال أي بيانات في هذه النسخة التجريبية.</p>
+  <button class="whatsapp-demo-dismiss" id="whatsapp-demo-dismiss" type="button">إغلاق المعاينة</button>
+ </div>
+</dialog>
 <footer class="footer"><div class="wrap footer-inner"><span>© 2026 RUWA — نموذج تجريبي من Apex Studio.</span><span>الصورة التوضيحية: <a href="https://www.pexels.com/photo/dentist-in-a-modern-dental-office-37458050/" target="_blank" rel="noopener noreferrer">Emily Gaibor / Pexels</a></span></div></footer>
 <script>
 (function(){
@@ -655,6 +711,35 @@ body,button,input,select,textarea{font-family:var(--body)}
    status.textContent="جهّزنا الرسالة أدناه. انسخها يدويًا؛ لم يتم إرسال أي بيانات أو حفظها.";
   }
  });
+})();
+// Portfolio-only WhatsApp preview: no external destination, message, or visitor data.
+(function(){
+ const dialog=document.getElementById("whatsapp-demo-dialog");
+ const title=document.getElementById("whatsapp-demo-title");
+ const closeButton=document.getElementById("whatsapp-demo-close");
+ const dismissButton=document.getElementById("whatsapp-demo-dismiss");
+ const triggers=[...document.querySelectorAll("[data-open-whatsapp-demo]")];
+ if(!dialog||!title||!closeButton||!dismissButton||triggers.length!==2)return;
+ let lastTrigger=null;
+ const restoreFocus=()=>{
+  document.body.classList.remove("dialog-open");
+  if(lastTrigger?.isConnected)lastTrigger.focus();
+  lastTrigger=null;
+ };
+ const closeDialog=()=>{if(dialog.open)dialog.close()};
+ triggers.forEach(trigger=>trigger.addEventListener("click",()=>{
+  if(dialog.open)return;
+  lastTrigger=trigger;
+  document.body.classList.add("dialog-open");
+  dialog.showModal();
+  title.focus();
+ }));
+ closeButton.addEventListener("click",closeDialog);
+ dismissButton.addEventListener("click",closeDialog);
+ dialog.addEventListener("click",event=>{
+  if(event.target===dialog)closeDialog();
+ });
+ dialog.addEventListener("close",restoreFocus);
 })();
 </script>
 </body>
