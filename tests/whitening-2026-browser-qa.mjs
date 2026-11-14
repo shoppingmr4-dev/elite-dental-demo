@@ -53,6 +53,23 @@ try {
         const r = el.getBoundingClientRect();
         return { left:r.left, right:r.right, top:r.top, bottom:r.bottom, width:r.width, height:r.height };
       };
+      const brandImage=document.querySelector(".brand-mark img");
+      const logoResponse=await fetch(brandImage.src);
+      const logoText=await logoResponse.text();
+      const logoDocument=new DOMParser().parseFromString(logoText,"image/svg+xml");
+      const logoSvg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+      logoSvg.setAttribute("viewBox",logoDocument.documentElement.getAttribute("viewBox") || "0 0 64 48");
+      logoSvg.style.cssText="position:fixed;left:-1000px;top:0;width:64px;height:48px;overflow:visible;pointer-events:none";
+      for(const id of ["ruwa-r","ruwa-smile"]){
+        const group=logoDocument.getElementById(id);
+        if(group)logoSvg.appendChild(document.importNode(group,true));
+      }
+      document.body.appendChild(logoSvg);
+      const rBox=logoSvg.querySelector("#ruwa-r")?.getBBox();
+      const smileBox=logoSvg.querySelector("#ruwa-smile")?.getBBox();
+      const logoGap=rBox&&smileBox?smileBox.x-(rBox.x+rBox.width):-1;
+      logoSvg.remove();
+
       return {
         lang:document.documentElement.lang,
         dir:document.documentElement.dir,
@@ -107,6 +124,8 @@ try {
         brandArabic:document.querySelector(".brand-name small")?.innerText?.trim() || "",
         brandMarkSrc:document.querySelector(".brand-mark img")?.getAttribute("src") || "",
         brandMarkLoaded:Boolean(document.querySelector(".brand-mark img")?.complete && document.querySelector(".brand-mark img")?.naturalWidth > 0),
+        brandNameFontSize:Number.parseFloat(getComputedStyle(document.querySelector(".brand-name strong")).fontSize),
+        logoGap,
         imageLoaded:Boolean(image?.complete && image.naturalWidth > 0),
         navDisplay:nav ? getComputedStyle(nav).display : "missing",
         toggleDisplay:toggle ? getComputedStyle(toggle).display : "missing",
@@ -190,6 +209,8 @@ try {
     assert.equal(state.brandArabic, "رُواء لطب الأسنان", `${vp.name}: Arabic clinic name is incorrect`);
     assert.equal(state.brandMarkSrc, "assets/ruwa-mark.svg", `${vp.name}: header logo asset is incorrect`);
     assert.ok(state.brandMarkLoaded, `${vp.name}: header logo asset failed to load`);
+    assert.ok(state.logoGap >= 7, `${vp.name}: R monogram and smile are too close or overlapping`);
+    assert.equal(state.brandNameFontSize, vp.width <= 390 ? 12 : 17, `${vp.name}: RUWA wordmark size is not correct for this viewport`);
     assert.ok(state.reducedMotion, `${vp.name}: reduced-motion fallback is not active`);
     assert.ok(state.scrollWidth <= state.clientWidth + 1, `${vp.name}: horizontal overflow ${state.scrollWidth}px > ${state.clientWidth}px`);
 
