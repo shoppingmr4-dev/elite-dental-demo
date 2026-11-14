@@ -57,18 +57,24 @@ try {
       const logoResponse=await fetch(brandImage.src);
       const logoText=await logoResponse.text();
       const logoDocument=new DOMParser().parseFromString(logoText,"image/svg+xml");
-      const logoSvg=document.createElementNS("http://www.w3.org/2000/svg","svg");
-      logoSvg.setAttribute("viewBox",logoDocument.documentElement.getAttribute("viewBox") || "0 0 64 48");
-      logoSvg.style.cssText="position:fixed;left:-1000px;top:0;width:64px;height:48px;overflow:visible;pointer-events:none";
-      for(const id of ["ruwa-r","ruwa-smile"]){
-        const group=logoDocument.getElementById(id);
-        if(group)logoSvg.appendChild(document.importNode(group,true));
-      }
-      document.body.appendChild(logoSvg);
-      const rBox=logoSvg.querySelector("#ruwa-r")?.getBBox();
-      const smileBox=logoSvg.querySelector("#ruwa-smile")?.getBBox();
-      const logoGap=rBox&&smileBox?smileBox.x-(rBox.x+rBox.width):-1;
-      logoSvg.remove();
+      const embeddedLogo=logoDocument.querySelector("image");
+      const embeddedLogoHref=embeddedLogo?.getAttribute("href") || "";
+      const logoRaster=new Image();
+      logoRaster.src=embeddedLogoHref;
+      await logoRaster.decode();
+      const logoCanvas=document.createElement("canvas");
+      logoCanvas.width=164;logoCanvas.height=142;
+      const logoContext=logoCanvas.getContext("2d",{willReadFrequently:true});
+      logoContext.drawImage(logoRaster,0,0);
+      const logoPixel=(x,y)=>Array.from(logoContext.getImageData(x,y,1,1).data);
+      const logoCornerPixel=logoPixel(0,0);
+      const logoNavyPixel=logoPixel(25,20);
+      const logoSmilePixel=logoPixel(40,79);
+      const logoReferenceMatch=logoDocument.documentElement.getAttribute("viewBox")==="0 0 164 142" &&
+        Boolean(embeddedLogoHref.startsWith("data:image/png;base64,")) &&
+        embeddedLogo?.getAttribute("width")==="164" &&
+        embeddedLogo?.getAttribute("height")==="142" &&
+        !logoDocument.querySelector("rect");
 
       return {
         lang:document.documentElement.lang,
@@ -125,7 +131,10 @@ try {
         brandMarkSrc:document.querySelector(".brand-mark img")?.getAttribute("src") || "",
         brandMarkLoaded:Boolean(document.querySelector(".brand-mark img")?.complete && document.querySelector(".brand-mark img")?.naturalWidth > 0),
         brandNameFontSize:Number.parseFloat(getComputedStyle(document.querySelector(".brand-name strong")).fontSize),
-        logoGap,
+        logoReferenceMatch,
+        logoTransparent:logoCornerPixel[3]===0,
+        logoNavyExact:logoNavyPixel[0]===12 && logoNavyPixel[1]===45 && logoNavyPixel[2]===63 && logoNavyPixel[3]>=250,
+        logoSmileExact:logoSmilePixel[0]===13 && logoSmilePixel[1]===126 && logoSmilePixel[2]===137 && logoSmilePixel[3]>=250,
         imageLoaded:Boolean(image?.complete && image.naturalWidth > 0),
         navDisplay:nav ? getComputedStyle(nav).display : "missing",
         toggleDisplay:toggle ? getComputedStyle(toggle).display : "missing",
@@ -209,7 +218,10 @@ try {
     assert.equal(state.brandArabic, "رُواء لطب الأسنان", `${vp.name}: Arabic clinic name is incorrect`);
     assert.equal(state.brandMarkSrc, "assets/ruwa-mark.svg", `${vp.name}: header logo asset is incorrect`);
     assert.ok(state.brandMarkLoaded, `${vp.name}: header logo asset failed to load`);
-    assert.ok(state.logoGap >= 7, `${vp.name}: R monogram and smile are too close or overlapping`);
+    assert.ok(state.logoReferenceMatch, `${vp.name}: RUWA logo does not match the supplied reference layout`);
+    assert.ok(state.logoTransparent, `${vp.name}: RUWA logo background is not transparent`);
+    assert.ok(state.logoNavyExact, `${vp.name}: RUWA navy mark color differs from reference`);
+    assert.ok(state.logoSmileExact, `${vp.name}: RUWA smile color differs from reference`);
     assert.equal(state.brandNameFontSize, vp.width <= 390 ? 12 : 17, `${vp.name}: RUWA wordmark size is not correct for this viewport`);
     assert.ok(state.reducedMotion, `${vp.name}: reduced-motion fallback is not active`);
     assert.ok(state.scrollWidth <= state.clientWidth + 1, `${vp.name}: horizontal overflow ${state.scrollWidth}px > ${state.clientWidth}px`);
