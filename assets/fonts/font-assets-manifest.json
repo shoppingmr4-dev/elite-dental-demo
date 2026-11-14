@@ -300,5 +300,36 @@
     }
   ],
   "allDownloadsExact200": true,
-  "noFontPreload": true
+  "noFontPreload": true,
+  "activeTypography": {
+    "headingFamily": "Cairo",
+    "headingWeights": [
+      700,
+      800
+    ],
+    "bodyFamily": "IBM Plex Sans Arabic",
+    "bodyWeights": [
+      400,
+      600,
+      700
+    ],
+    "delivery": "self-hosted WOFF2",
+    "sourcePackage": "@fontsource/cairo",
+    "sourceVersion": "5.3.0",
+    "license": "SIL Open Font License 1.1",
+    "assets": [
+      {
+        "fileName": "cairo-arabic-700-normal.woff2",
+        "subset": "arabic",
+        "weight": 700,
+        "sourceSha": "1689e56700f2172d080192a0133ca14a4c0d3204"
+      },
+      {
+        "fileName": "cairo-arabic-800-normal.woff2",
+        "subset": "arabic",
+        "weight": 800,
+        "sourceSha": "8991554ba745b0b0c36d4ace6d6cc23e857873d2"
+      }
+    ]
+  }
 }

@@ -1,0 +1,78 @@
+name: Elite Whitening Browser QA
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+    branches:
+      - main
+    paths:
+      - "whitening-2026.html"
+      - "assets/fonts/**"
+      - "assets/elite-dental-mark.svg"
+      - "tests/whitening-2026-browser-qa.mjs"
+      - ".github/workflows/whitening-2026-browser-qa.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: elite-whitening-browser-qa
+  cancel-in-progress: false
+
+jobs:
+  browser-and-lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out the staged landing page
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install the repository's existing test tools
+        run: npm install --no-audit --no-fund
+
+      - name: Install Chromium for Playwright and Lighthouse
+        run: npx playwright install --with-deps chromium
+
+      - name: Start a local preview server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/elite-whitening-http.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/whitening-2026.html >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/elite-whitening-http.log
+          exit 1
+
+      - name: Run browser checks at mobile, tablet and desktop sizes
+        env:
+          BASE_URL: http://127.0.0.1:4173/whitening-2026.html
+        run: node tests/whitening-2026-browser-qa.mjs
+
+      - name: Configure Lighthouse to use Playwright Chromium
+        run: echo "CHROME_PATH=$(node -e "process.stdout.write(require('playwright').chromium.executablePath())")" >> "$GITHUB_ENV"
+
+      - name: Run mobile Lighthouse audit
+        run: |
+          mkdir -p artifacts/whitening-2026
+          npx lighthouse http://127.0.0.1:4173/whitening-2026.html --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" --only-categories=performance,accessibility,best-practices,seo --output=html,json --output-path=./artifacts/whitening-2026/lighthouse-mobile --quiet
+
+      - name: Run desktop Lighthouse audit
+        run: |
+          npx lighthouse http://127.0.0.1:4173/whitening-2026.html --preset=desktop --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" --only-categories=performance,accessibility,best-practices,seo --output=html,json --output-path=./artifacts/whitening-2026/lighthouse-desktop --quiet
+
+      - name: Publish screenshots and quality reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: elite-whitening-browser-qa
+          path: artifacts/whitening-2026/
+          if-no-files-found: warn
+          retention-days: 14
+# Run the dedicated visual QA workflow on each reviewed preview revision.
