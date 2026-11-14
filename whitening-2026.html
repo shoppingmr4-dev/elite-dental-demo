@@ -411,13 +411,96 @@ body,button,input,select,textarea{font-family:var(--body)}
  .visual-caption{bottom:6%;left:1%;max-width:150px;padding:8px 10px;font-size:10px;line-height:1.55}
  .visual-side-note{display:none}
 }
+
+/* Apex Studio floating header refinement: stable layout footprint, compact visual shell. */
+.site-header{
+ position:sticky;top:10px;z-index:30;isolation:isolate;
+ width:min(calc(var(--max) - 48px),calc(100% - var(--gutter)*2 - 8px));
+ height:76px;margin:10px auto 0;
+ background:transparent;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+.site-header::before{
+ content:"";position:absolute;z-index:-1;inset:0;pointer-events:none;
+ border:1px solid rgba(221,230,227,.92);border-radius:23px;
+ background:rgba(255,255,255,.93);
+ box-shadow:0 9px 28px rgba(20,45,56,.075);
+ backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+ transition:inset .3s cubic-bezier(.2,.7,.2,1),border-radius .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s cubic-bezier(.2,.7,.2,1);
+}
+.header-inner{
+ position:relative;z-index:1;width:100%;max-width:none;height:76px;margin:0;
+ padding-inline:clamp(18px,2.2vw,28px);gap:20px;
+}
+.brand{gap:9px}
+.brand-mark{width:48px;height:42px}
+.brand-mark img{width:46px;height:40px}
+.nav{gap:clamp(14px,1.7vw,24px)}
+.header-action{min-height:42px;padding-inline:16px;border-radius:12px}
+.site-header.is-compact::before{
+ inset:7px 9px;border-radius:19px;
+ box-shadow:0 5px 18px rgba(20,45,56,.065);
+}
+.site-header.is-compact .header-inner{padding-inline:clamp(27px,2.8vw,36px);gap:16px}
+.site-header.is-compact .brand{gap:7px}
+.site-header.is-compact .brand-mark{width:43px;height:38px}
+.site-header.is-compact .brand-mark img{width:41px;height:36px}
+.site-header.is-compact .brand-name strong{font-size:27px}
+.site-header.is-compact .brand-name small{margin-top:3px;font-size:11px}
+.site-header.is-compact .nav{gap:clamp(12px,1.4vw,19px)}
+.site-header.is-compact .header-action{min-height:37px;padding-inline:14px;border-radius:11px;font-size:12px}
+.site-header.is-compact .header-action .whatsapp-brand-icon{width:16px;height:16px}
+.site-header.is-compact .menu-toggle{width:38px;height:38px}
+@media(max-width:920px){
+ .site-header{height:76px}
+ .header-inner{height:76px;padding-inline:18px;gap:14px}
+ .site-header.is-compact .header-inner{padding-inline:24px;gap:10px}
+ .nav{top:calc(100% + 7px);right:10px;left:10px;border-radius:16px}
+}
+@media(max-width:720px){
+ .site-header{top:8px;width:calc(100% - var(--gutter)*2 - 8px);height:66px;margin-top:8px}
+ .site-header::before{border-radius:20px}
+ .header-inner{height:66px;padding-inline:8px;gap:8px}
+ .brand{gap:7px}
+ .brand-mark{width:42px;height:36px}
+ .brand-mark img{width:40px;height:35px}
+ .brand-name strong{font-size:25px}
+ .brand-name small{margin-top:3px;font-size:11px}
+ .header-action{min-height:38px;padding-inline:10px;border-radius:11px;font-size:11px;gap:6px}
+ .header-action .whatsapp-brand-icon{width:16px;height:16px}
+ .menu-toggle{width:38px;height:38px;flex:none}
+ .site-header.is-compact::before{inset:5px 4px;border-radius:17px}
+ .site-header.is-compact .header-inner{padding-inline:9px;gap:6px}
+ .site-header.is-compact .brand{gap:5px}
+ .site-header.is-compact .brand-mark{width:39px;height:34px}
+ .site-header.is-compact .brand-mark img{width:37px;height:33px}
+ .site-header.is-compact .brand-name strong{font-size:23px}
+ .site-header.is-compact .brand-name small{margin-top:2px;font-size:10px}
+ .site-header.is-compact .header-action{min-height:35px;padding-inline:8px;font-size:10px}
+ .site-header.is-compact .header-action .whatsapp-brand-icon{width:15px;height:15px}
+ .site-header.is-compact .menu-toggle{width:36px;height:36px}
+}
+@media(max-width:390px){
+ .site-header{width:calc(100% - var(--gutter)*2 - 6px)}
+ .header-inner{padding-inline:6px;gap:5px}
+ .brand{gap:5px}
+ .brand-mark{width:38px;height:34px}
+ .brand-mark img{width:36px;height:32px}
+ .header-action{min-height:36px;padding-inline:7px;font-size:10.5px;gap:5px}
+ .header-action .whatsapp-brand-icon{width:15px;height:15px}
+ .menu-toggle{width:36px;height:36px}
+ .site-header.is-compact .header-inner{padding-inline:7px;gap:4px}
+}
+@media(prefers-reduced-motion:reduce){
+ .site-header::before,.header-inner,.brand,.brand-mark,.brand-mark img,.brand-name strong,.brand-name small,.nav,.header-action,.menu-toggle{transition:none!important}
+}
+
 </style>
 </head>
 <body>
 <a class="skip" href="#main">تجاوز إلى المحتوى</a>
 <div class="announcement">تبييض الأسنان يبدأ بفهم الحالة</div>
 <header class="site-header">
- <div class="wrap header-inner">
+ <div class="header-inner">
   <a class="brand" href="#top">
    <span class="brand-mark" aria-hidden="true"><img src="assets/ruwa-mark.png" alt="" width="48" height="42"></span>
    <span class="brand-name"><strong>Ruwa</strong><small>رُواء لطب الأسنان</small></span>
@@ -712,6 +795,22 @@ body,button,input,select,textarea{font-family:var(--body)}
   }
  });
 })();
+
+// Floating RUWA header: compact after page scrolling, without changing document flow.
+(function(){
+ const header=document.querySelector(".site-header");
+ if(!header)return;
+ let compact=null;
+ const update=()=>{
+  const next=window.scrollY>56;
+  if(next===compact)return;
+  compact=next;
+  header.classList.toggle("is-compact",next);
+ };
+ window.addEventListener("scroll",update,{passive:true});
+ update();
+})();
+
 // Portfolio-only WhatsApp preview: no external destination, message, or visitor data.
 (function(){
  const dialog=document.getElementById("whatsapp-demo-dialog");
