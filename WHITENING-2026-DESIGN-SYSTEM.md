@@ -31,12 +31,13 @@ These are directional references only. Do not copy proprietary artwork, page lay
 
 - Fictional brand name: **رُواء | RUWA** (working portfolio identity; trademark availability has not been legally cleared).
 - Arabic name: **رُواء لطب الأسنان**.
-- English wordmark: **RUWA**, paired with the Arabic descriptor in the website header.
+- English wordmark: **Ruwa**, set in **Great Vibes** (400) for a flowing calligraphic signature; loaded from Google Fonts with `display=swap`. The Arabic descriptor remains in IBM Plex Sans Arabic.
 - Logo mark: preserve the exact supplied reference composition: the deep-navy stylized **R** and the turquoise crescent smile placed inside its open bowl. Do not separate, reposition, reinterpret, or redraw these forms.
 - Header logo is transparent and unboxed. The favicon uses the same transparent PNG mark.
 - Primary logo asset: `assets/ruwa-mark.png`, containing the supplied mark with its white background removed and original proportions preserved.
 - Palette: deep ink `#142D38` and teal `#187A80`, matching the landing page system.
 - Keep the logo crisp at small sizes; do not add shadows, gradients, bevels, or decorative effects.
+- Great Vibes is distributed under the SIL Open Font License (OFL); source: Google Fonts. Only the English wordmark uses it.
 
 ## Current design tokens
 
