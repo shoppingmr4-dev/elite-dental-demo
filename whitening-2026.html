@@ -853,22 +853,40 @@ body,button,input,select,textarea{font-family:var(--body)}
    return;
   }
 
-  const brandRect=brand.getBoundingClientRect();
-  const navRect=nav.getBoundingClientRect();
-  const actionRect=action.getBoundingClientRect();
-  const brandGap=Math.max(0,brandRect.left-navRect.right);
-  const actionGap=Math.max(0,navRect.left-actionRect.right);
-  const navStyle=getComputedStyle(nav);
-  const baseNavGap=Number.parseFloat(navStyle.columnGap)||0;
-  const compactNavGap=Math.max(12,baseNavGap-2);
-  const linkCount=nav.querySelectorAll("a").length;
-  const navWidthReduction=(baseNavGap-compactNavGap)*Math.max(0,linkCount-1);
-  const navEdgeExpansion=navWidthReduction/2;
-  const compactPaddingIncrease=2;
-  const targetGapReduction=0.30;
+  // Measure both CSS states in an invisible, same-width clone. This accounts for
+  // every real compact-size change (brand width, CTA padding/type, and nav gaps)
+  // before calculating the exact translation needed to reduce each free gap by 30%.
+  const headerRect=header.getBoundingClientRect();
+  const clone=header.cloneNode(true);
+  clone.classList.remove("is-compact");
+  clone.style.setProperty("position","fixed","important");
+  clone.style.setProperty("top","-1000px","important");
+  clone.style.setProperty("left","0","important");
+  clone.style.setProperty("width",headerRect.width+"px","important");
+  clone.style.setProperty("margin","0","important");
+  clone.style.setProperty("visibility","hidden","important");
+  clone.style.setProperty("pointer-events","none","important");
+  clone.style.setProperty("transition","none","important");
+  clone.querySelectorAll("*").forEach(element=>element.style.setProperty("transition","none","important"));
+  document.body.appendChild(clone);
 
-  const brandTravel=Math.max(0,brandGap*targetGapReduction+navEdgeExpansion-compactPaddingIncrease);
-  const actionTravel=Math.max(0,actionGap*targetGapReduction+navEdgeExpansion-compactPaddingIncrease);
+  const snapshot=compactState=>{
+   clone.classList.toggle("is-compact",compactState);
+   const cloneBrand=clone.querySelector(".brand").getBoundingClientRect();
+   const cloneNav=clone.querySelector(".nav").getBoundingClientRect();
+   const cloneAction=clone.querySelector(".header-action").getBoundingClientRect();
+   return {
+    brandGap:Math.max(0,cloneBrand.left-cloneNav.right),
+    actionGap:Math.max(0,cloneNav.left-cloneAction.right)
+   };
+  };
+
+  const initial=snapshot(false);
+  const compactState=snapshot(true);
+  clone.remove();
+
+  const brandTravel=Math.max(0,compactState.brandGap-initial.brandGap*0.70);
+  const actionTravel=Math.max(0,compactState.actionGap-initial.actionGap*0.70);
   header.style.setProperty("--brand-converge-x",brandTravel.toFixed(2)+"px");
   header.style.setProperty("--action-converge-x",actionTravel.toFixed(2)+"px");
  };
