@@ -49,7 +49,7 @@ try {
       const toggle = document.querySelector("#menu-toggle");
       await document.fonts.load('800 48px "Cairo"', "التبييض");
       await document.fonts.load('400 16px "IBM Plex Sans Arabic"', "رعاية الأسنان");
-      await document.fonts.load('400 33px "Great Vibes"', "Ruwa");
+      await document.fonts.load('italic 500 31px "Cormorant Garamond"', "Ruwa");
       const rect = el => {
         const r = el.getBoundingClientRect();
         return { left:r.left, right:r.right, top:r.top, bottom:r.bottom, width:r.width, height:r.height };
@@ -70,6 +70,12 @@ try {
 
       return {
         lang:document.documentElement.lang,
+        announcementText:document.querySelector(".announcement")?.innerText?.trim() || "",
+        headerPosition:getComputedStyle(document.querySelector(".site-header")).position,
+        headerActionText:document.querySelector(".header-action")?.innerText?.trim() || "",
+        headerActionHasChatIcon:Boolean(document.querySelector(".header-action svg")),
+        navLabels:[...document.querySelectorAll("#main-nav a")].map(a=>a.innerText.trim()),
+        navHrefs:[...document.querySelectorAll("#main-nav a")].map(a=>a.getAttribute("href")),
         dir:document.documentElement.dir,
         heading:heading?.innerText?.replace(/\s+/g," ").trim() || "",
         heroLead:document.querySelector(".hero-lead")?.innerText?.trim() || "",
@@ -125,7 +131,7 @@ try {
         brandMarkLoaded:Boolean(document.querySelector(".brand-mark img")?.complete && document.querySelector(".brand-mark img")?.naturalWidth > 0),
         brandNameFontSize:Number.parseFloat(getComputedStyle(document.querySelector(".brand-name strong")).fontSize),
         brandNameFontFamily:getComputedStyle(document.querySelector(".brand-name strong")).fontFamily,
-        brandScriptFontLoaded:document.fonts.check('400 33px "Great Vibes"',"Ruwa"),
+        brandWordmarkFontLoaded:document.fonts.check('italic 500 31px "Cormorant Garamond"',"Ruwa"),
         logoReferenceMatch,
         logoTransparent:logoCornerPixel[3]===0,
         logoNavyExact:logoNavyPixel[0]===12 && logoNavyPixel[1]===45 && logoNavyPixel[2]===63 && logoNavyPixel[3]>=250,
@@ -175,6 +181,12 @@ try {
     });
 
     assert.equal(state.lang, "ar-SA", `${vp.name}: Arabic language metadata missing`);
+    assert.equal(state.announcementText, "تبييض الأسنان يبدأ بفهم الحالة", `${vp.name}: announcement copy is incorrect`);
+    assert.equal(state.headerPosition, "sticky", `${vp.name}: header should remain accessible while scrolling`);
+    assert.equal(state.headerActionText, "اطلب تقييمًا", `${vp.name}: primary header action label is incorrect`);
+    assert.equal(state.headerActionHasChatIcon, false, `${vp.name}: header CTA must not imply a live chat channel`);
+    assert.deepEqual(state.navLabels, ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
+    assert.deepEqual(state.navHrefs, ["#approach","#causes","#options","#suitability","#faq"], `${vp.name}: navigation destinations are incorrect`);
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
     assert.equal(state.heroLead, "تختلف أسباب تغيّر لون الأسنان ونتائج التبييض من حالة لأخرى. لذلك يبدأ التقييم بفحص الأسنان واللثة، ثم يشرح لك طبيب الأسنان الخيارات المناسبة لحالتك وما يمكن توقعه من كل خيار.", `${vp.name}: hero supporting copy changed`);
@@ -218,9 +230,9 @@ try {
     assert.ok(state.logoTransparent, `${vp.name}: RUWA logo background is not transparent`);
     assert.ok(state.logoNavyExact, `${vp.name}: RUWA navy mark color differs from reference`);
     assert.ok(state.logoSmileExact, `${vp.name}: RUWA smile color differs from reference`);
-    assert.equal(state.brandNameFontSize, vp.width <= 390 ? 26 : 33, `${vp.name}: Ruwa script wordmark size is not correct for this viewport`);
-    assert.ok(state.brandNameFontFamily.includes("Great Vibes"), `${vp.name}: Ruwa wordmark is not using Great Vibes`);
-    assert.ok(state.brandScriptFontLoaded, `${vp.name}: Great Vibes script font failed to load`);
+    assert.equal(state.brandNameFontSize, vp.width <= 390 ? 25 : 31, `${vp.name}: Ruwa wordmark size is not correct for this viewport`);
+    assert.ok(state.brandNameFontFamily.includes("Cormorant Garamond"), `${vp.name}: Ruwa wordmark is not using Cormorant Garamond`);
+    assert.ok(state.brandWordmarkFontLoaded, `${vp.name}: Cormorant Garamond wordmark font failed to load`);
     assert.ok(state.reducedMotion, `${vp.name}: reduced-motion fallback is not active`);
     assert.ok(state.scrollWidth <= state.clientWidth + 1, `${vp.name}: horizontal overflow ${state.scrollWidth}px > ${state.clientWidth}px`);
 
