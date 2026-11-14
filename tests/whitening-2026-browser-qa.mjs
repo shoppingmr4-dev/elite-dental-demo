@@ -271,20 +271,35 @@ try {
     assert.equal(await page.evaluate(() => document.activeElement?.id), "whatsapp-demo-title", `${vp.name}: opening from the hero CTA must move focus to the dialog heading`);
     assert.ok(await dialog.evaluate(el=>el.matches(":modal")), `${vp.name}: demo dialog must enter the native modal top layer`);
     await page.keyboard.press("Escape");
-    await page.waitForFunction(() => document.querySelector("#whatsapp-demo-dialog")?.open === false, null, { timeout: 3000 });
+    await page.waitForFunction(() => {
+      const dialog=document.querySelector("#whatsapp-demo-dialog");
+      return dialog?.open === false &&
+        !document.body.classList.contains("dialog-open") &&
+        document.activeElement?.classList.contains("primary-cta");
+    }, null, { timeout: 3000 });
     assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("primary-cta")), true, `${vp.name}: Escape must restore focus to the hero trigger`);
     assert.equal(await page.evaluate(() => document.body.classList.contains("dialog-open")), false, `${vp.name}: body scroll lock must be removed after Escape`);
 
     await headerTrigger.click();
     await page.waitForFunction(() => document.querySelector("#whatsapp-demo-dialog")?.open === true, null, { timeout: 3000 });
     await page.locator("#whatsapp-demo-close").click();
-    await page.waitForFunction(() => document.querySelector("#whatsapp-demo-dialog")?.open === false, null, { timeout: 3000 });
+    await page.waitForFunction(() => {
+      const dialog=document.querySelector("#whatsapp-demo-dialog");
+      return dialog?.open === false &&
+        !document.body.classList.contains("dialog-open") &&
+        document.activeElement?.classList.contains("header-action");
+    }, null, { timeout: 3000 });
     assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("header-action")), true, `${vp.name}: close control must restore focus to the header trigger`);
 
     await heroTrigger.click();
     await page.waitForFunction(() => document.querySelector("#whatsapp-demo-dialog")?.open === true, null, { timeout: 3000 });
     await page.locator("#whatsapp-demo-dismiss").click();
-    await page.waitForFunction(() => document.querySelector("#whatsapp-demo-dialog")?.open === false, null, { timeout: 3000 });
+    await page.waitForFunction(() => {
+      const dialog=document.querySelector("#whatsapp-demo-dialog");
+      return dialog?.open === false &&
+        !document.body.classList.contains("dialog-open") &&
+        document.activeElement?.classList.contains("primary-cta");
+    }, null, { timeout: 3000 });
     assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("primary-cta")), true, `${vp.name}: dialog action must restore focus to the hero trigger`);
     assert.equal(new URL(page.url()).hash, "", `${vp.name}: demo CTA must not create an unrelated anchor navigation`);
     await page.evaluate(() => window.scrollTo(0, 0));
