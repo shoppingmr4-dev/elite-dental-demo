@@ -36,22 +36,22 @@ img{display:block;max-width:100%}
 .wrap{width:min(var(--max),calc(100% - var(--gutter)*2));margin-inline:auto}
 .skip{position:absolute;top:-100px;right:18px;z-index:100;padding:11px 15px;background:#fff;border-radius:10px}
 .skip:focus{top:12px}
-.announcement{height:34px;display:flex;align-items:center;justify-content:center;padding:0 14px;background:var(--ink);color:#F8F5EC;text-align:center;font-size:10px;letter-spacing:.035em}
-.site-header{position:relative;z-index:30;background:rgba(244,247,246,.96);border-bottom:1px solid rgba(20,45,56,.1);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-.header-inner{height:78px;display:flex;align-items:center;justify-content:space-between;gap:25px}
+.announcement{min-height:32px;display:flex;align-items:center;justify-content:center;padding:6px 14px;background:var(--ink);color:#F8F5EC;text-align:center;font-size:11px;line-height:1.35;letter-spacing:0}
+.site-header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.header-inner{height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}
 .brand{display:flex;align-items:center;gap:11px;flex:none}
 .brand-mark{width:50px;height:44px;display:grid;place-items:center;flex:none;background:transparent;color:var(--ink);border-radius:0;box-shadow:none}
 .brand-mark img{display:block;width:48px;height:42px;object-fit:contain}
 .brand-name strong{display:block;font-family:"Cormorant Garamond",Georgia,serif;font-size:31px;font-style:italic;font-weight:500;letter-spacing:.01em;direction:ltr;text-align:right;color:var(--ink);line-height:1.05}
 .brand-name small{display:block;margin-top:5px;font-family:var(--body);font-size:12px;font-weight:600;color:#53656B;letter-spacing:0;direction:rtl;text-align:right;line-height:1.4}
-.nav{display:flex;align-items:center;gap:clamp(18px,2.8vw,38px);margin-inline:auto}
-.nav a{position:relative;font-size:12px;font-weight:700;color:#656A62;transition:color .2s}
+.nav{display:flex;align-items:center;gap:clamp(16px,2vw,30px);margin-inline:auto}
+.nav a{position:relative;font-size:13px;font-weight:600;color:var(--ink2);transition:color .2s}
 .nav a::after{content:"";position:absolute;right:0;bottom:-7px;width:100%;height:2px;border-radius:2px;background:var(--blue);transform:scaleX(0);transform-origin:right;transition:transform .22s cubic-bezier(.2,.7,.2,1)}
 .nav a:hover,.nav a:focus-visible{color:var(--blue)}
 .nav a:hover::after,.nav a:focus-visible::after{transform:scaleX(1)}
-.header-action{min-height:43px;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:0 16px;border-radius:999px;background:var(--blue);color:#FFFFFF;font-size:11px;font-weight:800;box-shadow:0 4px 12px rgba(24,122,128,.16);transition:transform .24s cubic-bezier(.2,.7,.2,1),box-shadow .24s cubic-bezier(.2,.7,.2,1)}
-.header-action:hover{transform:translateY(-2px);box-shadow:0 9px 22px rgba(24,122,128,.22)}
-.header-action:active{transform:translateY(0) scale(.985);box-shadow:0 2px 7px rgba(24,122,128,.14)}
+.header-action{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0 18px;border-radius:13px;background:var(--blue);color:#FFFFFF;font-size:14px;font-weight:700;box-shadow:0 3px 10px rgba(24,122,128,.12);transition:transform .2s cubic-bezier(.2,.7,.2,1),box-shadow .2s cubic-bezier(.2,.7,.2,1)}
+.header-action:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(24,122,128,.18)}
+.header-action:active{transform:translateY(0);box-shadow:0 2px 7px rgba(24,122,128,.12)}
 .header-action svg{width:17px;height:17px}
 .menu-toggle{display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--ink)}
 .menu-toggle svg{width:19px;height:19px;margin:auto}
@@ -194,22 +194,26 @@ img{display:block;max-width:100%}
 @keyframes photoEnter{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(hover:hover){.photo-frame img{transition:transform .8s cubic-bezier(.2,.7,.2,1)}.photo-frame:hover img{transform:scale(1.035)}}
 @media(max-width:920px){
- .nav{display:none;position:absolute;top:calc(100% + 1px);right:var(--gutter);left:var(--gutter);flex-direction:column;align-items:stretch;gap:0;padding:9px;border:1px solid var(--line);background:var(--paper);box-shadow:0 18px 34px rgba(20,45,56,.12)}
+ .nav{display:none;position:absolute;z-index:2;top:calc(100% + 1px);right:var(--gutter);left:var(--gutter);flex-direction:column;align-items:stretch;gap:0;padding:8px;border:1px solid var(--line);border-radius:14px;background:var(--paper);box-shadow:0 18px 34px rgba(20,45,56,.12)}
  .nav.open{display:flex}
- .nav a{padding:12px;border-bottom:1px solid var(--line);font-size:12px}
+ .nav a{display:flex;align-items:center;min-height:46px;padding:11px 14px;border-bottom:1px solid var(--line);font-size:14px}
  .nav a:last-child{border-bottom:0}
+ .nav a::after{display:none}
+ .nav a:hover,.nav a:focus-visible{background:var(--lime);border-radius:8px}
  .menu-toggle{display:block}
  .hero-grid{gap:27px}.hero-visual{min-height:450px}.photo-frame{height:440px}.visual-caption{max-width:145px}
  .hero h1{font-size:clamp(39px,5.7vw,58px)}
 }
 @media(max-width:720px){
- .announcement{font-size:9px}
- .header-inner{height:68px;gap:10px}
- .nav{display:none;position:absolute;top:calc(100% + 1px);right:var(--gutter);left:var(--gutter);flex-direction:column;align-items:stretch;gap:0;padding:9px;border:1px solid var(--line);background:var(--paper);box-shadow:0 18px 34px rgba(21,25,22,.12)}
+ .announcement{min-height:30px;padding:6px 12px;font-size:10px}
+ .header-inner{height:66px;gap:10px}
+ .nav{display:none;position:absolute;z-index:2;top:calc(100% + 1px);right:var(--gutter);left:var(--gutter);flex-direction:column;align-items:stretch;gap:0;padding:8px;border:1px solid var(--line);border-radius:14px;background:var(--paper);box-shadow:0 18px 34px rgba(21,25,22,.12)}
  .nav.open{display:flex}
- .nav a{padding:12px;border-bottom:1px solid var(--line);font-size:12px}
+ .nav a{display:flex;align-items:center;min-height:46px;padding:11px 14px;border-bottom:1px solid var(--line);font-size:14px}
  .nav a:last-child{border-bottom:0}
- .header-action{min-height:40px;padding:0 12px;font-size:10px}
+ .nav a::after{display:none}
+ .nav a:hover,.nav a:focus-visible{background:var(--lime);border-radius:8px}
+ .header-action{min-height:40px;padding:0 13px;font-size:14px}
  .menu-toggle{display:block}
  .hero{padding-top:31px}
  .hero-grid{grid-template-columns:1fr;gap:20px}
@@ -356,7 +360,7 @@ body,button,input,select,textarea{font-family:var(--body)}
 </head>
 <body>
 <a class="skip" href="#main">تجاوز إلى المحتوى</a>
-<div class="announcement">رُواء لطب الأسنان <span aria-hidden="true">✳</span> تبييض الأسنان يبدأ بفهم الحالة</div>
+<div class="announcement">تبييض الأسنان يبدأ بفهم الحالة</div>
 <header class="site-header">
  <div class="wrap header-inner">
   <a class="brand" href="#top">
@@ -364,13 +368,13 @@ body,button,input,select,textarea{font-family:var(--body)}
    <span class="brand-name"><strong>Ruwa</strong><small>رُواء لطب الأسنان</small></span>
   </a>
   <nav class="nav" id="main-nav" aria-label="التنقل الرئيسي">
-   <a href="#top">الرئيسية</a>
-   <a href="#approach">طريقة التقييم</a>
+   <a href="#approach">خطوات التقييم</a>
+   <a href="#causes">أسباب تغيّر اللون</a>
    <a href="#options">خيارات التبييض</a>
    <a href="#suitability">هل يناسبك؟</a>
    <a href="#faq">الأسئلة الشائعة</a>
   </nav>
-  <a class="header-action" href="#consultation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.2 11.7a8.2 8.2 0 0 1-12.1 7.2L4 20l1.1-4A8.2 8.2 0 1 1 20.2 11.7Z"/></svg>اطلب تقييماً</a>
+  <a class="header-action" href="#consultation">اطلب تقييمًا</a>
   <button class="menu-toggle" id="menu-toggle" type="button" aria-label="فتح القائمة" aria-expanded="false" aria-controls="main-nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
  </div>
 </header>
