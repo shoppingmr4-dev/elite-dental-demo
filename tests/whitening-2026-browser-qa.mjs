@@ -99,10 +99,14 @@ try {
         })()),
         copy:copy ? rect(copy) : null,
         visual:visual ? rect(visual) : null,
-        imageCount:document.images.length,
+        imageCount:document.querySelectorAll(".photo-frame img").length,
         imageAlt:image?.alt || "",
         imageSrc:image?.currentSrc || image?.src || "",
         faviconHref:document.querySelector('link[rel="icon"]')?.getAttribute("href") || "",
+        brandName:document.querySelector(".brand-name strong")?.innerText?.trim() || "",
+        brandArabic:document.querySelector(".brand-name small")?.innerText?.trim() || "",
+        brandMarkSrc:document.querySelector(".brand-mark img")?.getAttribute("src") || "",
+        brandMarkLoaded:Boolean(document.querySelector(".brand-mark img")?.complete && document.querySelector(".brand-mark img")?.naturalWidth > 0),
         imageLoaded:Boolean(image?.complete && image.naturalWidth > 0),
         navDisplay:nav ? getComputedStyle(nav).display : "missing",
         toggleDisplay:toggle ? getComputedStyle(toggle).display : "missing",
@@ -181,7 +185,11 @@ try {
     assert.ok(state.contrastChecks.every(item=>item.ratio>=4.5), `${vp.name}: text contrast below WCAG AA: ${JSON.stringify(state.contrastChecks)}`);
     assert.equal(state.missingAnchors.length, 0, `${vp.name}: broken in-page anchors: ${state.missingAnchors.join(", ")}`);
     assert.ok(state.skipLink, `${vp.name}: skip link missing`);
-    assert.ok(state.faviconHref.endsWith("assets/elite-dental-mark.svg"), `${vp.name}: branded favicon link is missing`);
+    assert.ok(state.faviconHref.endsWith("assets/ruwa-mark.svg"), `${vp.name}: RUWA favicon link is missing`);
+    assert.equal(state.brandName, "RUWA", `${vp.name}: English brand wordmark is incorrect`);
+    assert.equal(state.brandArabic, "رُواء لطب الأسنان", `${vp.name}: Arabic clinic name is incorrect`);
+    assert.equal(state.brandMarkSrc, "assets/ruwa-mark.svg", `${vp.name}: header logo asset is incorrect`);
+    assert.ok(state.brandMarkLoaded, `${vp.name}: header logo asset failed to load`);
     assert.ok(state.reducedMotion, `${vp.name}: reduced-motion fallback is not active`);
     assert.ok(state.scrollWidth <= state.clientWidth + 1, `${vp.name}: horizontal overflow ${state.scrollWidth}px > ${state.clientWidth}px`);
 
