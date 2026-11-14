@@ -24,8 +24,13 @@ async function measureHeader(page) {
     const top=Number.parseFloat(panel.top),bottom=Number.parseFloat(panel.bottom);
     const rect=element=>{
       const r=element.getBoundingClientRect();
-      return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};
+      return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height,centerX:r.left+r.width/2};
     };
+    const brand=rect(document.querySelector(".brand"));
+    const nav=rect(document.querySelector("#main-nav"));
+    const action=rect(document.querySelector(".header-action"));
+    const linkRects=[...document.querySelectorAll("#main-nav a")].map(rect).sort((a,b)=>a.left-b.left);
+    const navLinkGaps=linkRects.slice(0,-1).map((link,index)=>linkRects[index+1].left-link.right);
     const targets=[
       ["brand",document.querySelector(".brand")],
       ["nav",document.querySelector("#main-nav")],
@@ -41,8 +46,13 @@ async function measureHeader(page) {
       innerHeight:rect(header.querySelector(".header-inner")).height,
       headerWidth:headerRect.width,
       headerCenter:headerRect.left+headerRect.width/2,
-      actionHeight:rect(document.querySelector(".header-action")).height,
+      actionHeight:action.height,
       wordmarkSize:Number.parseFloat(getComputedStyle(document.querySelector(".brand-name strong")).fontSize),
+      brand,nav,action,
+      brandNavGap:brand.left-nav.right,
+      navActionGap:nav.left-action.right,
+      navLinkGaps,
+      navLinkGapAverage:navLinkGaps.length?navLinkGaps.reduce((sum,gap)=>sum+gap,0)/navLinkGaps.length:0,
       panelTop:top,panelBottom:bottom,panelLeft:left,panelRight:right,
       visualWidth:headerRect.width-left-right,
       visualHeight:headerRect.height-top-bottom,
@@ -52,6 +62,7 @@ async function measureHeader(page) {
       visibleGroups
     };
   });
+}
 }
 
 const expectedHeading = "اكتشف خيارات تبييض الأسنان لابتسامة أكثر إشراقًا";
@@ -356,10 +367,19 @@ try {
     assert.equal(new URL(page.url()).hash, "", `${vp.name}: demo CTA must not create an unrelated anchor navigation`);
     await page.evaluate(() => window.scrollTo(0, 0));
     const initialHeaderMetrics = await measureHeader(page);
+    if (vp.width===1440) {
+      await page.locator(".site-header").screenshot({path:`${OUT}/desktop-1440-header-initial.png`,animations:"disabled"});
+    }
     await page.evaluate(() => window.scrollTo(0, 240));
     await page.waitForFunction(() => document.querySelector(".site-header")?.classList.contains("is-compact"), null, { timeout: 3000 });
     await page.waitForTimeout(360);
     const compactHeaderMetrics = await measureHeader(page);
+    if (vp.width===1440) {
+      await page.locator(".site-header").screenshot({path:`${OUT}/desktop-1440-header-compact.png`,animations:"disabled"});
+    }
+    if (vp.width===360) {
+      await page.locator(".site-header").screenshot({path:`${OUT}/mobile-360-header-compact.png`,animations:"disabled"});
+    }
     assert.equal(compactHeaderMetrics.layoutHeight, initialHeaderMetrics.layoutHeight, `${vp.name}: compacting the header must not shift page layout`);
     assert.equal(compactHeaderMetrics.innerHeight, initialHeaderMetrics.innerHeight, `${vp.name}: header's reserved inner height must remain stable`);
     assert.ok(compactHeaderMetrics.panelTop > initialHeaderMetrics.panelTop, `${vp.name}: floating shell did not visually shrink on scroll`);
@@ -378,6 +398,46 @@ try {
     assert.ok(compactHeaderMetrics.visualHeight<initialHeaderMetrics.visualHeight, `${vp.name}: actual floating shell height did not decrease`);
     assert.ok(compactHeaderMetrics.actionHeight < initialHeaderMetrics.actionHeight, `${vp.name}: header CTA did not become more compact on scroll`);
     assert.ok(compactHeaderMetrics.wordmarkSize < initialHeaderMetrics.wordmarkSize, `${vp.name}: brand wordmark did not become more compact on scroll`);
+    let headerConvergence=null;
+    if (vp.width>920) {
+      assert.ok(initialHeaderMetrics.brandNavGap>0 && initialHeaderMetrics.navActionGap>0,
+        `${vp.name}: initial brand/navigation/CTA groups must have measurable separation`);
+      assert.ok(Math.abs(initialHeaderMetrics.nav.centerX-initialHeaderMetrics.headerCenter)<=1,
+        `${vp.name}: navigation is not centered in the initial state`);
+      assert.ok(compactHeaderMetrics.brand.centerX<initialHeaderMetrics.brand.centerX-1,
+        `${vp.name}: the complete brand group did not move left toward the centered navigation`);
+      assert.ok(compactHeaderMetrics.action.centerX>initialHeaderMetrics.action.centerX+1,
+        `${vp.name}: the complete WhatsApp CTA did not move right toward the centered navigation`);
+      assert.ok(Math.abs(compactHeaderMetrics.nav.centerX-initialHeaderMetrics.nav.centerX)<=1,
+        `${vp.name}: navigation drifted from the center during compaction`);
+      const brandGapReduction=initialHeaderMetrics.brandNavGap-compactHeaderMetrics.brandNavGap;
+      const actionGapReduction=initialHeaderMetrics.navActionGap-compactHeaderMetrics.navActionGap;
+      const brandGapReductionRatio=brandGapReduction/initialHeaderMetrics.brandNavGap;
+      const actionGapReductionRatio=actionGapReduction/initialHeaderMetrics.navActionGap;
+      assert.ok(brandGapReduction>0 && actionGapReduction>0,
+        `${vp.name}: both brand-to-navigation and navigation-to-CTA gaps must decrease`);
+      assert.ok(brandGapReductionRatio>=0.25 && brandGapReductionRatio<=0.35,
+        `${vp.name}: brand/navigation gap reduction must be 25–35% (actual ${(brandGapReductionRatio*100).toFixed(1)}%)`);
+      assert.ok(actionGapReductionRatio>=0.25 && actionGapReductionRatio<=0.35,
+        `${vp.name}: navigation/CTA gap reduction must be 25–35% (actual ${(actionGapReductionRatio*100).toFixed(1)}%)`);
+      assert.ok(compactHeaderMetrics.navLinkGapAverage<initialHeaderMetrics.navLinkGapAverage,
+        `${vp.name}: navigation link spacing did not tighten`);
+      assert.ok(compactHeaderMetrics.navLinkGaps.every(gap=>gap>=8),
+        `${vp.name}: a compact navigation link gap became too tight`);
+      headerConvergence={
+        brandMovedLeftPx:Number((initialHeaderMetrics.brand.centerX-compactHeaderMetrics.brand.centerX).toFixed(2)),
+        whatsappMovedRightPx:Number((compactHeaderMetrics.action.centerX-initialHeaderMetrics.action.centerX).toFixed(2)),
+        brandNavGapBeforePx:Number(initialHeaderMetrics.brandNavGap.toFixed(2)),
+        brandNavGapAfterPx:Number(compactHeaderMetrics.brandNavGap.toFixed(2)),
+        brandNavGapReductionPercent:Number((brandGapReductionRatio*100).toFixed(2)),
+        navActionGapBeforePx:Number(initialHeaderMetrics.navActionGap.toFixed(2)),
+        navActionGapAfterPx:Number(compactHeaderMetrics.navActionGap.toFixed(2)),
+        navActionGapReductionPercent:Number((actionGapReductionRatio*100).toFixed(2)),
+        navCenterShiftPx:Number((compactHeaderMetrics.nav.centerX-initialHeaderMetrics.nav.centerX).toFixed(2)),
+        navLinkGapBeforePx:Number(initialHeaderMetrics.navLinkGapAverage.toFixed(2)),
+        navLinkGapAfterPx:Number(compactHeaderMetrics.navLinkGapAverage.toFixed(2))
+      };
+    }
     for (const metrics of [initialHeaderMetrics,compactHeaderMetrics]) {
       const groups=[...metrics.visibleGroups].sort((a,b)=>a.left-b.left);
       assert.ok(groups.length>=2, `${vp.name}: header controls are not all measurable`);
@@ -402,25 +462,23 @@ try {
     };
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.waitForFunction(() => !document.querySelector(".site-header")?.classList.contains("is-compact"), null, { timeout: 3000 });
-    const restoredHeaderMetrics = await page.evaluate(() => {
-      const header=document.querySelector(".site-header");
-      const headerRect=header.getBoundingClientRect();
-      const panel=getComputedStyle(header,"::before");
-      return {
-        actionHeight:document.querySelector(".header-action").getBoundingClientRect().height,
-        wordmarkSize:Number.parseFloat(getComputedStyle(document.querySelector(".brand-name strong")).fontSize),
-        panelTop:Number.parseFloat(panel.top),
-        panelLeft:Number.parseFloat(panel.left),
-        panelRight:Number.parseFloat(panel.right),
-        visualWidth:headerRect.width-Number.parseFloat(panel.left)-Number.parseFloat(panel.right)
-      };
-    });
+    const restoredHeaderMetrics = await measureHeader(page);
     assert.equal(restoredHeaderMetrics.actionHeight, initialHeaderMetrics.actionHeight, `${vp.name}: header CTA did not restore at the top`);
     assert.equal(restoredHeaderMetrics.wordmarkSize, initialHeaderMetrics.wordmarkSize, `${vp.name}: brand wordmark did not restore at the top`);
     assert.equal(restoredHeaderMetrics.panelTop, initialHeaderMetrics.panelTop, `${vp.name}: floating shell did not restore at the top`);
     assert.equal(restoredHeaderMetrics.panelLeft, initialHeaderMetrics.panelLeft, `${vp.name}: left edge did not restore at the top`);
     assert.equal(restoredHeaderMetrics.panelRight, initialHeaderMetrics.panelRight, `${vp.name}: right edge did not restore at the top`);
     assert.equal(restoredHeaderMetrics.visualWidth, initialHeaderMetrics.visualWidth, `${vp.name}: original floating header width did not restore at the top`);
+    assert.ok(Math.abs(restoredHeaderMetrics.brand.centerX-initialHeaderMetrics.brand.centerX)<=0.75,
+      `${vp.name}: brand position did not restore at the top`);
+    assert.ok(Math.abs(restoredHeaderMetrics.action.centerX-initialHeaderMetrics.action.centerX)<=0.75,
+      `${vp.name}: WhatsApp CTA position did not restore at the top`);
+    assert.ok(Math.abs(restoredHeaderMetrics.nav.centerX-initialHeaderMetrics.nav.centerX)<=0.75,
+      `${vp.name}: navigation position did not restore at the top`);
+    assert.ok(Math.abs(restoredHeaderMetrics.brandNavGap-initialHeaderMetrics.brandNavGap)<=0.75,
+      `${vp.name}: brand/navigation gap did not restore at the top`);
+    assert.ok(Math.abs(restoredHeaderMetrics.navActionGap-initialHeaderMetrics.navActionGap)<=0.75,
+      `${vp.name}: navigation/CTA gap did not restore at the top`);
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
@@ -511,7 +569,7 @@ try {
     });
     assert.ok(imageLoad.loaded, `${vp.name}: hero image failed to load`);
     assert.ok(/w=(640|1100|1500)/.test(imageLoad.src), `${vp.name}: responsive hero image variant was not selected`);
-    results.push({ ...vp, ...state, headerShrink, imageLoad, pageErrors, localErrors });
+    results.push({ ...vp, ...state, headerShrink, headerConvergence, imageLoad, pageErrors, localErrors });
     assert.equal(pageErrors.length, 0, `${vp.name}: JavaScript errors: ${pageErrors.join(" | ")}`);
     assert.equal(localErrors.length, 0, `${vp.name}: local resource errors: ${JSON.stringify(localErrors)}`);
     console.log(`[PASS] ${vp.name}: RTL, Cairo + IBM Plex fonts, layout, anchors, menu, motion and overflow`);
