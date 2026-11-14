@@ -147,6 +147,13 @@ try {
         skipLink:Boolean(document.querySelector("a.skip[href='#main']")),
         reducedMotion:matchMedia("(prefers-reduced-motion: reduce)").matches && Number.parseFloat(getComputedStyle(copy).animationDuration) <= 0.00002 && Number.parseFloat(getComputedStyle(visual).animationDuration) <= 0.00002,
         ctaHref:document.querySelector(".primary-cta")?.getAttribute("href") || "",
+        heroCtaText:document.querySelector(".primary-cta")?.innerText?.trim() || "",
+        photoLabelText:document.querySelector(".photo-label strong")?.innerText?.replace(/\\s+/g," ").trim() || "",
+        visualCaptionText:document.querySelector(".visual-caption")?.innerText?.trim() || "",
+        visualCaptionTransform:getComputedStyle(document.querySelector(".visual-caption")).transform,
+        visualCaptionRadius:Number.parseFloat(getComputedStyle(document.querySelector(".visual-caption")).borderTopLeftRadius),
+        visualCaptionBackground:getComputedStyle(document.querySelector(".visual-caption")).backgroundColor,
+        visualSideNoteDisplay:getComputedStyle(document.querySelector(".visual-side-note")).display,
         inquiryButton:Boolean(document.querySelector("#prepare-inquiry")),
         inquiryTopicLabel:Boolean(document.querySelector('label[for="inquiry-topic"]')),
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
@@ -210,6 +217,13 @@ try {
     assert.equal(state.imageCount, 1, `${vp.name}: unexpected number of hero images`);
     assert.ok(state.imageAlt.length > 10, `${vp.name}: image alt text is missing`);
     assert.equal(state.ctaHref, "#consultation", `${vp.name}: primary CTA target changed unexpectedly`);
+    assert.equal(state.heroCtaText, "اطلب تقييمًا", `${vp.name}: hero CTA wording is inconsistent`);
+    assert.equal(state.visualCaptionText, "صورة توضيحية من Pexels؛ لا تمثل طبيبًا أو موظفًا بالعيادة.", `${vp.name}: stock image disclosure is unclear`);
+    assert.equal(state.visualCaptionTransform, "none", `${vp.name}: stock image disclosure is unnecessarily rotated`);
+    assert.ok(state.visualCaptionRadius >= 8, `${vp.name}: stock image disclosure needs a restrained rounded surface`);
+    assert.ok(state.visualCaptionBackground.startsWith("rgba(255, 255, 255"), `${vp.name}: stock image disclosure should use a light readable surface`);
+    if (vp.width <= 720) assert.equal(state.visualSideNoteDisplay, "none", `${vp.name}: decorative vertical note should be hidden on mobile`);
+    else assert.notEqual(state.visualSideNoteDisplay, "none", `${vp.name}: desktop visual note should remain visible`);
     assert.ok(state.inquiryButton && state.inquiryTopicLabel, `${vp.name}: interactive inquiry control or label missing`);
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
