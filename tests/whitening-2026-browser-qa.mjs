@@ -149,7 +149,7 @@ try {
     assert.equal(state.lang, "ar-SA", `${vp.name}: Arabic language metadata missing`);
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
-    assert.equal(state.heroLead, "تختلف أسباب تغيّر لون الأسنان من شخص لآخر. لذلك يبدأ التقييم بفحص الأسنان واللثة، ثم يناقش طبيب الأسنان معك الخيارات المناسبة لحالتك والنتائج المتوقعة منها.", `${vp.name}: hero supporting copy changed`);
+    assert.equal(state.heroLead, "تختلف أسباب تغيّر لون الأسنان ونتائج التبييض من حالة لأخرى. لذلك يبدأ التقييم بفحص الأسنان واللثة، ثم يشرح لك طبيب الأسنان الخيارات المناسبة لحالتك وما يمكن توقعه من كل خيار.", `${vp.name}: hero supporting copy changed`);
     assert.equal(state.headlineLines, 3, `${vp.name}: headline must use the intended three-level composition`);
     assert.equal(state.headlineKicker, "اكتشف خيارات", `${vp.name}: headline introduction changed`);
     assert.equal(state.headlineService, "تبييض الأسنان", `${vp.name}: primary service phrase changed`);
