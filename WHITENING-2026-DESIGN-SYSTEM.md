@@ -75,13 +75,14 @@ The identity is intentionally restrained. Avoid reintroducing the previous cobal
 - Image role: illustrative stock portrait of a male dentist in a contemporary dental office.
 - The page explicitly discloses that the photo is not the actual dentist or staff of the fictional clinic.
 - Keep the visible credit and stock-photo disclosure. Never present this image as a real employee, patient, testimonial, or treatment result.
+- Use a concise, unrotated light disclosure label: «صورة توضيحية من Pexels؛ لا تمثل طبيبًا أو موظفًا بالعيادة.» Keep the extra vertical decorative note off mobile screens.
 - Do not create before/after claims or imply guaranteed clinical outcomes.
 
 ## Page architecture
 
 1. Slim announcement strip with a single concise whitening message, without repeating the clinic name or decorative glyphs.
 2. Sticky branded navigation with a white translucent surface, refined spacing, and a compact rounded menu panel on tablet and phone.
-3. Hero: three-tier service-first headline, supporting explanation, a primary assessment CTA, a secondary guide link, and an editorial image.
+3. Hero: three-tier service-first headline, supporting explanation, a primary CTA labelled «اطلب تقييمًا», a secondary guide link, and an editorial image with a quiet stock-photo disclosure.
 4. Assessment approach: understand the case, explain possible options, and identify the next step.
 5. Causes of discoloration: surface staining compared with deeper changes in natural tooth color.
 6. Treatment options: in-office professional whitening, dentist-supervised custom take-home trays, and care for surface staining.
