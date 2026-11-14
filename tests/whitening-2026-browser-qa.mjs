@@ -73,6 +73,7 @@ try {
         announcementText:document.querySelector(".announcement")?.innerText?.trim() || "",
         headerPosition:getComputedStyle(document.querySelector(".site-header")).position,
         headerActionText:document.querySelector(".header-action")?.innerText?.trim() || "",
+        headerActionHref:document.querySelector(".header-action")?.getAttribute("href") || "",
         headerActionHasChatIcon:Boolean(document.querySelector(".header-action svg")),
         navLabels:[...document.querySelectorAll("#main-nav a")].map(a=>a.innerText.trim()),
         navHrefs:[...document.querySelectorAll("#main-nav a")].map(a=>a.getAttribute("href")),
@@ -148,6 +149,14 @@ try {
         reducedMotion:matchMedia("(prefers-reduced-motion: reduce)").matches && Number.parseFloat(getComputedStyle(copy).animationDuration) <= 0.00002 && Number.parseFloat(getComputedStyle(visual).animationDuration) <= 0.00002,
         ctaHref:document.querySelector(".primary-cta")?.getAttribute("href") || "",
         heroCtaText:document.querySelector(".primary-cta")?.innerText?.trim() || "",
+        heroCtaHref:document.querySelector(".primary-cta")?.getAttribute("href") || "",
+        heroCtaBackground:getComputedStyle(document.querySelector(".primary-cta")).backgroundColor,
+        heroCtaForeground:getComputedStyle(document.querySelector(".primary-cta")).color,
+        heroCtaHeight:rect(document.querySelector(".primary-cta")).height,
+        heroCtaFontSize:Number.parseFloat(getComputedStyle(document.querySelector(".primary-cta")).fontSize),
+        heroCtaRadius:Number.parseFloat(getComputedStyle(document.querySelector(".primary-cta")).borderTopLeftRadius),
+        heroCtaIconHidden:document.querySelector(".primary-cta svg")?.getAttribute("aria-hidden") === "true",
+        liveContactChannelPresent:[...document.querySelectorAll("a[href]")].some(a=>/^(tel:|https?:\\/\\/(wa\\.me|api\\.whatsapp\\.com))/i.test(a.getAttribute("href") || "")),
         photoLabelText:document.querySelector(".photo-label strong")?.innerText?.replace(/\\s+/g," ").trim() || "",
         visualCaptionText:document.querySelector(".visual-caption")?.innerText?.trim() || "",
         visualCaptionTransform:getComputedStyle(document.querySelector(".visual-caption")).transform,
@@ -190,7 +199,8 @@ try {
     assert.equal(state.lang, "ar-SA", `${vp.name}: Arabic language metadata missing`);
     assert.equal(state.announcementText, "تبييض الأسنان يبدأ بفهم الحالة", `${vp.name}: announcement copy is incorrect`);
     assert.equal(state.headerPosition, "sticky", `${vp.name}: header should remain accessible while scrolling`);
-    assert.equal(state.headerActionText, "اطلب تقييمًا", `${vp.name}: primary header action label is incorrect`);
+    assert.equal(state.headerActionText, "ابدأ استفسارك", `${vp.name}: header CTA must describe the real demo action`);
+    assert.equal(state.headerActionHref, "#consultation", `${vp.name}: header CTA destination is incorrect`);
     assert.equal(state.headerActionHasChatIcon, false, `${vp.name}: header CTA must not imply a live chat channel`);
     assert.deepEqual(state.navLabels, ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
     assert.deepEqual(state.navHrefs, ["#approach","#causes","#options","#suitability","#faq"], `${vp.name}: navigation destinations are incorrect`);
@@ -217,7 +227,15 @@ try {
     assert.equal(state.imageCount, 1, `${vp.name}: unexpected number of hero images`);
     assert.ok(state.imageAlt.length > 10, `${vp.name}: image alt text is missing`);
     assert.equal(state.ctaHref, "#consultation", `${vp.name}: primary CTA target changed unexpectedly`);
-    assert.equal(state.heroCtaText, "اطلب تقييمًا", `${vp.name}: hero CTA wording is inconsistent`);
+    assert.equal(state.heroCtaText, "ابدأ استفسارك", `${vp.name}: hero CTA must describe the real demo action`);
+    assert.equal(state.heroCtaHref, "#consultation", `${vp.name}: hero CTA destination is incorrect`);
+    assert.equal(state.heroCtaBackground, "rgb(24, 122, 128)", `${vp.name}: primary CTA should retain the RUWA teal`);
+    assert.equal(state.heroCtaForeground, "rgb(255, 255, 255)", `${vp.name}: primary CTA text should remain white`);
+    assert.ok(state.heroCtaHeight >= 52, `${vp.name}: primary CTA hit area is too short`);
+    assert.ok(state.heroCtaFontSize >= 14, `${vp.name}: primary CTA text is too small`);
+    assert.ok(state.heroCtaRadius >= 999, `${vp.name}: primary CTA should retain its pill shape`);
+    assert.ok(state.heroCtaIconHidden, `${vp.name}: decorative CTA arrow must be hidden from assistive technology`);
+    assert.equal(state.liveContactChannelPresent, false, `${vp.name}: demo must not imply a live WhatsApp or phone channel`);
     assert.equal(state.visualCaptionText, "صورة توضيحية من Pexels؛ لا تمثل طبيبًا أو موظفًا بالعيادة.", `${vp.name}: stock image disclosure is unclear`);
     assert.equal(state.visualCaptionTransform, "none", `${vp.name}: stock image disclosure is unnecessarily rotated`);
     assert.ok(state.visualCaptionRadius >= 8, `${vp.name}: stock image disclosure needs a restrained rounded surface`);
@@ -225,6 +243,10 @@ try {
     if (vp.width <= 720) assert.equal(state.visualSideNoteDisplay, "none", `${vp.name}: decorative vertical note should be hidden on mobile`);
     else assert.notEqual(state.visualSideNoteDisplay, "none", `${vp.name}: desktop visual note should remain visible`);
     assert.ok(state.inquiryButton && state.inquiryTopicLabel, `${vp.name}: interactive inquiry control or label missing`);
+    await page.locator(".primary-cta").click();
+    await page.waitForFunction(() => location.hash === "#consultation", null, { timeout: 3000 });
+    assert.equal(new URL(page.url()).hash, "#consultation", `${vp.name}: hero CTA did not reach the inquiry-preparation panel`);
+    await page.evaluate(() => window.scrollTo(0, 0));
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
