@@ -117,7 +117,7 @@ Primary references:
 - Navigation links follow the visitor journey: assessment steps, causes of discoloration, whitening options, suitability, and FAQs. The wordmark links back to the top, so no duplicate “Home” link is needed; the assessment CTA remains a separate, clearly labelled button.
 - The compact navigation supports open/close state, `aria-expanded`, Escape-to-close, and closes after a selection.
 - FAQ entries use native `details` and `summary` elements.
-- The primary CTA scrolls to the inquiry-preparation panel.
+- The primary CTA is labelled “ابدأ استفسارك” and scrolls to the inquiry-preparation panel. It does not imply a real clinical assessment, live contact, or booking.
 - Visitors select an inquiry topic and prepare a copy-ready Arabic message.
 - The message is copied when clipboard access is available, with a manual-copy fallback otherwise.
 - **No information is transmitted, stored, or submitted.**
