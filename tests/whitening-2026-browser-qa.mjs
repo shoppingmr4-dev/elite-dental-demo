@@ -74,7 +74,13 @@ try {
         headerPosition:getComputedStyle(document.querySelector(".site-header")).position,
         headerActionText:document.querySelector(".header-action")?.innerText?.trim() || "",
         headerActionHref:document.querySelector(".header-action")?.getAttribute("href") || "",
+        headerActionTag:document.querySelector(".header-action")?.tagName || "",
         headerActionHasChatIcon:Boolean(document.querySelector(".header-action svg")),
+        headerActionWhatsAppIcon:Boolean(document.querySelector(".header-action .whatsapp-brand-icon")),
+        contactTriggerCount:document.querySelectorAll("[data-open-whatsapp-demo]").length,
+        demoDialogTag:document.querySelector("#whatsapp-demo-dialog")?.tagName || "",
+        demoDialogText:document.querySelector("#whatsapp-demo-dialog")?.innerText?.replace(/\\s+/g," ").trim() || "",
+        demoDialogInitialOpen:document.querySelector("#whatsapp-demo-dialog")?.open || false,
         navLabels:[...document.querySelectorAll("#main-nav a")].map(a=>a.innerText.trim()),
         navHrefs:[...document.querySelectorAll("#main-nav a")].map(a=>a.getAttribute("href")),
         dir:document.documentElement.dir,
@@ -150,6 +156,8 @@ try {
         ctaHref:document.querySelector(".primary-cta")?.getAttribute("href") || "",
         heroCtaText:document.querySelector(".primary-cta")?.innerText?.trim() || "",
         heroCtaHref:document.querySelector(".primary-cta")?.getAttribute("href") || "",
+        heroCtaTag:document.querySelector(".primary-cta")?.tagName || "",
+        heroCtaWhatsAppIcon:Boolean(document.querySelector(".primary-cta .whatsapp-brand-icon")),
         heroCtaBackground:getComputedStyle(document.querySelector(".primary-cta")).backgroundColor,
         heroCtaForeground:getComputedStyle(document.querySelector(".primary-cta")).color,
         heroCtaHeight:rect(document.querySelector(".primary-cta")).height,
@@ -202,9 +210,15 @@ try {
     assert.equal(state.lang, "ar-SA", `${vp.name}: Arabic language metadata missing`);
     assert.equal(state.announcementText, "تبييض الأسنان يبدأ بفهم الحالة", `${vp.name}: announcement copy is incorrect`);
     assert.equal(state.headerPosition, "sticky", `${vp.name}: header should remain accessible while scrolling`);
-    assert.equal(state.headerActionText, "ابدأ استفسارك", `${vp.name}: header CTA must describe the real demo action`);
-    assert.equal(state.headerActionHref, "#consultation", `${vp.name}: header CTA destination is incorrect`);
-    assert.equal(state.headerActionHasChatIcon, false, `${vp.name}: header CTA must not imply a live chat channel`);
+    assert.equal(state.headerActionText, "تواصل عبر واتساب", `${vp.name}: header CTA copy is incorrect`);
+    assert.equal(state.headerActionHref, "", `${vp.name}: demo header CTA must not contain a fake external destination`);
+    assert.equal(state.headerActionTag, "BUTTON", `${vp.name}: header CTA must open the local demo dialog`);
+    assert.ok(state.headerActionHasChatIcon && state.headerActionWhatsAppIcon, `${vp.name}: WhatsApp brand icon is missing from header CTA`);
+    assert.equal(state.contactTriggerCount, 2, `${vp.name}: both primary CTAs must share one dialog trigger`);
+    assert.equal(state.demoDialogTag, "DIALOG", `${vp.name}: accessible native dialog is missing`);
+    assert.equal(state.demoDialogInitialOpen, false, `${vp.name}: demo dialog should start closed`);
+    assert.ok(state.demoDialogText.includes("معاينة تجريبية لتجربة التواصل عبر واتساب"), `${vp.name}: demo dialog explanation is missing`);
+    assert.ok(state.demoDialogText.includes("لا يتم فتح محادثة فعلية أو إرسال أي بيانات"), `${vp.name}: demo dialog must disclose that no live contact occurs`);
     assert.deepEqual(state.navLabels, ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
     assert.deepEqual(state.navHrefs, ["#approach","#causes","#options","#suitability","#faq"], `${vp.name}: navigation destinations are incorrect`);
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
@@ -229,16 +243,18 @@ try {
     assert.ok(state.bodyFontLoaded, `${vp.name}: local IBM Plex Sans Arabic font failed to load`);
     assert.equal(state.imageCount, 1, `${vp.name}: unexpected number of hero images`);
     assert.ok(state.imageAlt.length > 10, `${vp.name}: image alt text is missing`);
-    assert.equal(state.ctaHref, "#consultation", `${vp.name}: primary CTA target changed unexpectedly`);
-    assert.equal(state.heroCtaText, "ابدأ استفسارك", `${vp.name}: hero CTA must describe the real demo action`);
-    assert.equal(state.heroCtaHref, "#consultation", `${vp.name}: hero CTA destination is incorrect`);
+    assert.equal(state.ctaHref, "", `${vp.name}: demo hero CTA must not navigate to an unrelated section`);
+    assert.equal(state.heroCtaText, "تواصل عبر واتساب", `${vp.name}: hero CTA copy is incorrect`);
+    assert.equal(state.heroCtaHref, "", `${vp.name}: demo hero CTA must not contain a fake external destination`);
+    assert.equal(state.heroCtaTag, "BUTTON", `${vp.name}: hero CTA must open the local demo dialog`);
+    assert.ok(state.heroCtaWhatsAppIcon, `${vp.name}: WhatsApp brand icon is missing from hero CTA`);
     assert.equal(state.heroCtaBackground, "rgb(24, 122, 128)", `${vp.name}: primary CTA should retain the RUWA teal`);
     assert.equal(state.heroCtaForeground, "rgb(255, 255, 255)", `${vp.name}: primary CTA text should remain white`);
     assert.ok(state.heroCtaHeight >= 52, `${vp.name}: primary CTA hit area is too short`);
     assert.ok(state.heroCtaFontSize >= 14, `${vp.name}: primary CTA text is too small`);
     assert.ok(state.heroCtaRadius >= 999, `${vp.name}: primary CTA should retain its pill shape`);
-    assert.ok(state.heroCtaIconHidden, `${vp.name}: decorative CTA arrow must be hidden from assistive technology`);
-    assert.equal(state.liveContactChannelPresent, false, `${vp.name}: demo must not imply a live WhatsApp or phone channel`);
+    assert.ok(state.heroCtaIconHidden, `${vp.name}: WhatsApp icon must be hidden from assistive technology because the button already has a text label`);
+    assert.equal(state.liveContactChannelPresent, false, `${vp.name}: demo must not contain a live WhatsApp or phone destination`);
     assert.equal(state.visualCaptionText, "صورة توضيحية من Pexels؛ لا تمثل طبيبًا أو موظفًا بالعيادة.", `${vp.name}: stock image disclosure is unclear`);
     assert.equal(state.visualCaptionTransform, "none", `${vp.name}: stock image disclosure is unnecessarily rotated`);
     assert.ok(state.visualCaptionRadius >= 8, `${vp.name}: stock image disclosure needs a restrained rounded surface`);
@@ -246,9 +262,31 @@ try {
     if (vp.width <= 720) assert.equal(state.visualSideNoteDisplay, "none", `${vp.name}: decorative vertical note should be hidden on mobile`);
     else assert.notEqual(state.visualSideNoteDisplay, "none", `${vp.name}: desktop visual note should remain visible`);
     assert.ok(state.inquiryButton && state.inquiryTopicLabel, `${vp.name}: interactive inquiry control or label missing`);
-    await page.locator(".primary-cta").click();
-    await page.waitForFunction(() => location.hash === "#consultation", null, { timeout: 3000 });
-    assert.equal(new URL(page.url()).hash, "#consultation", `${vp.name}: hero CTA did not reach the inquiry-preparation panel`);
+    const dialog=page.locator("#whatsapp-demo-dialog");
+    const heroTrigger=page.locator(".primary-cta");
+    const headerTrigger=page.locator(".header-action");
+    await heroTrigger.focus();
+    await page.keyboard.press("Enter");
+    await page.waitForFunction(() => document.querySelector("#whatsapp-demo-dialog")?.open === true, null, { timeout: 3000 });
+    assert.equal(await page.evaluate(() => document.activeElement?.id), "whatsapp-demo-title", `${vp.name}: opening from the hero CTA must move focus to the dialog heading`);
+    assert.ok(await dialog.evaluate(el=>el.matches(":modal")), `${vp.name}: demo dialog must enter the native modal top layer`);
+    await page.keyboard.press("Escape");
+    await page.waitForFunction(() => document.querySelector("#whatsapp-demo-dialog")?.open === false, null, { timeout: 3000 });
+    assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("primary-cta")), true, `${vp.name}: Escape must restore focus to the hero trigger`);
+    assert.equal(await page.evaluate(() => document.body.classList.contains("dialog-open")), false, `${vp.name}: body scroll lock must be removed after Escape`);
+
+    await headerTrigger.click();
+    await page.waitForFunction(() => document.querySelector("#whatsapp-demo-dialog")?.open === true, null, { timeout: 3000 });
+    await page.locator("#whatsapp-demo-close").click();
+    await page.waitForFunction(() => document.querySelector("#whatsapp-demo-dialog")?.open === false, null, { timeout: 3000 });
+    assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("header-action")), true, `${vp.name}: close control must restore focus to the header trigger`);
+
+    await heroTrigger.click();
+    await page.waitForFunction(() => document.querySelector("#whatsapp-demo-dialog")?.open === true, null, { timeout: 3000 });
+    await page.locator("#whatsapp-demo-dismiss").click();
+    await page.waitForFunction(() => document.querySelector("#whatsapp-demo-dialog")?.open === false, null, { timeout: 3000 });
+    assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("primary-cta")), true, `${vp.name}: dialog action must restore focus to the hero trigger`);
+    assert.equal(new URL(page.url()).hash, "", `${vp.name}: demo CTA must not create an unrelated anchor navigation`);
     await page.evaluate(() => window.scrollTo(0, 0));
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
