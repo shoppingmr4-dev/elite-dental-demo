@@ -57,6 +57,7 @@ try {
         lang:document.documentElement.lang,
         dir:document.documentElement.dir,
         heading:heading?.innerText?.replace(/\s+/g," ").trim() || "",
+        heroLead:document.querySelector(".hero-lead")?.innerText?.trim() || "",
         headlineLines:heading?.querySelectorAll(":scope > .hero-title-kicker, :scope > .hero-title-main, :scope > .hero-title-benefit").length || 0,
         headlineKicker:heading?.querySelector(".hero-title-kicker")?.innerText?.trim() || "",
         headlineService:heading?.querySelector(".hero-title-main")?.innerText?.trim() || "",
@@ -148,6 +149,7 @@ try {
     assert.equal(state.lang, "ar-SA", `${vp.name}: Arabic language metadata missing`);
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
+    assert.equal(state.heroLead, "تختلف أسباب تغيّر لون الأسنان من شخص لآخر. لذلك يبدأ التقييم بفحص الأسنان واللثة، ثم يوضح طبيب الأسنان ما يناسب حالتك وما يمكن توقعه من التبييض.", `${vp.name}: hero supporting copy changed`);
     assert.equal(state.headlineLines, 3, `${vp.name}: headline must use the intended three-level composition`);
     assert.equal(state.headlineKicker, "اكتشف خيارات", `${vp.name}: headline introduction changed`);
     assert.equal(state.headlineService, "تبييض الأسنان", `${vp.name}: primary service phrase changed`);
