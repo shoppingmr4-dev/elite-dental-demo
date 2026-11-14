@@ -148,9 +148,11 @@ Until real clinic contact details and operational readiness are provided, keep b
 
 ## Quality assurance
 
-The prior approved preview revision passed Playwright and Lighthouse. The expanded page now adds five educational sections, six FAQ entries, additional navigation targets, and tablet navigation behavior. The browser QA script has been extended to test those additions.
+The prior approved preview revision passed Playwright and Lighthouse. The expanded page adds five educational sections, six FAQ entries, additional navigation targets, tablet navigation behavior, and the WhatsApp portfolio-preview dialog. The browser QA script covers the expanded experience.
 
 **Verified:** Playwright and Lighthouse passed on code commit `c1a4b051b95ded4f1a29a39bbf2add94ebdb6ca2`. Browser checks passed at 360×800, 390×844, 768×1024, and 1440×900; both Cairo and IBM Plex Sans Arabic loaded locally, with no browser errors or horizontal overflow. Lighthouse: mobile Performance 96; desktop Performance 100; Accessibility, Best Practices, and SEO 100 on both. The following documentation-only commit does not change the tested page or test script. Record the new revision and results here only after the new workflow completes successfully.
+
+**Latest CTA verification (14 November 2026):** GitHub Actions run [#120](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/43649799213) passed on code commit `d1daab495eb9c2a4fc64f4957f7603a722301f66`. Playwright passed at 360×800, 390×844, 768×1024, 1024×900, and 1440×900, including both WhatsApp CTAs, the native preview dialog, Escape and close-button behavior, focus restoration, scroll-lock cleanup, and the absence of fake contact destinations. Mobile and desktop Lighthouse audits completed successfully. [Screenshots and HTML/JSON reports](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/43649799213/artifacts/14135776596) were uploaded; no Lighthouse scores are asserted here.
 
 The dedicated workflow checks 360×800, 390×844, 768×1024, 1024×900, and 1440×900. It checks exact hero headline text and its three-tier hierarchy, Cairo heading loading, IBM Plex body loading, local font loading, responsive navigation, all in-page anchors, section/card counts, FAQ open/close behavior, both WhatsApp CTAs, native dialog semantics, explanatory copy, Escape and close-button behavior, focus restoration, absence of fake contact destinations, image loading, reduced-motion behavior, JavaScript errors, and horizontal overflow. It also creates mobile and desktop Lighthouse reports.
 
