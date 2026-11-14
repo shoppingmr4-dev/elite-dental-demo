@@ -1,4 +1,4 @@
-# Apex Studio — Elite Dental Whitening Landing Page
+# Apex Studio — RUWA Dental Whitening Landing Page
 
 **Project status:** Expanded landing page in staged review; retesting the new educational content  
 **Page:** `whitening-2026.html`  
@@ -10,7 +10,7 @@
 
 Apex Studio created this concept to demonstrate a considered Arabic landing-page experience for a dental whitening service. The page explains why an oral-health assessment should precede treatment selection, outlines common professional options and limitations, answers common questions, and provides a transparent inquiry-preparation interaction.
 
-The clinic name **ELITE DENTAL** is fictional. This project must never be represented as a real clinic, a completed client engagement, or a live booking service.
+The clinic name **RUWA | رُواء لطب الأسنان** is fictional and created solely for this portfolio concept. It is not a real clinic name cleared for commercial use, a completed client engagement, or a live booking service.
 
 ## Design direction
 
@@ -26,6 +26,17 @@ Transferable reference principles:
 - **Vercel:** lightweight implementation and dependable technical execution.
 
 These are directional references only. Do not copy proprietary artwork, page layouts, or brand identities.
+
+## Brand identity
+
+- Fictional brand name: **رُواء | RUWA** (working portfolio identity; trademark availability has not been legally cleared).
+- Arabic name: **رُواء لطب الأسنان**.
+- English wordmark: **RUWA**, paired with the Arabic descriptor in the website header.
+- Logo mark: a custom geometric **R** monogram with a restrained smile arc; avoid the generic tooth pictogram.
+- Header logo is transparent and unboxed. The favicon uses the same vector mark.
+- Primary logo asset: `assets/ruwa-mark.svg`.
+- Palette: deep ink `#142D38` and teal `#187A80`, matching the landing page system.
+- Keep the logo crisp at small sizes; do not add shadows, gradients, bevels, or decorative effects.
 
 ## Current design tokens
 
@@ -69,7 +80,7 @@ The identity is intentionally restrained. Avoid reintroducing the previous cobal
 
 1. Slim announcement strip.
 2. Responsive branded navigation with compact menu behavior on phone and tablet.
-3. Hero: three-tier service-first headline, supporting explanation, primary assessment CTA, editorial image, and three guiding principles.
+3. Hero: three-tier service-first headline, supporting explanation, a primary assessment CTA, a secondary guide link, and an editorial image.
 4. Assessment approach: understand the case, explain possible options, and identify the next step.
 5. Causes of discoloration: surface staining compared with deeper changes in natural tooth color.
 6. Treatment options: in-office professional whitening, dentist-supervised custom take-home trays, and care for surface staining.
