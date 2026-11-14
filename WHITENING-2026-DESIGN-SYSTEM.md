@@ -31,13 +31,13 @@ These are directional references only. Do not copy proprietary artwork, page lay
 
 - Fictional brand name: **رُواء | RUWA** (working portfolio identity; trademark availability has not been legally cleared).
 - Arabic name: **رُواء لطب الأسنان**.
-- English wordmark: **Ruwa**, set in **Great Vibes** (400) for a flowing calligraphic signature; loaded from Google Fonts with `display=swap`. The Arabic descriptor remains in IBM Plex Sans Arabic.
+- English wordmark: **Ruwa**, set in **Cormorant Garamond** (500 italic) as a restrained serif signature; loaded from Google Fonts with `display=swap`. The Arabic descriptor remains in IBM Plex Sans Arabic.
 - Logo mark: preserve the exact supplied reference composition: the deep-navy stylized **R** and the turquoise crescent smile placed inside its open bowl. Do not separate, reposition, reinterpret, or redraw these forms.
 - Header logo is transparent and unboxed. The favicon uses the same transparent PNG mark.
 - Primary logo asset: `assets/ruwa-mark.png`, containing the supplied mark with its white background removed and original proportions preserved.
 - Palette: deep ink `#142D38` and teal `#187A80`, matching the landing page system.
 - Keep the logo crisp at small sizes; do not add shadows, gradients, bevels, or decorative effects.
-- Great Vibes is distributed under the SIL Open Font License (OFL); source: Google Fonts. Only the English wordmark uses it.
+- Keep the English wordmark restrained and legible; avoid highly decorative handwritten scripts. Only the English wordmark uses Cormorant Garamond.
 
 ## Current design tokens
 
@@ -79,8 +79,8 @@ The identity is intentionally restrained. Avoid reintroducing the previous cobal
 
 ## Page architecture
 
-1. Slim announcement strip.
-2. Responsive branded navigation with compact menu behavior on phone and tablet.
+1. Slim announcement strip with a single concise whitening message, without repeating the clinic name or decorative glyphs.
+2. Sticky branded navigation with a white translucent surface, refined spacing, and a compact rounded menu panel on tablet and phone.
 3. Hero: three-tier service-first headline, supporting explanation, a primary assessment CTA, a secondary guide link, and an editorial image.
 4. Assessment approach: understand the case, explain possible options, and identify the next step.
 5. Causes of discoloration: surface staining compared with deeper changes in natural tooth color.
@@ -113,7 +113,7 @@ Primary references:
 
 ## Interaction behavior
 
-- Navigation links point to real in-page sections.
+- Navigation links follow the visitor journey: assessment steps, causes of discoloration, whitening options, suitability, and FAQs. The wordmark links back to the top, so no duplicate “Home” link is needed; the assessment CTA remains a separate, clearly labelled button.
 - The compact navigation supports open/close state, `aria-expanded`, Escape-to-close, and closes after a selection.
 - FAQ entries use native `details` and `summary` elements.
 - The primary CTA scrolls to the inquiry-preparation panel.
