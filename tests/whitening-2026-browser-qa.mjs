@@ -156,7 +156,10 @@ try {
         heroCtaFontSize:Number.parseFloat(getComputedStyle(document.querySelector(".primary-cta")).fontSize),
         heroCtaRadius:Number.parseFloat(getComputedStyle(document.querySelector(".primary-cta")).borderTopLeftRadius),
         heroCtaIconHidden:document.querySelector(".primary-cta svg")?.getAttribute("aria-hidden") === "true",
-        liveContactChannelPresent:[...document.querySelectorAll("a[href]")].some(a=>/^(tel:|https?:\\/\\/(wa\\.me|api\\.whatsapp\\.com))/i.test(a.getAttribute("href") || "")),
+        liveContactChannelPresent:[...document.querySelectorAll("a[href]")].some(a=>{
+          const href=a.getAttribute("href") || "";
+          return href.startsWith("tel:") || a.hostname==="wa.me" || a.hostname==="api.whatsapp.com";
+        }),
         photoLabelText:document.querySelector(".photo-label strong")?.innerText?.replace(/\\s+/g," ").trim() || "",
         visualCaptionText:document.querySelector(".visual-caption")?.innerText?.trim() || "",
         visualCaptionTransform:getComputedStyle(document.querySelector(".visual-caption")).transform,
