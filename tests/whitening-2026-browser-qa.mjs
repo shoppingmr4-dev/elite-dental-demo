@@ -14,6 +14,46 @@ const viewports = [
   { name: "desktop-1440", width: 1440, height: 900, mobile: false }
 ];
 
+
+async function measureHeader(page) {
+  return page.evaluate(() => {
+    const header=document.querySelector(".site-header");
+    const headerRect=header.getBoundingClientRect();
+    const panel=getComputedStyle(header,"::before");
+    const left=Number.parseFloat(panel.left),right=Number.parseFloat(panel.right);
+    const top=Number.parseFloat(panel.top),bottom=Number.parseFloat(panel.bottom);
+    const rect=element=>{
+      const r=element.getBoundingClientRect();
+      return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};
+    };
+    const targets=[
+      ["brand",document.querySelector(".brand")],
+      ["nav",document.querySelector("#main-nav")],
+      ["action",document.querySelector(".header-action")],
+      ["menu",document.querySelector("#menu-toggle")]
+    ];
+    const visibleGroups=targets
+      .filter(([,element])=>element && getComputedStyle(element).display!=="none")
+      .map(([name,element])=>({name,...rect(element)}))
+      .filter(group=>group.width>0 && group.height>0);
+    return {
+      layoutHeight:headerRect.height,
+      innerHeight:rect(header.querySelector(".header-inner")).height,
+      headerWidth:headerRect.width,
+      headerCenter:headerRect.left+headerRect.width/2,
+      actionHeight:rect(document.querySelector(".header-action")).height,
+      wordmarkSize:Number.parseFloat(getComputedStyle(document.querySelector(".brand-name strong")).fontSize),
+      panelTop:top,panelBottom:bottom,panelLeft:left,panelRight:right,
+      visualWidth:headerRect.width-left-right,
+      visualHeight:headerRect.height-top-bottom,
+      visualLeft:headerRect.left+left,
+      visualRight:headerRect.right-right,
+      visualCenter:headerRect.left+left+(headerRect.width-left-right)/2,
+      visibleGroups
+    };
+  });
+}
+
 const expectedHeading = "اكتشف خيارات تبييض الأسنان لابتسامة أكثر إشراقًا";
 const failures = [];
 const results = [];
@@ -315,57 +355,11 @@ try {
     assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("primary-cta")), true, `${vp.name}: dialog action must restore focus to the hero trigger`);
     assert.equal(new URL(page.url()).hash, "", `${vp.name}: demo CTA must not create an unrelated anchor navigation`);
     await page.evaluate(() => window.scrollTo(0, 0));
-    const initialHeaderMetrics = await page.evaluate(() => {
-      const header=document.querySelector(".site-header");
-      const headerRect=header.getBoundingClientRect();
-      const action=document.querySelector(".header-action");
-      const wordmark=document.querySelector(".brand-name strong");
-      const panel=getComputedStyle(header,"::before");
-      const left=Number.parseFloat(panel.left),right=Number.parseFloat(panel.right);
-      const top=Number.parseFloat(panel.top),bottom=Number.parseFloat(panel.bottom);
-      return {
-        layoutHeight:headerRect.height,
-        innerHeight:header.querySelector(".header-inner").getBoundingClientRect().height,
-        headerWidth:headerRect.width,
-        headerCenter:headerRect.left+headerRect.width/2,
-        actionHeight:action.getBoundingClientRect().height,
-        wordmarkSize:Number.parseFloat(getComputedStyle(wordmark).fontSize),
-        panelTop:top,panelBottom:bottom,
-        panelLeft:left,panelRight:right,
-        visualWidth:headerRect.width-left-right,
-        visualHeight:headerRect.height-top-bottom,
-        visualLeft:headerRect.left+left,
-        visualRight:headerRect.right-right,
-        visualCenter:headerRect.left+left+(headerRect.width-left-right)/2
-      };
-    });
+    const initialHeaderMetrics = await measureHeader(page);
     await page.evaluate(() => window.scrollTo(0, 240));
     await page.waitForFunction(() => document.querySelector(".site-header")?.classList.contains("is-compact"), null, { timeout: 3000 });
     await page.waitForTimeout(360);
-    const compactHeaderMetrics = await page.evaluate(() => {
-      const header=document.querySelector(".site-header");
-      const headerRect=header.getBoundingClientRect();
-      const action=document.querySelector(".header-action");
-      const wordmark=document.querySelector(".brand-name strong");
-      const panel=getComputedStyle(header,"::before");
-      const left=Number.parseFloat(panel.left),right=Number.parseFloat(panel.right);
-      const top=Number.parseFloat(panel.top),bottom=Number.parseFloat(panel.bottom);
-      return {
-        layoutHeight:headerRect.height,
-        innerHeight:header.querySelector(".header-inner").getBoundingClientRect().height,
-        headerWidth:headerRect.width,
-        headerCenter:headerRect.left+headerRect.width/2,
-        actionHeight:action.getBoundingClientRect().height,
-        wordmarkSize:Number.parseFloat(getComputedStyle(wordmark).fontSize),
-        panelTop:top,panelBottom:bottom,
-        panelLeft:left,panelRight:right,
-        visualWidth:headerRect.width-left-right,
-        visualHeight:headerRect.height-top-bottom,
-        visualLeft:headerRect.left+left,
-        visualRight:headerRect.right-right,
-        visualCenter:headerRect.left+left+(headerRect.width-left-right)/2
-      };
-    });
+    const compactHeaderMetrics = await measureHeader(page);
     assert.equal(compactHeaderMetrics.layoutHeight, initialHeaderMetrics.layoutHeight, `${vp.name}: compacting the header must not shift page layout`);
     assert.equal(compactHeaderMetrics.innerHeight, initialHeaderMetrics.innerHeight, `${vp.name}: header's reserved inner height must remain stable`);
     assert.ok(compactHeaderMetrics.panelTop > initialHeaderMetrics.panelTop, `${vp.name}: floating shell did not visually shrink on scroll`);
@@ -384,6 +378,28 @@ try {
     assert.ok(compactHeaderMetrics.visualHeight<initialHeaderMetrics.visualHeight, `${vp.name}: actual floating shell height did not decrease`);
     assert.ok(compactHeaderMetrics.actionHeight < initialHeaderMetrics.actionHeight, `${vp.name}: header CTA did not become more compact on scroll`);
     assert.ok(compactHeaderMetrics.wordmarkSize < initialHeaderMetrics.wordmarkSize, `${vp.name}: brand wordmark did not become more compact on scroll`);
+    for (const metrics of [initialHeaderMetrics,compactHeaderMetrics]) {
+      const groups=[...metrics.visibleGroups].sort((a,b)=>a.left-b.left);
+      assert.ok(groups.length>=2, `${vp.name}: header controls are not all measurable`);
+      for (const group of groups) {
+        assert.ok(group.left>=metrics.visualLeft-1.5 && group.right<=metrics.visualRight+1.5,
+          `${vp.name}: ${group.name} escapes the visual floating shell`);
+      }
+      for (let index=1;index<groups.length;index++) {
+        assert.ok(groups[index-1].right<=groups[index].left+1,
+          `${vp.name}: header groups overlap (${groups[index-1].name} / ${groups[index].name})`);
+      }
+    }
+    const headerShrink = {
+      initialShellWidthPx:Number(initialHeaderMetrics.visualWidth.toFixed(2)),
+      compactShellWidthPx:Number(compactHeaderMetrics.visualWidth.toFixed(2)),
+      totalWidthReductionPx:Number((initialHeaderMetrics.visualWidth-compactHeaderMetrics.visualWidth).toFixed(2)),
+      leftEdgeInwardPx:Number(leftEdgeShift.toFixed(2)),
+      rightEdgeInwardPx:Number(rightEdgeShift.toFixed(2)),
+      perSideInwardPercent:Number((leftEdgeShift/initialHeaderMetrics.headerWidth*100).toFixed(2)),
+      initialShellHeightPx:Number(initialHeaderMetrics.visualHeight.toFixed(2)),
+      compactShellHeightPx:Number(compactHeaderMetrics.visualHeight.toFixed(2))
+    };
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.waitForFunction(() => !document.querySelector(".site-header")?.classList.contains("is-compact"), null, { timeout: 3000 });
     const restoredHeaderMetrics = await page.evaluate(() => {
@@ -495,7 +511,7 @@ try {
     });
     assert.ok(imageLoad.loaded, `${vp.name}: hero image failed to load`);
     assert.ok(/w=(640|1100|1500)/.test(imageLoad.src), `${vp.name}: responsive hero image variant was not selected`);
-    results.push({ ...vp, ...state, imageLoad, pageErrors, localErrors });
+    results.push({ ...vp, ...state, headerShrink, imageLoad, pageErrors, localErrors });
     assert.equal(pageErrors.length, 0, `${vp.name}: JavaScript errors: ${pageErrors.join(" | ")}`);
     assert.equal(localErrors.length, 0, `${vp.name}: local resource errors: ${JSON.stringify(localErrors)}`);
     console.log(`[PASS] ${vp.name}: RTL, Cairo + IBM Plex fonts, layout, anchors, menu, motion and overflow`);
