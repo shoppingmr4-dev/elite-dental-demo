@@ -54,27 +54,18 @@ try {
         return { left:r.left, right:r.right, top:r.top, bottom:r.bottom, width:r.width, height:r.height };
       };
       const brandImage=document.querySelector(".brand-mark img");
-      const logoResponse=await fetch(brandImage.src);
-      const logoText=await logoResponse.text();
-      const logoDocument=new DOMParser().parseFromString(logoText,"image/svg+xml");
-      const embeddedLogo=logoDocument.querySelector("image");
-      const embeddedLogoHref=embeddedLogo?.getAttribute("href") || "";
-      const logoRaster=new Image();
-      logoRaster.src=embeddedLogoHref;
-      await logoRaster.decode();
+      await brandImage.decode();
       const logoCanvas=document.createElement("canvas");
-      logoCanvas.width=164;logoCanvas.height=142;
+      logoCanvas.width=brandImage.naturalWidth;logoCanvas.height=brandImage.naturalHeight;
       const logoContext=logoCanvas.getContext("2d",{willReadFrequently:true});
-      logoContext.drawImage(logoRaster,0,0);
+      logoContext.drawImage(brandImage,0,0);
       const logoPixel=(x,y)=>Array.from(logoContext.getImageData(x,y,1,1).data);
-      const logoCornerPixel=logoPixel(0,0);
-      const logoNavyPixel=logoPixel(25,20);
-      const logoSmilePixel=logoPixel(40,79);
-      const logoReferenceMatch=logoDocument.documentElement.getAttribute("viewBox")==="0 0 164 142" &&
-        Boolean(embeddedLogoHref.startsWith("data:image/png;base64,")) &&
-        embeddedLogo?.getAttribute("width")==="164" &&
-        embeddedLogo?.getAttribute("height")==="142" &&
-        !logoDocument.querySelector("rect");
+      const logoCornerPixel=logoPixel(1,1);
+      const logoNavyPixel=logoPixel(28,18);
+      const logoSmilePixel=logoPixel(58,88);
+      const logoReferenceMatch=brandImage.naturalWidth===162 &&
+        brandImage.naturalHeight===140 &&
+        brandImage.currentSrc.endsWith("/assets/ruwa-mark.png");
 
       return {
         lang:document.documentElement.lang,
@@ -126,6 +117,7 @@ try {
         imageAlt:image?.alt || "",
         imageSrc:image?.currentSrc || image?.src || "",
         faviconHref:document.querySelector('link[rel="icon"]')?.getAttribute("href") || "",
+        brandMarkRect:brandImage ? rect(brandImage) : null,
         brandName:document.querySelector(".brand-name strong")?.innerText?.trim() || "",
         brandArabic:document.querySelector(".brand-name small")?.innerText?.trim() || "",
         brandMarkSrc:document.querySelector(".brand-mark img")?.getAttribute("src") || "",
@@ -213,12 +205,13 @@ try {
     assert.ok(state.contrastChecks.every(item=>item.ratio>=4.5), `${vp.name}: text contrast below WCAG AA: ${JSON.stringify(state.contrastChecks)}`);
     assert.equal(state.missingAnchors.length, 0, `${vp.name}: broken in-page anchors: ${state.missingAnchors.join(", ")}`);
     assert.ok(state.skipLink, `${vp.name}: skip link missing`);
-    assert.ok(state.faviconHref.endsWith("assets/ruwa-mark.svg"), `${vp.name}: RUWA favicon link is missing`);
+    assert.ok(state.faviconHref.endsWith("assets/ruwa-mark.png"), `${vp.name}: RUWA favicon link is missing`);
     assert.equal(state.brandName, "RUWA", `${vp.name}: English brand wordmark is incorrect`);
     assert.equal(state.brandArabic, "رُواء لطب الأسنان", `${vp.name}: Arabic clinic name is incorrect`);
-    assert.equal(state.brandMarkSrc, "assets/ruwa-mark.svg", `${vp.name}: header logo asset is incorrect`);
+    assert.equal(state.brandMarkSrc, "assets/ruwa-mark.png", `${vp.name}: header logo asset is incorrect`);
     assert.ok(state.brandMarkLoaded, `${vp.name}: header logo asset failed to load`);
-    assert.ok(state.logoReferenceMatch, `${vp.name}: RUWA logo does not match the supplied reference layout`);
+    assert.ok(state.brandMarkRect && state.brandMarkRect.width >= 38 && state.brandMarkRect.height >= 32, `${vp.name}: RUWA logo is not visibly sized beside the wordmark`);
+    assert.ok(state.logoReferenceMatch, `${vp.name}: RUWA logo dimensions or header asset differ from the supplied reference`);
     assert.ok(state.logoTransparent, `${vp.name}: RUWA logo background is not transparent`);
     assert.ok(state.logoNavyExact, `${vp.name}: RUWA navy mark color differs from reference`);
     assert.ok(state.logoSmileExact, `${vp.name}: RUWA smile color differs from reference`);
