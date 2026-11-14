@@ -317,50 +317,94 @@ try {
     await page.evaluate(() => window.scrollTo(0, 0));
     const initialHeaderMetrics = await page.evaluate(() => {
       const header=document.querySelector(".site-header");
+      const headerRect=header.getBoundingClientRect();
       const action=document.querySelector(".header-action");
       const wordmark=document.querySelector(".brand-name strong");
       const panel=getComputedStyle(header,"::before");
+      const left=Number.parseFloat(panel.left),right=Number.parseFloat(panel.right);
+      const top=Number.parseFloat(panel.top),bottom=Number.parseFloat(panel.bottom);
       return {
-        layoutHeight:header.getBoundingClientRect().height,
+        layoutHeight:headerRect.height,
         innerHeight:header.querySelector(".header-inner").getBoundingClientRect().height,
+        headerWidth:headerRect.width,
+        headerCenter:headerRect.left+headerRect.width/2,
         actionHeight:action.getBoundingClientRect().height,
         wordmarkSize:Number.parseFloat(getComputedStyle(wordmark).fontSize),
-        panelTop:Number.parseFloat(panel.top),
-        panelLeft:Number.parseFloat(panel.left)
+        panelTop:top,panelBottom:bottom,
+        panelLeft:left,panelRight:right,
+        visualWidth:headerRect.width-left-right,
+        visualHeight:headerRect.height-top-bottom,
+        visualLeft:headerRect.left+left,
+        visualRight:headerRect.right-right,
+        visualCenter:headerRect.left+left+(headerRect.width-left-right)/2
       };
     });
     await page.evaluate(() => window.scrollTo(0, 240));
     await page.waitForFunction(() => document.querySelector(".site-header")?.classList.contains("is-compact"), null, { timeout: 3000 });
+    await page.waitForTimeout(360);
     const compactHeaderMetrics = await page.evaluate(() => {
       const header=document.querySelector(".site-header");
+      const headerRect=header.getBoundingClientRect();
       const action=document.querySelector(".header-action");
       const wordmark=document.querySelector(".brand-name strong");
       const panel=getComputedStyle(header,"::before");
+      const left=Number.parseFloat(panel.left),right=Number.parseFloat(panel.right);
+      const top=Number.parseFloat(panel.top),bottom=Number.parseFloat(panel.bottom);
       return {
-        layoutHeight:header.getBoundingClientRect().height,
+        layoutHeight:headerRect.height,
         innerHeight:header.querySelector(".header-inner").getBoundingClientRect().height,
+        headerWidth:headerRect.width,
+        headerCenter:headerRect.left+headerRect.width/2,
         actionHeight:action.getBoundingClientRect().height,
         wordmarkSize:Number.parseFloat(getComputedStyle(wordmark).fontSize),
-        panelTop:Number.parseFloat(panel.top),
-        panelLeft:Number.parseFloat(panel.left)
+        panelTop:top,panelBottom:bottom,
+        panelLeft:left,panelRight:right,
+        visualWidth:headerRect.width-left-right,
+        visualHeight:headerRect.height-top-bottom,
+        visualLeft:headerRect.left+left,
+        visualRight:headerRect.right-right,
+        visualCenter:headerRect.left+left+(headerRect.width-left-right)/2
       };
     });
     assert.equal(compactHeaderMetrics.layoutHeight, initialHeaderMetrics.layoutHeight, `${vp.name}: compacting the header must not shift page layout`);
     assert.equal(compactHeaderMetrics.innerHeight, initialHeaderMetrics.innerHeight, `${vp.name}: header's reserved inner height must remain stable`);
     assert.ok(compactHeaderMetrics.panelTop > initialHeaderMetrics.panelTop, `${vp.name}: floating shell did not visually shrink on scroll`);
-    assert.ok(compactHeaderMetrics.panelLeft > initialHeaderMetrics.panelLeft, `${vp.name}: floating shell did not become narrower on scroll`);
+    const expectedSideInsetRatio=vp.width>920?0.025:vp.width>720?0.02:0.015;
+    const leftEdgeShift=compactHeaderMetrics.panelLeft-initialHeaderMetrics.panelLeft;
+    const rightEdgeShift=compactHeaderMetrics.panelRight-initialHeaderMetrics.panelRight;
+    assert.ok(leftEdgeShift>0 && rightEdgeShift>0, `${vp.name}: both outer sides must move inward`);
+    assert.ok(Math.abs(leftEdgeShift-rightEdgeShift)<=0.75, `${vp.name}: right and left edges must shrink by the same amount (left ${leftEdgeShift}px, right ${rightEdgeShift}px)`);
+    assert.ok(Math.abs(leftEdgeShift/initialHeaderMetrics.headerWidth-expectedSideInsetRatio)<=0.005, `${vp.name}: per-side horizontal shrink is not at the intended responsive percentage`);
+    assert.ok(compactHeaderMetrics.visualWidth<initialHeaderMetrics.visualWidth, `${vp.name}: actual floating shell width did not decrease`);
+    assert.ok(Math.abs((compactHeaderMetrics.visualCenter-initialHeaderMetrics.visualCenter))<=0.75, `${vp.name}: visual header shell shifted away from the center`);
+    assert.ok(Math.abs(compactHeaderMetrics.headerCenter-initialHeaderMetrics.headerCenter)<=0.75, `${vp.name}: header container center changed during compaction`);
+    assert.ok(compactHeaderMetrics.visualLeft>initialHeaderMetrics.visualLeft, `${vp.name}: visual left edge did not move inward`);
+    assert.ok(compactHeaderMetrics.visualRight<initialHeaderMetrics.visualRight, `${vp.name}: visual right edge did not move inward`);
+    assert.ok(Math.abs(compactHeaderMetrics.panelTop-compactHeaderMetrics.panelBottom)<=0.75, `${vp.name}: vertical shell inset must remain balanced`);
+    assert.ok(compactHeaderMetrics.visualHeight<initialHeaderMetrics.visualHeight, `${vp.name}: actual floating shell height did not decrease`);
     assert.ok(compactHeaderMetrics.actionHeight < initialHeaderMetrics.actionHeight, `${vp.name}: header CTA did not become more compact on scroll`);
     assert.ok(compactHeaderMetrics.wordmarkSize < initialHeaderMetrics.wordmarkSize, `${vp.name}: brand wordmark did not become more compact on scroll`);
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.waitForFunction(() => !document.querySelector(".site-header")?.classList.contains("is-compact"), null, { timeout: 3000 });
-    const restoredHeaderMetrics = await page.evaluate(() => ({
-      actionHeight:document.querySelector(".header-action").getBoundingClientRect().height,
-      wordmarkSize:Number.parseFloat(getComputedStyle(document.querySelector(".brand-name strong")).fontSize),
-      panelTop:Number.parseFloat(getComputedStyle(document.querySelector(".site-header"),"::before").top)
-    }));
+    const restoredHeaderMetrics = await page.evaluate(() => {
+      const header=document.querySelector(".site-header");
+      const headerRect=header.getBoundingClientRect();
+      const panel=getComputedStyle(header,"::before");
+      return {
+        actionHeight:document.querySelector(".header-action").getBoundingClientRect().height,
+        wordmarkSize:Number.parseFloat(getComputedStyle(document.querySelector(".brand-name strong")).fontSize),
+        panelTop:Number.parseFloat(panel.top),
+        panelLeft:Number.parseFloat(panel.left),
+        panelRight:Number.parseFloat(panel.right),
+        visualWidth:headerRect.width-Number.parseFloat(panel.left)-Number.parseFloat(panel.right)
+      };
+    });
     assert.equal(restoredHeaderMetrics.actionHeight, initialHeaderMetrics.actionHeight, `${vp.name}: header CTA did not restore at the top`);
     assert.equal(restoredHeaderMetrics.wordmarkSize, initialHeaderMetrics.wordmarkSize, `${vp.name}: brand wordmark did not restore at the top`);
     assert.equal(restoredHeaderMetrics.panelTop, initialHeaderMetrics.panelTop, `${vp.name}: floating shell did not restore at the top`);
+    assert.equal(restoredHeaderMetrics.panelLeft, initialHeaderMetrics.panelLeft, `${vp.name}: left edge did not restore at the top`);
+    assert.equal(restoredHeaderMetrics.panelRight, initialHeaderMetrics.panelRight, `${vp.name}: right edge did not restore at the top`);
+    assert.equal(restoredHeaderMetrics.visualWidth, initialHeaderMetrics.visualWidth, `${vp.name}: original floating header width did not restore at the top`);
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
