@@ -63,7 +63,6 @@ async function measureHeader(page) {
     };
   });
 }
-}
 
 const expectedHeading = "اكتشف خيارات تبييض الأسنان لابتسامة أكثر إشراقًا";
 const failures = [];
