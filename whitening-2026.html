@@ -512,7 +512,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   translate:var(--action-converge-x,0px) 0
  }
  .site-header.is-compact .nav{
-  gap:calc(clamp(14px,1.7vw,24px) - 2px)
+  gap:calc(clamp(14px,1.7vw,24px) - 4px)
  }
 }
 
@@ -855,7 +855,7 @@ body,button,input,select,textarea{font-family:var(--body)}
 
   // Measure both CSS states in an invisible, same-width clone. This accounts for
   // every real compact-size change (brand width, CTA padding/type, and nav gaps)
-  // before calculating the exact translation needed to reduce each free gap by 30%.
+  // before calculating the exact translation needed to reduce each free gap by about 60–70%, while preserving a safe minimum gap.
   const headerRect=header.getBoundingClientRect();
   const clone=header.cloneNode(true);
   clone.classList.remove("is-compact");
@@ -887,8 +887,11 @@ body,button,input,select,textarea{font-family:var(--body)}
   const compactState=snapshot(true);
   clone.remove();
 
-  const brandTravel=Math.max(0,compactState.brandGap-initial.brandGap*0.70);
-  const actionTravel=Math.max(0,compactState.actionGap-initial.actionGap*0.70);
+  const minimumGroupGap=16;
+  const targetBrandGap=Math.max(minimumGroupGap,initial.brandGap*0.30);
+  const targetActionGap=Math.max(minimumGroupGap,initial.actionGap*0.30);
+  const brandTravel=Math.max(0,compactState.brandGap-targetBrandGap);
+  const actionTravel=Math.max(0,compactState.actionGap-targetActionGap);
   header.style.setProperty("--brand-converge-x",brandTravel.toFixed(2)+"px");
   header.style.setProperty("--action-converge-x",actionTravel.toFixed(2)+"px");
  };

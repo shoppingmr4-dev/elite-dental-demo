@@ -64,6 +64,20 @@ async function measureHeader(page) {
   });
 }
 
+async function captureHeader(page, path) {
+  const box = await page.locator(".site-header").boundingBox();
+  assert.ok(box, "Header screenshot target must be measurable");
+  await page.screenshot({
+    path,
+    clip: { x: box.x, y: box.y, width: box.width, height: box.height },
+    animations: "disabled"
+  });
+  return page.evaluate(() => ({
+    scrollY: window.scrollY,
+    compact: document.querySelector(".site-header")?.classList.contains("is-compact") || false
+  }));
+}
+
 const expectedHeading = "اكتشف خيارات تبييض الأسنان لابتسامة أكثر إشراقًا";
 const failures = [];
 const results = [];
@@ -367,17 +381,23 @@ try {
     await page.evaluate(() => window.scrollTo(0, 0));
     const initialHeaderMetrics = await measureHeader(page);
     if (vp.width===1440) {
-      await page.locator(".site-header").screenshot({path:`${OUT}/desktop-1440-header-initial.png`,animations:"disabled"});
+      const initialScreenshotState=await captureHeader(page,`${OUT}/desktop-1440-header-initial.png`);
+      assert.equal(initialScreenshotState.scrollY,0, `${vp.name}: initial header screenshot must preserve the top-of-page state`);
+      assert.equal(initialScreenshotState.compact,false, `${vp.name}: initial header screenshot must show the expanded state`);
     }
     await page.evaluate(() => window.scrollTo(0, 240));
     await page.waitForFunction(() => document.querySelector(".site-header")?.classList.contains("is-compact"), null, { timeout: 3000 });
     await page.waitForTimeout(360);
     const compactHeaderMetrics = await measureHeader(page);
     if (vp.width===1440) {
-      await page.locator(".site-header").screenshot({path:`${OUT}/desktop-1440-header-compact.png`,animations:"disabled"});
+      const compactScreenshotState=await captureHeader(page,`${OUT}/desktop-1440-header-compact.png`);
+      assert.ok(compactScreenshotState.scrollY>56, `${vp.name}: compact header screenshot must preserve the scrolled position`);
+      assert.equal(compactScreenshotState.compact,true, `${vp.name}: compact header screenshot must preserve the compact state`);
     }
     if (vp.width===360) {
-      await page.locator(".site-header").screenshot({path:`${OUT}/mobile-360-header-compact.png`,animations:"disabled"});
+      const mobileScreenshotState=await captureHeader(page,`${OUT}/mobile-360-header-compact.png`);
+      assert.ok(mobileScreenshotState.scrollY>56, `${vp.name}: mobile compact screenshot must preserve the scrolled position`);
+      assert.equal(mobileScreenshotState.compact,true, `${vp.name}: mobile compact screenshot must preserve the compact state`);
     }
     assert.equal(compactHeaderMetrics.layoutHeight, initialHeaderMetrics.layoutHeight, `${vp.name}: compacting the header must not shift page layout`);
     assert.equal(compactHeaderMetrics.innerHeight, initialHeaderMetrics.innerHeight, `${vp.name}: header's reserved inner height must remain stable`);
@@ -415,12 +435,16 @@ try {
       const actionGapReductionRatio=actionGapReduction/initialHeaderMetrics.navActionGap;
       assert.ok(brandGapReduction>0 && actionGapReduction>0,
         `${vp.name}: both brand-to-navigation and navigation-to-CTA gaps must decrease`);
-      assert.ok(brandGapReductionRatio>=0.25 && brandGapReductionRatio<=0.35,
-        `${vp.name}: brand/navigation gap reduction must be 25–35% (actual ${(brandGapReductionRatio*100).toFixed(1)}%)`);
-      assert.ok(actionGapReductionRatio>=0.25 && actionGapReductionRatio<=0.35,
-        `${vp.name}: navigation/CTA gap reduction must be 25–35% (actual ${(actionGapReductionRatio*100).toFixed(1)}%)`);
+      assert.ok(brandGapReductionRatio>=0.55 && brandGapReductionRatio<=0.72,
+        `${vp.name}: brand/navigation gap reduction must be 55–72% (actual ${(brandGapReductionRatio*100).toFixed(1)}%)`);
+      assert.ok(actionGapReductionRatio>=0.55 && actionGapReductionRatio<=0.72,
+        `${vp.name}: navigation/CTA gap reduction must be 55–72% (actual ${(actionGapReductionRatio*100).toFixed(1)}%)`);
+      assert.ok(compactHeaderMetrics.brandNavGap>=15 && compactHeaderMetrics.navActionGap>=15,
+        `${vp.name}: compact group gaps must retain at least 15px of safe separation`);
       assert.ok(compactHeaderMetrics.navLinkGapAverage<initialHeaderMetrics.navLinkGapAverage,
         `${vp.name}: navigation link spacing did not tighten`);
+      assert.ok(compactHeaderMetrics.navLinkGapAverage<=initialHeaderMetrics.navLinkGapAverage-3,
+        `${vp.name}: navigation links must move noticeably closer together`);
       assert.ok(compactHeaderMetrics.navLinkGaps.every(gap=>gap>=8),
         `${vp.name}: a compact navigation link gap became too tight`);
       headerConvergence={
