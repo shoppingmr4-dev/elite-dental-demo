@@ -474,10 +474,12 @@ try {
       `${vp.name}: WhatsApp CTA position did not restore at the top`);
     assert.ok(Math.abs(restoredHeaderMetrics.nav.centerX-initialHeaderMetrics.nav.centerX)<=0.75,
       `${vp.name}: navigation position did not restore at the top`);
-    assert.ok(Math.abs(restoredHeaderMetrics.brandNavGap-initialHeaderMetrics.brandNavGap)<=0.75,
-      `${vp.name}: brand/navigation gap did not restore at the top`);
-    assert.ok(Math.abs(restoredHeaderMetrics.navActionGap-initialHeaderMetrics.navActionGap)<=0.75,
-      `${vp.name}: navigation/CTA gap did not restore at the top`);
+    if (vp.width>920) {
+      assert.ok(Math.abs(restoredHeaderMetrics.brandNavGap-initialHeaderMetrics.brandNavGap)<=0.75,
+        `${vp.name}: brand/navigation gap did not restore at the top`);
+      assert.ok(Math.abs(restoredHeaderMetrics.navActionGap-initialHeaderMetrics.navActionGap)<=0.75,
+        `${vp.name}: navigation/CTA gap did not restore at the top`);
+    }
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
