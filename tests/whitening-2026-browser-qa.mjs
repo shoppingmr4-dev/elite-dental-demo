@@ -200,7 +200,7 @@ try {
           if(!rule||!number)return null;
           const icon=document.querySelector(".hero-eyebrow-icon");
           const style=getComputedStyle(rule),bounds=rect(rule),numberBounds=rect(number),iconBounds=rect(icon);
-          const matrix=style.transform.match(/matrix\\(([^)]+)\\)/);
+          const matrix=style.transform.match(/matrix\(([^)]+)\)/);
           const values=matrix?matrix[1].split(",").map(Number):[];
           const angle=values.length>=2?Math.atan2(values[1],values[0])*180/Math.PI:0;
           return {width:Number.parseFloat(style.width),height:Number.parseFloat(style.height),visualWidth:bounds.width,
