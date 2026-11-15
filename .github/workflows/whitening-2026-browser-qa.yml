@@ -1,6 +1,15 @@
 name: Elite Whitening Browser QA
 
 on:
+  push:
+    branches:
+      - feature/elite-whitening-world-class-2026
+    paths:
+      - "whitening-2026.html"
+      - "assets/**"
+      - "tests/whitening-2026-browser-qa.mjs"
+      - "tests/whitening-2026-public-preview-qa.mjs"
+      - ".github/workflows/whitening-2026-browser-qa.yml"
   pull_request:
     types: [opened, synchronize, reopened, edited]
     branches:
@@ -10,6 +19,7 @@ on:
       - "assets/fonts/**"
       - "assets/elite-dental-mark.svg"
       - "tests/whitening-2026-browser-qa.mjs"
+      - "tests/whitening-2026-public-preview-qa.mjs"
       - ".github/workflows/whitening-2026-browser-qa.yml"
 
 permissions:
@@ -54,6 +64,11 @@ jobs:
         env:
           BASE_URL: http://127.0.0.1:4173/whitening-2026.html
         run: node tests/whitening-2026-browser-qa.mjs
+
+      - name: Verify the immutable public RUWA preview in desktop Chromium
+        env:
+          PUBLIC_PREVIEW_URL: https://rawcdn.githack.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/whitening-2026.html
+        run: node tests/whitening-2026-public-preview-qa.mjs
 
       - name: Configure Lighthouse to use Playwright Chromium
         run: echo "CHROME_PATH=$(node -e "process.stdout.write(require('playwright').chromium.executablePath())")" >> "$GITHUB_ENV"
