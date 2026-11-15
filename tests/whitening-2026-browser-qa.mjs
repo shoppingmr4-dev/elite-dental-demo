@@ -775,6 +775,15 @@ try {
             section?.getBoundingClientRect().top<=readingLine+1;
         },target,{timeout:6000});
         await page.mouse.move(0,0);
+        // The current-section underline animates for 220ms. Wait for the real
+        // browser transition to finish before measuring its final 100% scale.
+        await page.waitForFunction(href=>{
+          const link=document.querySelector(`#main-nav a[href="${href}"]`);
+          if(!link||link.getAttribute("aria-current")!=="location")return false;
+          const transform=getComputedStyle(link,"::after").transform;
+          const scale=transform.startsWith("matrix(")?Number.parseFloat(transform.slice(7)):0;
+          return scale>=.99&&scale<=1.01;
+        },target.href,{timeout:1800});
         const underline=await targetLink.evaluate(link=>{
           const rect=link.getBoundingClientRect();
           const pseudo=getComputedStyle(link,"::after");
