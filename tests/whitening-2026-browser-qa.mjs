@@ -198,9 +198,15 @@ try {
           const rule=document.querySelector(".hero-eyebrow-rule");
           const number=document.querySelector(".hero-eyebrow-index");
           if(!rule||!number)return null;
-          const style=getComputedStyle(rule),bounds=rect(rule),numberBounds=rect(number);
-          return {width:bounds.width,height:bounds.height,color:style.backgroundColor,opacity:Number.parseFloat(style.opacity),
-            immediatelyBeforeNumber:bounds.left>numberBounds.right&&bounds.left-numberBounds.right<12};
+          const icon=document.querySelector(".hero-eyebrow-icon");
+          const style=getComputedStyle(rule),bounds=rect(rule),numberBounds=rect(number),iconBounds=rect(icon);
+          const matrix=style.transform.match(/matrix\\(([^)]+)\\)/);
+          const values=matrix?matrix[1].split(",").map(Number):[];
+          const angle=values.length>=2?Math.atan2(values[1],values[0])*180/Math.PI:0;
+          return {width:Number.parseFloat(style.width),height:Number.parseFloat(style.height),visualWidth:bounds.width,
+            visualHeight:bounds.height,color:style.backgroundColor,opacity:Number.parseFloat(style.opacity),angle,
+            betweenNumberAndIcon:numberBounds.left>bounds.right&&iconBounds.right<bounds.left&&
+              numberBounds.left-bounds.right<12&&bounds.left-iconBounds.right<12};
         })(),
         benefitUnderline:(()=>{
           const accent=document.querySelector(".hero-title-benefit .accent");
@@ -211,9 +217,10 @@ try {
           const angle=values.length>=2?Math.atan2(values[1],values[0])*180/Math.PI:0;
           const widthValue=style.width;
           const width=widthValue.endsWith("%")?bounds.width*Number.parseFloat(widthValue)/100:Number.parseFloat(widthValue);
-          const height=Number.parseFloat(style.height);
-          return {textWidth:bounds.width,lineWidth:width,widthRatio:width/bounds.width,height,
-            color:style.backgroundColor,opacity:Number.parseFloat(style.opacity),bottom:style.bottom,angle};
+          return {textWidth:bounds.width,lineWidth:width,widthRatio:width/bounds.width,
+            height:Number.parseFloat(style.height),strokeWidth:Number.parseFloat(style.borderBottomWidth),
+            strokeColor:style.borderBottomColor,borderRadius:style.borderRadius,
+            opacity:Number.parseFloat(style.opacity),bottom:style.bottom,angle};
         })(),
         heroBackgroundHarmony:(()=>{
           const root=getComputedStyle(document.documentElement);
@@ -250,6 +257,14 @@ try {
             i.backgroundColor==="rgba(0, 0, 0, 0)"&&i.borderTopWidth==="0px"&&
             svg&&Number.parseFloat(getComputedStyle(svg).width)<=16;
         })()),
+        sectionMarkerChips:[...document.querySelectorAll(".eyebrow")].map(element=>{
+          const style=getComputedStyle(element),bounds=rect(element);
+          return {text:element.innerText.trim(),height:bounds.height,width:bounds.width,
+            borderWidth:style.borderTopWidth,borderRadius:style.borderRadius,
+            backgroundImage:style.backgroundImage,backdropFilter:style.backdropFilter,
+            beforeWidth:getComputedStyle(element,"::before").width,
+            beforeHeight:getComputedStyle(element,"::before").height};
+        }),
         copy:copy ? rect(copy) : null,
         visual:visual ? rect(visual) : null,
         imageCount:document.querySelectorAll(".photo-frame img").length,
@@ -377,16 +392,25 @@ try {
     assert.ok(state.eyebrowStartAligned, `${vp.name}: hero eyebrow is not aligned to the RTL line start`);
     assert.ok(state.eyebrowNumberFirst, `${vp.name}: section number is not first at the RTL line start`);
     assert.ok(state.eyebrowGlassChip, `${vp.name}: eyebrow glass chip is not compact, translucent, and unframed internally`);
-    assert.ok(state.eyebrowRule && state.eyebrowRule.immediatelyBeforeNumber,
-      `${vp.name}: the short RTL editorial line must sit immediately before 01: ${JSON.stringify(state.eyebrowRule)}`);
-    assert.ok(state.eyebrowRule.width>=16&&state.eyebrowRule.width<=24&&state.eyebrowRule.height>=1.4&&state.eyebrowRule.height<=2,
+    assert.ok(state.eyebrowRule && state.eyebrowRule.betweenNumberAndIcon,
+      `${vp.name}: the diagonal editorial line must sit between 01 and the tooth icon: ${JSON.stringify(state.eyebrowRule)}`);
+    assert.ok(state.eyebrowRule.width>=16&&state.eyebrowRule.width<=20&&state.eyebrowRule.height>=1.5&&state.eyebrowRule.height<=2,
       `${vp.name}: eyebrow rule dimensions are outside the refined range: ${JSON.stringify(state.eyebrowRule)}`);
+    assert.ok(state.eyebrowRule.angle<=-10&&state.eyebrowRule.angle>=-18,
+      `${vp.name}: eyebrow rule must have a restrained diagonal angle: ${JSON.stringify(state.eyebrowRule)}`);
     assert.equal(state.eyebrowRule.color,"rgb(24, 122, 128)",`${vp.name}: eyebrow rule must use RUWA teal`);
     assert.ok(state.benefitUnderline && state.benefitUnderline.widthRatio>=.90&&state.benefitUnderline.widthRatio<=1,
       `${vp.name}: benefit underline must cover 90–100% of the full phrase: ${JSON.stringify(state.benefitUnderline)}`);
-    assert.ok(state.benefitUnderline.height>=2&&state.benefitUnderline.height<=3,
-      `${vp.name}: benefit underline thickness is incorrect: ${JSON.stringify(state.benefitUnderline)}`);
-    assert.equal(state.benefitUnderline.color,"rgb(184, 93, 74)",`${vp.name}: benefit underline coral tone changed`);
+    assert.ok(state.benefitUnderline.strokeWidth>=2&&state.benefitUnderline.strokeWidth<=3,
+      `${vp.name}: curved underline stroke thickness is incorrect: ${JSON.stringify(state.benefitUnderline)}`);
+    assert.equal(state.benefitUnderline.strokeColor,"rgb(184, 93, 74)",`${vp.name}: benefit underline coral tone changed`);
+    assert.ok(state.benefitUnderline.borderRadius.includes("%"),
+      `${vp.name}: benefit underline must have a visibly curved profile: ${JSON.stringify(state.benefitUnderline)}`);
+    assert.equal(state.sectionMarkerChips.length,6,`${vp.name}: all follow-on section markers should use the shared glass chip`);
+    assert.ok(state.sectionMarkerChips.every(chip=>chip.height>=32&&chip.height<=36&&chip.borderWidth==="1px"&&
+      chip.borderRadius==="999px"&&chip.backgroundImage.includes("gradient")&&chip.backdropFilter.includes("blur")&&
+      chip.beforeWidth==="15px"&&chip.beforeHeight==="1.7px"),
+      `${vp.name}: all section marker chips must share the compact translucent RUWA frame: ${JSON.stringify(state.sectionMarkerChips)}`);
     assert.ok(state.benefitUnderline.angle<=-0.8&&state.benefitUnderline.angle>=-2.1,
       `${vp.name}: benefit underline must retain a subtle 1–2 degree angle: ${JSON.stringify(state.benefitUnderline)}`);
     assert.ok(Number.parseFloat(state.benefitUnderline.bottom)<-2,
