@@ -677,8 +677,55 @@ try {
       });
       assert.equal(activeHoverState.color,"rgb(17, 90, 96)", `${vp.name}: active + hover must preserve the active-section color`);
       assert.equal(activeHoverState.fontWeight,"700", `${vp.name}: active + hover must preserve active emphasis`);
-      assert.ok(activeHoverState.underlineScale>=0.70&&activeHoverState.underlineScale<=0.74,
-        `${vp.name}: active + hover underline should strengthen without replacing the active indicator`);
+      assert.ok(activeHoverState.underlineScale>=0.99&&activeHoverState.underlineScale<=1.01,
+        `${vp.name}: active + hover underline must remain full-width`);
+
+      // Validate full-width active indicators on all five navigation sections.
+      const navTargets=[
+        {href:"#approach",id:"approach"},
+        {href:"#causes",id:"causes"},
+        {href:"#options",id:"options"},
+        {href:"#suitability",id:"suitability"},
+        {href:"#faq",id:"faq"}
+      ];
+      for(const target of navTargets){
+        await page.mouse.move(0,0);
+        const targetLink=page.locator(`#main-nav a[href="${target.href}"]`);
+        await targetLink.click();
+        await page.waitForFunction(({href,id})=>{
+          const link=document.querySelector(`#main-nav a[href="${href}"]`);
+          const section=document.getElementById(id);
+          const readingLine=Math.max(120,window.innerHeight*.32);
+          return link?.getAttribute("aria-current")==="location"&&
+            section?.getBoundingClientRect().top<=readingLine+1;
+        },target,{timeout:6000});
+        await page.mouse.move(0,0);
+        const underline=await targetLink.evaluate(link=>{
+          const rect=link.getBoundingClientRect();
+          const pseudo=getComputedStyle(link,"::after");
+          const widthValue=pseudo.width;
+          const widthPx=widthValue.endsWith("%")
+            ?rect.width*Number.parseFloat(widthValue)/100
+            :Number.parseFloat(widthValue);
+          const transform=pseudo.transform;
+          const scale=transform.startsWith("matrix(")?Number.parseFloat(transform.slice(7)):0;
+          return {
+            current:link.getAttribute("aria-current"),
+            rectWidth:rect.width,
+            lineWidth:widthPx,
+            lineScale:scale,
+            fontWeight:getComputedStyle(link).fontWeight,
+            activeCount:document.querySelectorAll('#main-nav a[aria-current="location"]').length
+          };
+        });
+        assert.equal(underline.current,"location",`${vp.name}: ${target.id} did not become active`);
+        assert.equal(underline.activeCount,1,`${vp.name}: multiple links are marked active`);
+        assert.equal(underline.fontWeight,"700",`${vp.name}: ${target.id} active link lost its emphasis`);
+        assert.ok(underline.rectWidth>0&&underline.lineWidth>=underline.rectWidth*.99,
+          `${vp.name}: ${target.id} underline is not full-width: ${JSON.stringify(underline)}`);
+        assert.ok(underline.lineScale>=.99&&underline.lineScale<=1.01,
+          `${vp.name}: ${target.id} active underline transform is not 100%: ${JSON.stringify(underline)}`);
+      }
     }
 
     const faqQuestion=page.locator(".faq-item summary").first();
@@ -745,32 +792,30 @@ try {
     },null,{timeout:3000});
 
     const initial=await measureHeader(motionPage);
-    const targets=[0,50,100,150,200,150,100,50,0];
+    const SCROLL_RANGE=600;
+    const targets=[0,50,100,200,300,400,500,600,500,400,300,200,100,50,0];
     const samples=[];
-    let previousProgress=-1;
-    let descending=false;
     for(const targetY of targets){
-      if(targetY<previousProgress)descending=true;
       await motionPage.evaluate(y=>window.scrollTo(0,y),targetY);
-      const raw=Math.max(0,Math.min(1,targetY/200));
+      const raw=Math.max(0,Math.min(1,targetY/SCROLL_RANGE));
       const expected=raw*raw*(3-2*raw);
       await motionPage.waitForFunction(y=>{
         const header=document.querySelector(".site-header");
         const progress=Number.parseFloat(getComputedStyle(header).getPropertyValue("--header-progress"));
-        const raw=Math.max(0,Math.min(1,y/200));
+        const raw=Math.max(0,Math.min(1,y/600));
         const expected=raw*raw*(3-2*raw);
         return Math.abs(window.scrollY-y)<1&&Math.abs(progress-expected)<.00006;
       },targetY,{timeout:3000});
 
       const sample=await measureHeader(motionPage);
       assert.ok(Math.abs(sample.headerProgress-expected)<.00006,
-        `${vp.name}: progress at scrollY=${targetY} does not follow the shared smoothstep curve`);
+        `${vp.name}: progress at scrollY=${targetY} does not follow the shared 600px smoothstep curve`);
       assert.ok(Math.abs(sample.nav.centerX-sample.headerCenter)<=1,
         `${vp.name}: central navigation drifted during scroll-linked motion`);
       assert.ok(Math.abs(sample.frameLeftPadding-initial.frameLeftPadding)<=1.5,
-        `${vp.name}: frame lost synchronization with the WhatsApp button at progress ${expected.toFixed(3)}`);
+        `${vp.name}: frame lost synchronization with WhatsApp at progress ${expected.toFixed(3)}`);
       assert.ok(Math.abs(sample.frameRightPadding-initial.frameRightPadding)<=1.5,
-        `${vp.name}: frame lost synchronization with the RUWA brand at progress ${expected.toFixed(3)}`);
+        `${vp.name}: frame lost synchronization with RUWA at progress ${expected.toFixed(3)}`);
       assert.ok(sample.brandNavGap>=0&&sample.navActionGap>=0,
         `${vp.name}: header groups collided at intermediate progress ${expected.toFixed(3)}`);
       samples.push({
@@ -781,7 +826,7 @@ try {
         frameLeftPadding:Number(sample.frameLeftPadding.toFixed(2)),
         frameRightPadding:Number(sample.frameRightPadding.toFixed(2))
       });
-      if(targetY===100){
+      if(targetY===300){
         await motionPage.waitForTimeout(100);
         const held=await motionPage.evaluate(()=>Number.parseFloat(
           getComputedStyle(document.querySelector(".site-header")).getPropertyValue("--header-progress")
@@ -789,17 +834,21 @@ try {
         assert.ok(Math.abs(held-.5)<.00006,
           `${vp.name}: header kept moving after scrolling stopped halfway`);
       }
-      previousProgress=targetY;
     }
-    assert.ok(samples[1].progress<samples[2].progress&&samples[2].progress<samples[3].progress&&samples[3].progress<samples[4].progress,
+    const compactIndex=targets.indexOf(SCROLL_RANGE);
+    assert.ok(samples.slice(1,compactIndex+1).every((sample,index,array)=>index===0||sample.progress>array[index-1].progress),
       `${vp.name}: downward scroll progress was not monotonic`);
-    assert.ok(samples[4].progress>samples[5].progress&&samples[5].progress>samples[6].progress&&samples[6].progress>samples[7].progress&&samples[7].progress>samples[8].progress,
+    assert.ok(samples.slice(compactIndex+1).every((sample,index,array)=>index===0||sample.progress<array[index-1].progress),
       `${vp.name}: upward scroll progress was not monotonic`);
     assert.equal(samples[0].progress,0,`${vp.name}: expanded state did not start at zero`);
-    assert.equal(samples[4].progress,1,`${vp.name}: approved compact state did not end at one`);
-    assert.equal(samples[8].progress,0,`${vp.name}: expanded state was not restored`);
+    assert.ok(samples[1].progress<.03,`${vp.name}: first small scroll movement caused too much contraction`);
+    assert.ok(samples[2].progress<.10,`${vp.name}: header contracted too much within the first 100px`);
+    assert.ok(samples[3].progress>.10&&samples[3].progress<.50,`${vp.name}: header should remain partially expanded at 200px`);
+    assert.ok(samples[4].progress>.49&&samples[4].progress<.51,`${vp.name}: 300px should be approximately halfway through contraction`);
+    assert.equal(samples[compactIndex].progress,1,`${vp.name}: approved compact state did not end at 600px`);
+    assert.equal(samples[samples.length-1].progress,0,`${vp.name}: expanded state was not restored`);
     assert.equal(motionErrors.length,0,`${vp.name}: scroll-motion JavaScript errors: ${motionErrors.join(" | ")}`);
-    motionResults.push({viewport:vp.name,scrollRange:200,curve:"smoothstep",samples});
+    motionResults.push({viewport:vp.name,scrollRange:SCROLL_RANGE,curve:"smoothstep",samples});
     console.log(`[PASS] ${vp.name}: scroll-linked header motion, intermediate synchronization and reversal`);
     await motionPage.close();
   }
