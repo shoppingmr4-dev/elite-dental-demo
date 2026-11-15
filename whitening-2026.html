@@ -513,8 +513,9 @@ body,button,input,select,textarea{font-family:var(--body)}
 
 .site-header::before {
  inset-block: calc(7px * var(--header-progress));
- /* Give the desktop frame a clearly visible inward travel, not a barely perceptible inset. */
- inset-inline: calc(clamp(48px, calc(6vw - 5px), 82px) * var(--header-progress));
+ /* The physical frame edges follow the measured outer-group movement exactly. */
+ left: calc(var(--frame-left-travel, 0px) * var(--header-progress));
+ right: calc(var(--frame-right-travel, 0px) * var(--header-progress));
  border-radius: calc(23px - 4px * var(--header-progress));
  box-shadow: 0 9px calc(28px - 10px * var(--header-progress))
    rgba(20,45,56,calc(.075 - .01 * var(--header-progress)));
@@ -965,25 +966,26 @@ body,button,input,select,textarea{font-family:var(--body)}
  });
 })();
 
-// Floating RUWA header: compact after page scrolling, with measured inward convergence on desktop.
+// Floating RUWA header: one shared progress value and content-derived frame geometry.
 (function(){
  const header=document.querySelector(".site-header");
  if(!header)return;
+
  const brand=header.querySelector(".brand");
  const nav=header.querySelector(".nav");
  const action=header.querySelector(".header-action");
  let compact=null;
+ let measureFrame=null;
 
  const measureConvergence=()=>{
   if(window.innerWidth<=920||!brand||!nav||!action||getComputedStyle(nav).display==="none"){
    header.style.setProperty("--brand-converge-x","0px");
    header.style.setProperty("--action-converge-x","0px");
+   header.style.setProperty("--frame-left-travel","0px");
+   header.style.setProperty("--frame-right-travel","0px");
    return;
   }
 
-  // Measure both CSS states in an invisible, same-width clone. This accounts for
-  // every real compact-size change (brand width, CTA padding/type, and nav gaps)
-  // before calculating the exact translation needed to reduce each free gap by about 60–70%, while preserving a safe minimum gap.
   const headerRect=header.getBoundingClientRect();
   const clone=header.cloneNode(true);
   clone.classList.remove("is-compact");
@@ -991,37 +993,70 @@ body,button,input,select,textarea{font-family:var(--body)}
   clone.style.setProperty("top","-1000px","important");
   clone.style.setProperty("left","0","important");
   clone.style.setProperty("width",headerRect.width+"px","important");
-  clone.style.setProperty("--brand-converge-x","0px");
-  clone.style.setProperty("--action-converge-x","0px");
   clone.style.setProperty("margin","0","important");
   clone.style.setProperty("visibility","hidden","important");
   clone.style.setProperty("pointer-events","none","important");
   clone.style.setProperty("transition","none","important");
+  clone.style.setProperty("--brand-converge-x","0px");
+  clone.style.setProperty("--action-converge-x","0px");
+  clone.style.setProperty("--frame-left-travel","0px");
+  clone.style.setProperty("--frame-right-travel","0px");
   clone.querySelectorAll("*").forEach(element=>element.style.setProperty("transition","none","important"));
   document.body.appendChild(clone);
 
+  const rect=element=>{
+   const box=element.getBoundingClientRect();
+   return {left:box.left,right:box.right};
+  };
   const snapshot=compactState=>{
    clone.classList.toggle("is-compact",compactState);
-   const cloneBrand=clone.querySelector(".brand").getBoundingClientRect();
-   const cloneNav=clone.querySelector(".nav").getBoundingClientRect();
-   const cloneAction=clone.querySelector(".header-action").getBoundingClientRect();
+   const brandRect=rect(clone.querySelector(".brand"));
+   const navRect=rect(clone.querySelector(".nav"));
+   const actionRect=rect(clone.querySelector(".header-action"));
    return {
-    brandGap:Math.max(0,cloneBrand.left-cloneNav.right),
-    actionGap:Math.max(0,cloneNav.left-cloneAction.right)
+    brand:brandRect,
+    action:actionRect,
+    brandGap:Math.max(0,brandRect.left-navRect.right),
+    actionGap:Math.max(0,navRect.left-actionRect.right)
    };
   };
 
-  const initial=snapshot(false);
-  const compactState=snapshot(true);
+  // First measure the natural compact sizing and navigation gaps without translation.
+  const expanded=snapshot(false);
+  const compactBase=snapshot(true);
+  const minimumGroupGap=16;
+  const targetBrandGap=Math.max(minimumGroupGap,expanded.brandGap*.30);
+  const targetActionGap=Math.max(minimumGroupGap,expanded.actionGap*.30);
+  const brandTravel=Math.max(0,compactBase.brandGap-targetBrandGap);
+  const actionTravel=Math.max(0,compactBase.actionGap-targetActionGap);
+
+  // Apply the chosen group translations to the clone, then measure the real outer
+  // edges after text, icon, padding, and group dimensions have all reached compact size.
+  clone.classList.remove("is-compact");
+  clone.style.setProperty("--brand-converge-x",brandTravel.toFixed(3)+"px");
+  clone.style.setProperty("--action-converge-x",actionTravel.toFixed(3)+"px");
+  const fitted=snapshot(true);
+
+  // In RTL desktop layout the brand occupies the right side and WhatsApp the left.
+  // The frame's right inset therefore follows the brand's right-edge travel,
+  // while its left inset follows the WhatsApp CTA's left-edge travel.
+  const frameRightTravel=Math.max(0,expanded.brand.right-fitted.brand.right);
+  const frameLeftTravel=Math.max(0,fitted.action.left-expanded.action.left);
+
   clone.remove();
 
-  const minimumGroupGap=16;
-  const targetBrandGap=Math.max(minimumGroupGap,initial.brandGap*0.30);
-  const targetActionGap=Math.max(minimumGroupGap,initial.actionGap*0.30);
-  const brandTravel=Math.max(0,compactState.brandGap-targetBrandGap);
-  const actionTravel=Math.max(0,compactState.actionGap-targetActionGap);
-  header.style.setProperty("--brand-converge-x",brandTravel.toFixed(2)+"px");
-  header.style.setProperty("--action-converge-x",actionTravel.toFixed(2)+"px");
+  header.style.setProperty("--brand-converge-x",brandTravel.toFixed(3)+"px");
+  header.style.setProperty("--action-converge-x",actionTravel.toFixed(3)+"px");
+  header.style.setProperty("--frame-left-travel",frameLeftTravel.toFixed(3)+"px");
+  header.style.setProperty("--frame-right-travel",frameRightTravel.toFixed(3)+"px");
+ };
+
+ const scheduleMeasure=()=>{
+  if(measureFrame!==null)cancelAnimationFrame(measureFrame);
+  measureFrame=requestAnimationFrame(()=>{
+   measureFrame=null;
+   measureConvergence();
+  });
  };
 
  const update=()=>{
@@ -1031,13 +1066,14 @@ body,button,input,select,textarea{font-family:var(--body)}
   compact=next;
   header.classList.toggle("is-compact",next);
  };
+
  window.addEventListener("scroll",update,{passive:true});
- window.addEventListener("resize",()=>measureConvergence(),{passive:true});
+ window.addEventListener("resize",scheduleMeasure,{passive:true});
  measureConvergence();
- if(document.fonts?.ready)document.fonts.ready.then(measureConvergence).catch(()=>{});
+ if(document.fonts?.ready)document.fonts.ready.then(scheduleMeasure).catch(()=>{});
  update();
 })();
-
+ 
 // Portfolio-only WhatsApp preview: no external destination, message, or visitor data.
 (function(){
  const dialog=document.getElementById("whatsapp-demo-dialog");
