@@ -91,6 +91,7 @@ async function captureHeader(page, path) {
 const expectedHeading = "اكتشف خيارات تبييض الأسنان لابتسامة أكثر إشراقًا";
 const failures = [];
 const results = [];
+const motionResults = [];
 const browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
 
 try {
@@ -655,6 +656,10 @@ try {
       },null,{timeout:6000});
       const activeLink=page.locator('#main-nav a[href="#causes"]');
       await page.mouse.move(0,0);
+      await page.waitForFunction(()=>{
+        const link=document.querySelector('#main-nav a[href="#causes"]');
+        return link&&getComputedStyle(link).color==="rgb(17, 90, 96)";
+      },null,{timeout:1500});
       const activeState=await activeLink.evaluate(link=>{
         const style=getComputedStyle(link);
         return {color:style.color,fontWeight:style.fontWeight,underline:getComputedStyle(link,"::after").transform};
@@ -719,11 +724,89 @@ try {
     console.log(`[PASS] ${vp.name}: RTL, navigation typography and states, layout, anchors, menu, motion and overflow`);
     await page.close();
   }
+
+  // Exercise the real scroll-linked animation without reduced-motion emulation.
+  for (const vp of viewports.filter(item=>item.width>920)) {
+    const motionPage=await browser.newPage({
+      viewport:{width:vp.width,height:vp.height},
+      deviceScaleFactor:1,
+      reducedMotion:"no-preference"
+    });
+    const motionErrors=[];
+    motionPage.on("pageerror",error=>motionErrors.push(error.message));
+    const motionResponse=await motionPage.goto(BASE_URL,{waitUntil:"domcontentloaded",timeout:45000});
+    assert.ok(motionResponse?.ok(),`${vp.name}: scroll-motion preview did not load`);
+    await motionPage.evaluate(()=>document.fonts.ready);
+    await motionPage.evaluate(()=>{document.documentElement.style.scrollBehavior="auto";});
+    await motionPage.waitForFunction(()=>{
+      const header=document.querySelector(".site-header");
+      return header&&Math.abs(Number.parseFloat(getComputedStyle(header).getPropertyValue("--header-progress")))<.0001;
+    },null,{timeout:3000});
+
+    const initial=await measureHeader(motionPage);
+    const targets=[0,50,100,150,200,150,100,50,0];
+    const samples=[];
+    let previousProgress=-1;
+    let descending=false;
+    for(const targetY of targets){
+      if(targetY<previousProgress)descending=true;
+      await motionPage.evaluate(y=>window.scrollTo(0,y),targetY);
+      const raw=Math.max(0,Math.min(1,targetY/200));
+      const expected=raw*raw*(3-2*raw);
+      await motionPage.waitForFunction(y=>{
+        const header=document.querySelector(".site-header");
+        const progress=Number.parseFloat(getComputedStyle(header).getPropertyValue("--header-progress"));
+        const raw=Math.max(0,Math.min(1,y/200));
+        const expected=raw*raw*(3-2*raw);
+        return Math.abs(window.scrollY-y)<1&&Math.abs(progress-expected)<.00006;
+      },targetY,{timeout:3000});
+
+      const sample=await measureHeader(motionPage);
+      assert.ok(Math.abs(sample.headerProgress-expected)<.00006,
+        `${vp.name}: progress at scrollY=${targetY} does not follow the shared smoothstep curve`);
+      assert.ok(Math.abs(sample.nav.centerX-sample.headerCenter)<=1,
+        `${vp.name}: central navigation drifted during scroll-linked motion`);
+      assert.ok(Math.abs(sample.frameLeftPadding-initial.frameLeftPadding)<=1.5,
+        `${vp.name}: frame lost synchronization with the WhatsApp button at progress ${expected.toFixed(3)}`);
+      assert.ok(Math.abs(sample.frameRightPadding-initial.frameRightPadding)<=1.5,
+        `${vp.name}: frame lost synchronization with the RUWA brand at progress ${expected.toFixed(3)}`);
+      assert.ok(sample.brandNavGap>=0&&sample.navActionGap>=0,
+        `${vp.name}: header groups collided at intermediate progress ${expected.toFixed(3)}`);
+      samples.push({
+        scrollY:targetY,
+        progress:Number(sample.headerProgress.toFixed(5)),
+        brandNavGap:Number(sample.brandNavGap.toFixed(2)),
+        navActionGap:Number(sample.navActionGap.toFixed(2)),
+        frameLeftPadding:Number(sample.frameLeftPadding.toFixed(2)),
+        frameRightPadding:Number(sample.frameRightPadding.toFixed(2))
+      });
+      if(targetY===100){
+        await motionPage.waitForTimeout(100);
+        const held=await motionPage.evaluate(()=>Number.parseFloat(
+          getComputedStyle(document.querySelector(".site-header")).getPropertyValue("--header-progress")
+        ));
+        assert.ok(Math.abs(held-.5)<.00006,
+          `${vp.name}: header kept moving after scrolling stopped halfway`);
+      }
+      previousProgress=targetY;
+    }
+    assert.ok(samples[1].progress<samples[2].progress&&samples[2].progress<samples[3].progress&&samples[3].progress<samples[4].progress,
+      `${vp.name}: downward scroll progress was not monotonic`);
+    assert.ok(samples[4].progress>samples[5].progress&&samples[5].progress>samples[6].progress&&samples[6].progress>samples[7].progress&&samples[7].progress>samples[8].progress,
+      `${vp.name}: upward scroll progress was not monotonic`);
+    assert.equal(samples[0].progress,0,`${vp.name}: expanded state did not start at zero`);
+    assert.equal(samples[4].progress,1,`${vp.name}: approved compact state did not end at one`);
+    assert.equal(samples[8].progress,0,`${vp.name}: expanded state was not restored`);
+    assert.equal(motionErrors.length,0,`${vp.name}: scroll-motion JavaScript errors: ${motionErrors.join(" | ")}`);
+    motionResults.push({viewport:vp.name,scrollRange:200,curve:"smoothstep",samples});
+    console.log(`[PASS] ${vp.name}: scroll-linked header motion, intermediate synchronization and reversal`);
+    await motionPage.close();
+  }
 } catch (error) {
   failures.push(error.message);
   throw error;
 } finally {
   await browser.close();
-  await writeFile(`${OUT}/report.json`, JSON.stringify({ url:BASE_URL, generatedAt:new Date().toISOString(), results, failures }, null, 2) + "\n");
+  await writeFile(`${OUT}/report.json`, JSON.stringify({ url:BASE_URL, generatedAt:new Date().toISOString(), results, motionResults, failures }, null, 2) + "\n");
 }
 console.log(`All ${results.length} responsive browser checks passed.`);
