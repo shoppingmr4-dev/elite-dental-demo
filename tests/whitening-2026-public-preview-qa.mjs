@@ -108,8 +108,11 @@ try {
       link.color==="rgb(48, 74, 84)"&&link.whiteSpace==="nowrap"&&link.height>=36
     ), `${viewport.name}: public navigation typography does not match the approved specification: ${JSON.stringify(initial.navLinkTypography)}`);
 
-    await page.evaluate(() => window.scrollTo({ top: 240, behavior: "instant" }));
-    await page.waitForFunction(() => document.querySelector(".site-header")?.classList.contains("is-compact"), null, { timeout: 5000 });
+    await page.evaluate(() => window.scrollTo({ top: 600, behavior: "instant" }));
+    await page.waitForFunction(() => {
+      const header=document.querySelector(".site-header");
+      return header&&Number.parseFloat(getComputedStyle(header).getPropertyValue("--header-progress"))>=.999;
+    }, null, { timeout: 15000 });
     await page.waitForTimeout(420);
     const compact = await page.evaluate(() => {
       const header = document.querySelector(".site-header");
