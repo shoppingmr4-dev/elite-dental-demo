@@ -631,6 +631,10 @@ try {
 
       const firstLink=page.locator("#main-nav a").first();
       await firstLink.hover();
+      await page.waitForFunction(()=>{
+        const link=document.querySelector("#main-nav a");
+        return link&&getComputedStyle(link).color==="rgb(24, 122, 128)";
+      },null,{timeout:1200});
       const hoverColor=await firstLink.evaluate(link=>getComputedStyle(link).color);
       assert.equal(hoverColor,"rgb(24, 122, 128)", `${vp.name}: hover state should use the RUWA teal accent`);
       await firstLink.focus();
