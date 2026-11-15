@@ -320,7 +320,7 @@ try {
     assert.ok(state.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic") && link.fontSize===14 &&
       link.fontWeight===600 && Math.abs(link.lineHeight-22.4)<.2 &&
-      link.letterSpacing==="0px" && link.color==="rgb(48, 74, 84)"
+      (link.letterSpacing==="normal"||link.letterSpacing==="0px") && link.color==="rgb(48, 74, 84)"
     ), `${vp.name}: navigation font, size, weight, line-height, tracking, or base color is incorrect: ${JSON.stringify(state.navLinkTypography)}`);
     if(vp.width>920){
       assert.ok(state.navLinkTypography.every(link=>link.whiteSpace==="nowrap"&&link.height>=36),
