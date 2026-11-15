@@ -45,10 +45,23 @@ img{display:block;max-width:100%}
 .brand-name strong{display:block;font-family:"Cormorant Garamond",Georgia,serif;font-size:31px;font-style:italic;font-weight:500;letter-spacing:.01em;direction:ltr;text-align:right;color:var(--ink);line-height:1.05}
 .brand-name small{display:block;margin-top:5px;font-family:var(--body);font-size:12px;font-weight:600;color:#53656B;letter-spacing:0;direction:rtl;text-align:right;line-height:1.4}
 .nav{display:flex;align-items:center;gap:clamp(16px,2vw,30px);margin-inline:auto}
-.nav a{position:relative;font-size:13px;font-weight:600;color:var(--ink2);transition:color .2s}
-.nav a::after{content:"";position:absolute;right:0;bottom:-7px;width:100%;height:2px;border-radius:2px;background:var(--blue);transform:scaleX(0);transform-origin:right;transition:transform .22s cubic-bezier(.2,.7,.2,1)}
+.nav a{
+ position:relative;display:inline-flex;align-items:center;min-height:36px;
+ font-family:var(--body);font-size:14px;font-weight:600;line-height:1.6;
+ letter-spacing:0;color:var(--ink2);white-space:nowrap;
+ transition:color .2s cubic-bezier(.2,.7,.2,1)
+}
+.nav a::after{
+ content:"";position:absolute;right:0;bottom:2px;width:100%;height:2px;
+ border-radius:2px;background:var(--blue);transform:scaleX(0);transform-origin:right;
+ transition:transform .22s cubic-bezier(.2,.7,.2,1)
+}
+.nav a[aria-current="location"]{color:var(--blue-deep);font-weight:700}
+.nav a[aria-current="location"]::after{transform:scaleX(.38)}
 .nav a:hover,.nav a:focus-visible{color:var(--blue)}
+.nav a:focus-visible{outline:2px solid var(--blue-deep);outline-offset:4px;border-radius:3px}
 .nav a:hover::after,.nav a:focus-visible::after{transform:scaleX(1)}
+.nav a:active{color:var(--blue-deep)}
 .header-action{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0 18px;border-radius:13px;background:var(--blue);color:#FFFFFF;font-size:14px;font-weight:700;box-shadow:0 3px 10px rgba(24,122,128,.12);transition:transform .2s cubic-bezier(.2,.7,.2,1),box-shadow .2s cubic-bezier(.2,.7,.2,1)}
 .header-action:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(24,122,128,.18)}
 .header-action:active{transform:translateY(0);box-shadow:0 2px 7px rgba(24,122,128,.12)}
@@ -239,7 +252,7 @@ body.dialog-open{overflow:hidden}
 @media(max-width:920px){
  .nav{display:none;position:absolute;z-index:2;top:calc(100% + 1px);right:var(--gutter);left:var(--gutter);flex-direction:column;align-items:stretch;gap:0;padding:8px;border:1px solid var(--line);border-radius:14px;background:var(--paper);box-shadow:0 18px 34px rgba(20,45,56,.12)}
  .nav.open{display:flex}
- .nav a{display:flex;align-items:center;min-height:46px;padding:11px 14px;border-bottom:1px solid var(--line);font-size:14px}
+ .nav a{display:flex;align-items:center;min-height:46px;padding:11px 14px;border-bottom:1px solid var(--line);font-size:14px;white-space:normal}
  .nav a:last-child{border-bottom:0}
  .nav a::after{display:none}
  .nav a:hover,.nav a:focus-visible{background:var(--lime);border-radius:8px}
@@ -252,7 +265,7 @@ body.dialog-open{overflow:hidden}
  .header-inner{height:66px;gap:10px}
  .nav{display:none;position:absolute;z-index:2;top:calc(100% + 1px);right:var(--gutter);left:var(--gutter);flex-direction:column;align-items:stretch;gap:0;padding:8px;border:1px solid var(--line);border-radius:14px;background:var(--paper);box-shadow:0 18px 34px rgba(21,25,22,.12)}
  .nav.open{display:flex}
- .nav a{display:flex;align-items:center;min-height:46px;padding:11px 14px;border-bottom:1px solid var(--line);font-size:14px}
+ .nav a{display:flex;align-items:center;min-height:46px;padding:11px 14px;border-bottom:1px solid var(--line);font-size:14px;white-space:normal}
  .nav a:last-child{border-bottom:0}
  .nav a::after{display:none}
  .nav a:hover,.nav a:focus-visible{background:var(--lime);border-radius:8px}
@@ -434,7 +447,7 @@ body,button,input,select,textarea{font-family:var(--body)}
 .brand{gap:9px}
 .brand-mark{width:48px;height:42px}
 .brand-mark img{width:46px;height:40px}
-.nav{gap:clamp(14px,1.7vw,24px)}
+.nav{gap:clamp(16px,1.7vw,24px)}
 .header-action{min-height:42px;padding-inline:16px;border-radius:12px}
 @media(max-width:920px){
 .site-header{height:76px}
@@ -551,7 +564,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  transition: none !important;
 }
 .site-header .nav {
- gap: calc(clamp(14px,1.7vw,24px) - 4px * var(--header-progress));
+ gap: calc(clamp(16px,1.7vw,24px) - 2px * var(--header-progress));
  transition: none !important;
 }
 .site-header .header-action {
@@ -1074,6 +1087,48 @@ body,button,input,select,textarea{font-family:var(--body)}
  update();
 })();
  
+
+// RUWA navigation state: keep the current section clear without changing the header geometry.
+(function(){
+ const nav=document.getElementById("main-nav");
+ if(!nav)return;
+ const items=[...nav.querySelectorAll('a[href^="#"]')]
+  .map(link=>({link,section:document.getElementById(link.getAttribute("href").slice(1))}))
+  .filter(item=>item.section);
+ if(!items.length)return;
+
+ let pendingFrame=null;
+ const setCurrent=active=>{
+  items.forEach(item=>{
+   if(item===active)item.link.setAttribute("aria-current","location");
+   else item.link.removeAttribute("aria-current");
+  });
+ };
+ const updateCurrent=()=>{
+  pendingFrame=null;
+  const readingLine=Math.max(120,window.innerHeight*.32);
+  let active=null;
+  for(const item of items){
+   if(item.section.getBoundingClientRect().top<=readingLine)active=item;
+   else break;
+  }
+  setCurrent(active);
+ };
+ const scheduleUpdate=()=>{
+  if(pendingFrame===null)pendingFrame=requestAnimationFrame(updateCurrent);
+ };
+
+ nav.addEventListener("click",event=>{
+  const link=event.target.closest?.('a[href^="#"]');
+  if(!link)return;
+  const active=items.find(item=>item.link===link);
+  if(active)setCurrent(active);
+ });
+ window.addEventListener("scroll",scheduleUpdate,{passive:true});
+ window.addEventListener("resize",scheduleUpdate,{passive:true});
+ updateCurrent();
+})();
+
 // Portfolio-only WhatsApp preview: no external destination, message, or visitor data.
 (function(){
  const dialog=document.getElementById("whatsapp-demo-dialog");

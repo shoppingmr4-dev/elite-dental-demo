@@ -11,6 +11,7 @@ const viewports = [
   { name: "mobile-390", width: 390, height: 844, mobile: true },
   { name: "tablet-768", width: 768, height: 1024, mobile: false },
   { name: "laptop-1024", width: 1024, height: 900, mobile: false },
+  { name: "laptop-1280", width: 1280, height: 900, mobile: false },
   { name: "desktop-1440", width: 1440, height: 900, mobile: false }
 ];
 
@@ -163,6 +164,15 @@ try {
         demoDialogInitialOpen:document.querySelector("#whatsapp-demo-dialog")?.open || false,
         navLabels:[...document.querySelectorAll("#main-nav a")].map(a=>a.innerText.trim()),
         navHrefs:[...document.querySelectorAll("#main-nav a")].map(a=>a.getAttribute("href")),
+        navLinkTypography:[...document.querySelectorAll("#main-nav a")].map(link=>{
+          const style=getComputedStyle(link),bounds=link.getBoundingClientRect();
+          return {
+            fontFamily:style.fontFamily,fontSize:Number.parseFloat(style.fontSize),
+            fontWeight:Number.parseInt(style.fontWeight,10),lineHeight:Number.parseFloat(style.lineHeight),
+            letterSpacing:style.letterSpacing,color:style.color,whiteSpace:style.whiteSpace,
+            height:bounds.height,width:bounds.width
+          };
+        }),
         dir:document.documentElement.dir,
         heading:heading?.innerText?.replace(/\s+/g," ").trim() || "",
         heroLead:document.querySelector(".hero-lead")?.innerText?.trim() || "",
@@ -306,6 +316,16 @@ try {
     assert.ok(state.demoDialogText.includes("لا يتم فتح محادثة فعلية أو إرسال أي بيانات"), `${vp.name}: demo dialog must disclose that no live contact occurs`);
     assert.deepEqual(state.navLabels, ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
     assert.deepEqual(state.navHrefs, ["#approach","#causes","#options","#suitability","#faq"], `${vp.name}: navigation destinations are incorrect`);
+    assert.equal(state.navLinkTypography.length,5, `${vp.name}: all five navigation links must be present`);
+    assert.ok(state.navLinkTypography.every(link=>
+      link.fontFamily.includes("IBM Plex Sans Arabic") && link.fontSize===14 &&
+      link.fontWeight===600 && Math.abs(link.lineHeight-22.4)<.2 &&
+      link.letterSpacing==="0px" && link.color==="rgb(48, 74, 84)"
+    ), `${vp.name}: navigation font, size, weight, line-height, tracking, or base color is incorrect: ${JSON.stringify(state.navLinkTypography)}`);
+    if(vp.width>920){
+      assert.ok(state.navLinkTypography.every(link=>link.whiteSpace==="nowrap"&&link.height>=36),
+        `${vp.name}: desktop links must remain single-line with a comfortable hit area`);
+    }
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
     assert.equal(state.heroLead, "تختلف أسباب تغيّر لون الأسنان ونتائج التبييض من حالة لأخرى. لذلك يبدأ التقييم بفحص الأسنان واللثة، ثم يشرح لك طبيب الأسنان الخيارات المناسبة لحالتك وما يمكن توقعه من كل خيار.", `${vp.name}: hero supporting copy changed`);
@@ -597,6 +617,7 @@ try {
       assert.equal(closed.expanded, "false", `${vp.name}: mobile menu aria state did not close`);
       assert.equal(closed.display, "none", `${vp.name}: mobile menu remained open after selection`);
       assert.equal(closed.hash, "#approach", `${vp.name}: navigation target failed`);
+      await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#approach"]')?.getAttribute("aria-current")==="location",null,{timeout:3000});
     }
 
     if (vp.width > 920) {
@@ -604,6 +625,29 @@ try {
       assert.equal(state.toggleDisplay, "none", `${vp.name}: mobile menu button should be hidden`);
       assert.ok(state.copy.right <= state.visual.left + 1 || state.visual.right <= state.copy.left + 1,
         `${vp.name}: hero text and image columns overlap`);
+
+      const firstLink=page.locator("#main-nav a").first();
+      await firstLink.hover();
+      const hoverColor=await firstLink.evaluate(link=>getComputedStyle(link).color);
+      assert.equal(hoverColor,"rgb(24, 122, 128)", `${vp.name}: hover state should use the RUWA teal accent`);
+      await firstLink.focus();
+      await page.keyboard.press("Tab");
+      const focusState=await page.evaluate(()=>{
+        const link=document.querySelectorAll("#main-nav a")[1],style=getComputedStyle(link);
+        return {active:document.activeElement===link,visible:link.matches(":focus-visible"),
+          outlineStyle:style.outlineStyle,outlineWidth:style.outlineWidth,outlineColor:style.outlineColor};
+      });
+      assert.ok(focusState.active&&focusState.visible&&focusState.outlineStyle==="solid"&&focusState.outlineWidth==="2px",
+        `${vp.name}: keyboard focus state is not clearly visible: ${JSON.stringify(focusState)}`);
+      await page.locator('#main-nav a[href="#causes"]').click();
+      await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#causes"]')?.getAttribute("aria-current")==="location",null,{timeout:3000});
+      const activeState=await page.locator('#main-nav a[href="#causes"]').evaluate(link=>{
+        const style=getComputedStyle(link);
+        return {color:style.color,fontWeight:style.fontWeight,underline:getComputedStyle(link,"::after").transform};
+      });
+      assert.equal(activeState.color,"rgb(17, 90, 96)", `${vp.name}: active link color is incorrect`);
+      assert.equal(activeState.fontWeight,"700", `${vp.name}: active link should be emphasized subtly`);
+      assert.notEqual(activeState.underline,"matrix(0, 0, 0, 1, 0, 0)", `${vp.name}: active link underline is missing`);
     }
 
     const faqQuestion=page.locator(".faq-item summary").first();
@@ -646,7 +690,7 @@ try {
     results.push({ ...vp, ...state, headerShrink, headerConvergence, imageLoad, pageErrors, localErrors });
     assert.equal(pageErrors.length, 0, `${vp.name}: JavaScript errors: ${pageErrors.join(" | ")}`);
     assert.equal(localErrors.length, 0, `${vp.name}: local resource errors: ${JSON.stringify(localErrors)}`);
-    console.log(`[PASS] ${vp.name}: RTL, Cairo + IBM Plex fonts, layout, anchors, menu, motion and overflow`);
+    console.log(`[PASS] ${vp.name}: RTL, navigation typography and states, layout, anchors, menu, motion and overflow`);
     await page.close();
   }
 } catch (error) {

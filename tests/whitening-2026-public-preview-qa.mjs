@@ -69,6 +69,13 @@ try {
         header: rect(header),
         brand: rect(document.querySelector(".brand")),
         nav: rect(document.querySelector("#main-nav")),
+        navLabels:[...document.querySelectorAll("#main-nav a")].map(link=>link.innerText.trim()),
+        navLinkTypography:[...document.querySelectorAll("#main-nav a")].map(link=>{
+          const style=getComputedStyle(link),bounds=link.getBoundingClientRect();
+          return {fontFamily:style.fontFamily,fontSize:Number.parseFloat(style.fontSize),
+            fontWeight:Number.parseInt(style.fontWeight,10),lineHeight:Number.parseFloat(style.lineHeight),
+            color:style.color,whiteSpace:style.whiteSpace,height:bounds.height};
+        }),
         cta: rect(cta),
         logoLoaded: Boolean(logo?.complete && logo.naturalWidth > 0),
         heroImageLoaded: Boolean(heroImage?.complete && heroImage.naturalWidth > 0),
@@ -92,6 +99,14 @@ try {
     assert.ok(initial.bodyHeight > viewport.height * 2, `${viewport.name}: full landing page did not load`);
     assert.ok(initial.logoLoaded, `${viewport.name}: local RUWA logo failed to load`);
     assert.ok(initial.heroImageLoaded, `${viewport.name}: hero image failed to load`);
+    assert.deepEqual(initial.navLabels,
+      ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","الأسئلة الشائعة"],
+      `${viewport.name}: the five navigation labels or their order changed`);
+    assert.ok(initial.navLinkTypography.every(link=>
+      link.fontFamily.includes("IBM Plex Sans Arabic")&&link.fontSize===14&&
+      link.fontWeight===600&&Math.abs(link.lineHeight-22.4)<.2&&
+      link.color==="rgb(48, 74, 84)"&&link.whiteSpace==="nowrap"&&link.height>=36
+    ), `${viewport.name}: public navigation typography does not match the approved specification: ${JSON.stringify(initial.navLinkTypography)}`);
 
     await page.evaluate(() => window.scrollTo({ top: 240, behavior: "instant" }));
     await page.waitForFunction(() => document.querySelector(".site-header")?.classList.contains("is-compact"), null, { timeout: 5000 });
@@ -110,6 +125,7 @@ try {
         brand: rect(document.querySelector(".brand")),
         nav,
         cta: rect(document.querySelector(".header-action")),
+        navLinkSizes:[...document.querySelectorAll("#main-nav a")].map(link=>Number.parseFloat(getComputedStyle(link).fontSize)),
         headerLeft: header.getBoundingClientRect().left,
         headerRight: header.getBoundingClientRect().right,
         panelLeft: parseFloat(panel.left),
@@ -123,6 +139,8 @@ try {
     });
 
     assert.equal(compact.progress, 1, `${viewport.name}: shared header progress did not reach compact state`);
+    assert.ok(compact.navLinkSizes.length===5&&compact.navLinkSizes.every(size=>size===14),
+      `${viewport.name}: navigation typography changed unexpectedly in the compact header`);
     assert.ok(compact.panelLeft > initial.panel.left && compact.panelRight > initial.panel.right,
       `${viewport.name}: both public preview frame edges did not move inward`);
     assert.ok(compact.panelWidth < initial.header.width - initial.panel.left - initial.panel.right,
