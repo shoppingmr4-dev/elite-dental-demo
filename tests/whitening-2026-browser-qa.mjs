@@ -197,32 +197,32 @@ try {
         eyebrowRule:(()=>{
           const rule=document.querySelector(".hero-eyebrow-rule");
           const number=document.querySelector(".hero-eyebrow-index");
-          if(!rule||!number)return null;
           const icon=document.querySelector(".hero-eyebrow-icon");
+          if(!rule||!number||!icon)return null;
           const style=getComputedStyle(rule),bounds=rect(rule),numberBounds=rect(number),iconBounds=rect(icon);
           const matrix=style.transform.match(/matrix\(([^)]+)\)/);
           const values=matrix?matrix[1].split(",").map(Number):[];
           const angle=values.length>=2?Math.atan2(values[1],values[0])*180/Math.PI:0;
-          return {width:Number.parseFloat(style.width),height:Number.parseFloat(style.height),visualWidth:bounds.width,
-            visualHeight:bounds.height,color:style.backgroundColor,opacity:Number.parseFloat(style.opacity),angle,
-            betweenNumberAndIcon:numberBounds.left>bounds.right&&iconBounds.right<bounds.left&&
+          return {width:Number.parseFloat(style.width),height:Number.parseFloat(style.height),
+            visualWidth:bounds.width,visualHeight:bounds.height,color:style.backgroundColor,angle,
+            betweenNumberAndIcon:numberBounds.left>bounds.right&&bounds.left>iconBounds.right&&
               numberBounds.left-bounds.right<12&&bounds.left-iconBounds.right<12};
         })(),
         benefitUnderline:(()=>{
           const accent=document.querySelector(".hero-title-benefit .accent");
-          if(!accent)return null;
-          const bounds=rect(accent),style=getComputedStyle(accent,"::after");
-          const matrix=style.transform.match(/matrix\(([^)]+)\)/);
-          const values=matrix?matrix[1].split(",").map(Number):[];
-          const angle=values.length>=2?Math.atan2(values[1],values[0])*180/Math.PI:0;
-          const widthValue=style.width;
-          const width=widthValue.endsWith("%")?bounds.width*Number.parseFloat(widthValue)/100:Number.parseFloat(widthValue);
-          return {textWidth:bounds.width,lineWidth:width,widthRatio:width/bounds.width,
-            height:Number.parseFloat(style.height),strokeWidth:Number.parseFloat(style.borderBottomWidth),
-            strokeColor:style.borderBottomColor,borderRadius:style.borderRadius,
-            opacity:Number.parseFloat(style.opacity),bottom:style.bottom,angle};
+          const svg=accent?.querySelector(".accent-underline");
+          const path=svg?.querySelector("path");
+          if(!accent||!svg||!path)return null;
+          const bounds=rect(accent),svgBounds=rect(svg),svgStyle=getComputedStyle(svg),pathStyle=getComputedStyle(path);
+          const pathBounds=path.getBBox(),start=path.getPointAtLength(0),end=path.getPointAtLength(path.getTotalLength());
+          const pathBottom=svgBounds.top+(pathBounds.y+pathBounds.height)/12*svgBounds.height;
+          return {textWidth:bounds.width,lineWidth:svgBounds.width,widthRatio:svgBounds.width/bounds.width,
+            height:svgBounds.height,strokeWidth:Number.parseFloat(pathStyle.strokeWidth),
+            strokeColor:pathStyle.stroke,strokeLinecap:pathStyle.strokeLinecap,
+            curveHeight:pathBounds.height,slopeDelta:end.y-start.y,bottom:svgStyle.bottom,
+            lineGap:pathBottom-bounds.bottom,pathD:path.getAttribute("d")||""};
         })(),
-        heroBackgroundHarmony:(()=>{
+                heroBackgroundHarmony:(()=>{
           const root=getComputedStyle(document.documentElement);
           const header=document.querySelector(".site-header");
           return {
@@ -252,18 +252,73 @@ try {
           if(!badge||!icon)return false;
           const b=getComputedStyle(badge),i=getComputedStyle(icon);
           const svg=icon.querySelector("svg");
-          return b.backgroundImage.includes("gradient")&&b.backdropFilter.includes("blur")&&
-            Number.parseFloat(b.height)<=36&&b.borderTopWidth==="1px"&&
+          return b.backgroundColor!=="rgba(0, 0, 0, 0)"&&b.backdropFilter.includes("blur")&&
+            Number.parseFloat(b.height)>=42&&Number.parseFloat(b.height)<=46&&b.borderTopWidth==="1px"&&
             i.backgroundColor==="rgba(0, 0, 0, 0)"&&i.borderTopWidth==="0px"&&
             svg&&Number.parseFloat(getComputedStyle(svg).width)<=16;
         })()),
+        allSectionMarkers:[...document.querySelectorAll(".section-marker")].map(marker=>{
+          const number=marker.querySelector(".section-marker-number");
+          const divider=marker.querySelector(".section-marker-divider");
+          const icon=marker.querySelector(".hero-eyebrow-icon");
+          const label=marker.querySelector(".section-marker-label");
+          if(!number||!divider||!label)return {invalid:true,text:marker.innerText.trim()};
+          const markerStyle=getComputedStyle(marker),numberStyle=getComputedStyle(number);
+          const dividerStyle=getComputedStyle(divider),labelStyle=getComputedStyle(label);
+          const markerBounds=rect(marker),numberBounds=rect(number),dividerBounds=rect(divider);
+          const labelBounds=rect(label),iconBounds=icon?rect(icon):null;
+          const matrix=dividerStyle.transform.match(/matrix\(([^)]+)\)/);
+          const values=matrix?matrix[1].split(",").map(Number):[];
+          const dividerAngle=values.length>=2?Math.atan2(values[1],values[0])*180/Math.PI:0;
+          const context=[...marker.classList].find(name=>name.startsWith("section-marker--"))?.replace("section-marker--","")||"";
+          const rgba=value=>{
+            const parts=value.match(/[\d.]+/g)?.map(Number)||[0,0,0,1];
+            return [parts[0]||0,parts[1]||0,parts[2]||0,parts.length>3?parts[3]:1];
+          };
+          const composite=(front,back)=>{
+            const a=front[3];return [0,1,2].map(index=>front[index]*a+back[index]*(1-a)).concat(1);
+          };
+          const luminance=value=>{
+            const channels=value.slice(0,3).map(v=>v/255).map(v=>v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4));
+            return .2126*channels[0]+.7152*channels[1]+.0722*channels[2];
+          };
+          const contrast=(foreground,background)=>{
+            const l1=luminance(rgba(foreground)),l2=luminance(background);
+            return (Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05);
+          };
+          const section=marker.closest("section");
+          const sectionStyle=section?getComputedStyle(section):getComputedStyle(document.body);
+          const bodyBg=rgba(getComputedStyle(document.body).backgroundColor);
+          const surfaceBg=composite(rgba(sectionStyle.backgroundColor),bodyBg);
+          const chipBg=composite(rgba(markerStyle.backgroundColor),surfaceBg);
+          const numberBg=composite(rgba(numberStyle.backgroundColor),surfaceBg);
+          const expectedCenter=markerBounds.top+markerBounds.height/2;
+          return {
+            number:number.innerText.trim(),label:label.innerText.trim(),context,
+            markerHeight:markerBounds.height,markerWidth:markerBounds.width,
+            numberWidth:numberBounds.width,numberHeight:numberBounds.height,
+            numberRadius:numberStyle.borderRadius,numberBorderWidth:numberStyle.borderTopWidth,
+            numberBackground:numberStyle.backgroundColor,numberColor:numberStyle.color,
+            dividerWidth:dividerStyle.width,dividerHeight:dividerStyle.height,
+            dividerVisualHeight:dividerBounds.height,dividerColor:dividerStyle.backgroundColor,
+            dividerAngle,labelColor:labelStyle.color,
+            markerBorderWidth:markerStyle.borderTopWidth,markerRadius:markerStyle.borderRadius,
+            markerBackground:markerStyle.backgroundColor,backdropFilter:markerStyle.backdropFilter,
+            numberAtRight:markerBounds.right-numberBounds.right>=6&&markerBounds.right-numberBounds.right<=11,
+            rtlOrder:numberBounds.left>dividerBounds.right&&
+              (iconBounds?dividerBounds.left>iconBounds.right&&iconBounds.left>labelBounds.right:dividerBounds.left>labelBounds.right),
+            centered:Math.abs(numberBounds.top+numberBounds.height/2-expectedCenter)<=1.2&&
+              Math.abs(dividerBounds.top+dividerBounds.height/2-expectedCenter)<=1.5,
+            numberContrast:contrast(numberStyle.color,numberBg),
+            labelContrast:contrast(labelStyle.color,chipBg)
+          };
+        }),
         sectionMarkerChips:[...document.querySelectorAll(".eyebrow")].map(element=>{
           const style=getComputedStyle(element),bounds=rect(element);
-          return {text:element.innerText.trim(),height:bounds.height,width:bounds.width,
-            borderWidth:style.borderTopWidth,borderRadius:style.borderRadius,
-            backgroundImage:style.backgroundImage,backdropFilter:style.backdropFilter,
-            beforeWidth:getComputedStyle(element,"::before").width,
-            beforeHeight:getComputedStyle(element,"::before").height};
+          return {text:element.querySelector(".section-marker-label")?.innerText.trim()||"",
+            height:bounds.height,width:bounds.width,borderWidth:style.borderTopWidth,
+            borderRadius:style.borderRadius,backgroundColor:style.backgroundColor,
+            backdropFilter:style.backdropFilter};
         }),
         copy:copy ? rect(copy) : null,
         visual:visual ? rect(visual) : null,
@@ -393,28 +448,55 @@ try {
     assert.ok(state.eyebrowNumberFirst, `${vp.name}: section number is not first at the RTL line start`);
     assert.ok(state.eyebrowGlassChip, `${vp.name}: eyebrow glass chip is not compact, translucent, and unframed internally`);
     assert.ok(state.eyebrowRule && state.eyebrowRule.betweenNumberAndIcon,
-      `${vp.name}: the diagonal editorial line must sit between 01 and the tooth icon: ${JSON.stringify(state.eyebrowRule)}`);
-    assert.ok(state.eyebrowRule.width>=16&&state.eyebrowRule.width<=20&&state.eyebrowRule.height>=1.5&&state.eyebrowRule.height<=2,
-      `${vp.name}: eyebrow rule dimensions are outside the refined range: ${JSON.stringify(state.eyebrowRule)}`);
-    assert.ok(state.eyebrowRule.angle<=-10&&state.eyebrowRule.angle>=-18,
-      `${vp.name}: eyebrow rule must have a restrained diagonal angle: ${JSON.stringify(state.eyebrowRule)}`);
-    assert.equal(state.eyebrowRule.color,"rgb(24, 122, 128)",`${vp.name}: eyebrow rule must use RUWA teal`);
-    assert.ok(state.benefitUnderline && state.benefitUnderline.widthRatio>=.90&&state.benefitUnderline.widthRatio<=1,
-      `${vp.name}: benefit underline must cover 90–100% of the full phrase: ${JSON.stringify(state.benefitUnderline)}`);
-    assert.ok(state.benefitUnderline.strokeWidth>=2&&state.benefitUnderline.strokeWidth<=3,
-      `${vp.name}: curved underline stroke thickness is incorrect: ${JSON.stringify(state.benefitUnderline)}`);
-    assert.equal(state.benefitUnderline.strokeColor,"rgb(184, 93, 74)",`${vp.name}: benefit underline coral tone changed`);
-    assert.ok(state.benefitUnderline.borderRadius.includes("%"),
-      `${vp.name}: benefit underline must have a visibly curved profile: ${JSON.stringify(state.benefitUnderline)}`);
-    assert.equal(state.sectionMarkerChips.length,6,`${vp.name}: all follow-on section markers should use the shared glass chip`);
-    assert.ok(state.sectionMarkerChips.every(chip=>chip.height>=32&&chip.height<=36&&chip.borderWidth==="1px"&&
-      chip.borderRadius==="999px"&&chip.backgroundImage.includes("gradient")&&chip.backdropFilter.includes("blur")&&
-      chip.beforeWidth==="15px"&&Math.abs(Number.parseFloat(chip.beforeHeight)-1.7)<.1),
-      `${vp.name}: all section marker chips must share the compact translucent RUWA frame: ${JSON.stringify(state.sectionMarkerChips)}`);
-    assert.ok(state.benefitUnderline.angle<=-0.8&&state.benefitUnderline.angle>=-2.1,
-      `${vp.name}: benefit underline must retain a subtle 1–2 degree angle: ${JSON.stringify(state.benefitUnderline)}`);
+      vp.name + ": Hero vertical separator must sit between the 01 circle and tooth icon: " + JSON.stringify(state.eyebrowRule));
+    assert.ok(state.eyebrowRule.width>=1.9&&state.eyebrowRule.width<=2.1&&
+      state.eyebrowRule.height>=23&&state.eyebrowRule.height<=25,
+      vp.name + ": Hero separator must be 2px × 24px: " + JSON.stringify(state.eyebrowRule));
+    assert.ok(state.eyebrowRule.angle>=6&&state.eyebrowRule.angle<=10,
+      vp.name + ": Hero separator must have the approved subtle 6–10 degree vertical tilt: " + JSON.stringify(state.eyebrowRule));
+    assert.equal(state.eyebrowRule.color,"rgb(24, 122, 128)",vp.name + ": Hero separator must use RUWA teal");
+    assert.ok(state.benefitUnderline && state.benefitUnderline.widthRatio>=.95&&state.benefitUnderline.widthRatio<=1,
+      vp.name + ": SVG underline must cover 95–100% of the rendered accent phrase: " + JSON.stringify(state.benefitUnderline));
+    assert.ok(state.benefitUnderline.strokeWidth>=2.5&&state.benefitUnderline.strokeWidth<=3,
+      vp.name + ": SVG underline stroke must remain visibly 2.5–3px: " + JSON.stringify(state.benefitUnderline));
+    assert.equal(state.benefitUnderline.strokeColor,"rgb(184, 93, 74)",vp.name + ": SVG underline must retain the RUWA coral accent");
+    assert.equal(state.benefitUnderline.strokeLinecap,"round",vp.name + ": SVG underline ends must be rounded");
+    assert.ok(state.benefitUnderline.curveHeight>=4.5,
+      vp.name + ": SVG underline must contain a real visible Bézier curve, not a straight border: " + JSON.stringify(state.benefitUnderline));
+    assert.ok(state.benefitUnderline.slopeDelta<=-1.5&&state.benefitUnderline.slopeDelta>=-5.5,
+      vp.name + ": SVG underline must retain a subtle diagonal inclination: " + JSON.stringify(state.benefitUnderline));
+    assert.ok(state.benefitUnderline.lineGap>=-1&&state.benefitUnderline.lineGap<=14,
+      vp.name + ": curved underline must remain immediately beneath the phrase: " + JSON.stringify(state.benefitUnderline));
     assert.ok(Number.parseFloat(state.benefitUnderline.bottom)<-2,
-      `${vp.name}: benefit underline must sit clearly beneath the phrase`);
+      vp.name + ": SVG underline must be positioned beneath, not across, the lettering");
+    assert.equal(state.sectionMarkerChips.length,6,vp.name + ": all six content section markers must retain the shared glass component");
+    assert.ok(state.sectionMarkerChips.every(chip=>chip.height>=42&&chip.height<=46&&chip.borderWidth==="1px"&&
+      chip.borderRadius==="999px"&&chip.backgroundColor!=="rgba(0, 0, 0, 0)"&&chip.backdropFilter.includes("blur")),
+      vp.name + ": all six section marker glass frames must share compact dimensions and translucency: " + JSON.stringify(state.sectionMarkerChips));
+    const expectedMarkers=[
+      {number:"01",label:"دليل الابتسامة",context:"hero"},
+      {number:"02",label:"خطوات واضحة",context:"paper"},
+      {number:"03",label:"فهم اللون",context:"paper"},
+      {number:"04",label:"الخيارات المتاحة",context:"canvas"},
+      {number:"05",label:"قبل اتخاذ القرار",context:"paper"},
+      {number:"06",label:"توقعات واقعية",context:"dark"},
+      {number:"07",label:"إجابات واضحة",context:"canvas"}
+    ];
+    assert.equal(state.allSectionMarkers.length,7,vp.name + ": all seven numbered markers must be present");
+    assert.deepEqual(state.allSectionMarkers.map(({number,label,context})=>({number,label,context})),expectedMarkers,
+      vp.name + ": all seven numbers, Arabic labels, and contextual surfaces must match the approved sequence");
+    assert.ok(state.allSectionMarkers.every(marker=>
+      marker.markerHeight>=42&&marker.markerHeight<=46&&
+      marker.numberWidth>=33.5&&marker.numberWidth<=34.5&&
+      marker.numberHeight>=33.5&&marker.numberHeight<=34.5&&
+      marker.numberRadius==="50%"&&marker.numberBorderWidth==="1px"&&
+      marker.numberAtRight&&marker.rtlOrder&&marker.centered&&
+      marker.dividerWidth==="2px"&&marker.dividerHeight==="24px"&&
+      marker.dividerAngle>=6&&marker.dividerAngle<=10&&
+      marker.markerBorderWidth==="1px"&&marker.markerRadius==="999px"&&
+      marker.backdropFilter.includes("blur")&&
+      marker.numberContrast>=4.5&&marker.labelContrast>=4.5
+    ),vp.name + ": circular badge geometry, RTL order, vertical rule, glass frame, or AA contrast failed: " + JSON.stringify(state.allSectionMarkers));
     assert.equal(state.heroBackgroundHarmony.canvas,"#F4F7F6",`${vp.name}: canvas token drifted`);
     assert.equal(state.heroBackgroundHarmony.paper,"#FFFFFF",`${vp.name}: paper token drifted`);
     assert.equal(state.heroBackgroundHarmony.body,"rgb(244, 247, 246)",`${vp.name}: page canvas is no longer the intended soft mist tone`);

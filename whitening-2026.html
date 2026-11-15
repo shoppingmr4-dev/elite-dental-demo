@@ -343,7 +343,7 @@ body,button,input,select,textarea{font-family:var(--body)}
 @media(max-width:400px){.hero h1{font-size:39px}.hero-bottom-item span{font-size:10px}}
 
 
-/* Hero headline: service-first hierarchy with precise Arabic display typography. */
+/* Hero headline: preserve the approved hierarchy and use a real curved SVG accent stroke. */
 .hero h1{
  display:flex;flex-direction:column;align-items:flex-start;gap:0;
  max-width:100%;font-size:clamp(44px,5.45vw,72px);line-height:1.16;
@@ -362,15 +362,17 @@ body,button,input,select,textarea{font-family:var(--body)}
  line-height:1.55;margin-block-start:.12em;
 }
 .hero-title-benefit .accent{
- display:inline-block;position:relative;isolation:isolate;color:var(--blue);
- font-size:1em;white-space:nowrap;
+ display:inline-block;position:relative;isolation:isolate;
+ color:var(--blue);font-size:1em;line-height:1.2;white-space:nowrap;
 }
-.hero-title-benefit .accent::after{
- content:"";position:absolute;right:1.5%;bottom:-.10em;width:97%;height:.15em;
- border-bottom:2.5px solid var(--coral);
- border-radius:0 0 58% 42% / 0 0 100% 100%;
- background:transparent;opacity:.9;z-index:-1;pointer-events:none;
- transform:rotate(-1.25deg);transform-origin:right center;
+.hero-title-benefit .accent-underline{
+ position:absolute;z-index:-1;right:.5%;bottom:-.2em;
+ display:block;width:99%;height:12px;overflow:visible;
+ pointer-events:none;
+}
+.hero-title-benefit .accent-underline path{
+ fill:none;stroke:var(--coral);stroke-width:2.8;
+ stroke-linecap:round;stroke-linejoin:round;
 }
 @media(max-width:920px){
  .hero h1{font-size:clamp(39px,5.45vw,58px)}
@@ -390,39 +392,84 @@ body,button,input,select,textarea{font-family:var(--body)}
  .hero-title-benefit{font-size:.56em}
 }
 
-/* Shared translucent section-marker chip: one consistent RUWA glass treatment. */
+/* RUWA section markers: one RTL glass component with surface-aware circular number badges. */
+.section-marker,
 .eyebrow,
 .hero-eyebrow{
  display:inline-flex;flex-direction:row;direction:rtl;align-items:center;justify-content:flex-start;
- gap:8px;width:max-content;max-width:100%;min-height:34px;margin:0;padding:5px 10px;
- border:1px solid rgba(24,122,128,.14);border-radius:999px;
- background:linear-gradient(112deg,rgba(255,255,255,.66),rgba(227,242,233,.38) 58%,rgba(255,255,255,.52));
- box-shadow:inset 0 1px 0 rgba(255,255,255,.72);
+ gap:8px;width:max-content;max-width:100%;min-height:44px;margin:0;padding:4px 8px;
+ border:1px solid var(--marker-shell-border);border-radius:999px;
+ background:var(--marker-shell-bg);
+ box-shadow:inset 0 1px 0 var(--marker-shell-inset);
  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
- color:var(--ink2);font-size:11px;font-weight:700;letter-spacing:0;line-height:1.4;
+ color:var(--marker-label);font-size:11px;font-weight:700;letter-spacing:0;line-height:1.4;
 }
-.eyebrow::before{
- content:"";display:block;flex:none;width:15px;height:1.7px;border-radius:999px;
- background:var(--blue);opacity:.78;transform:rotate(-14deg);transform-origin:center;
+.eyebrow::before{content:none;display:none}
+
+.section-marker--hero{
+ --marker-shell-bg:rgba(255,255,255,.76);
+ --marker-shell-border:rgba(24,122,128,.20);
+ --marker-shell-inset:rgba(255,255,255,.88);
+ --marker-number-bg:#FFFFFF;
+ --marker-number-border:rgba(24,122,128,.30);
+ --marker-number-ink:#115A60;
+ --marker-divider:#187A80;
+ --marker-label:#304A54;
+}
+.section-marker--paper{
+ --marker-shell-bg:rgba(255,255,255,.84);
+ --marker-shell-border:rgba(24,122,128,.16);
+ --marker-shell-inset:rgba(255,255,255,.94);
+ --marker-number-bg:#E3F2E9;
+ --marker-number-border:rgba(24,122,128,.26);
+ --marker-number-ink:#115A60;
+ --marker-divider:#187A80;
+ --marker-label:#304A54;
+}
+.section-marker--canvas{
+ --marker-shell-bg:rgba(255,255,255,.72);
+ --marker-shell-border:rgba(24,122,128,.18);
+ --marker-shell-inset:rgba(255,255,255,.88);
+ --marker-number-bg:#EFF7F2;
+ --marker-number-border:rgba(24,122,128,.28);
+ --marker-number-ink:#115A60;
+ --marker-divider:#187A80;
+ --marker-label:#304A54;
+}
+.section-marker--dark{
+ --marker-shell-bg:rgba(255,255,255,.075);
+ --marker-shell-border:rgba(224,242,238,.28);
+ --marker-shell-inset:rgba(255,255,255,.10);
+ --marker-number-bg:rgba(255,255,255,.14);
+ --marker-number-border:rgba(190,228,221,.66);
+ --marker-number-ink:#F4F7F6;
+ --marker-divider:#A7DCD5;
+ --marker-label:#F4F7F6;
+}
+
+.section-marker-number{
+ display:inline-flex;flex:none;align-items:center;justify-content:center;
+ width:34px;height:34px;padding:0;border:1px solid var(--marker-number-border);
+ border-radius:50%;background:var(--marker-number-bg);color:var(--marker-number-ink);
+ font-family:var(--display);font-size:11px;font-weight:800;line-height:1;
+ letter-spacing:.015em;direction:ltr;font-variant-numeric:tabular-nums;
+}
+.section-marker-divider{
+ display:block;flex:none;width:2px;height:24px;border-radius:999px;
+ background:var(--marker-divider);transform:rotate(8deg);transform-origin:center;
+}
+.section-marker-label,
+.hero-eyebrow-label{
+ display:inline-block;flex:none;white-space:nowrap;
+ color:var(--marker-label);font-size:11px;font-weight:700;line-height:1.45;
 }
 .hero-eyebrow{margin:0 0 3px}
-.hero-eyebrow-rule{
- display:block;flex:none;width:18px;height:1.7px;border-radius:999px;
- background:var(--blue);opacity:.78;transform:rotate(-14deg);transform-origin:center;
-}
-.hero-eyebrow-index{
- display:inline-block;flex:none;min-width:0;height:auto;padding:0;border:0;border-radius:0;
- background:transparent;color:var(--blue);font-family:var(--display);
- font-size:10px;font-weight:800;letter-spacing:.055em;line-height:1;direction:ltr;
- font-variant-numeric:tabular-nums;opacity:.88;
-}
 .hero-eyebrow-icon{
  display:inline-flex;align-items:center;justify-content:center;flex:none;
- width:15px;height:15px;padding:0;margin:0;border:0;border-radius:0;
- background:transparent;box-shadow:none;overflow:visible;color:var(--blue);opacity:.9;
+ width:16px;height:16px;padding:0;margin:0;border:0;border-radius:0;
+ background:transparent;box-shadow:none;overflow:visible;color:var(--marker-divider);opacity:.95;
 }
 .hero-eyebrow-icon svg{display:block;width:16px;height:16px;filter:none}
-.hero-eyebrow-label{display:inline-block;white-space:nowrap;color:var(--ink2);line-height:1.4}
 @media(max-width:720px){
  .hero-eyebrow{display:flex;width:max-content;max-width:100%;margin-inline:0 auto;margin-bottom:2px}
 }
@@ -719,21 +766,23 @@ body,button,input,select,textarea{font-family:var(--body)}
   <div class="wrap">
    <div class="hero-grid">
     <div class="hero-copy">
-     <div class="hero-eyebrow" aria-label="القسم الأول: دليل الابتسامة">
-      <span class="hero-eyebrow-index" aria-label="01">01</span>
-      <span class="hero-eyebrow-rule" aria-hidden="true"></span>
+     <div class="hero-eyebrow section-marker section-marker--hero" role="group" aria-label="القسم الأول: دليل الابتسامة">
+      <span class="section-marker-number hero-eyebrow-index" aria-hidden="true">01</span>
+      <span class="section-marker-divider hero-eyebrow-rule" aria-hidden="true"></span>
       <span class="hero-eyebrow-icon" aria-hidden="true">
        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M7.15 3.45C4.8 3.1 3.15 4.75 3.15 7.15c0 2.15 1.2 4.1 2.05 6.35.88 2.35 1.38 6.7 3.05 6.7 1.15 0 1.25-3.65 2.75-3.65s1.6 3.65 2.75 3.65c1.67 0 2.17-4.35 3.05-6.7.85-2.25 2.05-4.2 2.05-6.35 0-2.4-1.65-4.05-4-3.7-1.15.17-2.1.85-3.85.85s-2.7-.68-3.85-.85Z" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="m18.35 2.1.58 1.62 1.62.58-1.62.58-.58 1.62-.58-1.62-1.62-.58 1.62-.58.58-1.62Z" fill="currentColor" opacity=".76"/>
        </svg>
       </span>
-      <span class="hero-eyebrow-label">دليل الابتسامة</span>
+      <span class="section-marker-label hero-eyebrow-label">دليل الابتسامة</span>
      </div>
      <h1 id="hero-title">
       <span class="hero-title-kicker">اكتشف خيارات</span>
       <span class="hero-title-main">تبييض الأسنان</span>
-      <span class="hero-title-benefit">لابتسامة <span class="accent">أكثر إشراقًا</span></span>
+      <span class="hero-title-benefit">لابتسامة <span class="accent">أكثر إشراقًا<svg class="accent-underline" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+       <path d="M1 8 C27 2.1 70 2 99 5.1"/>
+      </svg></span></span>
      </h1>
      <p class="hero-lead">تختلف أسباب تغيّر لون الأسنان ونتائج التبييض من حالة لأخرى. لذلك يبدأ التقييم بفحص الأسنان واللثة، ثم يشرح لك طبيب الأسنان الخيارات المناسبة لحالتك وما يمكن توقعه من كل خيار.</p>
      <div class="hero-actions">
@@ -763,7 +812,11 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="section approach" id="approach">
   <div class="wrap approach-grid">
    <div class="approach-intro">
-    <span class="eyebrow">خطوات واضحة / 02</span>
+    <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم الثاني: خطوات واضحة">
+      <span class="section-marker-number" aria-hidden="true">02</span>
+      <span class="section-marker-divider" aria-hidden="true"></span>
+      <span class="section-marker-label">خطوات واضحة</span>
+     </span>
     <h2>لا نبدأ باللون.<br>نبدأ بالسبب.</h2>
     <p>التصبغات ليست متشابهة، وصحة الفم جزء من القرار. لذلك يأتي الفحص والمحادثة قبل اختيار أي إجراء تجميلي.</p>
    </div>
@@ -778,7 +831,11 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="content-section cause-section" id="causes" aria-labelledby="causes-title">
   <div class="wrap">
    <div class="section-head">
-    <span class="eyebrow">فهم اللون / 03</span>
+    <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم الثالث: فهم اللون">
+      <span class="section-marker-number" aria-hidden="true">03</span>
+      <span class="section-marker-divider" aria-hidden="true"></span>
+      <span class="section-marker-label">فهم اللون</span>
+     </span>
     <h2 id="causes-title">ليس كل تغيّر في اللون من السبب نفسه.</h2>
     <p>قد يكون التغيّر على سطح السن، أو أعمق داخل بنيته. معرفة مصدره تساعد طبيب الأسنان على اختيار الطريقة المناسبة، وتحديد ما يمكن توقعه بواقعية.</p>
    </div>
@@ -800,7 +857,11 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="content-section options-section" id="options" aria-labelledby="options-title">
   <div class="wrap">
    <div class="section-head">
-    <span class="eyebrow">الخيارات المتاحة / 04</span>
+    <span class="eyebrow section-marker section-marker--canvas" role="group" aria-label="القسم الرابع: الخيارات المتاحة">
+      <span class="section-marker-number" aria-hidden="true">04</span>
+      <span class="section-marker-divider" aria-hidden="true"></span>
+      <span class="section-marker-label">الخيارات المتاحة</span>
+     </span>
     <h2 id="options-title">لكل حالة طريق مختلف.</h2>
     <p>هذه أمثلة على الخيارات التي قد يناقشها طبيب الأسنان بعد الفحص. ليست قائمة توصيات ذاتية، ولا يعني ظهور خيار هنا أنه مناسب لكل شخص.</p>
    </div>
@@ -830,7 +891,11 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="content-section suitability-section" id="suitability" aria-labelledby="suitability-title">
   <div class="wrap suitability-grid">
    <div class="suitability-copy">
-    <span class="eyebrow">قبل اتخاذ القرار / 05</span>
+    <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم الخامس: قبل اتخاذ القرار">
+      <span class="section-marker-number" aria-hidden="true">05</span>
+      <span class="section-marker-divider" aria-hidden="true"></span>
+      <span class="section-marker-label">قبل اتخاذ القرار</span>
+     </span>
     <h2 id="suitability-title">السلامة أولًا، ثم اختيار اللون.</h2>
     <p>الفحص المسبق يساعد على اكتشاف ما قد يؤثر في أمان الإجراء أو النتيجة، مثل حالة اللثة والأسنان والحشوات الموجودة. القرار النهائي فردي ويعود إلى طبيب الأسنان.</p>
     <div class="clinical-note">إذا وُجد تسوّس غير معالج أو التهاب في اللثة أو مشكلة في السن، فقد يلزم التعامل معها أولًا قبل التفكير في التبييض.</div>
@@ -859,7 +924,11 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="content-section expect-section" id="expectations" aria-labelledby="expectations-title">
   <div class="wrap">
    <div class="section-head">
-    <span class="eyebrow">توقعات واقعية / 06</span>
+    <span class="eyebrow section-marker section-marker--dark" role="group" aria-label="القسم السادس: توقعات واقعية">
+      <span class="section-marker-number" aria-hidden="true">06</span>
+      <span class="section-marker-divider" aria-hidden="true"></span>
+      <span class="section-marker-label">توقعات واقعية</span>
+     </span>
     <h2 id="expectations-title">ما الذي ينبغي معرفته قبل البدء؟</h2>
     <p>التبييض إجراء تجميلي له حدود وآثار محتملة. فهمها جزء من القرار، وليس تفصيلًا يأتي بعده.</p>
    </div>
@@ -883,7 +952,11 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="content-section faq-section" id="faq" aria-labelledby="faq-title">
   <div class="wrap">
    <div class="section-head">
-    <span class="eyebrow">إجابات واضحة / 07</span>
+    <span class="eyebrow section-marker section-marker--canvas" role="group" aria-label="القسم السابع: إجابات واضحة">
+      <span class="section-marker-number" aria-hidden="true">07</span>
+      <span class="section-marker-divider" aria-hidden="true"></span>
+      <span class="section-marker-label">إجابات واضحة</span>
+     </span>
     <h2 id="faq-title">أسئلة قد تخطر ببالك.</h2>
     <p>إجابات عامة تساعدك على فهم الإجراء. تبقى التوصية المناسبة مرتبطة بفحص حالتك لدى طبيب الأسنان.</p>
    </div>
