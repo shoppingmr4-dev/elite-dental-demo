@@ -640,7 +640,13 @@ try {
       assert.ok(focusState.active&&focusState.visible&&focusState.outlineStyle==="solid"&&focusState.outlineWidth==="2px",
         `${vp.name}: keyboard focus state is not clearly visible: ${JSON.stringify(focusState)}`);
       await page.locator('#main-nav a[href="#causes"]').click();
-      await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#causes"]')?.getAttribute("aria-current")==="location",null,{timeout:3000});
+      await page.waitForFunction(()=>{
+        const section=document.querySelector("#causes");
+        const link=document.querySelector('#main-nav a[href="#causes"]');
+        return link?.getAttribute("aria-current")==="location"&&
+          section?.getBoundingClientRect().top<=window.innerHeight*.32+1;
+      },null,{timeout:6000});
+      await page.mouse.move(0,0);
       const activeState=await page.locator('#main-nav a[href="#causes"]').evaluate(link=>{
         const style=getComputedStyle(link);
         return {color:style.color,fontWeight:style.fontWeight,underline:getComputedStyle(link,"::after").transform};
