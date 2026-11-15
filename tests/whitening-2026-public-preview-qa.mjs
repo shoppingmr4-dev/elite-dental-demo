@@ -76,7 +76,12 @@ try {
         panel: (() => {
           const s = getComputedStyle(header, "::before");
           return { left:parseFloat(s.left), right:parseFloat(s.right) };
-        })()
+        })(),
+        frameLeftPadding: cta.getBoundingClientRect().left -
+          (header.getBoundingClientRect().left + parseFloat(getComputedStyle(header,"::before").left)),
+        frameRightPadding: (header.getBoundingClientRect().right -
+          parseFloat(getComputedStyle(header,"::before").right)) -
+          document.querySelector(".brand").getBoundingClientRect().right
       };
     });
 
@@ -105,9 +110,15 @@ try {
         brand: rect(document.querySelector(".brand")),
         nav,
         cta: rect(document.querySelector(".header-action")),
+        headerLeft: header.getBoundingClientRect().left,
+        headerRight: header.getBoundingClientRect().right,
         panelLeft: parseFloat(panel.left),
         panelRight: parseFloat(panel.right),
-        panelWidth: header.getBoundingClientRect().width - parseFloat(panel.left) - parseFloat(panel.right)
+        panelWidth: header.getBoundingClientRect().width - parseFloat(panel.left) - parseFloat(panel.right),
+        frameLeftPadding: rect(document.querySelector(".header-action")).left -
+          (header.getBoundingClientRect().left + parseFloat(panel.left)),
+        frameRightPadding: (header.getBoundingClientRect().right - parseFloat(panel.right)) -
+          rect(document.querySelector(".brand")).right
       };
     });
 
@@ -116,6 +127,18 @@ try {
       `${viewport.name}: both public preview frame edges did not move inward`);
     assert.ok(compact.panelWidth < initial.header.width - initial.panel.left - initial.panel.right,
       `${viewport.name}: public preview frame did not become narrower`);
+    const frameLeftTravel=compact.panelLeft-initial.panel.left;
+    const frameRightTravel=compact.panelRight-initial.panel.right;
+    const whatsappLeftTravel=compact.cta.left-initial.cta.left;
+    const brandRightTravel=initial.brand.right-compact.brand.right;
+    assert.ok(Math.abs(frameLeftTravel-whatsappLeftTravel)<=1.5,
+      `${viewport.name}: public glass-frame left edge differs from WhatsApp edge travel by more than 1.5px`);
+    assert.ok(Math.abs(frameRightTravel-brandRightTravel)<=1.5,
+      `${viewport.name}: public glass-frame right edge differs from brand edge travel by more than 1.5px`);
+    assert.ok(Math.abs(compact.frameLeftPadding-initial.frameLeftPadding)<=1.5,
+      `${viewport.name}: public preview frame-to-WhatsApp padding drifted`);
+    assert.ok(Math.abs(compact.frameRightPadding-initial.frameRightPadding)<=1.5,
+      `${viewport.name}: public preview frame-to-brand padding drifted`);
     assert.ok(compact.brand.centerX < initial.brand.left + initial.brand.width/2,
       `${viewport.name}: brand did not converge toward centered navigation`);
     assert.ok(compact.cta.centerX > initial.cta.left + initial.cta.width/2,
