@@ -27,8 +27,14 @@ async function measureHeader(page) {
       return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height,centerX:r.left+r.width/2};
     };
     const brand=rect(document.querySelector(".brand"));
+    const brandMark=rect(document.querySelector(".brand-mark"));
+    const brandMarkImage=rect(document.querySelector(".brand-mark img"));
+    const arabicBrandSize=Number.parseFloat(getComputedStyle(document.querySelector(".brand-name small")).fontSize);
     const nav=rect(document.querySelector("#main-nav"));
     const action=rect(document.querySelector(".header-action"));
+    const actionIcon=rect(document.querySelector(".header-action .whatsapp-brand-icon"));
+    const actionFontSize=Number.parseFloat(getComputedStyle(document.querySelector(".header-action")).fontSize);
+    const headerProgress=Number.parseFloat(getComputedStyle(header).getPropertyValue("--header-progress"));
     const linkRects=[...document.querySelectorAll("#main-nav a")].map(rect).sort((a,b)=>a.left-b.left);
     const navLinkGaps=linkRects.slice(0,-1).map((link,index)=>linkRects[index+1].left-link.right);
     const targets=[
@@ -47,6 +53,7 @@ async function measureHeader(page) {
       headerWidth:headerRect.width,
       headerCenter:headerRect.left+headerRect.width/2,
       actionHeight:action.height,
+      actionFontSize,actionIcon,arabicBrandSize,brandMark,brandMarkImage,headerProgress,
       wordmarkSize:Number.parseFloat(getComputedStyle(document.querySelector(".brand-name strong")).fontSize),
       brand,nav,action,
       brandNavGap:brand.left-nav.right,
@@ -399,6 +406,13 @@ try {
       assert.ok(mobileScreenshotState.scrollY>56, `${vp.name}: mobile compact screenshot must preserve the scrolled position`);
       assert.equal(mobileScreenshotState.compact,true, `${vp.name}: mobile compact screenshot must preserve the compact state`);
     }
+    assert.equal(initialHeaderMetrics.headerProgress,0, `${vp.name}: header must begin at shared progress 0`);
+    assert.equal(compactHeaderMetrics.headerProgress,1, `${vp.name}: compact frame and content must reach shared progress 1 together`);
+    assert.ok(compactHeaderMetrics.brandMark.width<initialHeaderMetrics.brandMark.width, `${vp.name}: RUWA logo container did not shrink`);
+    assert.ok(compactHeaderMetrics.brandMarkImage.width<initialHeaderMetrics.brandMarkImage.width, `${vp.name}: RUWA logo artwork did not shrink proportionally`);
+    assert.ok(compactHeaderMetrics.arabicBrandSize<initialHeaderMetrics.arabicBrandSize, `${vp.name}: Arabic clinic name did not become more compact`);
+    assert.ok(compactHeaderMetrics.actionFontSize<initialHeaderMetrics.actionFontSize, `${vp.name}: WhatsApp CTA wording did not become more compact`);
+    assert.ok(compactHeaderMetrics.actionIcon.width<initialHeaderMetrics.actionIcon.width, `${vp.name}: WhatsApp icon did not become more compact`);
     assert.equal(compactHeaderMetrics.layoutHeight, initialHeaderMetrics.layoutHeight, `${vp.name}: compacting the header must not shift page layout`);
     assert.equal(compactHeaderMetrics.innerHeight, initialHeaderMetrics.innerHeight, `${vp.name}: header's reserved inner height must remain stable`);
     assert.ok(compactHeaderMetrics.panelTop > initialHeaderMetrics.panelTop, `${vp.name}: floating shell did not visually shrink on scroll`);
@@ -485,7 +499,9 @@ try {
     };
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.waitForFunction(() => !document.querySelector(".site-header")?.classList.contains("is-compact"), null, { timeout: 3000 });
+    await page.waitForFunction(() => Number.parseFloat(getComputedStyle(document.querySelector(".site-header")).getPropertyValue("--header-progress"))<0.001, null, { timeout: 3000 });
     const restoredHeaderMetrics = await measureHeader(page);
+    assert.equal(restoredHeaderMetrics.headerProgress,0, `${vp.name}: shared header progress did not restore to zero`);
     assert.equal(restoredHeaderMetrics.actionHeight, initialHeaderMetrics.actionHeight, `${vp.name}: header CTA did not restore at the top`);
     assert.equal(restoredHeaderMetrics.wordmarkSize, initialHeaderMetrics.wordmarkSize, `${vp.name}: brand wordmark did not restore at the top`);
     assert.equal(restoredHeaderMetrics.panelTop, initialHeaderMetrics.panelTop, `${vp.name}: floating shell did not restore at the top`);
