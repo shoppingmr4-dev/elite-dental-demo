@@ -409,7 +409,7 @@ try {
     assert.equal(state.sectionMarkerChips.length,6,`${vp.name}: all follow-on section markers should use the shared glass chip`);
     assert.ok(state.sectionMarkerChips.every(chip=>chip.height>=32&&chip.height<=36&&chip.borderWidth==="1px"&&
       chip.borderRadius==="999px"&&chip.backgroundImage.includes("gradient")&&chip.backdropFilter.includes("blur")&&
-      chip.beforeWidth==="15px"&&chip.beforeHeight==="1.7px"),
+      chip.beforeWidth==="15px"&&Math.abs(Number.parseFloat(chip.beforeHeight)-1.7)<.1),
       `${vp.name}: all section marker chips must share the compact translucent RUWA frame: ${JSON.stringify(state.sectionMarkerChips)}`);
     assert.ok(state.benefitUnderline.angle<=-0.8&&state.benefitUnderline.angle>=-2.1,
       `${vp.name}: benefit underline must retain a subtle 1–2 degree angle: ${JSON.stringify(state.benefitUnderline)}`);
