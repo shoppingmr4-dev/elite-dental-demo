@@ -737,6 +737,7 @@ try {
     const motionResponse=await motionPage.goto(BASE_URL,{waitUntil:"domcontentloaded",timeout:45000});
     assert.ok(motionResponse?.ok(),`${vp.name}: scroll-motion preview did not load`);
     await motionPage.evaluate(()=>document.fonts.ready);
+    await motionPage.waitForTimeout(100);
     await motionPage.evaluate(()=>{document.documentElement.style.scrollBehavior="auto";});
     await motionPage.waitForFunction(()=>{
       const header=document.querySelector(".site-header");
