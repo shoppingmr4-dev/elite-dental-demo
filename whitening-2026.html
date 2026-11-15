@@ -525,8 +525,8 @@ body,button,input,select,textarea{font-family:var(--body)}
 }
 .site-header {
  --header-progress: 0;
- transition: --header-progress 360ms cubic-bezier(.2,.7,.2,1);
 }
+/* The shared progress is driven by scroll position; it must not run on a separate time-based transition. */
 .site-header.is-compact { --header-progress: 1; }
 
 .site-header::before {
@@ -1019,6 +1019,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   clone.style.setProperty("--action-converge-x","0px");
   clone.style.setProperty("--frame-left-travel","0px");
   clone.style.setProperty("--frame-right-travel","0px");
+  clone.style.setProperty("--header-progress","0");
   clone.querySelectorAll("*").forEach(element=>element.style.setProperty("transition","none","important"));
   document.body.appendChild(clone);
 
@@ -1027,6 +1028,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    return {left:box.left,right:box.right};
   };
   const snapshot=compactState=>{
+   clone.style.setProperty("--header-progress",compactState?"1":"0");
    clone.classList.toggle("is-compact",compactState);
    const brandRect=rect(clone.querySelector(".brand"));
    const navRect=rect(clone.querySelector(".nav"));
@@ -1077,19 +1079,49 @@ body,button,input,select,textarea{font-family:var(--body)}
   });
  };
 
- const update=()=>{
-  const next=window.scrollY>56;
-  if(next===compact)return;
-  if(next)measureConvergence();
-  compact=next;
-  header.classList.toggle("is-compact",next);
+ const SCROLL_RANGE=200;
+ const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
+ let scrollFrame=null;
+
+ // Smoothstep gives the scroll-linked transform a gentle start and finish,
+ // while still stopping immediately when the user stops scrolling.
+ const calculateProgress=()=>{
+  if(reducedMotion.matches)return window.scrollY>56?1:0;
+  const raw=Math.max(0,Math.min(1,window.scrollY/SCROLL_RANGE));
+  return raw*raw*(3-2*raw);
  };
 
- window.addEventListener("scroll",update,{passive:true});
+ const applyProgress=()=>{
+  scrollFrame=null;
+  const progress=calculateProgress();
+  header.style.setProperty("--header-progress",progress.toFixed(5));
+  const next=progress>=.99999;
+  if(next!==compact){
+   compact=next;
+   header.classList.toggle("is-compact",next);
+  }
+ };
+
+ const scheduleProgress=()=>{
+  if(scrollFrame!==null)return;
+  scrollFrame=requestAnimationFrame(applyProgress);
+ };
+
+ window.addEventListener("scroll",scheduleProgress,{passive:true});
  window.addEventListener("resize",scheduleMeasure,{passive:true});
+ window.addEventListener("resize",scheduleProgress,{passive:true});
+ reducedMotion.addEventListener?.("change",scheduleProgress);
+ window.addEventListener("pageshow",scheduleProgress);
+ window.addEventListener("pagehide",()=>{
+  if(scrollFrame!==null)cancelAnimationFrame(scrollFrame);
+  if(measureFrame!==null)cancelAnimationFrame(measureFrame);
+  scrollFrame=null;
+  measureFrame=null;
+ },{once:true});
+
  measureConvergence();
+ applyProgress();
  if(document.fonts?.ready)document.fonts.ready.then(scheduleMeasure).catch(()=>{});
- update();
 })();
  
 
