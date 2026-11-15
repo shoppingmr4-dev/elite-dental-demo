@@ -453,11 +453,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  .header-action{min-height:38px;padding-inline:10px;border-radius:11px;font-size:11px;gap:6px}
  .header-action .whatsapp-brand-icon{width:16px;height:16px}
  .menu-toggle{width:38px;height:38px;flex:none}
-.site-header.is-compact .header-inner{padding-inline:9px;gap:6px}
-.site-header.is-compact .brand-mark{width:39px;height:34px}
-.site-header.is-compact .brand-name strong{font-size:23px}
-.site-header.is-compact .header-action{min-height:35px;padding-inline:8px;font-size:10px}
-.site-header.is-compact .menu-toggle{width:36px;height:36px}
+
 }
 @media(max-width:390px){
  .site-header{width:calc(100% - var(--gutter)*2 - 6px)}
@@ -480,12 +476,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  .site-header .nav{grid-column:2;justify-self:center;margin-inline:0}
  .site-header .header-action{grid-column:3;justify-self:end;translate:0 0}
  .site-header .menu-toggle{display:none}
-.site-header.is-compact .brand{
-  translate:calc(-1 * var(--brand-converge-x,0px)) 0
- }
-.site-header.is-compact .nav{
-  gap:calc(clamp(14px,1.7vw,24px) - 4px)
- }
+
 }
 
 /* Animate the compact transformation as one coordinated header interaction. */
@@ -522,7 +513,8 @@ body,button,input,select,textarea{font-family:var(--body)}
 
 .site-header::before {
  inset-block: calc(7px * var(--header-progress));
- inset-inline: calc(2.5% * var(--header-progress));
+ /* Give the desktop frame a clearly visible inward travel, not a barely perceptible inset. */
+ inset-inline: calc(clamp(40px, calc(8vw - 5px), 100px) * var(--header-progress));
  border-radius: calc(23px - 4px * var(--header-progress));
  box-shadow: 0 9px calc(28px - 10px * var(--header-progress))
    rgba(20,45,56,calc(.075 - .01 * var(--header-progress)));
