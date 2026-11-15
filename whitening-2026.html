@@ -61,6 +61,11 @@ img{display:block;max-width:100%}
 .nav a:hover,.nav a:focus-visible{color:var(--blue)}
 .nav a:focus-visible{outline:2px solid var(--blue-deep);outline-offset:4px;border-radius:3px}
 .nav a:hover::after,.nav a:focus-visible::after{transform:scaleX(1)}
+/* Keep the current-section identity clear when that same link is hovered or keyboard-focused. */
+.nav a[aria-current="location"]:hover,
+.nav a[aria-current="location"]:focus-visible{color:var(--blue-deep)}
+.nav a[aria-current="location"]:hover::after,
+.nav a[aria-current="location"]:focus-visible::after{transform:scaleX(.72)}
 .nav a:active{color:var(--blue-deep)}
 .header-action{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0 18px;border-radius:13px;background:var(--blue);color:#FFFFFF;font-size:14px;font-weight:700;box-shadow:0 3px 10px rgba(24,122,128,.12);transition:transform .2s cubic-bezier(.2,.7,.2,1),box-shadow .2s cubic-bezier(.2,.7,.2,1)}
 .header-action:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(24,122,128,.18)}
