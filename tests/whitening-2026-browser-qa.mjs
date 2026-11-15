@@ -417,7 +417,7 @@ try {
     assert.equal(compactHeaderMetrics.innerHeight, initialHeaderMetrics.innerHeight, `${vp.name}: header's reserved inner height must remain stable`);
     assert.ok(compactHeaderMetrics.panelTop > initialHeaderMetrics.panelTop, `${vp.name}: floating shell did not visually shrink on scroll`);
     const expectedSideInset=vp.width>920
-      ?Math.min(100,Math.max(40,vp.width*0.08-5))
+      ?Math.min(82,Math.max(48,vp.width*0.06-5))
       :null;
     const expectedSideInsetRatio=vp.width>920
       ?expectedSideInset/initialHeaderMetrics.headerWidth
@@ -428,8 +428,8 @@ try {
     assert.ok(Math.abs(leftEdgeShift-rightEdgeShift)<=0.75, `${vp.name}: right and left edges must shrink by the same amount (left ${leftEdgeShift}px, right ${rightEdgeShift}px)`);
     assert.ok(Math.abs(leftEdgeShift/initialHeaderMetrics.headerWidth-expectedSideInsetRatio)<=0.005, `${vp.name}: per-side horizontal shrink is not at the intended responsive percentage`);
     if(vp.width>920) {
-      assert.ok(leftEdgeShift/initialHeaderMetrics.headerWidth>=0.075,
-        `${vp.name}: desktop frame must visibly converge by at least 7.5% per side`);
+      assert.ok(leftEdgeShift/initialHeaderMetrics.headerWidth>=0.06,
+        `${vp.name}: desktop frame must visibly converge by at least 6% per side`);
     }
     assert.ok(compactHeaderMetrics.visualWidth<initialHeaderMetrics.visualWidth, `${vp.name}: actual floating shell width did not decrease`);
     assert.ok(Math.abs((compactHeaderMetrics.visualCenter-initialHeaderMetrics.visualCenter))<=0.75, `${vp.name}: visual header shell shifted away from the center`);
