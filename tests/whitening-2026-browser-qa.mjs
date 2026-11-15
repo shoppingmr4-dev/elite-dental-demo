@@ -416,12 +416,21 @@ try {
     assert.equal(compactHeaderMetrics.layoutHeight, initialHeaderMetrics.layoutHeight, `${vp.name}: compacting the header must not shift page layout`);
     assert.equal(compactHeaderMetrics.innerHeight, initialHeaderMetrics.innerHeight, `${vp.name}: header's reserved inner height must remain stable`);
     assert.ok(compactHeaderMetrics.panelTop > initialHeaderMetrics.panelTop, `${vp.name}: floating shell did not visually shrink on scroll`);
-    const expectedSideInsetRatio=vp.width>920?0.025:vp.width>720?0.02:0.015;
+    const expectedSideInset=vp.width>920
+      ?Math.min(100,Math.max(40,vp.width*0.08-5))
+      :null;
+    const expectedSideInsetRatio=vp.width>920
+      ?expectedSideInset/initialHeaderMetrics.headerWidth
+      :vp.width>720?0.02:0.015;
     const leftEdgeShift=compactHeaderMetrics.panelLeft-initialHeaderMetrics.panelLeft;
     const rightEdgeShift=compactHeaderMetrics.panelRight-initialHeaderMetrics.panelRight;
     assert.ok(leftEdgeShift>0 && rightEdgeShift>0, `${vp.name}: both outer sides must move inward`);
     assert.ok(Math.abs(leftEdgeShift-rightEdgeShift)<=0.75, `${vp.name}: right and left edges must shrink by the same amount (left ${leftEdgeShift}px, right ${rightEdgeShift}px)`);
     assert.ok(Math.abs(leftEdgeShift/initialHeaderMetrics.headerWidth-expectedSideInsetRatio)<=0.005, `${vp.name}: per-side horizontal shrink is not at the intended responsive percentage`);
+    if(vp.width>920) {
+      assert.ok(leftEdgeShift/initialHeaderMetrics.headerWidth>=0.075,
+        `${vp.name}: desktop frame must visibly converge by at least 7.5% per side`);
+    }
     assert.ok(compactHeaderMetrics.visualWidth<initialHeaderMetrics.visualWidth, `${vp.name}: actual floating shell width did not decrease`);
     assert.ok(Math.abs((compactHeaderMetrics.visualCenter-initialHeaderMetrics.visualCenter))<=0.75, `${vp.name}: visual header shell shifted away from the center`);
     assert.ok(Math.abs(compactHeaderMetrics.headerCenter-initialHeaderMetrics.headerCenter)<=0.75, `${vp.name}: header container center changed during compaction`);
