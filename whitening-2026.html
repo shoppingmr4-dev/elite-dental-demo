@@ -110,8 +110,7 @@ body.dialog-open{overflow:hidden}
 .hero:before{content:"";position:absolute;z-index:-1;top:-250px;left:-170px;width:550px;height:550px;border:1px solid rgba(24,122,128,.18);border-radius:50%;box-shadow:0 0 0 34px rgba(24,122,128,.025),0 0 0 90px rgba(24,122,128,.02)}
 .hero-grid{display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);align-items:center;gap:clamp(38px,6vw,86px)}
 .hero-copy{position:relative;z-index:2;max-width:620px;padding-block:15px 38px;animation:copyEnter .72s cubic-bezier(.2,.75,.25,1) both}
-.eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--blue);font-size:10px;font-weight:800;letter-spacing:.12em}
-.eyebrow:before{content:"";width:26px;height:2px;background:var(--coral)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--ink2);font-size:11px;font-weight:700;letter-spacing:0;line-height:1.4}
 .hero h1{margin:24px 0 18px;font-family:var(--display);font-size:clamp(42px,6.05vw,78px);line-height:1.27;font-weight:800;letter-spacing:-.075em;color:var(--ink)}
 .hero h1 .accent{display:inline-block;position:relative;color:var(--blue)}
 .hero-lead{max-width:510px;margin:0;color:#52656A;font-size:clamp(14px,1.35vw,17px);line-height:2.1}
@@ -144,7 +143,7 @@ body.dialog-open{overflow:hidden}
 .section{padding-block:clamp(65px,8vw,108px)}
 .approach{background:var(--paper)}
 .approach-grid{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(35px,7vw,95px);align-items:start}
-.approach-intro .eyebrow{color:#A84E3D}
+.approach-intro .eyebrow{color:var(--ink2)}
 .approach h2{max-width:500px;margin:16px 0 14px;font-family:var(--display);font-size:clamp(27px,4vw,48px);line-height:1.4;letter-spacing:-.06em}
 .approach-intro p{max-width:430px;margin:0;color:var(--muted);font-size:13px;line-height:2}
 .step-list{border-top:1px solid var(--line)}
@@ -201,7 +200,7 @@ body.dialog-open{overflow:hidden}
 .clinical-note{margin-top:24px;padding:17px 19px;border-right:3px solid var(--coral);border-radius:10px;background:#F4F7F6;color:var(--ink2);font-size:12px;line-height:2}
 .expect-section{background:var(--ink);color:#FFFFFF}
 .expect-section .section-head p{color:rgba(255,255,255,.78)}
-.expect-section .section-head .eyebrow{color:#A9DCD2}
+.expect-section .section-head .eyebrow{color:var(--blue-deep)}
 .expect-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .expect-card{padding:24px 22px;border:1px solid rgba(255,255,255,.16);border-radius:15px;background:rgba(255,255,255,.045)}
 .expect-card h3{margin:0 0 9px;font-family:var(--display);font-size:15px}
@@ -338,7 +337,7 @@ body,button,input,select,textarea{font-family:var(--body)}
 .inquiry-field label{font-size:13px}.inquiry-field select,.contact-submit,.inquiry-message{font-size:14px}
 .inquiry-status,.reference-note{font-size:13px}.nav a{font-size:14px}
 .header-action,.primary-cta{font-size:14px;font-weight:700}.text-link{font-size:14px;font-weight:700}
-.eyebrow{font-size:12px;letter-spacing:0}.photo-label strong{font-size:clamp(20px,2vw,25px)}
+.eyebrow{font-size:11px;letter-spacing:0}.photo-label strong{font-size:clamp(20px,2vw,25px)}
 .visual-caption{font-size:12px;line-height:1.8}.hero-bottom-item span{font-size:12px}.footer-inner{font-size:11px}
 @media(max-width:720px){.hero h1{font-size:clamp(38px,9vw,56px);line-height:1.35}.hero-lead{font-size:15.5px}.hero-bottom-item span{font-size:11px}.nav a{font-size:14px}.faq-item summary{font-size:15px}}
 @media(max-width:400px){.hero h1{font-size:39px}.hero-bottom-item span{font-size:10px}}
@@ -366,10 +365,12 @@ body,button,input,select,textarea{font-family:var(--body)}
  display:inline-block;position:relative;isolation:isolate;color:var(--blue);
  font-size:1em;white-space:nowrap;
 }
-.hero-title-benefit .accent:after{
- content:"";position:absolute;right:1.5%;bottom:-.13em;width:97%;height:2.5px;
- background:var(--coral);border-radius:999px;opacity:.88;z-index:-1;
- transform:rotate(-1.4deg);transform-origin:right center;
+.hero-title-benefit .accent::after{
+ content:"";position:absolute;right:1.5%;bottom:-.10em;width:97%;height:.15em;
+ border-bottom:2.5px solid var(--coral);
+ border-radius:0 0 58% 42% / 0 0 100% 100%;
+ background:transparent;opacity:.9;z-index:-1;pointer-events:none;
+ transform:rotate(-1.25deg);transform-origin:right center;
 }
 @media(max-width:920px){
  .hero h1{font-size:clamp(39px,5.45vw,58px)}
@@ -389,19 +390,25 @@ body,button,input,select,textarea{font-family:var(--body)}
  .hero-title-benefit{font-size:.56em}
 }
 
-/* Hero eyebrow: compact translucent glass chip, with one shared label unit. */
+/* Shared translucent section-marker chip: one consistent RUWA glass treatment. */
+.eyebrow,
 .hero-eyebrow{
  display:inline-flex;flex-direction:row;direction:rtl;align-items:center;justify-content:flex-start;
- gap:8px;min-height:34px;margin:0 0 3px;padding:5px 10px;
+ gap:8px;width:max-content;max-width:100%;min-height:34px;margin:0;padding:5px 10px;
  border:1px solid rgba(24,122,128,.14);border-radius:999px;
  background:linear-gradient(112deg,rgba(255,255,255,.66),rgba(227,242,233,.38) 58%,rgba(255,255,255,.52));
  box-shadow:inset 0 1px 0 rgba(255,255,255,.72);
  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
- color:var(--ink2);font-size:10px;font-weight:700;letter-spacing:0;line-height:1.4;
+ color:var(--ink2);font-size:11px;font-weight:700;letter-spacing:0;line-height:1.4;
 }
+.eyebrow::before{
+ content:"";display:block;flex:none;width:15px;height:1.7px;border-radius:999px;
+ background:var(--blue);opacity:.78;transform:rotate(-14deg);transform-origin:center;
+}
+.hero-eyebrow{margin:0 0 3px}
 .hero-eyebrow-rule{
- display:block;flex:none;width:20px;height:1.5px;border-radius:999px;
- background:var(--blue);opacity:.72;transform:translateY(-.15px);
+ display:block;flex:none;width:18px;height:1.7px;border-radius:999px;
+ background:var(--blue);opacity:.78;transform:rotate(-14deg);transform-origin:center;
 }
 .hero-eyebrow-index{
  display:inline-block;flex:none;min-width:0;height:auto;padding:0;border:0;border-radius:0;
@@ -713,8 +720,8 @@ body,button,input,select,textarea{font-family:var(--body)}
    <div class="hero-grid">
     <div class="hero-copy">
      <div class="hero-eyebrow" aria-label="القسم الأول: دليل الابتسامة">
+      <span class="hero-eyebrow-index" aria-label="01">01</span>
       <span class="hero-eyebrow-rule" aria-hidden="true"></span>
-       <span class="hero-eyebrow-index" aria-label="01">01</span>
       <span class="hero-eyebrow-icon" aria-hidden="true">
        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M7.15 3.45C4.8 3.1 3.15 4.75 3.15 7.15c0 2.15 1.2 4.1 2.05 6.35.88 2.35 1.38 6.7 3.05 6.7 1.15 0 1.25-3.65 2.75-3.65s1.6 3.65 2.75 3.65c1.67 0 2.17-4.35 3.05-6.7.85-2.25 2.05-4.2 2.05-6.35 0-2.4-1.65-4.05-4-3.7-1.15.17-2.1.85-3.85.85s-2.7-.68-3.85-.85Z" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/>
