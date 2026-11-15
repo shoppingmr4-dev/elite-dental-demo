@@ -194,6 +194,38 @@ try {
         headingVisible:Boolean(heading && rect(heading).height > 0),
         eyebrowLabel:document.querySelector(".hero-eyebrow-label")?.innerText?.trim() || "",
         eyebrowIndex:document.querySelector(".hero-eyebrow-index")?.innerText?.trim() || "",
+        eyebrowRule:(()=>{
+          const rule=document.querySelector(".hero-eyebrow-rule");
+          const number=document.querySelector(".hero-eyebrow-index");
+          if(!rule||!number)return null;
+          const style=getComputedStyle(rule),bounds=rect(rule),numberBounds=rect(number);
+          return {width:bounds.width,height:bounds.height,color:style.backgroundColor,opacity:Number.parseFloat(style.opacity),
+            immediatelyBeforeNumber:bounds.left>numberBounds.right&&bounds.left-numberBounds.right<12};
+        })(),
+        benefitUnderline:(()=>{
+          const accent=document.querySelector(".hero-title-benefit .accent");
+          if(!accent)return null;
+          const bounds=rect(accent),style=getComputedStyle(accent,"::after");
+          const matrix=style.transform.match(/matrix\(([^)]+)\)/);
+          const values=matrix?matrix[1].split(",").map(Number):[];
+          const angle=values.length>=2?Math.atan2(values[1],values[0])*180/Math.PI:0;
+          const width=Number.parseFloat(style.width),height=Number.parseFloat(style.height);
+          return {textWidth:bounds.width,lineWidth:width,widthRatio:width/bounds.width,height,
+            color:style.backgroundColor,opacity:Number.parseFloat(style.opacity),bottom:style.bottom,angle};
+        })(),
+        heroBackgroundHarmony:(()=>{
+          const root=getComputedStyle(document.documentElement);
+          const header=document.querySelector(".site-header");
+          return {
+            canvas:root.getPropertyValue("--canvas").trim(),paper:root.getPropertyValue("--paper").trim(),
+            body:getComputedStyle(document.body).backgroundColor,
+            headerSurface:getComputedStyle(header,"::before").backgroundColor,
+            headerBorder:getComputedStyle(header,"::before").borderTopColor,
+            heroGradients:getComputedStyle(document.querySelector(".hero")).backgroundImage,
+            heroBottom:getComputedStyle(document.querySelector(".hero-bottom")).backgroundColor,
+            approach:getComputedStyle(document.querySelector(".approach")).backgroundColor
+          };
+        })(),
         eyebrowToothIcon:Boolean(document.querySelector(".hero-eyebrow-icon svg path")?.getAttribute("d")?.startsWith("M7.15")),
         eyebrowStartAligned:Boolean(
           document.querySelector(".hero-eyebrow") && copy &&
@@ -343,6 +375,29 @@ try {
     assert.ok(state.eyebrowStartAligned, `${vp.name}: hero eyebrow is not aligned to the RTL line start`);
     assert.ok(state.eyebrowNumberFirst, `${vp.name}: section number is not first at the RTL line start`);
     assert.ok(state.eyebrowGlassChip, `${vp.name}: eyebrow glass chip is not compact, translucent, and unframed internally`);
+    assert.ok(state.eyebrowRule && state.eyebrowRule.immediatelyBeforeNumber,
+      `${vp.name}: the short RTL editorial line must sit immediately before 01: ${JSON.stringify(state.eyebrowRule)}`);
+    assert.ok(state.eyebrowRule.width>=16&&state.eyebrowRule.width<=24&&state.eyebrowRule.height>=1.4&&state.eyebrowRule.height<=2,
+      `${vp.name}: eyebrow rule dimensions are outside the refined range: ${JSON.stringify(state.eyebrowRule)}`);
+    assert.equal(state.eyebrowRule.color,"rgb(24, 122, 128)",`${vp.name}: eyebrow rule must use RUWA teal`);
+    assert.ok(state.benefitUnderline && state.benefitUnderline.widthRatio>=.90&&state.benefitUnderline.widthRatio<=1,
+      `${vp.name}: benefit underline must cover 90–100% of the full phrase: ${JSON.stringify(state.benefitUnderline)}`);
+    assert.ok(state.benefitUnderline.height>=2&&state.benefitUnderline.height<=3,
+      `${vp.name}: benefit underline thickness is incorrect: ${JSON.stringify(state.benefitUnderline)}`);
+    assert.equal(state.benefitUnderline.color,"rgb(184, 93, 74)",`${vp.name}: benefit underline coral tone changed`);
+    assert.ok(state.benefitUnderline.angle<=-0.8&&state.benefitUnderline.angle>=-2.1,
+      `${vp.name}: benefit underline must retain a subtle 1–2 degree angle: ${JSON.stringify(state.benefitUnderline)}`);
+    assert.ok(Number.parseFloat(state.benefitUnderline.bottom)<-2,
+      `${vp.name}: benefit underline must sit clearly beneath the phrase`);
+    assert.equal(state.heroBackgroundHarmony.canvas,"#F4F7F6",`${vp.name}: canvas token drifted`);
+    assert.equal(state.heroBackgroundHarmony.paper,"#FFFFFF",`${vp.name}: paper token drifted`);
+    assert.equal(state.heroBackgroundHarmony.body,"rgb(244, 247, 246)",`${vp.name}: page canvas is no longer the intended soft mist tone`);
+    assert.equal(state.heroBackgroundHarmony.headerSurface,"rgba(255, 255, 255, 0.93)",`${vp.name}: glass header surface changed`);
+    assert.equal(state.heroBackgroundHarmony.headerBorder,"rgba(221, 230, 227, 0.92)",`${vp.name}: glass header border changed`);
+    assert.equal(state.heroBackgroundHarmony.heroBottom,"rgba(255, 255, 255, 0.22)",`${vp.name}: hero-bottom surface changed`);
+    assert.equal(state.heroBackgroundHarmony.approach,"rgb(255, 255, 255)",`${vp.name}: next section surface changed`);
+    assert.ok(state.heroBackgroundHarmony.heroGradients.includes("radial-gradient"),
+      `${vp.name}: subtle hero background gradients are missing`);
     assert.ok(state.headingFont.includes("Cairo"), `${vp.name}: expected Cairo headline font`);
     assert.ok(state.bodyFont.includes("IBM Plex Sans Arabic"), `${vp.name}: expected IBM Plex Sans Arabic body font`);
     assert.ok(state.headingFontLoaded, `${vp.name}: local Cairo heading font failed to load`);
@@ -654,6 +709,17 @@ try {
         return link?.getAttribute("aria-current")==="location"&&
           section?.getBoundingClientRect().top<=window.innerHeight*.32+1;
       },null,{timeout:6000});
+      await page.evaluate(()=>new Promise(resolve=>{
+        let last=window.scrollY,stableFrames=0;
+        const check=()=>{
+          const current=window.scrollY;
+          stableFrames=Math.abs(current-last)<.5?stableFrames+1:0;
+          last=current;
+          if(stableFrames>=6)resolve();else requestAnimationFrame(check);
+        };
+        requestAnimationFrame(check);
+      }));
+      await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#causes"]')?.getAttribute("aria-current")==="location",null,{timeout:1500});
       const activeLink=page.locator('#main-nav a[href="#causes"]');
       await page.mouse.move(0,0);
       await page.waitForFunction(()=>{
