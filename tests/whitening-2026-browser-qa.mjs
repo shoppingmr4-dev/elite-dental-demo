@@ -653,14 +653,27 @@ try {
         return link?.getAttribute("aria-current")==="location"&&
           section?.getBoundingClientRect().top<=window.innerHeight*.32+1;
       },null,{timeout:6000});
+      const activeLink=page.locator('#main-nav a[href="#causes"]');
       await page.mouse.move(0,0);
-      const activeState=await page.locator('#main-nav a[href="#causes"]').evaluate(link=>{
+      const activeState=await activeLink.evaluate(link=>{
         const style=getComputedStyle(link);
         return {color:style.color,fontWeight:style.fontWeight,underline:getComputedStyle(link,"::after").transform};
       });
       assert.equal(activeState.color,"rgb(17, 90, 96)", `${vp.name}: active link color is incorrect`);
       assert.equal(activeState.fontWeight,"700", `${vp.name}: active link should be emphasized subtly`);
       assert.notEqual(activeState.underline,"matrix(0, 0, 0, 1, 0, 0)", `${vp.name}: active link underline is missing`);
+
+      await activeLink.hover();
+      const activeHoverState=await activeLink.evaluate(link=>{
+        const style=getComputedStyle(link);
+        const transform=getComputedStyle(link,"::after").transform;
+        const scale=transform.startsWith("matrix(")?Number.parseFloat(transform.slice(7)):0;
+        return {color:style.color,fontWeight:style.fontWeight,underlineScale:scale};
+      });
+      assert.equal(activeHoverState.color,"rgb(17, 90, 96)", `${vp.name}: active + hover must preserve the active-section color`);
+      assert.equal(activeHoverState.fontWeight,"700", `${vp.name}: active + hover must preserve active emphasis`);
+      assert.ok(activeHoverState.underlineScale>=0.70&&activeHoverState.underlineScale<=0.74,
+        `${vp.name}: active + hover underline should strengthen without replacing the active indicator`);
     }
 
     const faqQuestion=page.locator(".faq-item summary").first();
