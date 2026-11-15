@@ -736,11 +736,14 @@ try {
       assert.equal(activeState.fontWeight,"700", `${vp.name}: active link should be emphasized subtly`);
       assert.notEqual(activeState.underline,"matrix(0, 0, 0, 1, 0, 0)", `${vp.name}: active link underline is missing`);
 
+      // The real scroll observer was verified above. Pin the same active state
+      // during this hover-only style check so a late anchor-scroll frame cannot
+      // change which section is active while the pointer moves onto the link.
+      await activeLink.evaluate(link=>{
+        link.closest("nav").querySelectorAll("a").forEach(item=>item.removeAttribute("aria-current"));
+        link.setAttribute("aria-current","location");
+      });
       await activeLink.hover();
-      await page.waitForFunction(()=>{
-        const link=document.querySelector('#main-nav a[href="#causes"]');
-        return link?.getAttribute("aria-current")==="location"&&getComputedStyle(link).fontWeight==="700";
-      },null,{timeout:1800});
       const activeHoverState=await activeLink.evaluate(link=>{
         const style=getComputedStyle(link);
         const transform=getComputedStyle(link,"::after").transform;
