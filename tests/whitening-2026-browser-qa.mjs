@@ -209,7 +209,9 @@ try {
           const matrix=style.transform.match(/matrix\(([^)]+)\)/);
           const values=matrix?matrix[1].split(",").map(Number):[];
           const angle=values.length>=2?Math.atan2(values[1],values[0])*180/Math.PI:0;
-          const width=Number.parseFloat(style.width),height=Number.parseFloat(style.height);
+          const widthValue=style.width;
+          const width=widthValue.endsWith("%")?bounds.width*Number.parseFloat(widthValue)/100:Number.parseFloat(widthValue);
+          const height=Number.parseFloat(style.height);
           return {textWidth:bounds.width,lineWidth:width,widthRatio:width/bounds.width,height,
             color:style.backgroundColor,opacity:Number.parseFloat(style.opacity),bottom:style.bottom,angle};
         })(),
@@ -735,6 +737,10 @@ try {
       assert.notEqual(activeState.underline,"matrix(0, 0, 0, 1, 0, 0)", `${vp.name}: active link underline is missing`);
 
       await activeLink.hover();
+      await page.waitForFunction(()=>{
+        const link=document.querySelector('#main-nav a[href="#causes"]');
+        return link?.getAttribute("aria-current")==="location"&&getComputedStyle(link).fontWeight==="700";
+      },null,{timeout:1800});
       const activeHoverState=await activeLink.evaluate(link=>{
         const style=getComputedStyle(link);
         const transform=getComputedStyle(link,"::after").transform;
