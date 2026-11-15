@@ -66,6 +66,8 @@ async function measureHeader(page) {
       visualLeft:headerRect.left+left,
       visualRight:headerRect.right-right,
       visualCenter:headerRect.left+left+(headerRect.width-left-right)/2,
+      frameLeftPadding:action.left-(headerRect.left+left),
+      frameRightPadding:(headerRect.right-right)-brand.right,
       visibleGroups
     };
   });
@@ -416,23 +418,35 @@ try {
     assert.equal(compactHeaderMetrics.layoutHeight, initialHeaderMetrics.layoutHeight, `${vp.name}: compacting the header must not shift page layout`);
     assert.equal(compactHeaderMetrics.innerHeight, initialHeaderMetrics.innerHeight, `${vp.name}: header's reserved inner height must remain stable`);
     assert.ok(compactHeaderMetrics.panelTop > initialHeaderMetrics.panelTop, `${vp.name}: floating shell did not visually shrink on scroll`);
-    const expectedSideInset=vp.width>920
-      ?Math.min(82,Math.max(48,vp.width*0.06-5))
-      :null;
-    const expectedSideInsetRatio=vp.width>920
-      ?expectedSideInset/initialHeaderMetrics.headerWidth
-      :vp.width>720?0.02:0.015;
     const leftEdgeShift=compactHeaderMetrics.panelLeft-initialHeaderMetrics.panelLeft;
     const rightEdgeShift=compactHeaderMetrics.panelRight-initialHeaderMetrics.panelRight;
     assert.ok(leftEdgeShift>0 && rightEdgeShift>0, `${vp.name}: both outer sides must move inward`);
-    assert.ok(Math.abs(leftEdgeShift-rightEdgeShift)<=0.75, `${vp.name}: right and left edges must shrink by the same amount (left ${leftEdgeShift}px, right ${rightEdgeShift}px)`);
-    assert.ok(Math.abs(leftEdgeShift/initialHeaderMetrics.headerWidth-expectedSideInsetRatio)<=0.005, `${vp.name}: per-side horizontal shrink is not at the intended responsive percentage`);
     if(vp.width>920) {
-      assert.ok(leftEdgeShift/initialHeaderMetrics.headerWidth>=0.06,
-        `${vp.name}: desktop frame must visibly converge by at least 6% per side`);
+      const whatsappLeftEdgeTravel=compactHeaderMetrics.action.left-initialHeaderMetrics.action.left;
+      const brandRightEdgeTravel=initialHeaderMetrics.brand.right-compactHeaderMetrics.brand.right;
+      const leftEdgeError=Math.abs(leftEdgeShift-whatsappLeftEdgeTravel);
+      const rightEdgeError=Math.abs(rightEdgeShift-brandRightEdgeTravel);
+      assert.ok(whatsappLeftEdgeTravel>0 && brandRightEdgeTravel>0,
+        `${vp.name}: both outer header groups must converge inward`);
+      assert.ok(leftEdgeError<=1.5,
+        `${vp.name}: glass frame left edge must match WhatsApp's left-edge travel (frame ${leftEdgeShift.toFixed(2)}px, CTA ${whatsappLeftEdgeTravel.toFixed(2)}px, error ${leftEdgeError.toFixed(2)}px)`);
+      assert.ok(rightEdgeError<=1.5,
+        `${vp.name}: glass frame right edge must match brand's right-edge travel (frame ${rightEdgeShift.toFixed(2)}px, brand ${brandRightEdgeTravel.toFixed(2)}px, error ${rightEdgeError.toFixed(2)}px)`);
+      assert.ok(Math.abs(compactHeaderMetrics.frameLeftPadding-initialHeaderMetrics.frameLeftPadding)<=1.5,
+        `${vp.name}: frame-to-WhatsApp padding drifted by more than 1.5px`);
+      assert.ok(Math.abs(compactHeaderMetrics.frameRightPadding-initialHeaderMetrics.frameRightPadding)<=1.5,
+        `${vp.name}: frame-to-brand padding drifted by more than 1.5px`);
+    } else {
+      const expectedSideInsetRatio=vp.width>720?0.02:0.015;
+      assert.ok(Math.abs(leftEdgeShift-rightEdgeShift)<=0.75,
+        `${vp.name}: compact tablet/mobile frame must retain symmetrical side insets`);
+      assert.ok(Math.abs(leftEdgeShift/initialHeaderMetrics.headerWidth-expectedSideInsetRatio)<=0.005,
+        `${vp.name}: tablet/mobile frame inset differs from its responsive specification`);
     }
     assert.ok(compactHeaderMetrics.visualWidth<initialHeaderMetrics.visualWidth, `${vp.name}: actual floating shell width did not decrease`);
-    assert.ok(Math.abs((compactHeaderMetrics.visualCenter-initialHeaderMetrics.visualCenter))<=0.75, `${vp.name}: visual header shell shifted away from the center`);
+    const expectedFrameCenterShift=(leftEdgeShift-rightEdgeShift)/2;
+    assert.ok(Math.abs((compactHeaderMetrics.visualCenter-initialHeaderMetrics.visualCenter)-expectedFrameCenterShift)<=0.75,
+      `${vp.name}: glass frame center does not reflect its measured asymmetric edge movement`);
     assert.ok(Math.abs(compactHeaderMetrics.headerCenter-initialHeaderMetrics.headerCenter)<=0.75, `${vp.name}: header container center changed during compaction`);
     assert.ok(compactHeaderMetrics.visualLeft>initialHeaderMetrics.visualLeft, `${vp.name}: visual left edge did not move inward`);
     assert.ok(compactHeaderMetrics.visualRight<initialHeaderMetrics.visualRight, `${vp.name}: visual right edge did not move inward`);
@@ -480,6 +494,16 @@ try {
         navActionGapAfterPx:Number(compactHeaderMetrics.navActionGap.toFixed(2)),
         navActionGapReductionPercent:Number((actionGapReductionRatio*100).toFixed(2)),
         navCenterShiftPx:Number((compactHeaderMetrics.nav.centerX-initialHeaderMetrics.nav.centerX).toFixed(2)),
+        frameLeftEdgeTravelPx:Number(leftEdgeShift.toFixed(2)),
+        whatsappLeftEdgeTravelPx:Number((compactHeaderMetrics.action.left-initialHeaderMetrics.action.left).toFixed(2)),
+        frameLeftEdgeErrorPx:Number(Math.abs(leftEdgeShift-(compactHeaderMetrics.action.left-initialHeaderMetrics.action.left)).toFixed(3)),
+        frameRightEdgeTravelPx:Number(rightEdgeShift.toFixed(2)),
+        brandRightEdgeTravelPx:Number((initialHeaderMetrics.brand.right-compactHeaderMetrics.brand.right).toFixed(2)),
+        frameRightEdgeErrorPx:Number(Math.abs(rightEdgeShift-(initialHeaderMetrics.brand.right-compactHeaderMetrics.brand.right)).toFixed(3)),
+        frameToWhatsAppPaddingBeforePx:Number(initialHeaderMetrics.frameLeftPadding.toFixed(2)),
+        frameToWhatsAppPaddingAfterPx:Number(compactHeaderMetrics.frameLeftPadding.toFixed(2)),
+        frameToBrandPaddingBeforePx:Number(initialHeaderMetrics.frameRightPadding.toFixed(2)),
+        frameToBrandPaddingAfterPx:Number(compactHeaderMetrics.frameRightPadding.toFixed(2)),
         navLinkGapBeforePx:Number(initialHeaderMetrics.navLinkGapAverage.toFixed(2)),
         navLinkGapAfterPx:Number(compactHeaderMetrics.navLinkGapAverage.toFixed(2))
       };
