@@ -9,6 +9,7 @@ await mkdir(OUT, { recursive: true });
 const viewports = [
   { name: "mobile-360", width: 360, height: 800, mobile: true },
   { name: "mobile-390", width: 390, height: 844, mobile: true },
+  { name: "mobile-430", width: 430, height: 900, mobile: true },
   { name: "tablet-768", width: 768, height: 1024, mobile: false },
   { name: "laptop-1024", width: 1024, height: 900, mobile: false },
   { name: "laptop-1280", width: 1280, height: 900, mobile: false },
@@ -118,8 +119,6 @@ try {
     const state = await page.evaluate(async () => {
       const heading = document.querySelector("#hero-title");
       const copy = document.querySelector(".hero-copy");
-      const visual = document.querySelector(".hero-visual");
-      const image = document.querySelector(".photo-frame img");
       const nav = document.querySelector("#main-nav");
       const toggle = document.querySelector("#menu-toggle");
       await document.fonts.load('800 48px "Cairo"', "التبييض");
@@ -240,7 +239,8 @@ try {
         eyebrowToothIcon:Boolean(document.querySelector(".hero-eyebrow-icon svg path")?.getAttribute("d")?.startsWith("M7.15")),
         eyebrowStartAligned:Boolean(
           document.querySelector(".hero-eyebrow") && copy &&
-          Math.abs(rect(document.querySelector(".hero-eyebrow")).right - rect(copy).right) <= 3
+          Math.abs((rect(document.querySelector(".hero-eyebrow")).left+rect(document.querySelector(".hero-eyebrow")).right)/2 -
+            (rect(copy).left+rect(copy).right)/2) <= 2
         ),
         eyebrowNumberFirst:Boolean((()=>{
           const number=document.querySelector(".hero-eyebrow-index");
@@ -376,10 +376,15 @@ try {
           };
         })(),
         copy:copy ? rect(copy) : null,
-        visual:visual ? rect(visual) : null,
-        imageCount:document.querySelectorAll(".photo-frame img").length,
-        imageAlt:image?.alt || "",
-        imageSrc:image?.currentSrc || image?.src || "",
+        heroCopyCentered:Boolean(copy && Math.abs((rect(copy).left+rect(copy).right)/2 -
+          (rect(document.querySelector(".hero .wrap")).left+rect(document.querySelector(".hero .wrap")).right)/2) <= 2),
+        heroVisualNodeCount:document.querySelectorAll(".hero-visual,.photo-frame,.visual-backdrop,.visual-outline,.visual-index,.visual-caption,.visual-side-note,.photo-label").length,
+        imageCount:document.querySelectorAll(".hero img").length,
+        heroImagePreloadPresent:[...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>link.href.includes("37458050")),
+        heroImageMarkupReferencePresent:Boolean(document.querySelector(".hero")?.innerHTML.includes("37458050")),
+        heroBottomItemCount:document.querySelectorAll(".hero-bottom-item").length,
+        heroLegacyCssPresent:[".hero-grid",".hero-visual",".photo-frame",".visual-backdrop",".visual-outline",".visual-index",".visual-caption",".visual-side-note",".photo-label","photoEnter"].some(selector=>
+          [...document.querySelectorAll("style")].some(style=>style.textContent.includes(selector))),
         faviconHref:document.querySelector('link[rel="icon"]')?.getAttribute("href") || "",
         brandMarkRect:brandImage ? rect(brandImage) : null,
         brandName:document.querySelector(".brand-name strong")?.innerText?.trim() || "",
@@ -393,7 +398,6 @@ try {
         logoTransparent:logoCornerPixel[3]===0,
         logoNavyExact:logoNavyPixel[0]===12 && logoNavyPixel[1]===45 && logoNavyPixel[2]===63 && logoNavyPixel[3]>=250,
         logoSmileExact:logoSmilePixel[0]===13 && logoSmilePixel[1]===126 && logoSmilePixel[2]===137 && logoSmilePixel[3]>=250,
-        imageLoaded:Boolean(image?.complete && image.naturalWidth > 0),
         navDisplay:nav ? getComputedStyle(nav).display : "missing",
         toggleDisplay:toggle ? getComputedStyle(toggle).display : "missing",
         toggleExpanded:toggle?.getAttribute("aria-expanded"),
@@ -402,7 +406,7 @@ try {
         scrollWidth:document.documentElement.scrollWidth,
         clientWidth:document.documentElement.clientWidth,
         skipLink:Boolean(document.querySelector("a.skip[href='#main']")),
-        reducedMotion:matchMedia("(prefers-reduced-motion: reduce)").matches && Number.parseFloat(getComputedStyle(copy).animationDuration) <= 0.00002 && Number.parseFloat(getComputedStyle(visual).animationDuration) <= 0.00002,
+        reducedMotion:matchMedia("(prefers-reduced-motion: reduce)").matches && Number.parseFloat(getComputedStyle(copy).animationDuration) <= 0.00002,
         ctaHref:document.querySelector(".primary-cta")?.getAttribute("href") || "",
         heroCtaText:document.querySelector(".primary-cta")?.innerText?.trim() || "",
         heroCtaHref:document.querySelector(".primary-cta")?.getAttribute("href") || "",
@@ -418,12 +422,6 @@ try {
           const href=a.getAttribute("href") || "";
           return href.startsWith("tel:") || a.hostname==="wa.me" || a.hostname==="api.whatsapp.com";
         }),
-        photoLabelText:document.querySelector(".photo-label strong")?.innerText?.replace(/\\s+/g," ").trim() || "",
-        visualCaptionText:document.querySelector(".visual-caption")?.innerText?.trim() || "",
-        visualCaptionTransform:getComputedStyle(document.querySelector(".visual-caption")).transform,
-        visualCaptionRadius:Number.parseFloat(getComputedStyle(document.querySelector(".visual-caption")).borderTopLeftRadius),
-        visualCaptionBackground:getComputedStyle(document.querySelector(".visual-caption")).backgroundColor,
-        visualSideNoteDisplay:getComputedStyle(document.querySelector(".visual-side-note")).display,
         inquiryButton:Boolean(document.querySelector("#prepare-inquiry")),
         inquiryTopicLabel:Boolean(document.querySelector('label[for="inquiry-topic"]')),
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
@@ -502,7 +500,7 @@ try {
     assert.equal(state.eyebrowLabel, "دليل الابتسامة", `${vp.name}: hero eyebrow label changed`);
     assert.equal(state.eyebrowIndex, "01", `${vp.name}: hero eyebrow sequence marker is missing`);
     assert.ok(state.eyebrowToothIcon, `${vp.name}: dental tooth icon is missing`);
-    assert.ok(state.eyebrowStartAligned, `${vp.name}: hero eyebrow is not aligned to the RTL line start`);
+    assert.ok(state.eyebrowStartAligned, `${vp.name}: hero eyebrow is not centered with the text-first composition`);
     assert.ok(state.eyebrowNumberFirst, `${vp.name}: section number is not first at the RTL line start`);
     assert.ok(state.eyebrowGlassChip, `${vp.name}: eyebrow glass chip is not compact, translucent, and unframed internally`);
     assert.ok(state.eyebrowRule && state.eyebrowRule.betweenNumberAndIcon,
@@ -574,8 +572,13 @@ try {
     assert.ok(state.bodyFont.includes("IBM Plex Sans Arabic"), `${vp.name}: expected IBM Plex Sans Arabic body font`);
     assert.ok(state.headingFontLoaded, `${vp.name}: local Cairo heading font failed to load`);
     assert.ok(state.bodyFontLoaded, `${vp.name}: local IBM Plex Sans Arabic font failed to load`);
-    assert.equal(state.imageCount, 1, `${vp.name}: unexpected number of hero images`);
-    assert.ok(state.imageAlt.length > 10, `${vp.name}: image alt text is missing`);
+    assert.equal(state.imageCount, 0, `${vp.name}: Hero must not contain a photograph or replacement image`);
+    assert.equal(state.heroVisualNodeCount, 0, `${vp.name}: deleted Hero frame/decorative nodes remain`);
+    assert.equal(state.heroImagePreloadPresent, false, `${vp.name}: deleted Hero image preload remains`);
+    assert.equal(state.heroImageMarkupReferencePresent, false, `${vp.name}: deleted image URL remains in Hero markup`);
+    assert.equal(state.heroLegacyCssPresent, false, `${vp.name}: obsolete Hero image CSS remains`);
+    assert.equal(state.heroBottomItemCount, 3, `${vp.name}: the three approved Hero principles must remain`);
+    assert.equal(state.heroCopyCentered, true, `${vp.name}: text-first Hero copy is not centered within the available width`);
     assert.equal(state.ctaHref, "", `${vp.name}: demo hero CTA must not navigate to an unrelated section`);
     assert.equal(state.heroCtaText, "تواصل عبر واتساب", vp.name + ": hero CTA copy is incorrect");
     assert.ok(state.heroSecondaryCta, vp.name + ": the secondary evaluation link must remain visible");
@@ -615,12 +618,6 @@ try {
     assert.equal(audit.faq.referenceMargin,"24px", vp.name + ": reference note spacing changed");
     assert.ok(Number.parseFloat(audit.contactFooter.contactToFooter)>=52, vp.name + ": contact-to-footer separation is too tight");
     assert.equal(state.liveContactChannelPresent, false, `${vp.name}: demo must not contain a live WhatsApp or phone destination`);
-    assert.equal(state.visualCaptionText, "صورة توضيحية من Pexels؛ لا تمثل طبيبًا أو موظفًا بالعيادة.", `${vp.name}: stock image disclosure is unclear`);
-    assert.equal(state.visualCaptionTransform, "none", `${vp.name}: stock image disclosure is unnecessarily rotated`);
-    assert.ok(state.visualCaptionRadius >= 8, `${vp.name}: stock image disclosure needs a restrained rounded surface`);
-    assert.ok(state.visualCaptionBackground.startsWith("rgba(255, 255, 255"), `${vp.name}: stock image disclosure should use a light readable surface`);
-    if (vp.width <= 720) assert.equal(state.visualSideNoteDisplay, "none", `${vp.name}: decorative vertical note should be hidden on mobile`);
-    else assert.notEqual(state.visualSideNoteDisplay, "none", `${vp.name}: desktop visual note should remain visible`);
     assert.ok(state.inquiryButton && state.inquiryTopicLabel, `${vp.name}: interactive inquiry control or label missing`);
     const dialog=page.locator("#whatsapp-demo-dialog");
     const heroTrigger=page.locator(".primary-cta");
@@ -881,8 +878,7 @@ try {
     if (vp.width > 920) {
       assert.notEqual(state.navDisplay, "none", `${vp.name}: desktop navigation should be visible`);
       assert.equal(state.toggleDisplay, "none", `${vp.name}: mobile menu button should be hidden`);
-      assert.ok(state.copy.right <= state.visual.left + 1 || state.visual.right <= state.copy.left + 1,
-        `${vp.name}: hero text and image columns overlap`);
+      assert.ok(state.heroCopyCentered, `${vp.name}: text-first Hero must use the available desktop width symmetrically`);
 
       const firstLink=page.locator("#main-nav a").first();
       await firstLink.hover();
@@ -1040,13 +1036,7 @@ try {
     });
     await page.screenshot({ path: `${OUT}/${vp.name}.png`, fullPage: true, animations: "disabled" });
 
-    const imageLoad = await page.evaluate(() => {
-      const img = document.querySelector(".photo-frame img");
-      return { loaded:Boolean(img?.complete && img.naturalWidth>0), naturalWidth:img?.naturalWidth || 0, src:img?.currentSrc || img?.src || "" };
-    });
-    assert.ok(imageLoad.loaded, `${vp.name}: hero image failed to load`);
-    assert.ok(/w=(640|1100|1500)/.test(imageLoad.src), `${vp.name}: responsive hero image variant was not selected`);
-    results.push({ ...vp, ...state, headerShrink, headerConvergence, imageLoad, pageErrors, localErrors });
+    results.push({ ...vp, ...state, headerShrink, headerConvergence, pageErrors, localErrors });
     assert.equal(pageErrors.length, 0, `${vp.name}: JavaScript errors: ${pageErrors.join(" | ")}`);
     assert.equal(localErrors.length, 0, `${vp.name}: local resource errors: ${JSON.stringify(localErrors)}`);
     console.log(`[PASS] ${vp.name}: RTL, navigation typography and states, layout, anchors, menu, motion and overflow`);

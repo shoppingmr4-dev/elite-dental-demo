@@ -54,7 +54,6 @@ try {
       const title = document.querySelector("#hero-title");
       const logo = document.querySelector(".brand-mark img");
       const cta = document.querySelector(".header-action");
-      const heroImage = document.querySelector(".photo-frame img");
       const rect = element => {
         const r = element.getBoundingClientRect();
         return { left:r.left, right:r.right, width:r.width, height:r.height };
@@ -78,7 +77,18 @@ try {
         }),
         cta: rect(cta),
         logoLoaded: Boolean(logo?.complete && logo.naturalWidth > 0),
-        heroImageLoaded: Boolean(heroImage?.complete && heroImage.naturalWidth > 0),
+        heroImageCount: document.querySelectorAll(".hero img").length,
+        heroVisualNodeCount: document.querySelectorAll(".hero-visual,.photo-frame,.visual-backdrop,.visual-outline,.visual-index,.visual-caption,.visual-side-note,.photo-label").length,
+        heroImagePreloadPresent: [...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>link.href.includes("37458050")),
+        heroMarkupImageReferencePresent: Boolean(document.querySelector(".hero")?.innerHTML.includes("37458050")),
+        heroBottomItemCount: document.querySelectorAll(".hero-bottom-item").length,
+        heroCopyCentered: (() => {
+          const copy=title.closest(".hero-copy"),wrap=document.querySelector(".hero .wrap");
+          if(!copy||!wrap)return false;
+          const a=copy.getBoundingClientRect(),b=wrap.getBoundingClientRect();
+          return Math.abs((a.left+a.right)/2-(b.left+b.right)/2)<=2;
+        })(),
+        horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth + 1,
         markerSystem: {
           markers:[...document.querySelectorAll(".section-marker")].map(marker=>({
             number:marker.querySelector(".section-marker-number")?.innerText.trim()||"",
@@ -124,7 +134,13 @@ try {
     assert.ok(initial.bodyTextLength > 300, `${viewport.name}: document body appears blank`);
     assert.ok(initial.bodyHeight > viewport.height * 2, `${viewport.name}: full landing page did not load`);
     assert.ok(initial.logoLoaded, `${viewport.name}: local RUWA logo failed to load`);
-    assert.ok(initial.heroImageLoaded, `${viewport.name}: hero image failed to load`);
+    assert.equal(initial.heroImageCount, 0, `${viewport.name}: deleted Hero image is still present`);
+    assert.equal(initial.heroVisualNodeCount, 0, `${viewport.name}: image frame/decorative elements remain`);
+    assert.equal(initial.heroImagePreloadPresent, false, `${viewport.name}: deleted Hero preload remains`);
+    assert.equal(initial.heroMarkupImageReferencePresent, false, `${viewport.name}: image URL remains in Hero markup`);
+    assert.equal(initial.heroBottomItemCount, 3, `${viewport.name}: approved Hero principles are missing`);
+    assert.equal(initial.heroCopyCentered, true, `${viewport.name}: Hero copy is not centered`);
+    assert.equal(initial.horizontalOverflow, false, `${viewport.name}: horizontal overflow detected`);
     assert.deepEqual(initial.markerSystem.markers.map(({number,label,context})=>({number,label,context})),[
       {number:"01",label:"دليل الابتسامة",context:"hero"},
       {number:"02",label:"خطوات واضحة",context:"paper"},
@@ -225,7 +241,8 @@ try {
       bodyTextLength: initial.bodyTextLength,
       pageHeight: initial.bodyHeight,
       logoLoaded: initial.logoLoaded,
-      heroImageLoaded: initial.heroImageLoaded,
+      heroImageCount: initial.heroImageCount,
+      heroVisualNodeCount: initial.heroVisualNodeCount,
       initialFrameWidth: Number((initial.header.width-initial.panel.left-initial.panel.right).toFixed(2)),
       compactFrameWidth: Number(compact.panelWidth.toFixed(2)),
       leftInsetPx: Number(compact.panelLeft.toFixed(2)),
