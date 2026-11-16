@@ -286,6 +286,8 @@ body.dialog-open{overflow:hidden}
 }
 @media(prefers-reduced-motion:reduce){
  html{scroll-behavior:auto}
+ *,*:before,*:after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
+ .hero-copy{animation:none!important}
 }
 
 /* Cairo display + IBM Plex Sans Arabic interface typography. */
