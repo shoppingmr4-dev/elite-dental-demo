@@ -73,14 +73,59 @@ jobs:
       - name: Configure Lighthouse to use Playwright Chromium
         run: echo "CHROME_PATH=$(node -e "process.stdout.write(require('playwright').chromium.executablePath())")" >> "$GITHUB_ENV"
 
-      - name: Run mobile Lighthouse audit
+      - name: Run three controlled mobile Lighthouse audits
         run: |
           mkdir -p artifacts/whitening-2026
-          npx lighthouse http://127.0.0.1:4173/whitening-2026.html --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" --only-categories=performance,accessibility,best-practices,seo --output=html,json --output-path=./artifacts/whitening-2026/lighthouse-mobile --quiet
+          for run in 1 2 3; do
+            echo "Mobile Lighthouse run ${run}/3"
+            npx lighthouse http://127.0.0.1:4173/whitening-2026.html --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" --only-categories=performance,accessibility,best-practices,seo --output=html,json --output-path=./artifacts/whitening-2026/lighthouse-mobile-run-${run} --quiet
+          done
 
-      - name: Run desktop Lighthouse audit
+      - name: Run three controlled desktop Lighthouse audits
         run: |
-          npx lighthouse http://127.0.0.1:4173/whitening-2026.html --preset=desktop --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" --only-categories=performance,accessibility,best-practices,seo --output=html,json --output-path=./artifacts/whitening-2026/lighthouse-desktop --quiet
+          for run in 1 2 3; do
+            echo "Desktop Lighthouse run ${run}/3"
+            npx lighthouse http://127.0.0.1:4173/whitening-2026.html --preset=desktop --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" --only-categories=performance,accessibility,best-practices,seo --output=html,json --output-path=./artifacts/whitening-2026/lighthouse-desktop-run-${run} --quiet
+          done
+
+      - name: Summarize repeated LCP and Lighthouse metrics
+        if: always()
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const dir = 'artifacts/whitening-2026';
+          const summary = {};
+          for (const device of ['mobile', 'desktop']) {
+            const rows = [];
+            for (let run = 1; run <= 3; run++) {
+              const file = path.join(dir, `lighthouse-${device}-run-${run}.report.json`);
+              if (!fs.existsSync(file)) continue;
+              const report = JSON.parse(fs.readFileSync(file, 'utf8'));
+              const audits = report.audits || {};
+              const insight = audits['lcp-breakdown-insight']?.details?.items || [];
+              const table = insight.find(item => item.type === 'table')?.items || [];
+              const node = insight.find(item => item.type === 'node');
+              rows.push({
+                run,
+                scores: Object.fromEntries(['performance','accessibility','best-practices','seo'].map(key => [key, report.categories?.[key]?.score == null ? null : Math.round(report.categories[key].score * 100)])),
+                lcpMs: audits['largest-contentful-paint']?.numericValue ?? null,
+                fcpMs: audits['first-contentful-paint']?.numericValue ?? null,
+                speedIndexMs: audits['speed-index']?.numericValue ?? null,
+                tbtMs: audits['total-blocking-time']?.numericValue ?? null,
+                cls: audits['cumulative-layout-shift']?.numericValue ?? null,
+                lcpSelector: node?.selector ?? null,
+                lcpLabel: node?.nodeLabel ?? null,
+                lcpBox: node?.boundingRect ?? null,
+                lcpBreakdown: table.map(item => ({part:item.subpart, label:item.label, durationMs:item.duration}))
+              });
+            }
+            const values = rows.map(row => row.lcpMs).filter(Number.isFinite).sort((a,b)=>a-b);
+            summary[device] = { runs: rows, medianLcpMs: values.length ? values[Math.floor(values.length / 2)] : null };
+          }
+          fs.writeFileSync(path.join(dir, 'lighthouse-summary.json'), JSON.stringify(summary, null, 2));
+          console.log(JSON.stringify(summary, null, 2));
+          NODE
 
       - name: Publish screenshots and quality reports
         if: always()
