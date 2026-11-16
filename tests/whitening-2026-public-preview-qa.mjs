@@ -137,8 +137,10 @@ try {
     assert.ok(initial.markerSystem.markers.every(marker=>marker.numberWidth>=10&&marker.numberWidth<=22&&
       marker.numberHeight>=12&&marker.numberHeight<=18&&marker.numberBorder==="0px"&&
       marker.numberRadius==="0px"&&marker.numberBackground==="rgba(0, 0, 0, 0)"&&
-      marker.numberShadow==="none"&&marker.separatorWidth==="2px"&&marker.separatorHeight==="24px"),
-      `${viewport.name}: published marker numbers still have an enclosed badge or wrong separator geometry`);
+      marker.numberShadow==="none"&&marker.separatorWidth==="2px"&&
+      Number.parseFloat(marker.separatorHeight)>=14.2&&Number.parseFloat(marker.separatorHeight)<=14.6&&
+      Math.abs(Number.parseFloat(marker.separatorHeight)-marker.numberHeight)<=.2),
+      `${viewport.name}: published marker numbers must remain plain text and each separator must match the number height`);
     assert.ok(initial.markerSystem.underline&&initial.markerSystem.underline.widthRatio>=.95&&
       initial.markerSystem.underline.widthRatio<=1&&initial.markerSystem.underline.curveHeight>=4.5&&
       Number.parseFloat(initial.markerSystem.underline.strokeWidth)>=2.5&&
