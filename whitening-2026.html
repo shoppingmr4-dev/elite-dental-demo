@@ -788,8 +788,8 @@ body,button,input,select,textarea{font-family:var(--body)}
  position:fixed;right:calc(24px + env(safe-area-inset-right,0px));
  bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:40;
  width:58px;height:58px;display:grid;place-items:center;padding:0;
- border:1px solid #D8EEE0;border-radius:50%;background:#FFFFFF;color:#25D366;
- box-shadow:0 8px 24px rgba(20,45,56,.14);
+ border:1px solid #1DA851;border-radius:50%;background:#25D366;color:#FFFFFF;
+ box-shadow:0 8px 24px rgba(37,211,102,.26);
  opacity:0;visibility:hidden;pointer-events:none;transform:translateY(8px);
  transition:opacity .2s ease,transform .2s ease,visibility 0s linear .2s,
   background-color .2s ease,border-color .2s ease,box-shadow .2s ease;
@@ -799,13 +799,16 @@ body,button,input,select,textarea{font-family:var(--body)}
  opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0);
  transition-delay:0s;
 }
-.floating-whatsapp svg{display:block;width:29px;height:29px;flex:none;color:#25D366}
+.floating-whatsapp svg{display:block;width:29px;height:29px;flex:none;color:#FFFFFF}
 .floating-whatsapp:hover{
- background:#F2FBF5;border-color:#BFE6CC;
- box-shadow:0 11px 28px rgba(20,45,56,.19);transform:translateY(-2px);
+ background:#1DA851;border-color:#1DA851;
+ box-shadow:0 11px 28px rgba(29,168,81,.32);transform:translateY(-2px);
 }
-.floating-whatsapp:active{transform:translateY(0);box-shadow:0 4px 13px rgba(20,45,56,.15)}
-.floating-whatsapp:focus-visible{outline:3px solid rgba(37,211,102,.34);outline-offset:4px}
+.floating-whatsapp:active{
+ background:#178C43;border-color:#178C43;
+ transform:translateY(0);box-shadow:0 4px 13px rgba(29,168,81,.22);
+}
+.floating-whatsapp:focus-visible{outline:3px solid rgba(37,211,102,.42);outline-offset:4px}
 @media(max-width:720px){
  .floating-whatsapp{
   right:calc(16px + env(safe-area-inset-right,0px));
@@ -1324,29 +1327,34 @@ body,button,input,select,textarea{font-family:var(--body)}
 })();
 
 
-// Reveal the floating WhatsApp action only after the visitor has passed the Hero.
+// Reveal the floating WhatsApp action as soon as the original Hero CTA leaves the viewport.
 (function(){
- const hero=document.querySelector(".hero");
+ const heroCta=document.querySelector(".hero .whatsapp-cta");
  const button=document.querySelector(".floating-whatsapp");
- if(!hero||!button)return;
+ if(!heroCta||!button)return;
  const setVisible=visible=>{
   button.classList.toggle("is-visible",visible);
   button.setAttribute("aria-hidden",String(!visible));
   if(visible)button.removeAttribute("tabindex");
   else button.setAttribute("tabindex","-1");
  };
+ const hasPassedAboveViewport=rect=>rect.bottom<=0;
  if("IntersectionObserver" in window){
   const observer=new IntersectionObserver(entries=>{
    const entry=entries[0];
-   setVisible(entry.boundingClientRect.bottom<=0);
+   // Keep it hidden if the Hero CTA is visible or is still below the viewport.
+   // Reveal it only after that exact CTA has moved completely above the viewport.
+   setVisible(!entry.isIntersecting&&hasPassedAboveViewport(entry.boundingClientRect));
   },{threshold:0});
-  observer.observe(hero);
+  observer.observe(heroCta);
   window.addEventListener("pagehide",()=>observer.disconnect(),{once:true});
  }else{
   let frame=null;
   const update=()=>{
    frame=null;
-   setVisible(hero.getBoundingClientRect().bottom<=0);
+   const rect=heroCta.getBoundingClientRect();
+   const intersects=rect.bottom>0&&rect.top<window.innerHeight;
+   setVisible(!intersects&&hasPassedAboveViewport(rect));
   };
   const schedule=()=>{
    if(frame===null)frame=requestAnimationFrame(update);
