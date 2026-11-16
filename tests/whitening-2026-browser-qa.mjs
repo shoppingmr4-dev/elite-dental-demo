@@ -145,7 +145,9 @@ try {
 
       return {
         lang:document.documentElement.lang,
-        announcementText:document.querySelector(".announcement")?.innerText?.trim() || "",
+        announcementPresent:Boolean(document.querySelector(".announcement")),
+        announcementCssPresent:[...document.querySelectorAll("style")].some(style=>style.textContent.includes(".announcement")),
+        headerImmediatelyAfterSkip:document.querySelector(".skip")?.nextElementSibling===document.querySelector(".site-header"),
         headerPosition:getComputedStyle(document.querySelector(".site-header")).position,
         headerRect:rect(document.querySelector(".site-header")),
         headerInnerRect:rect(document.querySelector(".header-inner")),
@@ -297,6 +299,10 @@ try {
             number:number.innerText.trim(),label:label.innerText.trim(),context,
             markerHeight:markerBounds.height,markerWidth:markerBounds.width,
             numberWidth:numberBounds.width,numberHeight:numberBounds.height,
+            markerPadding:markerStyle.padding,markerGap:markerStyle.gap,
+            markerBorderColor:markerStyle.borderTopColor,markerShadow:markerStyle.boxShadow,
+            sectionBackgroundColor:sectionStyle.backgroundColor,
+            headingGap:(()=>{const heading=marker.parentElement?.querySelector("h1,h2");return heading?rect(heading).top-markerBounds.bottom:null;})(),
             numberRadius:numberStyle.borderRadius,numberBorderWidth:numberStyle.borderTopWidth,
             numberBackground:numberStyle.backgroundColor,numberColor:numberStyle.color,
             numberShadow:numberStyle.boxShadow,numberPadding:numberStyle.padding,
@@ -405,7 +411,10 @@ try {
     });
 
     assert.equal(state.lang, "ar-SA", `${vp.name}: Arabic language metadata missing`);
-    assert.equal(state.announcementText, "تبييض الأسنان يبدأ بفهم الحالة", `${vp.name}: announcement copy is incorrect`);
+    assert.equal(state.announcementPresent, false, `${vp.name}: the top announcement element must be completely removed`);
+    assert.equal(state.announcementCssPresent, false, `${vp.name}: obsolete announcement CSS must be removed`);
+    assert.equal(state.headerImmediatelyAfterSkip, true, `${vp.name}: floating header must directly follow the skip link with no reserved announcement band`);
+    assert.ok(state.headerRect.top>=0&&state.headerRect.top<=12, `${vp.name}: header should begin at the top without an empty announcement gap: ${JSON.stringify(state.headerRect)}`);
     assert.equal(state.headerPosition, "sticky", `${vp.name}: header should remain accessible while scrolling`);
     assert.ok(state.headerRect.width < state.heroWrapRect.width, `${vp.name}: floating header must be narrower than the hero container`);
     assert.equal(state.headerRect.height, state.headerInnerRect.height, `${vp.name}: header shell must reserve a stable layout height`);
@@ -489,6 +498,7 @@ try {
       vp.name + ": all seven numbers, Arabic labels, and contextual surfaces must match the approved sequence");
     assert.ok(state.allSectionMarkers.every(marker=>
       marker.markerHeight>=42&&marker.markerHeight<=46&&
+      marker.markerPadding==="4px 8px"&&marker.markerGap==="8px"&&
       marker.numberWidth>=10&&marker.numberWidth<=22&&
       marker.numberHeight>=12&&marker.numberHeight<=18&&
       marker.numberRadius==="0px"&&marker.numberBorderWidth==="0px"&&
@@ -501,7 +511,7 @@ try {
       marker.markerBorderWidth==="1px"&&marker.markerRadius==="999px"&&
       marker.backdropFilter.includes("blur")&&
       marker.numberContrast>=4.5&&marker.labelContrast>=4.5
-    ),vp.name + ": circular badge geometry, RTL order, vertical rule, glass frame, or AA contrast failed: " + JSON.stringify(state.allSectionMarkers));
+    ),vp.name + ": plain-text number geometry, capsule spacing, RTL order, vertical rule, glass frame, or AA contrast failed: " + JSON.stringify(state.allSectionMarkers));
     assert.equal(state.heroBackgroundHarmony.canvas,"#F4F7F6",`${vp.name}: canvas token drifted`);
     assert.equal(state.heroBackgroundHarmony.paper,"#FFFFFF",`${vp.name}: paper token drifted`);
     assert.equal(state.heroBackgroundHarmony.body,"rgb(244, 247, 246)",`${vp.name}: page canvas is no longer the intended soft mist tone`);

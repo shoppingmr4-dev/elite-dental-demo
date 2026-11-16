@@ -36,7 +36,6 @@ img{display:block;max-width:100%}
 .wrap{width:min(var(--max),calc(100% - var(--gutter)*2));margin-inline:auto}
 .skip{position:absolute;top:-100px;right:18px;z-index:100;padding:11px 15px;background:#fff;border-radius:10px}
 .skip:focus{top:12px}
-.announcement{min-height:32px;display:flex;align-items:center;justify-content:center;padding:6px 14px;background:var(--ink);color:#F8F5EC;text-align:center;font-size:11px;line-height:1.35;letter-spacing:0}
 .site-header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .header-inner{height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}
 .brand{display:flex;align-items:center;gap:11px;flex:none}
@@ -264,7 +263,6 @@ body.dialog-open{overflow:hidden}
  .hero h1{font-size:clamp(39px,5.7vw,58px)}
 }
 @media(max-width:720px){
- .announcement{min-height:30px;padding:6px 12px;font-size:10px}
  .header-inner{height:66px;gap:10px}
  .nav{display:none;position:absolute;z-index:2;top:calc(100% + 1px);right:var(--gutter);left:var(--gutter);flex-direction:column;align-items:stretch;gap:0;padding:8px;border:1px solid var(--line);border-radius:14px;background:var(--paper);box-shadow:0 18px 34px rgba(21,25,22,.12)}
  .nav.open{display:flex}
@@ -392,7 +390,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  .hero-title-benefit{font-size:.56em}
 }
 
-/* RUWA section markers: one RTL glass component with surface-aware circular number badges. */
+/* RUWA section markers: one RTL glass capsule with clear plain-text section numbers. */
 .section-marker,
 .eyebrow,
 .hero-eyebrow{
@@ -410,8 +408,6 @@ body,button,input,select,textarea{font-family:var(--body)}
  --marker-shell-bg:rgba(255,255,255,.76);
  --marker-shell-border:rgba(24,122,128,.20);
  --marker-shell-inset:rgba(255,255,255,.88);
- --marker-number-bg:#FFFFFF;
- --marker-number-border:rgba(24,122,128,.30);
  --marker-number-ink:#115A60;
  --marker-divider:#187A80;
  --marker-label:#304A54;
@@ -420,8 +416,6 @@ body,button,input,select,textarea{font-family:var(--body)}
  --marker-shell-bg:rgba(255,255,255,.84);
  --marker-shell-border:rgba(24,122,128,.16);
  --marker-shell-inset:rgba(255,255,255,.94);
- --marker-number-bg:#E3F2E9;
- --marker-number-border:rgba(24,122,128,.26);
  --marker-number-ink:#115A60;
  --marker-divider:#187A80;
  --marker-label:#304A54;
@@ -430,8 +424,6 @@ body,button,input,select,textarea{font-family:var(--body)}
  --marker-shell-bg:rgba(255,255,255,.72);
  --marker-shell-border:rgba(24,122,128,.18);
  --marker-shell-inset:rgba(255,255,255,.88);
- --marker-number-bg:#EFF7F2;
- --marker-number-border:rgba(24,122,128,.28);
  --marker-number-ink:#115A60;
  --marker-divider:#187A80;
  --marker-label:#304A54;
@@ -440,8 +432,6 @@ body,button,input,select,textarea{font-family:var(--body)}
  --marker-shell-bg:rgba(255,255,255,.075);
  --marker-shell-border:rgba(224,242,238,.28);
  --marker-shell-inset:rgba(255,255,255,.10);
- --marker-number-bg:rgba(255,255,255,.14);
- --marker-number-border:rgba(190,228,221,.66);
  --marker-number-ink:#F4F7F6;
  --marker-divider:#A7DCD5;
  --marker-label:#F4F7F6;
@@ -744,7 +734,6 @@ body,button,input,select,textarea{font-family:var(--body)}
 </head>
 <body>
 <a class="skip" href="#main">تجاوز إلى المحتوى</a>
-<div class="announcement">تبييض الأسنان يبدأ بفهم الحالة</div>
 <header class="site-header">
  <div class="header-inner">
   <a class="brand" href="#top">
