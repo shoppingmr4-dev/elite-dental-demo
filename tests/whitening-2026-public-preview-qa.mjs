@@ -84,8 +84,12 @@ try {
             number:marker.querySelector(".section-marker-number")?.innerText.trim()||"",
             label:marker.querySelector(".section-marker-label")?.innerText.trim()||"",
             context:[...marker.classList].find(name=>name.startsWith("section-marker--"))?.replace("section-marker--","")||"",
-            circleWidth:marker.querySelector(".section-marker-number")?.getBoundingClientRect().width||0,
-            circleHeight:marker.querySelector(".section-marker-number")?.getBoundingClientRect().height||0,
+            numberWidth:marker.querySelector(".section-marker-number")?.getBoundingClientRect().width||0,
+            numberHeight:marker.querySelector(".section-marker-number")?.getBoundingClientRect().height||0,
+            numberBorder:getComputedStyle(marker.querySelector(".section-marker-number")).borderTopWidth,
+            numberRadius:getComputedStyle(marker.querySelector(".section-marker-number")).borderRadius,
+            numberBackground:getComputedStyle(marker.querySelector(".section-marker-number")).backgroundColor,
+            numberShadow:getComputedStyle(marker.querySelector(".section-marker-number")).boxShadow,
             separatorWidth:getComputedStyle(marker.querySelector(".section-marker-divider")).width,
             separatorHeight:getComputedStyle(marker.querySelector(".section-marker-divider")).height
           })),
@@ -130,9 +134,11 @@ try {
       {number:"06",label:"توقعات واقعية",context:"dark"},
       {number:"07",label:"إجابات واضحة",context:"canvas"}
     ], `${viewport.name}: immutable preview does not render the complete approved seven-marker system`);
-    assert.ok(initial.markerSystem.markers.every(marker=>Math.abs(marker.circleWidth-34)<.5&&
-      Math.abs(marker.circleHeight-34)<.5&&marker.separatorWidth==="2px"&&marker.separatorHeight==="24px"),
-      `${viewport.name}: published section marker geometry is incorrect`);
+    assert.ok(initial.markerSystem.markers.every(marker=>marker.numberWidth>=10&&marker.numberWidth<=22&&
+      marker.numberHeight>=12&&marker.numberHeight<=18&&marker.numberBorder==="0px"&&
+      marker.numberRadius==="0px"&&marker.numberBackground==="rgba(0, 0, 0, 0)"&&
+      marker.numberShadow==="none"&&marker.separatorWidth==="2px"&&marker.separatorHeight==="24px"),
+      `${viewport.name}: published marker numbers still have an enclosed badge or wrong separator geometry`);
     assert.ok(initial.markerSystem.underline&&initial.markerSystem.underline.widthRatio>=.95&&
       initial.markerSystem.underline.widthRatio<=1&&initial.markerSystem.underline.curveHeight>=4.5&&
       Number.parseFloat(initial.markerSystem.underline.strokeWidth)>=2.5&&

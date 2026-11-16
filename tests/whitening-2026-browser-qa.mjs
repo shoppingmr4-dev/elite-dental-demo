@@ -299,6 +299,8 @@ try {
             numberWidth:numberBounds.width,numberHeight:numberBounds.height,
             numberRadius:numberStyle.borderRadius,numberBorderWidth:numberStyle.borderTopWidth,
             numberBackground:numberStyle.backgroundColor,numberColor:numberStyle.color,
+            numberShadow:numberStyle.boxShadow,numberPadding:numberStyle.padding,
+            numberMinWidth:numberStyle.minWidth,
             dividerWidth:dividerStyle.width,dividerHeight:dividerStyle.height,
             dividerVisualHeight:dividerBounds.height,dividerColor:dividerStyle.backgroundColor,
             dividerAngle,labelColor:labelStyle.color,
@@ -487,9 +489,12 @@ try {
       vp.name + ": all seven numbers, Arabic labels, and contextual surfaces must match the approved sequence");
     assert.ok(state.allSectionMarkers.every(marker=>
       marker.markerHeight>=42&&marker.markerHeight<=46&&
-      marker.numberWidth>=33.5&&marker.numberWidth<=34.5&&
-      marker.numberHeight>=33.5&&marker.numberHeight<=34.5&&
-      marker.numberRadius==="50%"&&marker.numberBorderWidth==="1px"&&
+      marker.numberWidth>=10&&marker.numberWidth<=22&&
+      marker.numberHeight>=12&&marker.numberHeight<=18&&
+      marker.numberRadius==="0px"&&marker.numberBorderWidth==="0px"&&
+      marker.numberBackground==="rgba(0, 0, 0, 0)"&&
+      marker.numberShadow==="none"&&marker.numberPadding==="0px"&&
+      marker.numberMinWidth==="0px"&&
       marker.numberAtRight&&marker.rtlOrder&&marker.centered&&
       marker.dividerWidth==="2px"&&marker.dividerHeight==="24px"&&
       marker.dividerAngle>=6&&marker.dividerAngle<=10&&

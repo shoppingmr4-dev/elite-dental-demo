@@ -449,10 +449,11 @@ body,button,input,select,textarea{font-family:var(--body)}
 
 .section-marker-number{
  display:inline-flex;flex:none;align-items:center;justify-content:center;
- width:34px;height:34px;padding:0;border:1px solid var(--marker-number-border);
- border-radius:50%;background:var(--marker-number-bg);color:var(--marker-number-ink);
- font-family:var(--display);font-size:11px;font-weight:800;line-height:1;
- letter-spacing:.015em;direction:ltr;font-variant-numeric:tabular-nums;
+ width:auto;height:auto;min-width:0;margin:0;padding:0;
+ border:0;border-radius:0;background:transparent;box-shadow:none;
+ color:var(--marker-number-ink);
+ font-family:var(--display);font-size:12px;font-weight:800;line-height:1.2;
+ letter-spacing:.025em;direction:ltr;font-variant-numeric:tabular-nums;
 }
 .section-marker-divider{
  display:block;flex:none;width:2px;height:24px;border-radius:999px;
