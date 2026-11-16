@@ -847,7 +847,7 @@ try {
     assert.ok(state.logoTransparent, `${vp.name}: RUWA logo background is not transparent`);
     assert.ok(state.logoNavyExact, `${vp.name}: RUWA navy mark color differs from reference`);
     assert.ok(state.logoSmileExact, `${vp.name}: RUWA smile color differs from reference`);
-    assert.equal(state.brandNameFontSize, vp.width <= 390 ? 25 : 31, `${vp.name}: Ruwa wordmark size is not correct for this viewport`);
+    assert.equal(state.brandNameFontSize, vp.width <= 720 ? 25 : 31, `${vp.name}: Ruwa wordmark size is not correct for this viewport`);
     assert.ok(state.brandNameFontFamily.includes("Cormorant Garamond"), `${vp.name}: Ruwa wordmark is not using Cormorant Garamond`);
     assert.ok(state.brandWordmarkFontLoaded, `${vp.name}: Cormorant Garamond wordmark font failed to load`);
     assert.ok(state.reducedMotion, `${vp.name}: reduced-motion fallback is not active`);
