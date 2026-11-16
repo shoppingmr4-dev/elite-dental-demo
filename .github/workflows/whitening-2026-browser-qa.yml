@@ -48,17 +48,44 @@ jobs:
       - name: Install Chromium for Playwright and Lighthouse
         run: npx playwright install --with-deps chromium
 
-      - name: Start a local preview server
+      - name: Start a compression-enabled local preview server
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/elite-whitening-http.log 2>&1 &
+          python3 - <<'PY' > /tmp/elite-whitening-http.log 2>&1 &
+          import gzip
+          import io
+          import os
+          from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+          from pathlib import Path
+
+          class GzipStaticHandler(SimpleHTTPRequestHandler):
+              compressed_extensions = {".html", ".css", ".js", ".svg", ".xml", ".json"}
+
+              def send_head(self):
+                  path = self.translate_path(self.path)
+                  accepts_gzip = "gzip" in self.headers.get("Accept-Encoding", "")
+                  if accepts_gzip and os.path.isfile(path) and Path(path).suffix.lower() in self.compressed_extensions:
+                      raw = Path(path).read_bytes()
+                      payload = gzip.compress(raw, compresslevel=9, mtime=0)
+                      self.send_response(200)
+                      self.send_header("Content-Type", self.guess_type(path))
+                      self.send_header("Content-Encoding", "gzip")
+                      self.send_header("Vary", "Accept-Encoding")
+                      self.send_header("Content-Length", str(len(payload)))
+                      self.end_headers()
+                      return io.BytesIO(payload)
+                  return super().send_head()
+
+          ThreadingHTTPServer(("127.0.0.1", 4173), GzipStaticHandler).serve_forever()
+          PY
           for attempt in $(seq 1 30); do
-            if curl --fail --silent http://127.0.0.1:4173/whitening-2026.html >/dev/null; then
-              exit 0
+            if curl --compressed --fail --silent http://127.0.0.1:4173/whitening-2026.html >/dev/null; then
+              break
             fi
             sleep 1
           done
+          curl --silent --head -H "Accept-Encoding: gzip" http://127.0.0.1:4173/whitening-2026.html | grep -qi "^Content-Encoding: gzip$"
           cat /tmp/elite-whitening-http.log
-          exit 1
+
 
       - name: Run browser checks at mobile, tablet and desktop sizes
         env:
@@ -76,9 +103,18 @@ jobs:
       - name: Run three controlled mobile Lighthouse audits
         run: |
           mkdir -p artifacts/whitening-2026
-          for run in 1 2 3; do
-            echo "Mobile Lighthouse run ${run}/3"
+          for run in 1 2 3 4 5; do
+            echo "Mobile Lighthouse run ${run}/5"
             npx lighthouse http://127.0.0.1:4173/whitening-2026.html --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" --only-categories=performance,accessibility,best-practices,seo --output=html,json --output-path=./artifacts/whitening-2026/lighthouse-mobile-run-${run} --quiet
+          done
+
+      - name: Run five mobile Lighthouse audits against the immutable public preview
+        env:
+          PUBLIC_PREVIEW_URL: https://rawcdn.githack.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/whitening-2026.html
+        run: |
+          for run in 1 2 3 4 5; do
+            echo "Public preview mobile Lighthouse run ${run}/5"
+            npx lighthouse "$PUBLIC_PREVIEW_URL" --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" --only-categories=performance,accessibility,best-practices,seo --output=html,json --output-path=./artifacts/whitening-2026/lighthouse-public-mobile-run-${run} --quiet
           done
 
       - name: Run three controlled desktop Lighthouse audits
@@ -95,11 +131,11 @@ jobs:
           const fs = require('node:fs');
           const path = require('node:path');
           const dir = 'artifacts/whitening-2026';
-          const summary = {};
-          for (const device of ['mobile', 'desktop']) {
+
+          function readRuns(prefix, count) {
             const rows = [];
-            for (let run = 1; run <= 3; run++) {
-              const file = path.join(dir, `lighthouse-${device}-run-${run}.report.json`);
+            for (let run = 1; run <= count; run++) {
+              const file = path.join(dir, `${prefix}-run-${run}.report.json`);
               if (!fs.existsSync(file)) continue;
               const report = JSON.parse(fs.readFileSync(file, 'utf8'));
               const audits = report.audits || {};
@@ -121,8 +157,14 @@ jobs:
               });
             }
             const values = rows.map(row => row.lcpMs).filter(Number.isFinite).sort((a,b)=>a-b);
-            summary[device] = { runs: rows, medianLcpMs: values.length ? values[Math.floor(values.length / 2)] : null };
+            return {runs:rows, medianLcpMs:values.length ? values[Math.floor(values.length / 2)] : null};
           }
+
+          const summary = {
+            localCompressedMobile: readRuns('lighthouse-mobile', 5),
+            immutablePublicPreviewMobile: readRuns('lighthouse-public-mobile', 5),
+            desktop: readRuns('lighthouse-desktop', 3)
+          };
           fs.writeFileSync(path.join(dir, 'lighthouse-summary.json'), JSON.stringify(summary, null, 2));
           console.log(JSON.stringify(summary, null, 2));
           NODE
