@@ -584,7 +584,7 @@ try {
     assert.ok(state.heroSecondaryCta.minHeight>=44, vp.name + ": secondary CTA click target must be at least 44px tall");
     assert.ok(state.heroSecondaryCta.gap>=7&&state.heroSecondaryCta.gap<=18,
       vp.name + ": primary/secondary CTA spacing is not balanced: " + JSON.stringify(state.heroSecondaryCta));
-    assert.equal(state.heroSecondaryCta.stacked,vp.width<=720, vp.name + ": CTA should stack only on narrow viewports");
+    assert.equal(state.heroSecondaryCta.stacked,vp.width<=920, vp.name + ": CTA should stack when the responsive Hero uses its compact layout");
     assert.equal(state.heroCtaHref, "", `${vp.name}: demo hero CTA must not contain a fake external destination`);
     assert.equal(state.heroCtaTag, "BUTTON", `${vp.name}: hero CTA must open the local demo dialog`);
     assert.ok(state.heroCtaWhatsAppIcon, `${vp.name}: WhatsApp brand icon is missing from hero CTA`);
