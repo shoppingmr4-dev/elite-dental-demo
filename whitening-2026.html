@@ -278,6 +278,8 @@ body.dialog-open{overflow:hidden}
  .header-action{min-height:40px;padding:0 13px;font-size:14px}
  .menu-toggle{display:block}
  .hero{padding-top:31px}
+ /* Render mobile hero content immediately; entrance opacity animations can postpone the first meaningful paint. */
+ .hero-copy,.photo-frame{animation:none}
  .hero-grid{grid-template-columns:1fr;gap:20px}
  .hero-copy{max-width:650px;margin-inline:auto;padding:0;text-align:center}
  .eyebrow{justify-content:center}
