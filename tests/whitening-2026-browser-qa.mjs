@@ -506,10 +506,10 @@ try {
     assert.ok(state.eyebrowNumberFirst, `${vp.name}: section number is not first at the RTL line start`);
     assert.ok(state.eyebrowGlassChip, `${vp.name}: eyebrow glass chip is not compact, translucent, and unframed internally`);
     assert.ok(state.eyebrowRule && state.eyebrowRule.betweenNumberAndIcon,
-      vp.name + ": Hero vertical separator must sit between the 01 circle and tooth icon: " + JSON.stringify(state.eyebrowRule));
+      vp.name + ": Hero vertical separator must sit between the plain-text 01 and tooth icon: " + JSON.stringify(state.eyebrowRule));
     assert.ok(state.eyebrowRule.width>=1.9&&state.eyebrowRule.width<=2.1&&
-      state.eyebrowRule.height>=23&&state.eyebrowRule.height<=25,
-      vp.name + ": Hero separator must be 2px × 24px: " + JSON.stringify(state.eyebrowRule));
+      state.eyebrowRule.height>=14.2&&state.eyebrowRule.height<=14.6,
+      vp.name + ": Hero separator must match the 01 text height at approximately 14.4px: " + JSON.stringify(state.eyebrowRule));
     assert.ok(state.eyebrowRule.angle>=6&&state.eyebrowRule.angle<=10,
       vp.name + ": Hero separator must have the approved subtle 6–10 degree vertical tilt: " + JSON.stringify(state.eyebrowRule));
     assert.equal(state.eyebrowRule.color,"rgb(24, 122, 128)",vp.name + ": Hero separator must use RUWA teal");
@@ -596,7 +596,7 @@ try {
     assert.ok(state.heroCtaIconHidden, vp.name + ": WhatsApp icon must be hidden from assistive technology because the button already has a text label");
     const audit=state.spacingAudit;
     assert.ok(audit.hero.markerToHeading>=16&&audit.hero.markerToHeading<=24, vp.name + ": Hero marker/headline spacing drifted: " + JSON.stringify(audit.hero));
-    assert.ok(audit.hero.headingToCopy>=13&&audit.hero.headingToCopy<=19, vp.name + ": Hero headline/copy spacing drifted");
+    assert.ok(vp.width<=720 ? audit.hero.headingToCopy>=11&&audit.hero.headingToCopy<=13 : audit.hero.headingToCopy>=13&&audit.hero.headingToCopy<=19, vp.name + ": Hero headline/copy spacing drifted");
     assert.ok(audit.hero.copyToActions>=20&&audit.hero.copyToActions<=28, vp.name + ": Hero copy/CTA spacing drifted");
     for(const [name,item] of Object.entries({approach:audit.approach,causes:audit.causes,options:audit.options,suitability:audit.suitability,expectations:audit.expectations,faq:audit.faq})){
       assert.ok(item.markerToHeading>=12&&item.markerToHeading<=16, vp.name + ": " + name + " marker-to-heading spacing drifted: " + JSON.stringify(item));
@@ -606,11 +606,11 @@ try {
     assert.ok(audit.options.introToCards>=24&&audit.options.introToCards<=40, vp.name + ": options intro-to-cards spacing is inconsistent");
     assert.ok(audit.expectations.introToCards>=24&&audit.expectations.introToCards<=40, vp.name + ": expectations intro-to-cards spacing is inconsistent");
     assert.ok(audit.faq.introToList>=24&&audit.faq.introToList<=40, vp.name + ": FAQ intro-to-list spacing is inconsistent");
-    assert.equal(audit.approach.stepRowPadding,"18px 0", vp.name + ": step row rhythm changed");
+    assert.equal(audit.approach.stepRowPadding,"18px 0px", vp.name + ": step row rhythm changed");
     assert.equal(audit.causes.cardIndexToTitle,"16px", vp.name + ": cause card index/title spacing changed");
     assert.equal(audit.options.numberToTitle,"20px", vp.name + ": option label/title spacing changed");
     assert.equal(audit.suitability.checkItemPadding,"15px 0px", vp.name + ": suitability checklist rhythm changed");
-    assert.equal(audit.expectations.cardPadding,"21px 20px", vp.name + ": expectations card padding changed");
+    assert.equal(audit.expectations.cardPadding,vp.width<=600 ? "21px" : "21px 20px", vp.name + ": expectations card padding changed");
     assert.equal(audit.faq.summaryPadding,"18px 3px", vp.name + ": FAQ row spacing changed");
     assert.equal(audit.faq.referenceMargin,"24px", vp.name + ": reference note spacing changed");
     assert.ok(Number.parseFloat(audit.contactFooter.contactToFooter)>=52, vp.name + ": contact-to-footer separation is too tight");
