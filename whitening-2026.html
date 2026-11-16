@@ -785,7 +785,7 @@ body,button,input,select,textarea{font-family:var(--body)}
 
 /* RUWA floating WhatsApp: compact circular action revealed after the Hero. */
 .floating-whatsapp{
- position:fixed;right:calc(24px + env(safe-area-inset-right,0px));
+ position:fixed;right:calc(14px + env(safe-area-inset-right,0px));
  bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:40;
  width:58px;height:58px;display:grid;place-items:center;padding:0;
  border:1px solid #1DA851;border-radius:50%;background:#25D366;color:#FFFFFF;
@@ -811,7 +811,7 @@ body,button,input,select,textarea{font-family:var(--body)}
 .floating-whatsapp:focus-visible{outline:3px solid rgba(37,211,102,.42);outline-offset:4px}
 @media(max-width:720px){
  .floating-whatsapp{
-  right:calc(16px + env(safe-area-inset-right,0px));
+  right:calc(10px + env(safe-area-inset-right,0px));
   bottom:calc(16px + env(safe-area-inset-bottom,0px));
   width:54px;height:54px;
  }
