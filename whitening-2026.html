@@ -821,7 +821,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  .floating-whatsapp{transition:none}
 }
 
-/* RUWA Hero principles: refined three-step information component. */
+/* RUWA Hero topic navigation: useful paths into the whitening guide. */
 .hero-bottom{
  display:grid;
  grid-template-columns:repeat(3,minmax(0,1fr));
@@ -842,17 +842,20 @@ body,button,input,select,textarea{font-family:var(--body)}
  justify-content:center;
  gap:12px;
  min-width:0;
- min-height:76px;
- padding:14px 18px;
+ min-height:72px;
+ padding:12px clamp(9px,1.45vw,18px);
  border:0;
+ border-radius:12px;
+ color:#304A54;
  text-align:right;
+ text-decoration:none;
+ transition:background-color .18s ease,color .18s ease;
 }
-.hero-bottom-item+.hero-bottom-item{border-right:0}
-.hero-bottom-item+.hero-bottom-item:before{
+.hero-bottom-item:nth-child(n+2)::before{
  content:"";
  position:absolute;
  top:50%;
- right:0;
+ inset-inline-start:0;
  width:1px;
  height:30px;
  background:#E6EEEB;
@@ -885,13 +888,21 @@ body,button,input,select,textarea{font-family:var(--body)}
  line-height:1.7;
  text-align:right;
 }
+.hero-bottom-item:hover{
+ background:rgba(227,242,233,.48);
+}
+.hero-bottom-item:hover span{color:#115A60}
+.hero-bottom-item:focus-visible{
+ outline:2px solid #187A80;
+ outline-offset:2px;
+}
 @media(max-width:920px){
  .hero-bottom{
   width:min(100%,1000px);
   padding:7px;
   margin-top:28px;
  }
- .hero-bottom-item{gap:10px;padding:12px 10px;min-height:72px}
+ .hero-bottom-item{gap:10px;padding:12px 10px;min-height:70px}
  .hero-bottom-item b{flex-basis:32px;width:32px;height:32px}
  .hero-bottom-item span{font-size:13px}
 }
@@ -904,7 +915,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   border-radius:16px;
  }
  .hero-bottom-item,
- .hero-bottom-item+.hero-bottom-item{
+ .hero-bottom-item:nth-child(n+2){
   display:flex;
   flex-direction:row;
   align-items:center;
@@ -912,11 +923,10 @@ body,button,input,select,textarea{font-family:var(--body)}
   gap:12px;
   min-height:58px;
   padding:12px 8px;
-  border:0;
-  border-bottom:1px solid #E6EEEB;
+  border-radius:0;
  }
- .hero-bottom-item+.hero-bottom-item:before{display:none}
- .hero-bottom-item:last-child{border-bottom:0}
+ .hero-bottom-item:nth-child(n+2){border-top:1px solid #E6EEEB}
+ .hero-bottom-item:nth-child(n+2)::before{display:none}
  .hero-bottom-item b{
   flex:0 0 32px;
   width:32px;
@@ -930,8 +940,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  }
 }
 @media(prefers-reduced-motion:reduce){
- .hero-bottom-item,
- .hero-bottom-item b{transition:none}
+ .hero-bottom-item{transition:none}
 }
 </style>
 </head>
@@ -985,11 +994,11 @@ body,button,input,select,textarea{font-family:var(--body)}
     </div>
     <div class="hero-visual" aria-hidden="true"></div>
    </div>
-   <div class="hero-bottom" aria-label="مبادئ التقييم">
-    <div class="hero-bottom-item"><b>01</b><span>فحص الأسنان واللثة</span></div>
-    <div class="hero-bottom-item"><b>02</b><span>فهم سبب تغيّر اللون</span></div>
-    <div class="hero-bottom-item"><b>03</b><span>مناقشة الخيارات المناسبة</span></div>
-   </div>
+   <nav class="hero-bottom" aria-label="استكشف موضوعات تبييض الأسنان">
+    <a class="hero-bottom-item" href="#causes"><b aria-hidden="true">01</b><span>أسباب تغيّر اللون</span></a>
+    <a class="hero-bottom-item" href="#options"><b aria-hidden="true">02</b><span>خيارات التبييض</span></a>
+    <a class="hero-bottom-item" href="#suitability"><b aria-hidden="true">03</b><span>ملاءمة التبييض لحالتك</span></a>
+   </nav>
   </div>
  </section>
  <section class="section approach" id="approach">
