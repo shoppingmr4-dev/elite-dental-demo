@@ -299,6 +299,7 @@ try {
             number:number.innerText.trim(),label:label.innerText.trim(),context,
             markerHeight:markerBounds.height,markerWidth:markerBounds.width,
             numberWidth:numberBounds.width,numberHeight:numberBounds.height,
+            numberLineHeight:numberStyle.lineHeight,
             markerPadding:markerStyle.padding,markerGap:markerStyle.gap,
             markerBorderColor:markerStyle.borderTopColor,markerShadow:markerStyle.boxShadow,
             sectionBackgroundColor:sectionStyle.backgroundColor,
@@ -328,6 +329,52 @@ try {
             borderRadius:style.borderRadius,backgroundColor:style.backgroundColor,
             backdropFilter:style.backdropFilter};
         }),
+        heroSecondaryCta:(()=>{
+          const link=document.querySelector(".hero-actions .text-link");
+          const button=document.querySelector(".hero-actions .primary-cta");
+          if(!link||!button)return null;
+          const lr=link.getBoundingClientRect(),br=button.getBoundingClientRect(),style=getComputedStyle(link);
+          const stacked=lr.top>=br.bottom-1;
+          const gap=stacked?lr.top-br.bottom:Math.max(0,br.left-lr.right,lr.left-br.right);
+          return {text:link.innerText.trim(),href:link.getAttribute("href"),minHeight:lr.height,
+            stacked,gap,display:style.display,flow:getComputedStyle(link.parentElement).flexDirection};
+        })(),
+        spacingAudit:(()=>{
+          const gap=(a,b)=>{
+            const first=document.querySelector(a),second=document.querySelector(b);
+            if(!first||!second)return null;
+            return Number((second.getBoundingClientRect().top-first.getBoundingClientRect().bottom).toFixed(2));
+          };
+          const style=selector=>{const element=document.querySelector(selector);return element?getComputedStyle(element):null;};
+          const pad=selector=>{const s=style(selector);return s?{top:s.paddingTop,bottom:s.paddingBottom}:null;};
+          return {
+            hero:{padding:pad(".hero"),markerToHeading:gap(".hero-eyebrow","#hero-title"),
+              headingToCopy:gap("#hero-title",".hero-lead"),copyToActions:gap(".hero-lead",".hero-actions")},
+            approach:{padding:pad("#approach"),markerToHeading:gap("#approach .section-marker","#approach h2"),
+              headingToCopy:gap("#approach h2","#approach .approach-intro p"),stepRowPadding:style(".step")?.padding||null,
+              stepTitleToCopy:gap(".step h3",".step p")},
+            causes:{padding:pad("#causes"),markerToHeading:gap("#causes .section-marker","#causes h2"),
+              headingToCopy:gap("#causes h2","#causes .section-head p"),introToCards:gap("#causes .section-head",".cause-grid"),
+              cardPadding:style(".info-card")?.padding||null,cardIndexToTitle:style(".info-card .card-index")?.marginBottom||null},
+            options:{padding:pad("#options"),markerToHeading:gap("#options .section-marker","#options h2"),
+              headingToCopy:gap("#options h2","#options .section-head p"),introToCards:gap("#options .section-head",".options-grid"),
+              cardPadding:style(".option-card")?.padding||null,numberToTitle:style(".option-card .option-number")?.marginBottom||null,
+              noteTopPadding:style(".option-card .option-note")?.paddingTop||null},
+            suitability:{padding:pad("#suitability"),markerToHeading:gap("#suitability .section-marker","#suitability h2"),
+              headingToCopy:gap("#suitability h2","#suitability .suitability-copy p"),gridGap:style(".suitability-grid")?.gap||null,
+              checkItemPadding:style(".check-item")?.padding||null,noteMargin:style(".clinical-note")?.marginTop||null},
+            expectations:{padding:pad("#expectations"),markerToHeading:gap("#expectations .section-marker","#expectations h2"),
+              headingToCopy:gap("#expectations h2","#expectations .section-head p"),
+              introToCards:gap("#expectations .section-head",".expect-grid"),cardPadding:style(".expect-card")?.padding||null},
+            faq:{padding:pad("#faq"),markerToHeading:gap("#faq .section-marker","#faq h2"),
+              headingToCopy:gap("#faq h2","#faq .section-head p"),introToList:gap("#faq .section-head",".faq-list"),
+              summaryPadding:style(".faq-item summary")?.padding||null,answerPadding:style(".faq-answer")?.padding||null,
+              referenceMargin:style(".reference-note")?.marginTop||null},
+            contactFooter:{paddingBottom:style(".contact-section")?.paddingBottom||null,
+              contactToFooter:gap(".contact-band",".footer"),contactGridGap:style(".contact-band")?.gap||null,
+              formGap:style(".inquiry-form")?.gap||null}
+          };
+        })(),
         copy:copy ? rect(copy) : null,
         visual:visual ? rect(visual) : null,
         imageCount:document.querySelectorAll(".photo-frame img").length,
@@ -506,7 +553,9 @@ try {
       marker.numberShadow==="none"&&marker.numberPadding==="0px"&&
       marker.numberMinWidth==="0px"&&
       marker.numberAtRight&&marker.rtlOrder&&marker.centered&&
-      marker.dividerWidth==="2px"&&marker.dividerHeight==="24px"&&
+      marker.dividerWidth==="2px"&&Math.abs(Number.parseFloat(marker.dividerHeight)-14.4)<.05&&
+      Math.abs(marker.dividerVisualHeight-marker.numberHeight)<=.6&&
+      Math.abs(Number.parseFloat(marker.numberLineHeight)-14.4)<.05&&
       marker.dividerAngle>=6&&marker.dividerAngle<=10&&
       marker.markerBorderWidth==="1px"&&marker.markerRadius==="999px"&&
       marker.backdropFilter.includes("blur")&&
@@ -528,7 +577,14 @@ try {
     assert.equal(state.imageCount, 1, `${vp.name}: unexpected number of hero images`);
     assert.ok(state.imageAlt.length > 10, `${vp.name}: image alt text is missing`);
     assert.equal(state.ctaHref, "", `${vp.name}: demo hero CTA must not navigate to an unrelated section`);
-    assert.equal(state.heroCtaText, "تواصل عبر واتساب", `${vp.name}: hero CTA copy is incorrect`);
+    assert.equal(state.heroCtaText, "تواصل عبر واتساب", vp.name + ": hero CTA copy is incorrect");
+    assert.ok(state.heroSecondaryCta, vp.name + ": the secondary evaluation link must remain visible");
+    assert.equal(state.heroSecondaryCta.text, "تعرّف على خطوات التقييم", vp.name + ": secondary CTA wording changed");
+    assert.equal(state.heroSecondaryCta.href, "#approach", vp.name + ": secondary CTA destination changed");
+    assert.ok(state.heroSecondaryCta.minHeight>=44, vp.name + ": secondary CTA click target must be at least 44px tall");
+    assert.ok(state.heroSecondaryCta.gap>=7&&state.heroSecondaryCta.gap<=18,
+      vp.name + ": primary/secondary CTA spacing is not balanced: " + JSON.stringify(state.heroSecondaryCta));
+    assert.equal(state.heroSecondaryCta.stacked,vp.width<=720, vp.name + ": CTA should stack only on narrow viewports");
     assert.equal(state.heroCtaHref, "", `${vp.name}: demo hero CTA must not contain a fake external destination`);
     assert.equal(state.heroCtaTag, "BUTTON", `${vp.name}: hero CTA must open the local demo dialog`);
     assert.ok(state.heroCtaWhatsAppIcon, `${vp.name}: WhatsApp brand icon is missing from hero CTA`);
@@ -537,7 +593,27 @@ try {
     assert.ok(state.heroCtaHeight >= 52, `${vp.name}: primary CTA hit area is too short`);
     assert.ok(state.heroCtaFontSize >= 14, `${vp.name}: primary CTA text is too small`);
     assert.ok(state.heroCtaRadius >= 999, `${vp.name}: primary CTA should retain its pill shape`);
-    assert.ok(state.heroCtaIconHidden, `${vp.name}: WhatsApp icon must be hidden from assistive technology because the button already has a text label`);
+    assert.ok(state.heroCtaIconHidden, vp.name + ": WhatsApp icon must be hidden from assistive technology because the button already has a text label");
+    const audit=state.spacingAudit;
+    assert.ok(audit.hero.markerToHeading>=16&&audit.hero.markerToHeading<=24, vp.name + ": Hero marker/headline spacing drifted: " + JSON.stringify(audit.hero));
+    assert.ok(audit.hero.headingToCopy>=13&&audit.hero.headingToCopy<=19, vp.name + ": Hero headline/copy spacing drifted");
+    assert.ok(audit.hero.copyToActions>=20&&audit.hero.copyToActions<=28, vp.name + ": Hero copy/CTA spacing drifted");
+    for(const [name,item] of Object.entries({approach:audit.approach,causes:audit.causes,options:audit.options,suitability:audit.suitability,expectations:audit.expectations,faq:audit.faq})){
+      assert.ok(item.markerToHeading>=12&&item.markerToHeading<=16, vp.name + ": " + name + " marker-to-heading spacing drifted: " + JSON.stringify(item));
+      assert.ok(item.headingToCopy>=9&&item.headingToCopy<=14, vp.name + ": " + name + " heading-to-copy spacing drifted: " + JSON.stringify(item));
+    }
+    assert.ok(audit.causes.introToCards>=24&&audit.causes.introToCards<=40, vp.name + ": causes intro-to-cards spacing is inconsistent");
+    assert.ok(audit.options.introToCards>=24&&audit.options.introToCards<=40, vp.name + ": options intro-to-cards spacing is inconsistent");
+    assert.ok(audit.expectations.introToCards>=24&&audit.expectations.introToCards<=40, vp.name + ": expectations intro-to-cards spacing is inconsistent");
+    assert.ok(audit.faq.introToList>=24&&audit.faq.introToList<=40, vp.name + ": FAQ intro-to-list spacing is inconsistent");
+    assert.equal(audit.approach.stepRowPadding,"18px 0", vp.name + ": step row rhythm changed");
+    assert.equal(audit.causes.cardIndexToTitle,"16px", vp.name + ": cause card index/title spacing changed");
+    assert.equal(audit.options.numberToTitle,"20px", vp.name + ": option label/title spacing changed");
+    assert.equal(audit.suitability.checkItemPadding,"15px 0px", vp.name + ": suitability checklist rhythm changed");
+    assert.equal(audit.expectations.cardPadding,"21px 20px", vp.name + ": expectations card padding changed");
+    assert.equal(audit.faq.summaryPadding,"18px 3px", vp.name + ": FAQ row spacing changed");
+    assert.equal(audit.faq.referenceMargin,"24px", vp.name + ": reference note spacing changed");
+    assert.ok(Number.parseFloat(audit.contactFooter.contactToFooter)>=52, vp.name + ": contact-to-footer separation is too tight");
     assert.equal(state.liveContactChannelPresent, false, `${vp.name}: demo must not contain a live WhatsApp or phone destination`);
     assert.equal(state.visualCaptionText, "صورة توضيحية من Pexels؛ لا تمثل طبيبًا أو موظفًا بالعيادة.", `${vp.name}: stock image disclosure is unclear`);
     assert.equal(state.visualCaptionTransform, "none", `${vp.name}: stock image disclosure is unnecessarily rotated`);
