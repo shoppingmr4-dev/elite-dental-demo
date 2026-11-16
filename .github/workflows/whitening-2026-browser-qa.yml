@@ -50,7 +50,7 @@ jobs:
 
       - name: Start a compression-enabled local preview server
         run: |
-          python3 - <<'PY' > /tmp/elite-whitening-http.log 2>&1 &
+          cat > /tmp/ruwa-gzip-server.py <<'PY'
           import gzip
           import io
           import os
@@ -64,8 +64,7 @@ jobs:
                   path = self.translate_path(self.path)
                   accepts_gzip = "gzip" in self.headers.get("Accept-Encoding", "")
                   if accepts_gzip and os.path.isfile(path) and Path(path).suffix.lower() in self.compressed_extensions:
-                      raw = Path(path).read_bytes()
-                      payload = gzip.compress(raw, compresslevel=9, mtime=0)
+                      payload = gzip.compress(Path(path).read_bytes(), compresslevel=9, mtime=0)
                       self.send_response(200)
                       self.send_header("Content-Type", self.guess_type(path))
                       self.send_header("Content-Encoding", "gzip")
@@ -77,15 +76,27 @@ jobs:
 
           ThreadingHTTPServer(("127.0.0.1", 4173), GzipStaticHandler).serve_forever()
           PY
+          python3 /tmp/ruwa-gzip-server.py > /tmp/elite-whitening-http.log 2>&1 &
+          echo $! > /tmp/ruwa-gzip-server.pid
+          ready=0
           for attempt in $(seq 1 30); do
-            if curl --compressed --fail --silent http://127.0.0.1:4173/whitening-2026.html >/dev/null; then
+            if curl --fail --silent http://127.0.0.1:4173/whitening-2026.html -o /dev/null; then
+              ready=1
               break
             fi
             sleep 1
           done
-          curl --silent --head -H "Accept-Encoding: gzip" http://127.0.0.1:4173/whitening-2026.html | grep -qi "^Content-Encoding: gzip$"
-          cat /tmp/elite-whitening-http.log
-
+          if [ "$ready" -ne 1 ]; then
+            cat /tmp/elite-whitening-http.log
+            exit 1
+          fi
+          headers="$(curl --fail --silent --head -H "Accept-Encoding: gzip" http://127.0.0.1:4173/whitening-2026.html)"
+          printf '%s\n' "$headers"
+          printf '%s\n' "$headers" | tr -d '\r' | grep -qi "Content-Encoding: gzip" || {
+            echo "The local preview server did not return gzip-encoded HTML."
+            cat /tmp/elite-whitening-http.log
+            exit 1
+          }
 
       - name: Run browser checks at mobile, tablet and desktop sizes
         env:
@@ -131,6 +142,7 @@ jobs:
           const fs = require('node:fs');
           const path = require('node:path');
           const dir = 'artifacts/whitening-2026';
+          fs.mkdirSync(dir, { recursive: true });
 
           function readRuns(prefix, count) {
             const rows = [];
