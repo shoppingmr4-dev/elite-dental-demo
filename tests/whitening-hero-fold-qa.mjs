@@ -54,6 +54,11 @@ try {
           opacity: Number(cs.opacity)
         };
       };
+      const heroPortrait=document.querySelector(".hero-portrait");
+      if(heroPortrait) await heroPortrait.decode();
+      const portrait=rect(".hero-portrait");
+      const visual=rect(".hero-visual");
+      const hero=rect(".hero");
       const header = rect(".site-header");
       const marker = rect(".hero-eyebrow");
       const heading = rect("#hero-title");
@@ -107,6 +112,8 @@ try {
       }
       if (scrollWidth > clientWidth + 1) issues.push(`horizontal overflow: ${scrollWidth}px > ${clientWidth}px`);
       if (pageYOffset !== 0) issues.push("page did not start at scroll position zero");
+      if (!portrait || portrait.width<=0 || portrait.height<=0 || portrait.display==="none" || portrait.visibility!=="visible" || portrait.opacity<=.99) issues.push("Hero dentist portrait is not visible");
+      if (!visual || !hero || portrait.top<hero.top-1 || portrait.bottom>hero.bottom+1 || portrait.left<visual.left-1 || portrait.right>visual.right+1) issues.push("Hero dentist portrait is not contained in its visual area");
       if (Math.abs(markerDesign.height - 40) > 0.5) issues.push(`Hero marker height should be 40px; got ${markerDesign.height}px`);
       if (markerDesign.labelFontSize !== "12px") issues.push(`Hero marker label should be 12px; got ${markerDesign.labelFontSize}`);
       if (markerDesign.labelColor !== "rgb(48, 74, 84)") issues.push("Hero marker label color changed unexpectedly");
@@ -123,6 +130,12 @@ try {
         paragraph,
         primary,
         secondary,
+        portrait,
+        portraitSource:heroPortrait?.getAttribute("src")||"",
+        portraitNaturalWidth:heroPortrait?.naturalWidth||0,
+        portraitNaturalHeight:heroPortrait?.naturalHeight||0,
+        portraitObjectFit:heroPortrait?getComputedStyle(heroPortrait).objectFit:"",
+        portraitAlt:heroPortrait?.getAttribute("alt")||"",
         allHeroContentVisible: issues.length === 0,
         issues,
         horizontalOverflow: scrollWidth - clientWidth

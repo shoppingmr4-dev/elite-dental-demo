@@ -411,9 +411,10 @@ try {
         heroImageMarkupReferencePresent:Boolean(document.querySelector(".hero")?.innerHTML.includes("assets/ruwa-dentist-hero.webp")),
         heroImageTransparentPixelAlpha:(()=>{
           try{
-            const canvas=document.createElement("canvas");canvas.width=canvas.height=1;
+            const canvas=document.createElement("canvas");
+            canvas.width=heroPortrait.naturalWidth;canvas.height=heroPortrait.naturalHeight;
             const context=canvas.getContext("2d",{willReadFrequently:true});
-            context.drawImage(heroPortrait,0,0,1,1,0,0,1,1);
+            context.drawImage(heroPortrait,0,0);
             return context.getImageData(0,0,1,1).data[3];
           }catch{return -1;}
         })(),
