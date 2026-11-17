@@ -9,6 +9,7 @@ on:
       - "assets/**"
       - "tests/whitening-2026-browser-qa.mjs"
       - "tests/whitening-2026-public-preview-qa.mjs"
+      - "tests/whitening-hero-fold-qa.mjs"
       - ".github/workflows/whitening-2026-browser-qa.yml"
   pull_request:
     types: [opened, synchronize, reopened, edited]
@@ -20,6 +21,7 @@ on:
       - "assets/elite-dental-mark.svg"
       - "tests/whitening-2026-browser-qa.mjs"
       - "tests/whitening-2026-public-preview-qa.mjs"
+      - "tests/whitening-hero-fold-qa.mjs"
       - ".github/workflows/whitening-2026-browser-qa.yml"
 
 permissions:
@@ -97,6 +99,11 @@ jobs:
             cat /tmp/elite-whitening-http.log
             exit 1
           }
+
+      - name: Verify complete RUWA Hero visibility above the fold at eight viewport sizes
+        env:
+          BASE_URL: http://127.0.0.1:4173/whitening-2026.html
+        run: node tests/whitening-hero-fold-qa.mjs
 
       - name: Run browser checks at mobile, tablet and desktop sizes
         env:

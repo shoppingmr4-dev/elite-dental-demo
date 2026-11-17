@@ -930,6 +930,59 @@ body,button,input,select,textarea{font-family:var(--body)}
 @media(prefers-reduced-motion:reduce){
  .hero-bottom-item{transition:none}
 }
+
+
+/* RUWA Hero first-screen refinement: keep the full message and both actions visible. */
+@media (min-width:721px) {
+ .hero {
+  padding-block:clamp(24px,3.2vw,42px) clamp(20px,2.5vw,32px);
+ }
+ .hero-copy {
+  padding-block:8px 20px;
+ }
+ .hero h1 {
+  margin-top:16px;
+  margin-bottom:12px;
+ }
+ .hero-actions {
+  margin-top:20px;
+ }
+}
+@media (min-width:721px) and (max-width:920px) {
+ .hero {
+  padding-block:26px 22px;
+ }
+ .hero-copy {
+  padding-block:0;
+ }
+}
+@media (max-width:720px) {
+ .hero {
+  padding-block:18px 20px;
+ }
+ .hero h1 {
+  margin:12px auto 8px;
+ }
+ .hero-lead {
+  line-height:1.9;
+ }
+ .hero-actions {
+  margin-top:15px;
+  gap:8px;
+ }
+}
+@media (max-width:390px) {
+ .hero {
+  padding-top:15px;
+ }
+ .hero h1 {
+  margin-top:10px;
+  margin-bottom:7px;
+ }
+ .hero-actions {
+  margin-top:13px;
+ }
+}
 </style>
 </head>
 <body>
