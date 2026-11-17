@@ -596,9 +596,9 @@ try {
     assert.equal(state.heroCopyLayoutValid, true, `${vp.name}: Hero copy is not aligned within its approved responsive column`);
     assert.equal(state.ctaHref, "", `${vp.name}: demo hero CTA must not navigate to an unrelated section`);
     assert.equal(state.heroCtaText, "تواصل عبر واتساب", vp.name + ": hero CTA copy is incorrect");
-    assert.ok(state.heroSecondaryCta, vp.name + ": the secondary evaluation link must remain visible");
-    assert.equal(state.heroSecondaryCta.text, "تعرّف على خطوات التقييم", vp.name + ": secondary CTA wording changed");
-    assert.equal(state.heroSecondaryCta.href, "#approach", vp.name + ": secondary CTA destination changed");
+    assert.ok(state.heroSecondaryCta, vp.name + ": the secondary consultation link must remain visible");
+    assert.equal(state.heroSecondaryCta.text, "اطلب استشارة", vp.name + ": secondary consultation CTA wording changed");
+    assert.equal(state.heroSecondaryCta.href, "#consultation", vp.name + ": secondary consultation CTA destination changed");
     assert.ok(state.heroSecondaryCta.minHeight>=44, vp.name + ": secondary CTA click target must be at least 44px tall");
     assert.ok(state.heroSecondaryCta.gap>=7&&state.heroSecondaryCta.gap<=18,
       vp.name + ": primary/secondary CTA spacing is not balanced: " + JSON.stringify(state.heroSecondaryCta));
