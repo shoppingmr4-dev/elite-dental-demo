@@ -53,6 +53,9 @@ try {
           boxShadow:c.boxShadow,display:c.display
         };
       };
+      const pageSectionOrder=[...document.querySelectorAll("main > section")].map(section=>section.id);
+      const allIds=[...document.querySelectorAll("[id]")].map(element=>element.id);
+      const duplicateIds=[...new Set(allIds.filter((id,index)=>allIds.indexOf(id)!==index))];
       const sections=ids.map(id=>{
         const el=document.getElementById(id);
         if(!el)return {id,missing:true};
@@ -83,6 +86,7 @@ try {
       })).slice(0,-1);
       return {
         viewport:{width:innerWidth,height:innerHeight},documentHeight:document.documentElement.scrollHeight,
+        pageSectionOrder,duplicateIds,
         horizontalOverflow:round(scrollWidth-clientWidth),sections,sectionTransitions,
         images,brokenAnchors,emptyControls,
         counts:{sections:ids.length,steps:document.querySelectorAll(".step").length,causeCards:document.querySelectorAll(".info-card").length,
@@ -104,6 +108,8 @@ try {
     const problems=[];
     if(metrics.horizontalOverflow>1)problems.push("horizontal overflow "+metrics.horizontalOverflow+"px");
     if(metrics.sections.some(s=>s.missing))problems.push("missing section");
+    if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","approach","causes","options","suitability","expectations","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
+    if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");
     if(metrics.brokenAnchors.length)problems.push("broken in-page anchors");
     if(metrics.images.some(i=>!i.complete||i.naturalWidth===0))problems.push("broken image asset");
     if(errors.length)problems.push("JavaScript errors");
