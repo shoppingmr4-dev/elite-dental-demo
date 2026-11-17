@@ -255,7 +255,7 @@ try {
           const b=getComputedStyle(badge),i=getComputedStyle(icon);
           const svg=icon.querySelector("svg");
           return b.backgroundColor!=="rgba(0, 0, 0, 0)"&&b.backdropFilter.includes("blur")&&
-            Number.parseFloat(b.height)>=42&&Number.parseFloat(b.height)<=46&&b.borderTopWidth==="1px"&&
+            Number.parseFloat(b.height)>=38&&Number.parseFloat(b.height)<=42&&b.borderTopWidth==="1px"&&
             i.backgroundColor==="rgba(0, 0, 0, 0)"&&i.borderTopWidth==="0px"&&
             svg&&Number.parseFloat(getComputedStyle(svg).width)<=16;
         })()),
@@ -273,6 +273,7 @@ try {
           const values=matrix?matrix[1].split(",").map(Number):[];
           const dividerAngle=values.length>=2?Math.atan2(values[1],values[0])*180/Math.PI:0;
           const context=[...marker.classList].find(name=>name.startsWith("section-marker--"))?.replace("section-marker--","")||"";
+          const isHero=marker.classList.contains("hero-eyebrow");
           const rgba=value=>{
             const parts=value.match(/[\d.]+/g)?.map(Number)||[0,0,0,1];
             return [parts[0]||0,parts[1]||0,parts[2]||0,parts.length>3?parts[3]:1];
@@ -296,7 +297,7 @@ try {
           const numberBg=composite(rgba(numberStyle.backgroundColor),surfaceBg);
           const expectedCenter=markerBounds.top+markerBounds.height/2;
           return {
-            number:number.innerText.trim(),label:label.innerText.trim(),context,
+            number:number.innerText.trim(),label:label.innerText.trim(),context,isHero,
             markerHeight:markerBounds.height,markerWidth:markerBounds.width,
             numberWidth:numberBounds.width,numberHeight:numberBounds.height,
             numberLineHeight:numberStyle.lineHeight,
@@ -548,24 +549,26 @@ try {
     assert.equal(state.allSectionMarkers.length,7,vp.name + ": all seven numbered markers must be present");
     assert.deepEqual(state.allSectionMarkers.map(({number,label,context})=>({number,label,context})),expectedMarkers,
       vp.name + ": all seven numbers, Arabic labels, and contextual surfaces must match the approved sequence");
-    assert.ok(state.allSectionMarkers.every(marker=>
-      marker.markerHeight>=42&&marker.markerHeight<=46&&
-      marker.markerPadding==="4px 8px"&&marker.markerGap==="8px"&&
-      marker.numberWidth>=10&&marker.numberWidth<=22&&
-      marker.numberHeight>=12&&marker.numberHeight<=18&&
-      marker.numberRadius==="0px"&&marker.numberBorderWidth==="0px"&&
-      marker.numberBackground==="rgba(0, 0, 0, 0)"&&
-      marker.numberShadow==="none"&&marker.numberPadding==="0px"&&
-      marker.numberMinWidth==="0px"&&
-      marker.numberAtRight&&marker.rtlOrder&&marker.centered&&
-      marker.dividerWidth==="2px"&&Math.abs(Number.parseFloat(marker.dividerHeight)-14.4)<.05&&
-      Math.abs(marker.dividerVisualHeight-marker.numberHeight)<=.6&&
-      Math.abs(Number.parseFloat(marker.numberLineHeight)-14.4)<.05&&
-      marker.dividerAngle>=6&&marker.dividerAngle<=10&&
-      marker.markerBorderWidth==="1px"&&marker.markerRadius==="999px"&&
-      marker.backdropFilter.includes("blur")&&
-      marker.numberContrast>=4.5&&marker.labelContrast>=4.5
-    ),vp.name + ": plain-text number geometry, capsule spacing, RTL order, vertical rule, glass frame, or AA contrast failed: " + JSON.stringify(state.allSectionMarkers));
+    assert.ok(state.allSectionMarkers.every(marker=>{
+      const approvedCapsule=marker.isHero
+        ? marker.markerHeight>=38&&marker.markerHeight<=42&&marker.markerPadding==="4px 10px"&&marker.markerGap==="7px"
+        : marker.markerHeight>=42&&marker.markerHeight<=46&&marker.markerPadding==="4px 8px"&&marker.markerGap==="8px";
+      return approvedCapsule&&
+        marker.numberWidth>=10&&marker.numberWidth<=22&&
+        marker.numberHeight>=12&&marker.numberHeight<=18&&
+        marker.numberRadius==="0px"&&marker.numberBorderWidth==="0px"&&
+        marker.numberBackground==="rgba(0, 0, 0, 0)"&&
+        marker.numberShadow==="none"&&marker.numberPadding==="0px"&&
+        marker.numberMinWidth==="0px"&&
+        marker.numberAtRight&&marker.rtlOrder&&marker.centered&&
+        marker.dividerWidth==="2px"&&Math.abs(Number.parseFloat(marker.dividerHeight)-14.4)<.05&&
+        Math.abs(marker.dividerVisualHeight-marker.numberHeight)<=.6&&
+        Math.abs(Number.parseFloat(marker.numberLineHeight)-14.4)<.05&&
+        marker.dividerAngle>=6&&marker.dividerAngle<=10&&
+        marker.markerBorderWidth==="1px"&&marker.markerRadius==="999px"&&
+        marker.backdropFilter.includes("blur")&&
+        marker.numberContrast>=4.5&&marker.labelContrast>=4.5;
+    }),vp.name + ": plain-text number geometry, capsule spacing, RTL order, vertical rule, glass frame, or AA contrast failed: " + JSON.stringify(state.allSectionMarkers));
     assert.equal(state.heroBackgroundHarmony.canvas,"#F4F7F6",`${vp.name}: canvas token drifted`);
     assert.equal(state.heroBackgroundHarmony.paper,"#FFFFFF",`${vp.name}: paper token drifted`);
     assert.equal(state.heroBackgroundHarmony.body,"rgb(244, 247, 246)",`${vp.name}: page canvas is no longer the intended soft mist tone`);
