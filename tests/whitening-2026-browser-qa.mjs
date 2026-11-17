@@ -248,17 +248,22 @@ try {
           const label=document.querySelector(".hero-eyebrow-label");
           return number&&icon&&label&&rect(number).right>=rect(icon).right&&rect(icon).right>=rect(label).right;
         })()),
-        eyebrowGlassChip:Boolean((()=>{
+        eyebrowGlassChip:(()=>{
           const badge=document.querySelector(".hero-eyebrow");
           const icon=document.querySelector(".hero-eyebrow-icon");
-          if(!badge||!icon)return false;
+          if(!badge||!icon)return {valid:false,reason:"missing badge or icon"};
           const b=getComputedStyle(badge),i=getComputedStyle(icon);
           const svg=icon.querySelector("svg");
-          return b.backgroundColor!=="rgba(0, 0, 0, 0)"&&b.backdropFilter.includes("blur")&&
+          const metrics={
+            backgroundColor:b.backgroundColor,backdropFilter:b.backdropFilter,height:b.height,
+            borderTopWidth:b.borderTopWidth,iconBackground:i.backgroundColor,
+            iconBorderTopWidth:i.borderTopWidth,svgWidth:svg?getComputedStyle(svg).width:null
+          };
+          return {valid:b.backgroundColor!=="rgba(0, 0, 0, 0)"&&b.backdropFilter.includes("blur")&&
             Number.parseFloat(b.height)>=38&&Number.parseFloat(b.height)<=42&&b.borderTopWidth==="1px"&&
             i.backgroundColor==="rgba(0, 0, 0, 0)"&&i.borderTopWidth==="0px"&&
-            svg&&Number.parseFloat(getComputedStyle(svg).width)<=16;
-        })()),
+            svg&&Number.parseFloat(getComputedStyle(svg).width)<=16,...metrics};
+        })(),
         allSectionMarkers:[...document.querySelectorAll(".section-marker")].map(marker=>{
           const number=marker.querySelector(".section-marker-number");
           const divider=marker.querySelector(".section-marker-divider");
@@ -510,7 +515,7 @@ try {
     assert.ok(state.eyebrowToothIcon, `${vp.name}: dental tooth icon is missing`);
     assert.ok(state.eyebrowStartAligned, `${vp.name}: hero eyebrow is not centered with the text-first composition`);
     assert.ok(state.eyebrowNumberFirst, `${vp.name}: section number is not first at the RTL line start`);
-    assert.ok(state.eyebrowGlassChip, `${vp.name}: eyebrow glass chip is not compact, translucent, and unframed internally`);
+    assert.ok(state.eyebrowGlassChip.valid, `${vp.name}: eyebrow glass chip failed: ${JSON.stringify(state.eyebrowGlassChip)}`);
     assert.ok(state.eyebrowRule && state.eyebrowRule.betweenNumberAndIcon,
       vp.name + ": Hero vertical separator must sit between the plain-text 01 and tooth icon: " + JSON.stringify(state.eyebrowRule));
     assert.ok(state.eyebrowRule.width>=1.9&&state.eyebrowRule.width<=2.1&&
