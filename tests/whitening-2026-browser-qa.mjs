@@ -579,7 +579,7 @@ try {
     assert.equal(state.heroBackgroundHarmony.body,"rgb(244, 247, 246)",`${vp.name}: page canvas is no longer the intended soft mist tone`);
     assert.equal(state.heroBackgroundHarmony.headerSurface,"rgba(255, 255, 255, 0.93)",`${vp.name}: glass header surface changed`);
     assert.equal(state.heroBackgroundHarmony.headerBorder,"rgba(221, 230, 227, 0.92)",`${vp.name}: glass header border changed`);
-    assert.equal(state.heroBackgroundHarmony.heroBottom,"rgba(255, 255, 255, 0.22)",`${vp.name}: hero-bottom surface changed`);
+    assert.equal(state.heroBackgroundHarmony.heroBottom,"rgba(0, 0, 0, 0)",`${vp.name}: frameless Hero topic navigation gained an unintended background`);
     assert.equal(state.heroBackgroundHarmony.approach,"rgb(255, 255, 255)",`${vp.name}: next section surface changed`);
     assert.ok(state.heroBackgroundHarmony.heroGradients.includes("radial-gradient"),
       `${vp.name}: subtle hero background gradients are missing`);
