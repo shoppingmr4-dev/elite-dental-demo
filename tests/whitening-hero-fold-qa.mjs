@@ -60,6 +60,40 @@ try {
       const paragraph = rect(".hero-lead");
       const primary = rect(".hero-actions .primary-cta");
       const secondary = rect(".hero-actions .consultation-cta");
+      const markerNode = document.querySelector(".hero-eyebrow");
+      const markerLabel = document.querySelector(".hero-eyebrow-label");
+      const markerNumber = document.querySelector(".hero-eyebrow-index");
+      const markerIcon = document.querySelector(".hero-eyebrow-icon");
+      const markerDivider = document.querySelector(".hero-eyebrow-rule");
+      const markerCss = getComputedStyle(markerNode);
+      const labelCss = getComputedStyle(markerLabel);
+      const numberCss = getComputedStyle(markerNumber);
+      const iconCss = getComputedStyle(markerIcon);
+      const heroCss = getComputedStyle(document.querySelector(".hero"));
+      const heroRingCss = getComputedStyle(document.querySelector(".hero"), "::before");
+      const markerDesign = {
+        height: Number(markerCss.height.replace("px", "")),
+        width: Number(markerCss.width.replace("px", "")),
+        radius: markerCss.borderTopLeftRadius,
+        background: markerCss.backgroundColor,
+        border: markerCss.border,
+        borderColor: markerCss.borderTopColor,
+        padding: markerCss.padding,
+        gap: markerCss.gap,
+        backdropFilter: markerCss.backdropFilter,
+        labelFontSize: labelCss.fontSize,
+        labelColor: labelCss.color,
+        labelWeight: labelCss.fontWeight,
+        numberFontSize: numberCss.fontSize,
+        numberColor: numberCss.color,
+        dividerColor: getComputedStyle(markerDivider).backgroundColor,
+        iconColor: iconCss.color,
+        iconSize: rect(".hero-eyebrow-icon"),
+        heroBackgroundColor: heroCss.backgroundColor,
+        heroBackgroundImage: heroCss.backgroundImage,
+        heroRingBorderColor: heroRingCss.borderTopColor,
+        heroRingShadow: heroRingCss.boxShadow
+      };
       const visible = item => Boolean(item && item.width > 0 && item.height > 0 &&
         item.display !== "none" && item.visibility !== "hidden" && item.opacity > 0.95);
       const insideViewport = item => visible(item) && item.top >= -0.5 && item.bottom <= window.innerHeight + 0.5;
@@ -73,11 +107,18 @@ try {
       }
       if (scrollWidth > clientWidth + 1) issues.push(`horizontal overflow: ${scrollWidth}px > ${clientWidth}px`);
       if (pageYOffset !== 0) issues.push("page did not start at scroll position zero");
+      if (Math.abs(markerDesign.height - 40) > 0.5) issues.push(`Hero marker height should be 40px; got ${markerDesign.height}px`);
+      if (markerDesign.labelFontSize !== "12px") issues.push(`Hero marker label should be 12px; got ${markerDesign.labelFontSize}`);
+      if (markerDesign.labelColor !== "rgb(48, 74, 84)") issues.push("Hero marker label color changed unexpectedly");
+      if (markerDesign.background !== "rgba(227, 242, 233, 0.78)") issues.push(`Hero marker surface should use the approved pale-mint tint; got ${markerDesign.background}`);
+      if (markerDesign.gap !== "7px") issues.push(`Hero marker internal gap should be 7px; got ${markerDesign.gap}`);
+      if (markerDesign.iconSize.width !== 17 || markerDesign.iconSize.height !== 17) issues.push("Hero marker tooth icon should measure 17 × 17px");
       return {
         viewport: { width: innerWidth, height: innerHeight },
         scrollY: pageYOffset,
         header,
         marker,
+        markerDesign,
         heading,
         paragraph,
         primary,
@@ -99,7 +140,7 @@ try {
       failures.push({ viewport: vp.name, issues: [...metrics.issues, ...pageErrors.map(error => `JavaScript error: ${error}`)] });
       console.log(`[FAIL] ${vp.name}: ${JSON.stringify({ issues: metrics.issues, heading: metrics.heading, paragraph: metrics.paragraph, primary: metrics.primary, secondary: metrics.secondary })}`);
     } else {
-      console.log(`[PASS] ${vp.name}: headline, paragraph, both complete CTAs, header clearance, and horizontal overflow`);
+      console.log(`[PASS] ${vp.name}: Hero marker mint-glass proportions, typography, icon, background, headline, paragraph, complete CTAs and overflow`);
     }
     await page.close();
   }
