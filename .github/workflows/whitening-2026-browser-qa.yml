@@ -10,6 +10,7 @@ on:
       - "tests/whitening-2026-browser-qa.mjs"
       - "tests/whitening-2026-public-preview-qa.mjs"
       - "tests/whitening-hero-fold-qa.mjs"
+      - "tests/whitening-full-page-visual-audit.mjs"
       - ".github/workflows/whitening-2026-browser-qa.yml"
   pull_request:
     types: [opened, synchronize, reopened, edited]
@@ -22,6 +23,7 @@ on:
       - "tests/whitening-2026-browser-qa.mjs"
       - "tests/whitening-2026-public-preview-qa.mjs"
       - "tests/whitening-hero-fold-qa.mjs"
+      - "tests/whitening-full-page-visual-audit.mjs"
       - ".github/workflows/whitening-2026-browser-qa.yml"
 
 permissions:
@@ -99,6 +101,11 @@ jobs:
             cat /tmp/elite-whitening-http.log
             exit 1
           }
+
+      - name: Capture and audit every RUWA content section across desktop, tablet and mobile
+        env:
+          BASE_URL: http://127.0.0.1:4173/whitening-2026.html
+        run: node tests/whitening-full-page-visual-audit.mjs
 
       - name: Verify complete RUWA Hero visibility above the fold at eight viewport sizes
         env:
