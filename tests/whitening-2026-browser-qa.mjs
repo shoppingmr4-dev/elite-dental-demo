@@ -85,7 +85,7 @@ async function captureHeader(page, path) {
   });
   return page.evaluate(() => ({
     scrollY: window.scrollY,
-    compact: document.querySelector(".site-header")?.classList.contains("is-compact") || false
+    compact: Number.parseFloat(getComputedStyle(document.querySelector(".site-header")).getPropertyValue("--header-progress")) >= 0.999
   }));
 }
 
@@ -376,14 +376,19 @@ try {
           };
         })(),
         copy:copy ? rect(copy) : null,
-        heroCopyCentered:Boolean(copy && Math.abs((rect(copy).left+rect(copy).right)/2 -
-          (rect(document.querySelector(".hero .wrap")).left+rect(document.querySelector(".hero .wrap")).right)/2) <= 2),
-        heroVisualNodeCount:document.querySelectorAll(".hero-visual,.photo-frame,.visual-backdrop,.visual-outline,.visual-index,.visual-caption,.visual-side-note,.photo-label").length,
+        heroCopyLayoutValid:Boolean(copy && (() => {
+          const copyRect=rect(copy),wrapRect=rect(document.querySelector(".hero .wrap")),gridRect=rect(document.querySelector(".hero-grid"));
+          const withinWrap=copyRect.left>=wrapRect.left-1&&copyRect.right<=wrapRect.right+1;
+          const centered=Math.abs((copyRect.left+copyRect.right)/2-(wrapRect.left+wrapRect.right)/2)<=2;
+          const alignedToRightColumn=Math.abs(copyRect.right-gridRect.right)<=2;
+          return withinWrap&&(innerWidth<=720?centered:alignedToRightColumn);
+        })()),
+        heroVisualNodeCount:document.querySelectorAll(".photo-frame,.visual-backdrop,.visual-outline,.visual-index,.visual-caption,.visual-side-note,.photo-label").length,
         imageCount:document.querySelectorAll(".hero img").length,
         heroImagePreloadPresent:[...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>link.href.includes("37458050")),
         heroImageMarkupReferencePresent:Boolean(document.querySelector(".hero")?.innerHTML.includes("37458050")),
         heroBottomItemCount:document.querySelectorAll(".hero-bottom-item").length,
-        heroLegacyCssPresent:[".hero-grid",".hero-visual",".photo-frame",".visual-backdrop",".visual-outline",".visual-index",".visual-caption",".visual-side-note",".photo-label","photoEnter"].some(selector=>
+        heroLegacyCssPresent:[".photo-frame",".visual-backdrop",".visual-outline",".visual-index",".visual-caption",".visual-side-note",".photo-label","photoEnter"].some(selector=>
           [...document.querySelectorAll("style")].some(style=>style.textContent.includes(selector))),
         faviconHref:document.querySelector('link[rel="icon"]')?.getAttribute("href") || "",
         brandMarkRect:brandImage ? rect(brandImage) : null,
@@ -401,6 +406,8 @@ try {
         navDisplay:nav ? getComputedStyle(nav).display : "missing",
         toggleDisplay:toggle ? getComputedStyle(toggle).display : "missing",
         toggleExpanded:toggle?.getAttribute("aria-expanded"),
+        pageSectionOrder:[...document.querySelectorAll("main > section")].map(section=>section.id),
+        duplicateIds:(()=>{const values=[...document.querySelectorAll("[id]")].map(element=>element.id);return [...new Set(values.filter((id,index)=>values.indexOf(id)!==index))]})(),
         anchors:[...document.querySelectorAll('a[href^="#"]')].map(a=>a.getAttribute("href").slice(1)).filter(Boolean),
         missingAnchors:[...document.querySelectorAll('a[href^="#"]')].map(a=>a.getAttribute("href").slice(1)).filter(id=>id && !document.getElementById(id)),
         scrollWidth:document.documentElement.scrollWidth,
@@ -425,7 +432,7 @@ try {
         inquiryButton:Boolean(document.querySelector("#prepare-inquiry")),
         inquiryTopicLabel:Boolean(document.querySelector('label[for="inquiry-topic"]')),
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
-        contentSections:["causes","options","suitability","expectations","faq"].map(id=>Boolean(document.getElementById(id))),
+        contentSections:["approach","causes","options","suitability","expectations","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
         optionCards:document.querySelectorAll(".option-card").length,
         causeCards:document.querySelectorAll(".info-card").length,
         faqItems:document.querySelectorAll(".faq-item").length,
@@ -578,7 +585,7 @@ try {
     assert.equal(state.heroImageMarkupReferencePresent, false, `${vp.name}: deleted image URL remains in Hero markup`);
     assert.equal(state.heroLegacyCssPresent, false, `${vp.name}: obsolete Hero image CSS remains`);
     assert.equal(state.heroBottomItemCount, 3, `${vp.name}: the three approved Hero principles must remain`);
-    assert.equal(state.heroCopyCentered, true, `${vp.name}: text-first Hero copy is not centered within the available width`);
+    assert.equal(state.heroCopyLayoutValid, true, `${vp.name}: Hero copy is not aligned within its approved responsive column`);
     assert.equal(state.ctaHref, "", `${vp.name}: demo hero CTA must not navigate to an unrelated section`);
     assert.equal(state.heroCtaText, "تواصل عبر واتساب", vp.name + ": hero CTA copy is incorrect");
     assert.ok(state.heroSecondaryCta, vp.name + ": the secondary evaluation link must remain visible");
@@ -830,9 +837,11 @@ try {
     }
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
+    assert.deepEqual(state.pageSectionOrder, ["top","approach","causes","options","suitability","expectations","faq","consultation"], `${vp.name}: page sections are missing or not in the approved patient-journey order`);
+    assert.deepEqual(state.duplicateIds, [], `${vp.name}: duplicate HTML IDs detected`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
     assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);
-    assert.equal(state.faqItems, 6, `${vp.name}: FAQ entries are incomplete`);
+    assert.equal(state.faqItems, 4, `${vp.name}: the four focused FAQ entries are not present`);
     assert.ok(state.clinicalReferences.some(url=>url.includes("nhs.uk")) && state.clinicalReferences.some(url=>url.includes("ada.org")), `${vp.name}: clinical reference links are missing`);
     assert.ok(state.contrastChecks.every(item=>item.ratio>=4.5), `${vp.name}: text contrast below WCAG AA: ${JSON.stringify(state.contrastChecks)}`);
     assert.equal(state.missingAnchors.length, 0, `${vp.name}: broken in-page anchors: ${state.missingAnchors.join(", ")}`);
@@ -878,7 +887,7 @@ try {
     if (vp.width > 920) {
       assert.notEqual(state.navDisplay, "none", `${vp.name}: desktop navigation should be visible`);
       assert.equal(state.toggleDisplay, "none", `${vp.name}: mobile menu button should be hidden`);
-      assert.ok(state.heroCopyCentered, `${vp.name}: text-first Hero must use the available desktop width symmetrically`);
+      assert.ok(state.heroCopyLayoutValid, `${vp.name}: Hero copy must remain aligned to the intended right-hand content column`);
 
       const firstLink=page.locator("#main-nav a").first();
       await firstLink.hover();
