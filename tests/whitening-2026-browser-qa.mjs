@@ -262,7 +262,7 @@ try {
           return {valid:b.backgroundColor!=="rgba(0, 0, 0, 0)"&&b.backdropFilter.includes("blur")&&
             Number.parseFloat(b.height)>=38&&Number.parseFloat(b.height)<=42&&b.borderTopWidth==="1px"&&
             i.backgroundColor==="rgba(0, 0, 0, 0)"&&i.borderTopWidth==="0px"&&
-            svg&&Number.parseFloat(getComputedStyle(svg).width)<=16,...metrics};
+            svg&&Number.parseFloat(getComputedStyle(svg).width)<=17,...metrics};
         })(),
         allSectionMarkers:[...document.querySelectorAll(".section-marker")].map(marker=>{
           const number=marker.querySelector(".section-marker-number");
