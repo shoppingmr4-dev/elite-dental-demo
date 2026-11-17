@@ -36,7 +36,7 @@ try {
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(120);
 
-    const metrics = await page.evaluate(() => {
+    const metrics = await page.evaluate(async () => {
       const rect = selector => {
         const element = document.querySelector(selector);
         if (!element) return null;

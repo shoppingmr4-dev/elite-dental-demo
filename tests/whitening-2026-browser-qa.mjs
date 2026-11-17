@@ -13,6 +13,7 @@ const viewports = [
   { name: "tablet-768", width: 768, height: 1024, mobile: false },
   { name: "laptop-1024", width: 1024, height: 900, mobile: false },
   { name: "laptop-1280", width: 1280, height: 900, mobile: false },
+  { name: "laptop-1366", width: 1366, height: 900, mobile: false },
   { name: "desktop-1440", width: 1440, height: 900, mobile: false }
 ];
 
@@ -123,6 +124,8 @@ try {
       const toggle = document.querySelector("#menu-toggle");
       await document.fonts.load('800 48px "Cairo"', "التبييض");
       await document.fonts.load('400 16px "IBM Plex Sans Arabic"', "رعاية الأسنان");
+      const heroPortrait=document.querySelector(".hero-portrait");
+      if(heroPortrait) await heroPortrait.decode();
       await document.fonts.load('italic 500 31px "Cormorant Garamond"', "Ruwa");
       const rect = el => {
         const r = el.getBoundingClientRect();
@@ -391,8 +394,30 @@ try {
         })()),
         heroVisualNodeCount:document.querySelectorAll(".photo-frame,.visual-backdrop,.visual-outline,.visual-index,.visual-caption,.visual-side-note,.photo-label").length,
         imageCount:document.querySelectorAll(".hero img").length,
-        heroImagePreloadPresent:[...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>link.href.includes("37458050")),
-        heroImageMarkupReferencePresent:Boolean(document.querySelector(".hero")?.innerHTML.includes("37458050")),
+        heroImageLoaded:Boolean(heroPortrait?.complete&&heroPortrait.naturalWidth===224&&heroPortrait.naturalHeight===336),
+        heroImageVisible:Boolean(heroPortrait&&(()=>{
+          const r=heroPortrait.getBoundingClientRect(),s=getComputedStyle(heroPortrait);
+          return r.width>0&&r.height>0&&s.display!=="none"&&s.visibility==="visible"&&Number(s.opacity)>.99;
+        })()),
+        heroImageRect:heroPortrait?rect(heroPortrait):null,
+        heroImageSrc:heroPortrait?.getAttribute("src")||"",
+        heroImageNaturalWidth:heroPortrait?.naturalWidth||0,
+        heroImageNaturalHeight:heroPortrait?.naturalHeight||0,
+        heroImageAlt:heroPortrait?.getAttribute("alt")||"",
+        heroImageLoading:heroPortrait?.getAttribute("loading")||"",
+        heroImageFetchPriority:heroPortrait?.getAttribute("fetchpriority")||"",
+        heroImageObjectFit:heroPortrait?getComputedStyle(heroPortrait).objectFit:"",
+        heroImagePreloadPresent:[...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>new URL(link.href).pathname.endsWith("/assets/ruwa-dentist-hero.webp")),
+        heroImageMarkupReferencePresent:Boolean(document.querySelector(".hero")?.innerHTML.includes("assets/ruwa-dentist-hero.webp")),
+        heroImageTransparentPixelAlpha:(()=>{
+          try{
+            const canvas=document.createElement("canvas");canvas.width=canvas.height=1;
+            const context=canvas.getContext("2d",{willReadFrequently:true});
+            context.drawImage(heroPortrait,0,0,1,1,0,0,1,1);
+            return context.getImageData(0,0,1,1).data[3];
+          }catch{return -1;}
+        })(),
+        heroImageDisclosurePresent:document.body.innerText.includes("الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا."),
         heroBottomItemCount:document.querySelectorAll(".hero-bottom-item").length,
         heroLegacyCssPresent:[".photo-frame",".visual-backdrop",".visual-outline",".visual-index",".visual-caption",".visual-side-note",".photo-label","photoEnter"].some(selector=>
           [...document.querySelectorAll("style")].some(style=>style.textContent.includes(selector))),
@@ -587,10 +612,22 @@ try {
     assert.ok(state.bodyFont.includes("IBM Plex Sans Arabic"), `${vp.name}: expected IBM Plex Sans Arabic body font`);
     assert.ok(state.headingFontLoaded, `${vp.name}: local Cairo heading font failed to load`);
     assert.ok(state.bodyFontLoaded, `${vp.name}: local IBM Plex Sans Arabic font failed to load`);
-    assert.equal(state.imageCount, 0, `${vp.name}: Hero must not contain a photograph or replacement image`);
+    assert.equal(state.imageCount, 1, `${vp.name}: Hero must contain exactly one approved dentist portrait`);
+    assert.equal(state.heroImageLoaded, true, `${vp.name}: approved local Hero portrait failed to load at its intrinsic size`);
+    assert.equal(state.heroImageVisible, true, `${vp.name}: Hero portrait is hidden or has zero rendered dimensions`);
+    assert.ok(state.heroImageRect.width>0&&state.heroImageRect.height>0, `${vp.name}: Hero portrait has no rendered area`);
+    assert.equal(state.heroImageSrc, "assets/ruwa-dentist-hero.webp", `${vp.name}: Hero portrait must use the approved local asset`);
+    assert.equal(state.heroImageNaturalWidth, 224, `${vp.name}: Hero portrait intrinsic width changed unexpectedly`);
+    assert.equal(state.heroImageNaturalHeight, 336, `${vp.name}: Hero portrait intrinsic height changed unexpectedly`);
+    assert.ok(state.heroImageAlt.includes("طبيب أسنان")&&state.heroImageAlt.includes("مولّد بالذكاء الاصطناعي"), `${vp.name}: Arabic AI portrait alternative text is missing`);
+    assert.equal(state.heroImageLoading, "eager", `${vp.name}: above-the-fold portrait must not lazy-load`);
+    assert.equal(state.heroImageFetchPriority, "high", `${vp.name}: Hero portrait fetch priority is not high`);
+    assert.equal(state.heroImageObjectFit, "contain", `${vp.name}: portrait must preserve its full transparent cutout`);
+    assert.equal(state.heroImagePreloadPresent, true, `${vp.name}: Hero portrait preload is missing`);
+    assert.equal(state.heroImageMarkupReferencePresent, true, `${vp.name}: Hero markup does not reference the approved local portrait`);
+    assert.equal(state.heroImageTransparentPixelAlpha, 0, `${vp.name}: Hero portrait corner is not transparently rendered`);
+    assert.equal(state.heroImageDisclosurePresent, true, `${vp.name}: exact Arabic AI-generated image disclosure is missing`);
     assert.equal(state.heroVisualNodeCount, 0, `${vp.name}: deleted Hero frame/decorative nodes remain`);
-    assert.equal(state.heroImagePreloadPresent, false, `${vp.name}: deleted Hero image preload remains`);
-    assert.equal(state.heroImageMarkupReferencePresent, false, `${vp.name}: deleted image URL remains in Hero markup`);
     assert.equal(state.heroLegacyCssPresent, false, `${vp.name}: obsolete Hero image CSS remains`);
     assert.equal(state.heroBottomItemCount, 3, `${vp.name}: the three approved Hero principles must remain`);
     assert.equal(state.heroCopyLayoutValid, true, `${vp.name}: Hero copy is not aligned within its approved responsive column`);

@@ -53,6 +53,7 @@ try {
       const header = document.querySelector(".site-header");
       const title = document.querySelector("#hero-title");
       const logo = document.querySelector(".brand-mark img");
+      const heroPortrait = document.querySelector(".hero-portrait");
       const cta = document.querySelector(".header-action");
       const rect = element => {
         const r = element.getBoundingClientRect();
@@ -78,9 +79,14 @@ try {
         cta: rect(cta),
         logoLoaded: Boolean(logo?.complete && logo.naturalWidth > 0),
         heroImageCount: document.querySelectorAll(".hero img").length,
-        heroVisualNodeCount: document.querySelectorAll(".photo-frame,.visual-backdrop,.visual-outline,.visual-index,.visual-caption,.visual-side-note,.photo-label").length,
-        heroImagePreloadPresent: [...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>link.href.includes("37458050")),
-        heroMarkupImageReferencePresent: Boolean(document.querySelector(".hero")?.innerHTML.includes("37458050")),
+        heroImageLoaded: Boolean(heroPortrait?.complete&&heroPortrait.naturalWidth===224&&heroPortrait.naturalHeight===336),
+        heroImageVisible: Boolean(heroPortrait&&heroPortrait.getBoundingClientRect().width>0&&heroPortrait.getBoundingClientRect().height>0&&getComputedStyle(heroPortrait).visibility==="visible"&&getComputedStyle(heroPortrait).display!=="none"),
+        heroImageSource: heroPortrait?.getAttribute("src")||"",
+        heroImageWidth: heroPortrait?.naturalWidth||0,
+        heroImageHeight: heroPortrait?.naturalHeight||0,
+        heroImagePreloadPresent: [...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>new URL(link.href).pathname.endsWith("/assets/ruwa-dentist-hero.webp")),
+        heroMarkupImageReferencePresent: Boolean(document.querySelector(".hero")?.innerHTML.includes("assets/ruwa-dentist-hero.webp")),
+        heroImageDisclosurePresent: document.body.innerText.includes("الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا."),
         heroBottomItemCount: document.querySelectorAll(".hero-bottom-item").length,
         heroCopyLayoutValid: (() => {
           const copy=title.closest(".hero-copy"),wrap=document.querySelector(".hero .wrap"),grid=document.querySelector(".hero-grid");
@@ -137,10 +143,16 @@ try {
     assert.ok(initial.bodyTextLength > 300, `${viewport.name}: document body appears blank`);
     assert.ok(initial.bodyHeight > viewport.height * 2, `${viewport.name}: full landing page did not load`);
     assert.ok(initial.logoLoaded, `${viewport.name}: local RUWA logo failed to load`);
-    assert.equal(initial.heroImageCount, 0, `${viewport.name}: deleted Hero image is still present`);
+    assert.equal(initial.heroImageCount, 1, `${viewport.name}: approved Hero dentist portrait is missing`);
+    assert.equal(initial.heroImageLoaded, true, `${viewport.name}: approved local Hero portrait did not load at its intrinsic size`);
+    assert.equal(initial.heroImageVisible, true, `${viewport.name}: Hero portrait is not visibly rendered`);
+    assert.equal(initial.heroImageSource, "assets/ruwa-dentist-hero.webp", `${viewport.name}: wrong Hero portrait asset`);
+    assert.equal(initial.heroImageWidth, 224, `${viewport.name}: portrait intrinsic width is incorrect`);
+    assert.equal(initial.heroImageHeight, 336, `${viewport.name}: portrait intrinsic height is incorrect`);
+    assert.equal(initial.heroImagePreloadPresent, true, `${viewport.name}: Hero portrait preload is missing`);
+    assert.equal(initial.heroMarkupImageReferencePresent, true, `${viewport.name}: Hero does not use the approved local portrait`);
+    assert.equal(initial.heroImageDisclosurePresent, true, `${viewport.name}: AI-generated portrait disclosure is missing`);
     assert.equal(initial.heroVisualNodeCount, 0, `${viewport.name}: image frame/decorative elements remain`);
-    assert.equal(initial.heroImagePreloadPresent, false, `${viewport.name}: deleted Hero preload remains`);
-    assert.equal(initial.heroMarkupImageReferencePresent, false, `${viewport.name}: image URL remains in Hero markup`);
     assert.equal(initial.heroBottomItemCount, 3, `${viewport.name}: approved Hero principles are missing`);
     assert.equal(initial.heroCopyLayoutValid, true, `${viewport.name}: Hero copy is outside its approved responsive content column`);
     assert.equal(initial.horizontalOverflow, false, `${viewport.name}: horizontal overflow detected`);
