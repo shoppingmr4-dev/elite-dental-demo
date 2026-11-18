@@ -106,9 +106,10 @@ body.dialog-open{overflow:hidden}
 @keyframes whatsappDialogIn{from{opacity:0;transform:translateY(9px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 .menu-toggle{display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--ink)}
 .menu-toggle svg{width:19px;height:19px;margin:auto}
-.hero{position:relative;overflow:hidden;isolation:isolate;padding-block:clamp(38px,5.8vw,76px) clamp(28px,4vw,52px);background:radial-gradient(ellipse at 84% 18%,rgba(24,122,128,.075) 0%,rgba(24,122,128,0) 42%),radial-gradient(ellipse at 10% 82%,rgba(184,93,74,.035) 0%,rgba(184,93,74,0) 34%),var(--canvas)}
-.hero:before{content:"";position:absolute;z-index:-1;top:-250px;left:-170px;width:550px;height:550px;border:1px solid rgba(24,122,128,.18);border-radius:50%;box-shadow:0 0 0 34px rgba(24,122,128,.025),0 0 0 90px rgba(24,122,128,.02)}
-.hero-grid{display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);align-items:center;gap:clamp(38px,6vw,86px)}
+.hero{position:relative;overflow:hidden;isolation:isolate;padding-block:clamp(38px,5.8vw,76px) clamp(28px,4vw,52px);background:radial-gradient(ellipse at 84% 18%,rgba(24,122,128,.075) 0%,rgba(24,122,128,0) 42%),radial-gradient(ellipse at 10% 82%,rgba(24,122,128,.045) 0%,rgba(24,122,128,0) 36%),var(--canvas)}
+/* Replace the oversized, detached ring with a softer visual field that supports the dentist portrait. */
+.hero:before{content:none}
+.hero-grid{display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);align-items:center;gap:clamp(18px,2.6vw,38px)}
 .hero-copy{position:relative;z-index:2;max-width:620px;padding-block:15px 38px;animation:copyEnter .72s cubic-bezier(.2,.75,.25,1) both}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--ink2);font-size:11px;font-weight:700;letter-spacing:0;line-height:1.4}
 .hero h1{margin:var(--space-4) 0 var(--space-3);font-family:var(--display);font-size:clamp(42px,6.05vw,78px);line-height:1.27;font-weight:800;letter-spacing:-.075em;color:var(--ink)}
@@ -122,8 +123,9 @@ body.dialog-open{overflow:hidden}
 .text-link{min-height:44px;display:inline-flex;align-items:center;gap:8px;padding:0 2px;border-bottom:1px solid #A9AAA0;color:var(--ink);font-size:12px;font-weight:800}
 .text-link svg{width:15px;height:15px;transition:transform .2s}
 .text-link:hover svg{transform:translateY(3px)}
-.hero-visual{position:relative;min-width:0;min-height:540px;display:flex;align-items:center;justify-content:center;padding-block:3px}
-.hero-portrait{display:block;width:min(100%,380px);height:auto;max-height:500px;object-fit:contain;object-position:center bottom;transform:rotate(1deg);transform-origin:50% 94%}
+.hero-visual{position:relative;min-width:0;min-height:560px;display:flex;align-items:center;justify-content:flex-start;padding:3px;isolation:isolate}
+.hero-visual::before{content:"";position:absolute;z-index:0;inset:3% -2% 4% 0;border-radius:50%;background:radial-gradient(ellipse at 49% 48%,rgba(24,122,128,.105) 0%,rgba(227,242,233,.34) 38%,rgba(227,242,233,0) 72%);filter:blur(15px);pointer-events:none}
+.hero-portrait{position:relative;z-index:1;display:block;width:min(100%,420px);height:auto;max-height:550px;object-fit:contain;object-position:center bottom;transform:rotate(1deg);transform-origin:50% 94%}
 .section{padding-block:clamp(60px,7vw,94px)}
 .approach{background:var(--paper)}
 .approach-grid{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(32px,6vw,82px);align-items:start}
@@ -243,8 +245,8 @@ body.dialog-open{overflow:hidden}
  .nav a::after{display:none}
  .nav a:hover,.nav a:focus-visible{background:var(--lime);border-radius:8px}
  .menu-toggle{display:block}
- .hero-grid{gap:27px}.hero-visual{min-height:450px}
- .hero-portrait{width:min(100%,330px);max-height:420px;transform:rotate(.65deg)}
+ .hero-grid{gap:20px}.hero-visual{min-height:470px;justify-content:flex-start}
+ .hero-portrait{width:min(100%,330px);max-height:460px;transform:rotate(.65deg)}
  .hero h1{font-size:clamp(39px,5.7vw,58px)}
 }
 @media(max-width:720px){
@@ -266,7 +268,8 @@ body.dialog-open{overflow:hidden}
  .hero h1{max-width:590px;margin:23px auto 16px;font-size:clamp(38px,9.5vw,57px);line-height:1.36}
  .hero-lead{margin-inline:auto;font-size:14px}
  .hero-actions{flex-direction:column;justify-content:center;align-items:center;margin-top:27px;gap:8px}
- .hero-visual{min-height:380px;width:min(100%,520px);margin-inline:auto}
+ .hero-visual{min-height:380px;width:min(100%,520px);margin-inline:auto;justify-content:center}
+ .hero-visual::before{inset:4% 0;border-radius:50%}
  .hero-portrait{width:min(100%,320px);max-height:455px;transform:rotate(.45deg)}
  .approach-grid{grid-template-columns:1fr;gap:24px}
  .approach-intro p{max-width:570px}
