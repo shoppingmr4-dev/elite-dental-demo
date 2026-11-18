@@ -88,6 +88,7 @@ try {
         heroImagePreloadPresent: [...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>new URL(link.href).pathname.endsWith("/assets/ruwa-hero-90-768.webp")),
         heroMarkupImageReferencePresent: Boolean(document.querySelector(".hero")?.innerHTML.includes("assets/ruwa-hero-90-768.webp")),
         heroImageDisclosurePresent: document.body.innerText.includes("الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا."),
+        heroVisualNodeCount: document.querySelectorAll(".photo-frame,.visual-backdrop,.visual-outline,.visual-index,.visual-caption,.visual-side-note,.photo-label").length,
         heroBottomItemCount: document.querySelectorAll(".hero-bottom-item").length,
         heroCopyLayoutValid: (() => {
           const copy=title.closest(".hero-copy"),wrap=document.querySelector(".hero .wrap"),grid=document.querySelector(".hero-grid");
