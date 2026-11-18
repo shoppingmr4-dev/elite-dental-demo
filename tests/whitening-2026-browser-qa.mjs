@@ -242,8 +242,7 @@ try {
         eyebrowToothIcon:Boolean(document.querySelector(".hero-eyebrow-icon svg path")?.getAttribute("d")?.startsWith("M7.15")),
         eyebrowStartAligned:Boolean(
           document.querySelector(".hero-eyebrow") && copy &&
-          Math.abs((rect(document.querySelector(".hero-eyebrow")).left+rect(document.querySelector(".hero-eyebrow")).right)/2 -
-            (rect(copy).left+rect(copy).right)/2) <= 2
+          Math.abs(rect(document.querySelector(".hero-eyebrow")).right-rect(copy).right) <= 2
         ),
         eyebrowNumberFirst:Boolean((()=>{
           const number=document.querySelector(".hero-eyebrow-index");
@@ -540,7 +539,7 @@ try {
     assert.equal(state.eyebrowLabel, "دليل الابتسامة", `${vp.name}: hero eyebrow label changed`);
     assert.equal(state.eyebrowIndex, "01", `${vp.name}: hero eyebrow sequence marker is missing`);
     assert.ok(state.eyebrowToothIcon, `${vp.name}: dental tooth icon is missing`);
-    assert.ok(state.eyebrowStartAligned, `${vp.name}: hero eyebrow is not centered with the text-first composition`);
+    assert.ok(state.eyebrowStartAligned, `${vp.name}: hero eyebrow is not aligned with the RTL start edge of the text composition`);
     assert.ok(state.eyebrowNumberFirst, `${vp.name}: section number is not first at the RTL line start`);
     assert.ok(state.eyebrowGlassChip.valid, `${vp.name}: eyebrow glass chip failed: ${JSON.stringify(state.eyebrowGlassChip)}`);
     assert.ok(state.eyebrowRule && state.eyebrowRule.betweenNumberAndIcon,
