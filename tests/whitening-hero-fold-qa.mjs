@@ -9,6 +9,7 @@ const viewports = [
   { name: "laptop-1280x720", width: 1280, height: 720, mobile: false },
   { name: "laptop-1024x768", width: 1024, height: 768, mobile: false },
   { name: "tablet-768x800", width: 768, height: 800, mobile: false },
+  { name: "mobile-430x900", width: 430, height: 900, mobile: true },
   { name: "mobile-390x844", width: 390, height: 844, mobile: true },
   { name: "mobile-360x800", width: 360, height: 800, mobile: true },
   { name: "mobile-360x740", width: 360, height: 740, mobile: true }
@@ -114,6 +115,13 @@ try {
       if (pageYOffset !== 0) issues.push("page did not start at scroll position zero");
       if (!portrait || portrait.width<=0 || portrait.height<=0 || portrait.display==="none" || portrait.visibility!=="visible" || portrait.opacity<=.99) issues.push("Hero dentist portrait is not visible");
       if (!visual || !hero || portrait.top<hero.top-1 || portrait.bottom>hero.bottom+1 || portrait.left<visual.left-1 || portrait.right>visual.right+1) issues.push("Hero dentist portrait is not contained in its visual area");
+      if (!heroPortrait || heroPortrait.getAttribute("src")!=="assets/ruwa-hero-90-768.webp") issues.push("Hero must use the approved RUWA dentist portrait asset");
+      if (heroPortrait && (heroPortrait.naturalWidth!==768 || heroPortrait.naturalHeight!==1152 || heroPortrait.getAttribute("width")!=="768" || heroPortrait.getAttribute("height")!=="1152")) issues.push("Hero portrait intrinsic dimensions or reserved layout dimensions changed");
+      if (heroPortrait && heroPortrait.loading!=="eager") issues.push("Above-the-fold Hero portrait must use eager loading");
+      if (heroPortrait && heroPortrait.getAttribute("fetchpriority")!=="high") issues.push("Hero portrait fetch priority must remain high");
+      if (heroPortrait && getComputedStyle(heroPortrait).objectFit!=="contain") issues.push("Hero portrait must preserve its transparent cutout with object-fit: contain");
+      const heroImagePreload=document.querySelector('link[rel="preload"][as="image"][href="assets/ruwa-hero-90-768.webp"]');
+      if (!heroImagePreload || heroImagePreload.getAttribute("fetchpriority")!=="high") issues.push("High-priority preload for the approved Hero portrait is missing");
       if (Math.abs(markerDesign.height - 40) > 0.5) issues.push(`Hero marker height should be 40px; got ${markerDesign.height}px`);
       if (markerDesign.labelFontSize !== "12px") issues.push(`Hero marker label should be 12px; got ${markerDesign.labelFontSize}`);
       if (markerDesign.labelColor !== "rgb(48, 74, 84)") issues.push("Hero marker label color changed unexpectedly");
@@ -130,8 +138,16 @@ try {
         paragraph,
         primary,
         secondary,
+        visual,
+        hero,
         portrait,
         portraitSource:heroPortrait?.getAttribute("src")||"",
+        portraitLoading:heroPortrait?.loading||"",
+        portraitFetchPriority:heroPortrait?.getAttribute("fetchpriority")||"",
+        portraitWidthAttribute:heroPortrait?.getAttribute("width")||"",
+        portraitHeightAttribute:heroPortrait?.getAttribute("height")||"",
+        portraitPreloadPresent:Boolean(heroImagePreload),
+        portraitPreloadFetchPriority:heroImagePreload?.getAttribute("fetchpriority")||"",
         portraitNaturalWidth:heroPortrait?.naturalWidth||0,
         portraitNaturalHeight:heroPortrait?.naturalHeight||0,
         portraitObjectFit:heroPortrait?getComputedStyle(heroPortrait).objectFit:"",
