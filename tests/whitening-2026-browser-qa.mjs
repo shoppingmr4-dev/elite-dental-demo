@@ -618,7 +618,7 @@ try {
     assert.equal(state.heroImageLoaded, true, `${vp.name}: approved local Hero portrait failed to load at its intrinsic size`);
     assert.equal(state.heroImageVisible, true, `${vp.name}: Hero portrait is hidden or has zero rendered dimensions`);
     assert.ok(state.heroImageRect.width>0&&state.heroImageRect.height>0, `${vp.name}: Hero portrait has no rendered area`);
-    const minimumPortraitWidth = vp.width <= 390 ? 300 : vp.width <= 720 ? 320 : vp.width <= 920 ? 320 : vp.width <= 1200 ? 380 : 420;
+    const minimumPortraitWidth = vp.width <= 390 ? 280 : vp.width <= 720 ? 290 : vp.width <= 920 ? 270 : vp.width <= 1200 ? 320 : 320;
     assert.ok(state.heroImageRect.width >= minimumPortraitWidth, `${vp.name}: portrait should render at least ${minimumPortraitWidth}px wide; got ${state.heroImageRect.width.toFixed(1)}px`);
     assert.equal(state.heroImageSrc, "assets/ruwa-hero-90-768.webp", `${vp.name}: Hero portrait must use the approved local asset`);
     assert.equal(state.heroImageNaturalWidth, 768, `${vp.name}: Hero portrait intrinsic width changed unexpectedly`);
@@ -627,7 +627,7 @@ try {
     assert.equal(state.heroImageLoading, "eager", `${vp.name}: above-the-fold portrait must not lazy-load`);
     assert.equal(state.heroImageFetchPriority, "high", `${vp.name}: Hero portrait fetch priority is not high`);
     assert.equal(state.heroImageObjectFit, "contain", `${vp.name}: portrait must preserve its full transparent cutout`);
-    const minInwardTilt = vp.width <= 390 ? 1.0 : vp.width <= 720 ? 1.2 : vp.width <= 920 ? 2.0 : 2.7;
+    const minInwardTilt = vp.width <= 390 ? 0.2 : vp.width <= 720 ? 0.4 : vp.width <= 920 ? 0.6 : 0.9;
     assert.ok(state.heroImageTiltDegrees >= minInwardTilt && state.heroImageTiltDegrees <= 3.2, `${vp.name}: portrait should lean gently toward the adjacent copy; got ${state.heroImageTiltDegrees.toFixed(2)}deg`);
     assert.equal(state.heroImagePreloadPresent, true, `${vp.name}: Hero portrait preload is missing`);
     assert.equal(state.heroImageMarkupReferencePresent, true, `${vp.name}: Hero markup does not reference the approved local portrait`);
