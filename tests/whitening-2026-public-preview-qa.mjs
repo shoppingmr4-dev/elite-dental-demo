@@ -79,13 +79,13 @@ try {
         cta: rect(cta),
         logoLoaded: Boolean(logo?.complete && logo.naturalWidth > 0),
         heroImageCount: document.querySelectorAll(".hero img").length,
-        heroImageLoaded: Boolean(heroPortrait?.complete&&heroPortrait.naturalWidth===224&&heroPortrait.naturalHeight===336),
+        heroImageLoaded: Boolean(heroPortrait?.complete&&heroPortrait.naturalWidth===768&&heroPortrait.naturalHeight===1152),
         heroImageVisible: Boolean(heroPortrait&&heroPortrait.getBoundingClientRect().width>0&&heroPortrait.getBoundingClientRect().height>0&&getComputedStyle(heroPortrait).visibility==="visible"&&getComputedStyle(heroPortrait).display!=="none"),
         heroImageSource: heroPortrait?.getAttribute("src")||"",
         heroImageWidth: heroPortrait?.naturalWidth||0,
         heroImageHeight: heroPortrait?.naturalHeight||0,
-        heroImagePreloadPresent: [...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>new URL(link.href).pathname.endsWith("/assets/ruwa-dentist-hero.webp")),
-        heroMarkupImageReferencePresent: Boolean(document.querySelector(".hero")?.innerHTML.includes("assets/ruwa-dentist-hero.webp")),
+        heroImagePreloadPresent: [...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>new URL(link.href).pathname.endsWith("/assets/ruwa-hero-90-768.webp")),
+        heroMarkupImageReferencePresent: Boolean(document.querySelector(".hero")?.innerHTML.includes("assets/ruwa-hero-90-768.webp")),
         heroImageDisclosurePresent: document.body.innerText.includes("الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا."),
         heroBottomItemCount: document.querySelectorAll(".hero-bottom-item").length,
         heroCopyLayoutValid: (() => {
@@ -146,9 +146,9 @@ try {
     assert.equal(initial.heroImageCount, 1, `${viewport.name}: approved Hero dentist portrait is missing`);
     assert.equal(initial.heroImageLoaded, true, `${viewport.name}: approved local Hero portrait did not load at its intrinsic size`);
     assert.equal(initial.heroImageVisible, true, `${viewport.name}: Hero portrait is not visibly rendered`);
-    assert.equal(initial.heroImageSource, "assets/ruwa-dentist-hero.webp", `${viewport.name}: wrong Hero portrait asset`);
-    assert.equal(initial.heroImageWidth, 224, `${viewport.name}: portrait intrinsic width is incorrect`);
-    assert.equal(initial.heroImageHeight, 336, `${viewport.name}: portrait intrinsic height is incorrect`);
+    assert.equal(initial.heroImageSource, "assets/ruwa-hero-90-768.webp", `${viewport.name}: wrong Hero portrait asset`);
+    assert.equal(initial.heroImageWidth, 768, `${viewport.name}: portrait intrinsic width is incorrect`);
+    assert.equal(initial.heroImageHeight, 1152, `${viewport.name}: portrait intrinsic height is incorrect`);
     assert.equal(initial.heroImagePreloadPresent, true, `${viewport.name}: Hero portrait preload is missing`);
     assert.equal(initial.heroMarkupImageReferencePresent, true, `${viewport.name}: Hero does not use the approved local portrait`);
     assert.equal(initial.heroImageDisclosurePresent, true, `${viewport.name}: AI-generated portrait disclosure is missing`);
