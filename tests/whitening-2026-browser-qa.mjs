@@ -407,6 +407,7 @@ try {
         heroImageLoading:heroPortrait?.getAttribute("loading")||"",
         heroImageFetchPriority:heroPortrait?.getAttribute("fetchpriority")||"",
         heroImageObjectFit:heroPortrait?getComputedStyle(heroPortrait).objectFit:"",
+        heroImageTiltDegrees:(()=>{if(!heroPortrait)return 0;const transform=getComputedStyle(heroPortrait).transform;if(transform==="none")return 0;const values=transform.slice(transform.indexOf("(")+1,-1).split(",").map(Number);return values.length===6?Math.atan2(values[1],values[0])*180/Math.PI:0;})(),
         heroImagePreloadPresent:[...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>new URL(link.href).pathname.endsWith("/assets/ruwa-hero-90-768.webp")),
         heroImageMarkupReferencePresent:Boolean(document.querySelector(".hero")?.innerHTML.includes("assets/ruwa-hero-90-768.webp")),
         heroImageTransparentPixelAlpha:(()=>{
@@ -626,6 +627,8 @@ try {
     assert.equal(state.heroImageLoading, "eager", `${vp.name}: above-the-fold portrait must not lazy-load`);
     assert.equal(state.heroImageFetchPriority, "high", `${vp.name}: Hero portrait fetch priority is not high`);
     assert.equal(state.heroImageObjectFit, "contain", `${vp.name}: portrait must preserve its full transparent cutout`);
+    const minInwardTilt = vp.width <= 390 ? 1.0 : vp.width <= 720 ? 1.2 : vp.width <= 920 ? 2.0 : 2.7;
+    assert.ok(state.heroImageTiltDegrees >= minInwardTilt && state.heroImageTiltDegrees <= 3.2, `${vp.name}: portrait should lean gently toward the adjacent copy; got ${state.heroImageTiltDegrees.toFixed(2)}deg`);
     assert.equal(state.heroImagePreloadPresent, true, `${vp.name}: Hero portrait preload is missing`);
     assert.equal(state.heroImageMarkupReferencePresent, true, `${vp.name}: Hero markup does not reference the approved local portrait`);
     assert.equal(state.heroImageTransparentPixelAlpha, 0, `${vp.name}: Hero portrait corner is not transparently rendered`);

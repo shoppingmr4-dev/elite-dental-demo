@@ -84,6 +84,7 @@ try {
         heroImageSource: heroPortrait?.getAttribute("src")||"",
         heroImageWidth: heroPortrait?.naturalWidth||0,
         heroImageHeight: heroPortrait?.naturalHeight||0,
+        heroImageTiltDegrees:(()=>{if(!heroPortrait)return 0;const transform=getComputedStyle(heroPortrait).transform;if(transform==="none")return 0;const values=transform.slice(transform.indexOf("(")+1,-1).split(",").map(Number);return values.length===6?Math.atan2(values[1],values[0])*180/Math.PI:0;})(),
         heroImagePreloadPresent: [...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>new URL(link.href).pathname.endsWith("/assets/ruwa-hero-90-768.webp")),
         heroMarkupImageReferencePresent: Boolean(document.querySelector(".hero")?.innerHTML.includes("assets/ruwa-hero-90-768.webp")),
         heroImageDisclosurePresent: document.body.innerText.includes("الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا."),
@@ -149,6 +150,7 @@ try {
     assert.equal(initial.heroImageSource, "assets/ruwa-hero-90-768.webp", `${viewport.name}: wrong Hero portrait asset`);
     assert.equal(initial.heroImageWidth, 768, `${viewport.name}: portrait intrinsic width is incorrect`);
     assert.equal(initial.heroImageHeight, 1152, `${viewport.name}: portrait intrinsic height is incorrect`);
+    assert.ok(initial.heroImageTiltDegrees >= 1 && initial.heroImageTiltDegrees <= 3.2, `${viewport.name}: dentist portrait must lean slightly toward the Hero copy`);
     assert.equal(initial.heroImagePreloadPresent, true, `${viewport.name}: Hero portrait preload is missing`);
     assert.equal(initial.heroMarkupImageReferencePresent, true, `${viewport.name}: Hero does not use the approved local portrait`);
     assert.equal(initial.heroImageDisclosurePresent, true, `${viewport.name}: AI-generated portrait disclosure is missing`);
