@@ -127,16 +127,78 @@ body.dialog-open{overflow:hidden}
 .hero-visual::before{content:"";position:absolute;z-index:0;inset:3% -2% 4% 0;border-radius:50%;background:radial-gradient(ellipse at 49% 48%,rgba(24,122,128,.105) 0%,rgba(227,242,233,.34) 38%,rgba(227,242,233,0) 72%);filter:blur(15px);pointer-events:none}
 .hero-portrait{position:relative;z-index:1;display:block;width:min(100%,420px);height:auto;max-height:550px;object-fit:contain;object-position:center bottom;transform:rotate(1deg);transform-origin:50% 94%}
 .section{padding-block:clamp(60px,7vw,94px)}
+/* RUWA Section 02 — one authoritative centered-introduction and editorial-step system. */
 .approach{background:var(--paper)}
-.approach-grid{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(32px,6vw,82px);align-items:start}
+.approach-grid{
+ display:grid;grid-template-columns:minmax(0,1fr);
+ gap:clamp(28px,3.2vw,42px);align-items:start
+}
+.approach-intro{
+ display:flex;flex-direction:column;align-items:center;
+ width:100%;text-align:center
+}
 .approach-intro .eyebrow{color:var(--ink2)}
-.approach h2{max-width:500px;margin:14px 0 12px;font-family:var(--display);font-size:clamp(27px,4vw,48px);line-height:1.4;letter-spacing:-.06em}
-.approach-intro p{max-width:430px;margin:0;color:var(--muted);font-size:13px;line-height:2}
-.step-list{border-top:1px solid var(--line)}
-.step{display:grid;grid-template-columns:48px minmax(0,1fr);gap:17px;padding:18px 0;border-bottom:1px solid var(--line)}
-.step-no{font-family:var(--display);font-size:12px;font-weight:800;color:var(--blue);direction:ltr}
-.step h3{margin:0 0 6px;font-family:var(--display);font-size:14px}
-.step p{margin:0;color:var(--muted);font-size:12px;line-height:1.9}
+.approach-intro>.section-marker{align-self:center;margin-inline:auto}
+.approach h2{
+ width:min(100%,760px);max-width:760px;margin:14px auto 12px;
+ color:var(--ink);text-align:center;font-family:var(--display);
+ font-size:clamp(30px,4.2vw,46px);font-weight:700;
+ line-height:1.42;letter-spacing:0
+}
+.approach-intro p{
+ width:min(100%,660px);max-width:660px;margin:0 auto;
+ color:var(--muted);text-align:center;font-family:var(--body);
+ font-size:15px;font-weight:400;line-height:2
+}
+.step-list{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:clamp(18px,2.2vw,32px);width:100%;border:0
+}
+.step{
+ display:grid;grid-template-columns:36px minmax(0,1fr);
+ align-content:start;gap:14px;min-width:0;margin:0;
+ padding:18px 0;border:0;border-top:1px solid var(--line);
+ background:transparent;box-shadow:none
+}
+.step-no{
+ padding-top:2px;color:var(--blue);text-align:right;
+ font-family:var(--body);font-size:12px;font-weight:800;
+ line-height:1.8;direction:ltr
+}
+.step>div{min-width:0;text-align:right}
+.step h3{
+ margin:0 0 7px;color:var(--ink);font-family:var(--display);
+ font-size:18px;font-weight:700;line-height:1.55;
+ letter-spacing:0;text-align:right
+}
+.step p{
+ max-width:390px;margin:0;color:var(--muted);font-family:var(--body);
+ font-size:14px;font-weight:400;line-height:1.95;text-align:right
+}
+@media(max-width:900px){
+ .approach-grid{gap:clamp(26px,3.8vw,34px)}
+ .step-list{
+  grid-template-columns:minmax(0,1fr);gap:0;
+  max-width:840px;margin-inline:auto
+ }
+ .step{
+  grid-template-columns:36px minmax(0,1fr);
+  border-top:0;border-bottom:1px solid var(--line)
+ }
+ .step:first-child{border-top:1px solid var(--line)}
+ .step p{max-width:680px}
+}
+@media(max-width:600px){
+ .approach-grid{gap:26px}
+ .approach h2{
+  width:100%;margin-top:13px;margin-bottom:10px;
+  font-size:clamp(29px,7.5vw,34px);line-height:1.42
+ }
+ .approach-intro p{font-size:14px;line-height:1.95}
+ .step{gap:12px}
+ .step h3{font-size:17px}
+ .step p{font-size:14px;line-height:1.95}
+}
 .contact-section{padding:0 0 56px;background:var(--paper)}
 .contact-band{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:center;gap:clamp(24px,4vw,52px);padding:clamp(24px,4.2vw,42px);background:var(--ink);color:#FFFFFF;border-radius:8px 30px 8px 30px}
 .contact-eyebrow{display:inline-block;margin-bottom:11px;color:#A9DCD2;font-size:9px;font-weight:800;letter-spacing:.14em;direction:ltr}
@@ -271,8 +333,6 @@ body.dialog-open{overflow:hidden}
  .hero-visual{min-height:380px;width:min(100%,520px);margin-inline:auto;justify-content:center}
  .hero-visual::before{inset:4% 0;border-radius:50%}
  .hero-portrait{width:min(100%,320px);max-height:455px;transform:rotate(.45deg)}
- .approach-grid{grid-template-columns:1fr;gap:24px}
- .approach-intro p{max-width:570px}
  .contact-band{grid-template-columns:1fr;align-items:stretch;gap:22px}
  .inquiry-form{grid-template-columns:1fr}
  .contact-submit{width:100%}
@@ -301,13 +361,13 @@ body.dialog-open{overflow:hidden}
 body,button,input,select,textarea{font-family:var(--body)}
 .step-no,.hero-bottom-item b,.info-card .card-index,.option-card .option-number{font-family:var(--body)}
 .hero h1{font-family:var(--display);font-size:clamp(42px,5.6vw,72px);line-height:1.34;letter-spacing:0}
-.approach h2,.section-head h2,.suitability-copy h2{font-family:var(--display);letter-spacing:0;line-height:1.45}
-.approach h2,.section-head h2{font-size:clamp(30px,3.7vw,44px)}
+.section-head h2,.suitability-copy h2{font-family:var(--display);letter-spacing:0;line-height:1.45}
+.section-head h2{font-size:clamp(30px,3.7vw,44px)}
 .suitability-copy h2{font-size:clamp(29px,3.4vw,40px)}
-.step h3,.info-card h3,.option-card h3,.check-item h3,.expect-card h3,.faq-item summary,.contact-band h2{font-family:var(--display);letter-spacing:0;line-height:1.55}
-.step h3,.check-item h3{font-size:17px}.info-card h3,.option-card h3{font-size:19px}.expect-card h3{font-size:18px}.faq-item summary{font-size:16px}
+.info-card h3,.option-card h3,.check-item h3,.expect-card h3,.faq-item summary,.contact-band h2{font-family:var(--display);letter-spacing:0;line-height:1.55}
+.check-item h3{font-size:17px}.info-card h3,.option-card h3{font-size:19px}.expect-card h3{font-size:18px}.faq-item summary{font-size:16px}
 .hero-lead{font-size:clamp(15px,1.25vw,17px);line-height:2.05}
-.approach-intro p,.step p,.check-item p{font-size:14px;line-height:1.95}
+.check-item p{font-size:14px;line-height:1.95}
 .section-head p,.suitability-copy p{font-size:15px;line-height:2}
 .info-card p,.option-card p,.faq-answer,.expect-card p{font-size:14.5px;line-height:2}
 .option-card .option-note{font-size:13px}.contact-band p{font-size:14px;line-height:1.95}
@@ -940,62 +1000,6 @@ body,button,input,select,textarea{font-family:var(--body)}
 .section-marker--hero .hero-eyebrow-icon svg {
  width:17px;
  height:17px;
-}
-
-/* RUWA Section 02 — centered editorial introduction and responsive evaluation steps. */
-.approach-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(28px,3.2vw,42px);align-items:start}
-.approach-intro{display:flex;flex-direction:column;align-items:center;width:100%;text-align:center}
-.approach-intro>.section-marker{align-self:center;margin-inline:auto}
-.approach h2{
- width:min(100%,760px);max-width:760px;margin:14px auto 12px;color:var(--ink);
- text-align:center;font-family:var(--display);font-size:clamp(30px,4.2vw,46px);
- font-weight:700;line-height:1.42;letter-spacing:0
-}
-.approach-intro p{
- width:min(100%,660px);max-width:660px;margin:0 auto;color:var(--muted);text-align:center;
- font-family:var(--body);font-size:15px;font-weight:400;line-height:2
-}
-.step-list{
- display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2.2vw,32px);
- width:100%;border:0
-}
-.step{
- display:grid;grid-template-columns:36px minmax(0,1fr);align-content:start;gap:14px;
- min-width:0;margin:0;padding:18px 0;border:0;border-top:1px solid var(--line)
-}
-.step-no{
- padding-top:2px;color:var(--blue);text-align:right;font-family:var(--body);
- font-size:12px;font-weight:800;line-height:1.8;direction:ltr
-}
-.step>div{min-width:0;text-align:right}
-.step h3{
- margin:0 0 7px;color:var(--ink);font-family:var(--display);font-size:18px;
- font-weight:700;line-height:1.55;letter-spacing:0;text-align:right
-}
-.step p{
- max-width:390px;margin:0;color:var(--muted);font-family:var(--body);
- font-size:14px;font-weight:400;line-height:1.95;text-align:right
-}
-@media(max-width:900px){
- .approach-grid{gap:clamp(26px,3.8vw,34px)}
- .step-list{grid-template-columns:minmax(0,1fr);gap:0;max-width:840px;margin-inline:auto}
- .step{
-  grid-template-columns:36px minmax(0,1fr);padding:18px 0;
-  border-top:0;border-bottom:1px solid var(--line)
- }
- .step:first-child{border-top:1px solid var(--line)}
- .step p{max-width:680px}
-}
-@media(max-width:600px){
- .approach-grid{gap:26px}
- .approach h2{
-  width:100%;margin-top:13px;margin-bottom:10px;
-  font-size:clamp(29px,7.5vw,34px);line-height:1.42
- }
- .approach-intro p{font-size:14px;line-height:1.95}
- .step{gap:12px}
- .step h3{font-size:17px}
- .step p{font-size:14px;line-height:1.95}
 }
 
 </style>

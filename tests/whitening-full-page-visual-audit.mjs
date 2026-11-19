@@ -87,14 +87,17 @@ try {
           fontWeight:c.fontWeight,lineHeight:c.lineHeight,letterSpacing:c.letterSpacing,
           textAlign:c.textAlign,direction:c.direction,padding:c.padding,margin:c.margin,
           gap:c.gap,border:c.border,borderRadius:c.borderRadius,boxShadow:c.boxShadow,
-          display:c.display
+          backdropFilter:c.backdropFilter,filter:c.filter,display:c.display
         };
       };
       const textDetails=el=>{
         if(!el)return null;
         const range=document.createRange();
         range.selectNodeContents(el);
-        return {text:el.innerText.replace(/\s+/g," ").trim(),rect:rect(el),style:style(el),lineCount:range.getClientRects().length};
+        const computed=getComputedStyle(el);
+        const lineHeight=Number.parseFloat(computed.lineHeight);
+        const visualLineCount=lineHeight>0?Math.max(1,Math.round(rect(el).height/lineHeight)):range.getClientRects().length;
+        return {text:el.innerText.replace(/\s+/g," ").trim(),rect:rect(el),style:style(el),visualLineCount,fragmentCount:range.getClientRects().length};
       };
       const pageSectionOrder=[...document.querySelectorAll("main > section")].map(section=>section.id);
       const allIds=[...document.querySelectorAll("[id]")].map(element=>element.id);
@@ -125,6 +128,31 @@ try {
       const approachSteps=[...(approachElement?.querySelectorAll(".step")||[])];
       const approachListStyle=style(approachList);
       const approachIntroStyle=style(approachIntro);
+      const oneLineVariant=approachHeading?.cloneNode(true);
+      let oneLineComparison=null;
+      if(oneLineVariant){
+        oneLineVariant.removeAttribute("id");
+        oneLineVariant.querySelectorAll("br").forEach(br=>br.replaceWith(document.createTextNode(" ")));
+        const originalStyle=getComputedStyle(approachHeading);
+        Object.assign(oneLineVariant.style,{
+          position:"fixed",left:"-10000px",right:"auto",top:"0",visibility:"hidden",
+          width:"max-content",maxWidth:"none",whiteSpace:"nowrap",margin:"0",
+          fontFamily:originalStyle.fontFamily,fontSize:originalStyle.fontSize,
+          fontWeight:originalStyle.fontWeight,lineHeight:originalStyle.lineHeight,
+          letterSpacing:originalStyle.letterSpacing,direction:"rtl",textAlign:"center"
+        });
+        document.body.appendChild(oneLineVariant);
+        const naturalWidth=oneLineVariant.getBoundingClientRect().width;
+        const availableWidth=Math.min(760,approachGrid.getBoundingClientRect().width);
+        const currentFontSize=Number.parseFloat(originalStyle.fontSize);
+        oneLineComparison={
+          naturalWidth:round(naturalWidth),availableWidth:round(availableWidth),
+          currentFontSize:round(currentFontSize),
+          fontSizeRequiredToFit:round(currentFontSize*availableWidth/naturalWidth),
+          fitsAtCurrentSize:naturalWidth<=availableWidth+1
+        };
+        oneLineVariant.remove();
+      }
       const approachDetails=approachElement?(()=>{
         const gridStyle=getComputedStyle(approachGrid);
         const markerNumber=approachMarker?.querySelector(".section-marker-number");
@@ -157,6 +185,7 @@ try {
             number:textDetails(markerNumber),divider:rect(markerDivider)
           },
           heading:textDetails(approachHeading),
+          oneLineComparison,
           supportingParagraph:textDetails(approachParagraph),
           spacing:{
             markerToHeading:round(headingRect.top-rect(approachMarker).bottom),
@@ -171,7 +200,7 @@ try {
             const title=step.querySelector("h3");
             const description=step.querySelector("p");
             return {
-              rect:rect(step),padding:getComputedStyle(step).padding,
+              rect:rect(step),padding:getComputedStyle(step).padding,style:style(step),
               number:textDetails(number),title:textDetails(title),description:textDetails(description),
               divider:getComputedStyle(step).borderBottomColor
             };
@@ -251,7 +280,11 @@ try {
       if(approachDetails.steps.some(step=>!step.title?.text||!step.description?.text))problems.push("Section 02 contains an empty step title or description");
       if(approachDetails.heading?.text!=="قبل اختيار التبييض، نقيّم صحة أسنانك.")problems.push("Section 02 headline differs from the approved copy");
       if(approachDetails.marker?.label!=="خطوات التقييم")problems.push("Section 02 marker label differs from the approved copy");
+      if(approachDetails.heading?.visualLineCount!==2)problems.push("Section 02 headline must render as exactly two deliberate visual lines");
+      if(approachDetails.heading?.style.color!=="rgb(20, 45, 56)")problems.push("Section 02 headline must use the approved RUWA deep-ink color");
       if(approachDetails.heading?.style.textAlign!=="center")problems.push("Section 02 heading is not centered");
+      if(approachDetails.steps.some(step=>step.style.backdropFilter!=="none"||step.style.boxShadow!=="none"||step.style.borderRadius!=="0px"||step.style.backgroundColor!=="rgba(0, 0, 0, 0)"))problems.push("Section 02 step components must remain minimal editorial blocks, not glass or boxed cards");
+      if(!approachDetails.oneLineComparison||approachDetails.oneLineComparison.fontSizeRequiredToFit<approachDetails.oneLineComparison.currentFontSize*.85)problems.push("Section 02 one-line headline comparison did not support the selected two-line hierarchy");
       if(approachDetails.supportingParagraph?.style.textAlign!=="center")problems.push("Section 02 supporting paragraph is not centered");
       if(approachDetails.steps.some(step=>step.title.style.textAlign!=="right"||step.description.style.textAlign!=="right"))problems.push("Section 02 step text is not right-aligned for Arabic reading");
       if([approachDetails.composition.markerCenterOffset,approachDetails.composition.headingCenterOffset,approachDetails.composition.paragraphCenterOffset].some(offset=>Math.abs(offset)>1))problems.push("Section 02 centered introduction is horizontally unbalanced");
