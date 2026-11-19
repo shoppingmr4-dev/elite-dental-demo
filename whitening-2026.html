@@ -128,10 +128,10 @@ body.dialog-open{overflow:hidden}
 .hero-portrait{position:relative;z-index:1;display:block;width:min(100%,420px);height:auto;max-height:550px;object-fit:contain;object-position:center bottom;transform:rotate(1deg);transform-origin:50% 94%}
 .section{padding-block:clamp(60px,7vw,94px)}
 /* RUWA Section 02 — one authoritative centered-introduction and editorial-step system. */
-.approach{background:var(--paper)}
+.approach{background:var(--paper);padding-block:clamp(52px,6vw,84px)}
 .approach-grid{
  display:grid;grid-template-columns:minmax(0,1fr);
- gap:clamp(28px,3.2vw,42px);align-items:start
+ gap:clamp(24px,2.6vw,36px);align-items:start
 }
 .approach-intro{
  display:flex;flex-direction:column;align-items:center;
@@ -163,7 +163,7 @@ body.dialog-open{overflow:hidden}
 }
 .step-no{
  padding-top:2px;color:var(--blue);text-align:right;
- font-family:var(--body);font-size:12px;font-weight:800;
+ font-family:var(--body);font-size:13px;font-weight:700;
  line-height:1.8;direction:ltr
 }
 .step>div{min-width:0;text-align:right}
@@ -177,7 +177,7 @@ body.dialog-open{overflow:hidden}
  font-size:14px;font-weight:400;line-height:1.95;text-align:right
 }
 @media(max-width:900px){
- .approach-grid{gap:clamp(26px,3.8vw,34px)}
+ .approach-grid{gap:clamp(24px,3vw,30px)}
  .step-list{
   grid-template-columns:minmax(0,1fr);gap:0;
   max-width:840px;margin-inline:auto
@@ -190,7 +190,7 @@ body.dialog-open{overflow:hidden}
  .step p{max-width:680px}
 }
 @media(max-width:600px){
- .approach-grid{gap:26px}
+ .approach-grid{gap:24px}
  .approach h2{
   width:100%;margin-top:13px;margin-bottom:10px;
   font-size:clamp(29px,7.5vw,34px);line-height:1.42

@@ -65,6 +65,7 @@ try {
         }
         return "rgb("+background.slice(0,3).map(value=>Math.round(value)).join(", ")+")";
       };
+      const colorHex=value=>"#"+parseColor(value).slice(0,3).map(channel=>Math.round(channel).toString(16).padStart(2,"0")).join("").toUpperCase();
       const luminance=value=>{
         const rgb=parseColor(value).slice(0,3).map(component=>{
           const channel=component/255;
@@ -80,9 +81,11 @@ try {
         if(!el)return null;
         const c=getComputedStyle(el);
         const background=effectiveBackground(el);
+        const primaryFont=c.fontFamily.split(",")[0].replace(/["']/g,"").trim();
+        const fontLoaded=document.fonts.check(c.fontWeight+" "+c.fontSize+" \""+primaryFont+"\"");
         return {
-          color:c.color,backgroundColor:c.backgroundColor,effectiveBackground:background,
-          contrastRatio:contrast(c.color,background),
+          color:c.color,colorHex:colorHex(c.color),backgroundColor:c.backgroundColor,effectiveBackground:background,
+          primaryFont,fontLoaded,contrastRatio:contrast(c.color,background),
           backgroundImage:c.backgroundImage,fontFamily:c.fontFamily,fontSize:c.fontSize,
           fontWeight:c.fontWeight,lineHeight:c.lineHeight,letterSpacing:c.letterSpacing,
           textAlign:c.textAlign,direction:c.direction,padding:c.padding,margin:c.margin,
@@ -124,6 +127,7 @@ try {
       const approachHeading=approachIntro?.querySelector("h2");
       const approachParagraph=approachIntro?.querySelector(":scope > p");
       const approachMarker=approachIntro?.querySelector(".section-marker");
+      const approachAccent=approachHeading?.querySelector(".approach-title-accent");
       const approachList=approachElement?.querySelector(".step-list");
       const approachSteps=[...(approachElement?.querySelectorAll(".step")||[])];
       const approachListStyle=style(approachList);
@@ -160,6 +164,8 @@ try {
         const markerDivider=approachMarker?.querySelector(".section-marker-divider");
         const introRect=rect(approachIntro);
         const headingRect=rect(approachHeading);
+        const heroRect=rect(document.getElementById("top"));
+        const nextSectionRect=rect(document.getElementById("causes"));
         const paragraphRect=rect(approachParagraph);
         const listRect=rect(approachList);
         return {
@@ -185,24 +191,43 @@ try {
             number:textDetails(markerNumber),divider:rect(markerDivider)
           },
           heading:textDetails(approachHeading),
+          headlineAccent:textDetails(approachAccent),
+          fontAvailability:{
+            cairo700:document.fonts.check('700 46px "Cairo"',"صحة الأسنان"),
+            ibm400:document.fonts.check('400 15px "IBM Plex Sans Arabic"',"خيارات التقييم"),
+            ibm700:document.fonts.check('700 13px "IBM Plex Sans Arabic"',"01")
+          },
           oneLineComparison,
           supportingParagraph:textDetails(approachParagraph),
           spacing:{
             markerToHeading:round(headingRect.top-rect(approachMarker).bottom),
             headingToParagraph:round(paragraphRect.top-(headingRect.top+headingRect.height)),
             paragraphToStepList:round(listRect.top-(paragraphRect.top+paragraphRect.height)),
+            heroToSection:round(rect(approachElement).top-heroRect.bottom),
+            sectionToNext:round(nextSectionRect.top-rect(approachElement).bottom),
             sectionPadding:getComputedStyle(approachElement).padding,
+            sectionPaddingTop:getComputedStyle(approachElement).paddingTop,
+            sectionPaddingBottom:getComputedStyle(approachElement).paddingBottom,
+            introToSteps:round(listRect.top-introRect.bottom),
             stepRowPadding:getComputedStyle(approachSteps[0]||approachElement).padding,
-            stepColumnGap:getComputedStyle(approachSteps[0]||approachElement).columnGap
+            stepColumnGap:getComputedStyle(approachSteps[0]||approachElement).columnGap,
+            stepListColumnGap:getComputedStyle(approachList).columnGap,
+            stepListRowGap:getComputedStyle(approachList).rowGap
           },
           steps:approachSteps.map(step=>{
             const number=step.querySelector(".step-no");
             const title=step.querySelector("h3");
             const description=step.querySelector("p");
+            const textGroup=step.querySelector(":scope > div");
+            const numberRect=rect(number),groupRect=rect(textGroup);
+            const titleRect=rect(title),descriptionRect=rect(description);
+            const numberToTitle=Math.max(0,Math.max(numberRect.x,groupRect.x)-Math.min(numberRect.x+numberRect.width,groupRect.x+groupRect.width));
             return {
               rect:rect(step),padding:getComputedStyle(step).padding,style:style(step),
+              numberToTitleGap:round(numberToTitle),
+              titleToDescriptionGap:round(descriptionRect.top-(titleRect.top+titleRect.height)),
               number:textDetails(number),title:textDetails(title),description:textDetails(description),
-              divider:getComputedStyle(step).borderBottomColor
+              divider:{top:getComputedStyle(step).borderTopColor,topWidth:getComputedStyle(step).borderTopWidth,bottom:getComputedStyle(step).borderBottomColor,bottomWidth:getComputedStyle(step).borderBottomWidth}
             };
           })
         };
@@ -281,11 +306,22 @@ try {
       if(approachDetails.heading?.text!=="قبل اختيار التبييض، نقيّم صحة أسنانك.")problems.push("Section 02 headline differs from the approved copy");
       if(approachDetails.marker?.label!=="خطوات التقييم")problems.push("Section 02 marker label differs from the approved copy");
       if(approachDetails.heading?.visualLineCount!==2)problems.push("Section 02 headline must render as exactly two deliberate visual lines");
-      if(approachDetails.heading?.style.color!=="rgb(20, 45, 56)")problems.push("Section 02 headline must use the approved RUWA deep-ink color");
+      if(approachDetails.heading?.style.color!=="rgb(20, 45, 56)")problems.push("Section 02 headline base color must use the approved RUWA deep ink");
+      if(approachDetails.headlineAccent?.text!=="نقيّم صحة أسنانك."||approachDetails.headlineAccent?.style.color!=="rgb(24, 122, 128)")problems.push("Section 02 must apply the restrained Teal accent to the complete key statement only");
+      if(approachDetails.headlineAccent?.style.contrastRatio<4.5)problems.push("Section 02 Teal headline accent falls below normal-text WCAG AA contrast");
+      if(!approachDetails.fontAvailability?.cairo700||!approachDetails.fontAvailability?.ibm400||!approachDetails.fontAvailability?.ibm700)problems.push("Section 02 required local Cairo or IBM Plex Arabic font face did not pass document.fonts.check()");
+      if(approachDetails.steps.some(step=>!step.title.style.fontLoaded||!step.description.style.fontLoaded||!step.number.style.fontLoaded))problems.push("Section 02 contains a text role whose requested primary font is not available");
       if(approachDetails.heading?.style.textAlign!=="center")problems.push("Section 02 heading is not centered");
       if(approachDetails.steps.some(step=>step.style.backdropFilter!=="none"||step.style.boxShadow!=="none"||step.style.borderRadius!=="0px"||step.style.backgroundColor!=="rgba(0, 0, 0, 0)"))problems.push("Section 02 step components must remain minimal editorial blocks, not glass or boxed cards");
       if(!approachDetails.oneLineComparison||approachDetails.oneLineComparison.naturalWidth<=0||approachDetails.oneLineComparison.availableWidth<=0)problems.push("Section 02 one-line headline comparison could not be measured");
       if(approachDetails.supportingParagraph?.style.textAlign!=="center")problems.push("Section 02 supporting paragraph is not centered");
+      if(approachDetails.steps.some(step=>step.title.style.color!=="rgb(20, 45, 56)"||step.description.style.color!=="rgb(92, 109, 114)"||step.number.style.color!=="rgb(24, 122, 128)"))problems.push("Section 02 step text roles do not use the consistent RUWA color hierarchy");
+      if(approachDetails.steps.some(step=>step.number.style.fontWeight!=="700"||step.number.style.fontSize!=="13px"))problems.push("Section 02 step numbers must use the refined readable 13px / 700 treatment");
+      if(approachDetails.steps.some(step=>step.numberToTitleGap<10||step.numberToTitleGap>18||step.titleToDescriptionGap<5||step.titleToDescriptionGap>9))problems.push("Section 02 step internal spacing is outside the approved rhythm");
+      if(approachDetails.steps.some(step=>step.description.style.fontSize!=="14px"||step.description.style.lineHeight!=="27.3px"))problems.push("Section 02 step description typography differs from its approved readable body style");
+      if(approachDetails.steps.some(step=>step.rect.width<300))problems.push("Section 02 step column is too narrow for comfortable Arabic reading");
+      if(approachDetails.spacing.sectionPaddingTop!==approachDetails.spacing.sectionPaddingBottom)problems.push("Section 02 vertical section padding is unbalanced");
+      if(Number.parseFloat(approachDetails.spacing.sectionPaddingTop)>84.5||Number.parseFloat(approachDetails.spacing.sectionPaddingTop)<51.5)problems.push("Section 02 external vertical spacing is outside the refined responsive scale");
       if(approachDetails.steps.some(step=>step.title.style.textAlign!=="right"||step.description.style.textAlign!=="right"))problems.push("Section 02 step text is not right-aligned for Arabic reading");
       if([approachDetails.composition.markerCenterOffset,approachDetails.composition.headingCenterOffset,approachDetails.composition.paragraphCenterOffset].some(offset=>Math.abs(offset)>1))problems.push("Section 02 centered introduction is horizontally unbalanced");
       if(approachDetails.spacing.paragraphToStepList<24)problems.push("Section 02 introduction and evaluation steps are too close");
