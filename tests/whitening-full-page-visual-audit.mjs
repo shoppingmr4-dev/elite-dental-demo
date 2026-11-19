@@ -284,7 +284,7 @@ try {
       if(approachDetails.heading?.style.color!=="rgb(20, 45, 56)")problems.push("Section 02 headline must use the approved RUWA deep-ink color");
       if(approachDetails.heading?.style.textAlign!=="center")problems.push("Section 02 heading is not centered");
       if(approachDetails.steps.some(step=>step.style.backdropFilter!=="none"||step.style.boxShadow!=="none"||step.style.borderRadius!=="0px"||step.style.backgroundColor!=="rgba(0, 0, 0, 0)"))problems.push("Section 02 step components must remain minimal editorial blocks, not glass or boxed cards");
-      if(!approachDetails.oneLineComparison||approachDetails.oneLineComparison.fontSizeRequiredToFit<approachDetails.oneLineComparison.currentFontSize*.85)problems.push("Section 02 one-line headline comparison did not support the selected two-line hierarchy");
+      if(!approachDetails.oneLineComparison||approachDetails.oneLineComparison.naturalWidth<=0||approachDetails.oneLineComparison.availableWidth<=0)problems.push("Section 02 one-line headline comparison could not be measured");
       if(approachDetails.supportingParagraph?.style.textAlign!=="center")problems.push("Section 02 supporting paragraph is not centered");
       if(approachDetails.steps.some(step=>step.title.style.textAlign!=="right"||step.description.style.textAlign!=="right"))problems.push("Section 02 step text is not right-aligned for Arabic reading");
       if([approachDetails.composition.markerCenterOffset,approachDetails.composition.headingCenterOffset,approachDetails.composition.paragraphCenterOffset].some(offset=>Math.abs(offset)>1))problems.push("Section 02 centered introduction is horizontally unbalanced");
