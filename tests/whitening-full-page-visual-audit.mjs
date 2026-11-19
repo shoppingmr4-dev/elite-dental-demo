@@ -45,7 +45,7 @@ try {
         return {x:round(r.x),y:round(r.y),width:round(r.width),height:round(r.height),top:round(r.top),bottom:round(r.bottom)};
       };
       const parseColor=value=>{
-        const match=String(value||"").match(/rgba?\\(([^)]+)\\)/);
+        const match=String(value||"").match(/rgba?\(([^)]+)\)/);
         if(!match)return [0,0,0,0];
         const values=match[1].split(",").map(part=>Number.parseFloat(part.trim()));
         return [values[0]||0,values[1]||0,values[2]||0,values[3]??1];
@@ -94,7 +94,7 @@ try {
         if(!el)return null;
         const range=document.createRange();
         range.selectNodeContents(el);
-        return {text:el.innerText.replace(/\\s+/g," ").trim(),rect:rect(el),style:style(el),lineCount:range.getClientRects().length};
+        return {text:el.innerText.replace(/\s+/g," ").trim(),rect:rect(el),style:style(el),lineCount:range.getClientRects().length};
       };
       const pageSectionOrder=[...document.querySelectorAll("main > section")].map(section=>section.id);
       const allIds=[...document.querySelectorAll("[id]")].map(element=>element.id);
@@ -218,18 +218,18 @@ try {
     if(approachDetails){
       const normalText=[
         approachDetails.supportingParagraph?.style,
+        ...approachDetails.steps.map(step=>step.title.style),
         ...approachDetails.steps.map(step=>step.description.style),
         ...approachDetails.steps.map(step=>step.number.style),
         approachDetails.marker?.number?.style,
         style(document.querySelector("#approach .section-marker-label"))
       ].filter(Boolean);
-      const largeText=[
-        approachDetails.heading?.style,
-        ...approachDetails.steps.map(step=>step.title.style)
-      ].filter(Boolean);
+      const largeText=[approachDetails.heading?.style].filter(Boolean);
       if(normalText.some(item=>item.contrastRatio<4.5))problems.push("Section 02 normal-text contrast below WCAG AA 4.5:1");
       if(largeText.some(item=>item.contrastRatio<3))problems.push("Section 02 large-text contrast below WCAG AA 3:1");
       if(approachDetails.steps.some(step=>!step.title?.text||!step.description?.text))problems.push("Section 02 contains an empty step title or description");
+      if(approachDetails.heading?.text!=="قبل اختيار التبييض، نقيّم صحة أسنانك.")problems.push("Section 02 headline differs from the approved copy");
+      if(approachDetails.marker?.label!=="خطوات التقييم")problems.push("Section 02 marker label differs from the approved copy");
     }
     if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","approach","causes","options","suitability","expectations","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
     if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");
