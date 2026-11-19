@@ -343,21 +343,22 @@ try {
       if(normalText.some(item=>item.contrastRatio<4.5))problems.push("Section 02 normal-text contrast below WCAG AA 4.5:1");
       if(largeText.some(item=>item.contrastRatio<3))problems.push("Section 02 large-text contrast below WCAG AA 3:1");
       if(approachDetails.steps.some(step=>!step.title?.text||!step.description?.text))problems.push("Section 02 contains an empty step title or description");
-      if(approachDetails.supportingParagraph?.text!=="يساعدك التقييم على فهم الخيارات المتاحة لحالة أسنانك، وما يمكن توقّعه من نتائجها وحدودها قبل اتخاذ القرار.")problems.push("Section 02 supporting paragraph differs from the approved patient-centered copy");
-      const expectedStepTitles=["نفحص صحة الفم","نشرح الخيارات المناسبة","نحدّد الخطوة التالية"];
+      if(approachDetails.supportingParagraph?.text!=="لا يحدّد لون الأسنان وحده مدى ملاءمة التبييض؛ فصحة الفم جزء أساسي من القرار.")problems.push("Section 02 supporting paragraph differs from the approved patient-centered copy");
+      const expectedStepTitles=["نفحص صحة الفم","نستعرض الخيارات المتاحة","نحدّد الخطوة التالية"];
       const expectedStepDescriptions=[
         "نستمع إلى ملاحظاتك، ونفحص الأسنان واللثة، ونسأل عن أي حساسية أو ألم.",
-        "نوضح الخيارات التي قد تناسب حالتك، وما يمكن توقّعه من نتائجها وآثارها الجانبية وحدودها.",
+        "نشرح النتائج المحتملة لكل خيار، وما قد يصاحبه من آثار جانبية، وحدوده.",
         "نبيّن ما إذا كان التبييض مناسبًا الآن، أم أن هناك مشكلة تستدعي العلاج أولًا."
       ];
       if(JSON.stringify(approachDetails.steps.map(step=>step.title.text))!==JSON.stringify(expectedStepTitles))problems.push("Section 02 step titles differ from the approved copy or sequence");
       if(JSON.stringify(approachDetails.steps.map(step=>step.description.text))!==JSON.stringify(expectedStepDescriptions))problems.push("Section 02 step descriptions differ from the approved copy or sequence");
       if(approachDetails.steps.map(step=>step.number.text).join("|")!=="01|02|03")problems.push("Section 02 evaluation numbers are not in the intended 01 → 02 → 03 order");
-      if(approachDetails.heading?.text!=="قبل اختيار التبييض، نقيّم صحة أسنانك.")problems.push("Section 02 headline differs from the approved copy");
+      if(approachDetails.heading?.text!=="قبل اختيار التبييض، نقيّم صحة فمك.")problems.push("Section 02 headline differs from the approved copy");
       if(approachDetails.marker?.label!=="خطوات التقييم")problems.push("Section 02 marker label differs from the approved copy");
+      if(approachDetails.marker?.ariaLabel!=="القسم الثاني: خطوات التقييم")problems.push("Section 02 accessible marker name differs from the approved Arabic label");
       if(approachDetails.heading?.visualLineCount!==2)problems.push("Section 02 headline must render as exactly two deliberate visual lines");
       if(approachDetails.heading?.style.color!=="rgb(20, 45, 56)")problems.push("Section 02 headline base color must use the approved RUWA deep ink");
-      if(approachDetails.headlineAccent?.text!=="نقيّم صحة أسنانك."||approachDetails.headlineAccent?.style.color!=="rgb(24, 122, 128)")problems.push("Section 02 must apply the restrained Teal accent to the complete key statement only");
+      if(approachDetails.headlineAccent?.text!=="نقيّم صحة فمك."||approachDetails.headlineAccent?.style.color!=="rgb(24, 122, 128)")problems.push("Section 02 must apply the restrained Teal accent to the complete key statement only");
       if(approachDetails.headlineAccent?.style.contrastRatio<4.5)problems.push("Section 02 Teal headline accent falls below normal-text WCAG AA contrast");
       if(!approachDetails.fontAvailability?.cairo700||!approachDetails.fontAvailability?.ibm400||!approachDetails.fontAvailability?.ibm700)problems.push("Section 02 required local Cairo or IBM Plex Arabic font face did not pass document.fonts.check()");
       if(approachDetails.steps.some(step=>!step.title.style.fontLoaded||!step.description.style.fontLoaded||!step.number.style.fontLoaded))problems.push("Section 02 contains a text role whose requested primary font is not available");
