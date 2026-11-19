@@ -143,6 +143,7 @@ try {
           },
           marker:{
             label:markerLabel?.innerText.trim()||"",
+            labelDetails:textDetails(markerLabel),
             ariaLabel:approachMarker?.getAttribute("aria-label")||"",
             rect:rect(approachMarker),style:style(approachMarker),
             number:textDetails(markerNumber),divider:rect(markerDivider)
@@ -214,6 +215,7 @@ try {
     const problems=[];
     if(metrics.horizontalOverflow>1)problems.push("horizontal overflow "+metrics.horizontalOverflow+"px");
     if(metrics.sections.some(s=>s.missing))problems.push("missing section");
+    const approachDetails=metrics.approachDetails;
     if(!approachDetails||approachDetails.steps.length!==3)problems.push("Section 02 must contain one heading and exactly three evaluation steps");
     if(approachDetails){
       const normalText=[
@@ -222,7 +224,7 @@ try {
         ...approachDetails.steps.map(step=>step.description.style),
         ...approachDetails.steps.map(step=>step.number.style),
         approachDetails.marker?.number?.style,
-        style(document.querySelector("#approach .section-marker-label"))
+        approachDetails.marker?.labelDetails?.style
       ].filter(Boolean);
       const largeText=[approachDetails.heading?.style].filter(Boolean);
       if(normalText.some(item=>item.contrastRatio<4.5))problems.push("Section 02 normal-text contrast below WCAG AA 4.5:1");
