@@ -344,10 +344,10 @@ try {
       if(largeText.some(item=>item.contrastRatio<3))problems.push("Section 02 large-text contrast below WCAG AA 3:1");
       if(approachDetails.steps.some(step=>!step.title?.text||!step.description?.text))problems.push("Section 02 contains an empty step title or description");
       if(approachDetails.supportingParagraph?.text!=="لا يحدّد لون الأسنان وحده مدى ملاءمة التبييض؛ فصحة الفم جزء أساسي من القرار.")problems.push("Section 02 supporting paragraph differs from the approved patient-centered copy");
-      const expectedStepTitles=["نفحص صحة الفم","نستعرض الخيارات المتاحة لحالتك","نحدّد الخطوة التالية"];
+      const expectedStepTitles=["نبدأ بفهم حالتك","نستعرض الخيارات المتاحة لحالتك","نحدّد الخطوة التالية"];
       const expectedStepDescriptions=[
         "نستمع إلى ملاحظاتك، ونفحص الأسنان واللثة، ونسأل عن أي حساسية أو ألم.",
-        "نشرح النتائج المحتملة لكل خيار، وما قد يصاحبه من آثار جانبية، وحدوده.",
+        "نوضح لكل خيار نتائجه المتوقعة، وآثاره الجانبية المحتملة، وحدوده.",
         "نبيّن ما إذا كان التبييض مناسبًا الآن، أم أن هناك مشكلة تستدعي العلاج أولًا."
       ];
       if(JSON.stringify(approachDetails.steps.map(step=>step.title.text))!==JSON.stringify(expectedStepTitles))problems.push("Section 02 step titles differ from the approved copy or sequence");
