@@ -4,11 +4,12 @@ import { mkdir, writeFile } from "node:fs/promises";
 const BASE_URL = process.env.BASE_URL || "http://127.0.0.1:4173/whitening-2026.html";
 const OUT = "artifacts/whitening-2026/full-page-visual-audit";
 const viewports = [
-  { name: "desktop-1440", width: 1440, height: 1000 },
-  { name: "desktop-1366", width: 1366, height: 900 },
-  { name: "laptop-1280", width: 1280, height: 900 },
-  { name: "laptop-1024", width: 1024, height: 900 },
-  { name: "tablet-768", width: 768, height: 1000 },
+  { name: "desktop-1440", width: 1440, height: 900 },
+  { name: "desktop-1366", width: 1366, height: 768 },
+  { name: "laptop-1280", width: 1280, height: 720 },
+  { name: "laptop-1024", width: 1024, height: 768 },
+  { name: "tablet-768", width: 768, height: 800 },
+  { name: "mobile-430", width: 430, height: 900, mobile: true },
   { name: "mobile-390", width: 390, height: 844, mobile: true },
   { name: "mobile-360", width: 360, height: 800, mobile: true }
 ];
@@ -43,15 +44,57 @@ try {
         const r=el.getBoundingClientRect();
         return {x:round(r.x),y:round(r.y),width:round(r.width),height:round(r.height),top:round(r.top),bottom:round(r.bottom)};
       };
+      const parseColor=value=>{
+        const match=String(value||"").match(/rgba?\\(([^)]+)\\)/);
+        if(!match)return [0,0,0,0];
+        const values=match[1].split(",").map(part=>Number.parseFloat(part.trim()));
+        return [values[0]||0,values[1]||0,values[2]||0,values[3]??1];
+      };
+      const composite=(foreground,background)=>{
+        const alpha=foreground[3]+background[3]*(1-foreground[3]);
+        if(alpha===0)return [0,0,0,0];
+        return [0,1,2].map(index=>(foreground[index]*foreground[3]+background[index]*background[3]*(1-foreground[3]))/alpha).concat(alpha);
+      };
+      const effectiveBackground=el=>{
+        let background=[255,255,255,1];
+        const ancestry=[];
+        for(let node=el;node;node=node.parentElement)ancestry.unshift(node);
+        for(const node of ancestry){
+          const color=parseColor(getComputedStyle(node).backgroundColor);
+          if(color[3]>0)background=composite(color,background);
+        }
+        return "rgb("+background.slice(0,3).map(value=>Math.round(value)).join(", ")+")";
+      };
+      const luminance=value=>{
+        const rgb=parseColor(value).slice(0,3).map(component=>{
+          const channel=component/255;
+          return channel<=0.04045?channel/12.92:Math.pow((channel+0.055)/1.055,2.4);
+        });
+        return 0.2126*rgb[0]+0.7152*rgb[1]+0.0722*rgb[2];
+      };
+      const contrast=(foreground,background)=>{
+        const values=[luminance(foreground),luminance(background)].sort((a,b)=>b-a);
+        return Number(((values[0]+0.05)/(values[1]+0.05)).toFixed(2));
+      };
       const style=el=>{
         if(!el)return null;
         const c=getComputedStyle(el);
+        const background=effectiveBackground(el);
         return {
-          color:c.color,backgroundColor:c.backgroundColor,backgroundImage:c.backgroundImage,
-          fontFamily:c.fontFamily,fontSize:c.fontSize,fontWeight:c.fontWeight,lineHeight:c.lineHeight,
-          padding:c.padding,margin:c.margin,gap:c.gap,border:c.border,borderRadius:c.borderRadius,
-          boxShadow:c.boxShadow,display:c.display
+          color:c.color,backgroundColor:c.backgroundColor,effectiveBackground:background,
+          contrastRatio:contrast(c.color,background),
+          backgroundImage:c.backgroundImage,fontFamily:c.fontFamily,fontSize:c.fontSize,
+          fontWeight:c.fontWeight,lineHeight:c.lineHeight,letterSpacing:c.letterSpacing,
+          textAlign:c.textAlign,direction:c.direction,padding:c.padding,margin:c.margin,
+          gap:c.gap,border:c.border,borderRadius:c.borderRadius,boxShadow:c.boxShadow,
+          display:c.display
         };
+      };
+      const textDetails=el=>{
+        if(!el)return null;
+        const range=document.createRange();
+        range.selectNodeContents(el);
+        return {text:el.innerText.replace(/\\s+/g," ").trim(),rect:rect(el),style:style(el),lineCount:range.getClientRects().length};
       };
       const pageSectionOrder=[...document.querySelectorAll("main > section")].map(section=>section.id);
       const allIds=[...document.querySelectorAll("[id]")].map(element=>element.id);
@@ -72,6 +115,60 @@ try {
           cards:cardStyles
         };
       });
+      const approachElement=document.getElementById("approach");
+      const approachGrid=approachElement?.querySelector(".approach-grid");
+      const approachIntro=approachElement?.querySelector(".approach-intro");
+      const approachHeading=approachIntro?.querySelector("h2");
+      const approachParagraph=approachIntro?.querySelector(":scope > p");
+      const approachMarker=approachIntro?.querySelector(".section-marker");
+      const approachList=approachElement?.querySelector(".step-list");
+      const approachSteps=[...(approachElement?.querySelectorAll(".step")||[])];
+      const approachDetails=approachElement?(()=>{
+        const gridStyle=getComputedStyle(approachGrid);
+        const markerNumber=approachMarker?.querySelector(".section-marker-number");
+        const markerLabel=approachMarker?.querySelector(".section-marker-label");
+        const markerDivider=approachMarker?.querySelector(".section-marker-divider");
+        const introRect=rect(approachIntro);
+        const headingRect=rect(approachHeading);
+        const paragraphRect=rect(approachParagraph);
+        const listRect=rect(approachList);
+        return {
+          section:{rect:rect(approachElement),style:style(approachElement)},
+          composition:{
+            gridTemplateColumns:gridStyle.gridTemplateColumns,
+            columnGap:gridStyle.columnGap,rowGap:gridStyle.rowGap,
+            introRect,listRect,
+            horizontalSeparation:round(Math.max(0,Math.max(introRect.x,listRect.x)-Math.min(introRect.x+introRect.width,listRect.x+listRect.width))),
+            introToListVerticalOffset:round(listRect.top-introRect.top)
+          },
+          marker:{
+            label:markerLabel?.innerText.trim()||"",
+            ariaLabel:approachMarker?.getAttribute("aria-label")||"",
+            rect:rect(approachMarker),style:style(approachMarker),
+            number:textDetails(markerNumber),divider:rect(markerDivider)
+          },
+          heading:textDetails(approachHeading),
+          supportingParagraph:textDetails(approachParagraph),
+          spacing:{
+            markerToHeading:round(headingRect.top-rect(approachMarker).bottom),
+            headingToParagraph:round(paragraphRect.top-(headingRect.top+headingRect.height)),
+            paragraphToStepList:round(listRect.top-(paragraphRect.top+paragraphRect.height)),
+            sectionPadding:getComputedStyle(approachElement).padding,
+            stepRowPadding:getComputedStyle(approachSteps[0]||approachElement).padding,
+            stepColumnGap:getComputedStyle(approachSteps[0]||approachElement).columnGap
+          },
+          steps:approachSteps.map(step=>{
+            const number=step.querySelector(".step-no");
+            const title=step.querySelector("h3");
+            const description=step.querySelector("p");
+            return {
+              rect:rect(step),padding:getComputedStyle(step).padding,
+              number:textDetails(number),title:textDetails(title),description:textDetails(description),
+              divider:getComputedStyle(step).borderBottomColor
+            };
+          })
+        };
+      })():null;
       const images=[...document.images].map(img=>({src:img.currentSrc||img.src,complete:img.complete,naturalWidth:img.naturalWidth,naturalHeight:img.naturalHeight}));
       const links=[...document.querySelectorAll("a[href]")].map(a=>({text:a.innerText.trim(),href:a.getAttribute("href")}));
       const brokenAnchors=links.filter(x=>x.href.startsWith("#")&&!document.getElementById(x.href.slice(1))).map(x=>x.href);
@@ -87,7 +184,7 @@ try {
       return {
         viewport:{width:innerWidth,height:innerHeight},documentHeight:document.documentElement.scrollHeight,
         pageSectionOrder,duplicateIds,
-        horizontalOverflow:round(scrollWidth-clientWidth),sections,sectionTransitions,
+        horizontalOverflow:round(scrollWidth-clientWidth),sections,approachDetails,sectionTransitions,
         images,brokenAnchors,emptyControls,
         counts:{sections:ids.length,steps:document.querySelectorAll(".step").length,causeCards:document.querySelectorAll(".info-card").length,
           optionCards:document.querySelectorAll(".option-card").length,suitabilityItems:document.querySelectorAll(".check-item").length,
@@ -97,17 +194,43 @@ try {
       };
     },sectionIds);
     await page.screenshot({path:`${OUT}/${vp.name}-full.png`,fullPage:true,animations:"disabled",timeout:60000});
+    await page.locator("#approach").screenshot({
+      path:`${OUT}/${vp.name}-section-approach.png`,animations:"disabled",timeout:30000
+    });
     if(vp.width===1440||vp.width===390){
-      for(const id of sectionIds){
-        const locator=page.locator("#"+id);
-        await locator.screenshot({path:`${OUT}/${vp.name}-section-${id}.png`,animations:"disabled",timeout:30000});
-      }
+      await page.evaluate(()=>{
+        const section=document.querySelector("#approach");
+        const target=Math.max(0,section.getBoundingClientRect().top+window.scrollY-120);
+        window.scrollTo(0,target);
+      });
+      await page.waitForTimeout(100);
+      await page.screenshot({
+        path:`${OUT}/${vp.name}-hero-to-approach-transition.png`,
+        fullPage:false,animations:"disabled",timeout:30000
+      });
     }
     const result={name:vp.name,...metrics,pageErrors:errors,resourceErrors};
     results.push(result);
     const problems=[];
     if(metrics.horizontalOverflow>1)problems.push("horizontal overflow "+metrics.horizontalOverflow+"px");
     if(metrics.sections.some(s=>s.missing))problems.push("missing section");
+    if(!approachDetails||approachDetails.steps.length!==3)problems.push("Section 02 must contain one heading and exactly three evaluation steps");
+    if(approachDetails){
+      const normalText=[
+        approachDetails.supportingParagraph?.style,
+        ...approachDetails.steps.map(step=>step.description.style),
+        ...approachDetails.steps.map(step=>step.number.style),
+        approachDetails.marker?.number?.style,
+        style(document.querySelector("#approach .section-marker-label"))
+      ].filter(Boolean);
+      const largeText=[
+        approachDetails.heading?.style,
+        ...approachDetails.steps.map(step=>step.title.style)
+      ].filter(Boolean);
+      if(normalText.some(item=>item.contrastRatio<4.5))problems.push("Section 02 normal-text contrast below WCAG AA 4.5:1");
+      if(largeText.some(item=>item.contrastRatio<3))problems.push("Section 02 large-text contrast below WCAG AA 3:1");
+      if(approachDetails.steps.some(step=>!step.title?.text||!step.description?.text))problems.push("Section 02 contains an empty step title or description");
+    }
     if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","approach","causes","options","suitability","expectations","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
     if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");
     if(metrics.brokenAnchors.length)problems.push("broken in-page anchors");
