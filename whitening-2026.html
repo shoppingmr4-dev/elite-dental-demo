@@ -941,6 +941,63 @@ body,button,input,select,textarea{font-family:var(--body)}
  width:17px;
  height:17px;
 }
+
+/* RUWA Section 02 — centered editorial introduction and responsive evaluation steps. */
+.approach-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(28px,3.2vw,42px);align-items:start}
+.approach-intro{display:flex;flex-direction:column;align-items:center;width:100%;text-align:center}
+.approach-intro>.section-marker{align-self:center;margin-inline:auto}
+.approach h2{
+ width:min(100%,760px);max-width:760px;margin:14px auto 12px;color:var(--ink);
+ text-align:center;font-family:var(--display);font-size:clamp(30px,4.2vw,46px);
+ font-weight:700;line-height:1.42;letter-spacing:0
+}
+.approach-intro p{
+ width:min(100%,660px);max-width:660px;margin:0 auto;color:var(--muted);text-align:center;
+ font-family:var(--body);font-size:15px;font-weight:400;line-height:2
+}
+.step-list{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2.2vw,32px);
+ width:100%;border:0
+}
+.step{
+ display:grid;grid-template-columns:36px minmax(0,1fr);align-content:start;gap:14px;
+ min-width:0;margin:0;padding:22px 0 0;border:0;border-top:1px solid var(--line)
+}
+.step-no{
+ padding-top:2px;color:var(--blue);text-align:right;font-family:var(--body);
+ font-size:12px;font-weight:800;line-height:1.8;direction:ltr
+}
+.step>div{min-width:0;text-align:right}
+.step h3{
+ margin:0 0 7px;color:var(--ink);font-family:var(--display);font-size:18px;
+ font-weight:700;line-height:1.55;letter-spacing:0;text-align:right
+}
+.step p{
+ max-width:390px;margin:0;color:var(--muted);font-family:var(--body);
+ font-size:14px;font-weight:400;line-height:1.95;text-align:right
+}
+@media(max-width:900px){
+ .approach-grid{gap:clamp(26px,3.8vw,34px)}
+ .step-list{grid-template-columns:minmax(0,1fr);gap:0;max-width:840px;margin-inline:auto}
+ .step{
+  grid-template-columns:36px minmax(0,1fr);padding:18px 0;
+  border-top:0;border-bottom:1px solid var(--line)
+ }
+ .step:first-child{border-top:1px solid var(--line)}
+ .step p{max-width:680px}
+}
+@media(max-width:600px){
+ .approach-grid{gap:26px}
+ .approach h2{
+  width:100%;margin-top:13px;margin-bottom:10px;
+  font-size:clamp(29px,7.5vw,34px);line-height:1.42
+ }
+ .approach-intro p{font-size:14px;line-height:1.95}
+ .step{padding:16px 0;gap:12px}
+ .step h3{font-size:17px}
+ .step p{font-size:14px;line-height:1.95}
+}
+
 </style>
 </head>
 <body>

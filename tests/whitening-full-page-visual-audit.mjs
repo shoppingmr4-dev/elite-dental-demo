@@ -123,6 +123,8 @@ try {
       const approachMarker=approachIntro?.querySelector(".section-marker");
       const approachList=approachElement?.querySelector(".step-list");
       const approachSteps=[...(approachElement?.querySelectorAll(".step")||[])];
+      const approachListStyle=style(approachList);
+      const approachIntroStyle=style(approachIntro);
       const approachDetails=approachElement?(()=>{
         const gridStyle=getComputedStyle(approachGrid);
         const markerNumber=approachMarker?.querySelector(".section-marker-number");
@@ -137,7 +139,13 @@ try {
           composition:{
             gridTemplateColumns:gridStyle.gridTemplateColumns,
             columnGap:gridStyle.columnGap,rowGap:gridStyle.rowGap,
+            stepListGridTemplateColumns:approachListStyle?.display==="grid"?getComputedStyle(approachList).gridTemplateColumns:"",
+            stepListColumnCount:approachListStyle?.display==="grid"?getComputedStyle(approachList).gridTemplateColumns.trim().split(/\s+/).length:0,
+            introStyle:approachIntroStyle,stepListStyle:approachListStyle,
             introRect,listRect,
+            markerCenterOffset:round((rect(approachMarker).x+rect(approachMarker).width/2)-(rect(approachGrid).x+rect(approachGrid).width/2)),
+            headingCenterOffset:round((headingRect.x+headingRect.width/2)-(rect(approachGrid).x+rect(approachGrid).width/2)),
+            paragraphCenterOffset:round((paragraphRect.x+paragraphRect.width/2)-(rect(approachGrid).x+rect(approachGrid).width/2)),
             horizontalSeparation:round(Math.max(0,Math.max(introRect.x,listRect.x)-Math.min(introRect.x+introRect.width,listRect.x+listRect.width))),
             introToListVerticalOffset:round(listRect.top-introRect.top)
           },
@@ -209,6 +217,17 @@ try {
         path:`${OUT}/${vp.name}-hero-to-approach-transition.png`,
         fullPage:false,animations:"disabled",timeout:30000
       });
+      await page.evaluate(()=>{
+        const section=document.querySelector("#approach");
+        const rect=section.getBoundingClientRect();
+        const target=window.scrollY+rect.bottom-Math.round(window.innerHeight*0.68);
+        window.scrollTo(0,Math.max(0,target));
+      });
+      await page.waitForTimeout(100);
+      await page.screenshot({
+        path:`${OUT}/${vp.name}-approach-to-causes-transition.png`,
+        fullPage:false,animations:"disabled",timeout:30000
+      });
     }
     const result={name:vp.name,...metrics,pageErrors:errors,resourceErrors};
     results.push(result);
@@ -232,6 +251,13 @@ try {
       if(approachDetails.steps.some(step=>!step.title?.text||!step.description?.text))problems.push("Section 02 contains an empty step title or description");
       if(approachDetails.heading?.text!=="قبل اختيار التبييض، نقيّم صحة أسنانك.")problems.push("Section 02 headline differs from the approved copy");
       if(approachDetails.marker?.label!=="خطوات التقييم")problems.push("Section 02 marker label differs from the approved copy");
+      if(approachDetails.heading?.style.textAlign!=="center")problems.push("Section 02 heading is not centered");
+      if(approachDetails.supportingParagraph?.style.textAlign!=="center")problems.push("Section 02 supporting paragraph is not centered");
+      if(approachDetails.steps.some(step=>step.title.style.textAlign!=="right"||step.description.style.textAlign!=="right"))problems.push("Section 02 step text is not right-aligned for Arabic reading");
+      if([approachDetails.composition.markerCenterOffset,approachDetails.composition.headingCenterOffset,approachDetails.composition.paragraphCenterOffset].some(offset=>Math.abs(offset)>1))problems.push("Section 02 centered introduction is horizontally unbalanced");
+      if(approachDetails.spacing.paragraphToStepList<24)problems.push("Section 02 introduction and evaluation steps are too close");
+      const expectedStepColumns=vp.width>900?3:1;
+      if(approachDetails.composition.stepListColumnCount!==expectedStepColumns)problems.push("Section 02 step layout does not match the responsive column rule");
     }
     if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","approach","causes","options","suitability","expectations","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
     if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");
