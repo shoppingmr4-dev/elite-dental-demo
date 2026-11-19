@@ -41,12 +41,13 @@ try {
     if(vp.width===1440||vp.width===390){
       const variants=[
         {name:"editorial-teal",css:"#approach .step-no{display:block;width:auto;height:auto;padding-top:2px;color:#187A80;font-size:13px;font-weight:700;line-height:1.8;text-align:right;background:transparent;border:0;border-radius:0;box-shadow:none}"},
-        {name:"soft-circle",css:"#approach .step-no{display:flex;width:30px;height:30px;padding:0;align-items:center;justify-content:center;justify-self:start;color:#115A60;font-size:12px;font-weight:700;line-height:1;text-align:center;background:#E3F2E9;border:0;border-radius:50%;box-shadow:none}"},
-        {name:"soft-rounded-square",css:"#approach .step-no{display:flex;width:30px;height:30px;padding:0;align-items:center;justify-content:center;justify-self:start;color:#115A60;font-size:12px;font-weight:700;line-height:1;text-align:center;background:#E3F2E9;border:0;border-radius:8px;box-shadow:none}"},
+        {name:"soft-circle",css:"#approach .step-no{display:flex;width:28px;height:28px;padding:0;align-items:center;justify-content:center;justify-self:start;color:#115A60;font-size:12px;font-weight:700;line-height:1;text-align:center;background:#E3F2E9;border:0;border-radius:50%;box-shadow:none}"},
+        {name:"soft-rounded-square",css:"#approach .step-no{display:flex;width:28px;height:28px;padding:0;align-items:center;justify-content:center;justify-self:start;color:#115A60;font-size:12px;font-weight:700;line-height:1;text-align:center;background:#E3F2E9;border:0;border-radius:8px;box-shadow:none}"},
         {name:"deep-teal-editorial",css:"#approach .step-no{display:block;width:auto;height:auto;padding-top:2px;color:#115A60;font-size:14px;font-weight:700;line-height:1.8;text-align:right;background:transparent;border:0;border-radius:0;box-shadow:none}"}
       ];
       for(const variant of variants){
         const styleTag=await page.addStyleTag({content:variant.css});
+        await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
         const measurements=await page.locator("#approach .step-no").evaluateAll(elements=>{
           const lum=value=>{
             const channels=String(value).match(/[\d.]+/g)?.slice(0,3).map(Number)||[255,255,255];
@@ -73,6 +74,7 @@ try {
         });
         numberDesignComparisons.push({viewport:vp.name,variant:variant.name,measurements});
         await styleTag.evaluate(node=>node.remove());
+        await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
       }
     }
     const metrics=await page.evaluate((ids)=>{
@@ -233,7 +235,7 @@ try {
           fontAvailability:{
             cairo700:document.fonts.check('700 46px "Cairo"',"صحة الأسنان"),
             ibm400:document.fonts.check('400 15px "IBM Plex Sans Arabic"',"خيارات التقييم"),
-            ibm700:document.fonts.check('700 13px "IBM Plex Sans Arabic"',"01")
+            ibm700:document.fonts.check('700 12px "IBM Plex Sans Arabic"',"01")
           },
           oneLineComparison,
           supportingParagraph:textDetails(approachParagraph),
@@ -363,8 +365,8 @@ try {
       if(approachDetails.steps.some(step=>step.style.backdropFilter!=="none"||step.style.boxShadow!=="none"||step.style.borderRadius!=="0px"||step.style.backgroundColor!=="rgba(0, 0, 0, 0)"))problems.push("Section 02 step components must remain minimal editorial blocks, not glass or boxed cards");
       if(!approachDetails.oneLineComparison||approachDetails.oneLineComparison.naturalWidth<=0||approachDetails.oneLineComparison.availableWidth<=0)problems.push("Section 02 one-line headline comparison could not be measured");
       if(approachDetails.supportingParagraph?.style.textAlign!=="center")problems.push("Section 02 supporting paragraph is not centered");
-      if(approachDetails.steps.some(step=>step.title.style.color!=="rgb(20, 45, 56)"||step.description.style.color!=="rgb(92, 109, 114)"||step.number.style.color!=="rgb(24, 122, 128)"))problems.push("Section 02 step text roles do not use the consistent RUWA color hierarchy");
-      if(approachDetails.steps.some(step=>step.number.style.fontWeight!=="700"||step.number.style.fontSize!=="13px"))problems.push("Section 02 step numbers must use the refined readable 13px / 700 treatment");
+      if(approachDetails.steps.some(step=>step.title.style.color!=="rgb(20, 45, 56)"||step.description.style.color!=="rgb(92, 109, 114)"||step.number.style.color!=="rgb(17, 90, 96)"))problems.push("Section 02 step text roles do not use the consistent RUWA color hierarchy");
+      if(approachDetails.steps.some(step=>step.number.style.fontWeight!=="700"||step.number.style.fontSize!=="12px"||step.number.style.backgroundColor!=="rgb(227, 242, 233)"||step.number.style.borderRadius!=="50%"||step.number.rect.width!==28||step.number.rect.height!==28))problems.push("Section 02 step numbers must use the refined 28px Soft Mint circular marker with 12px Deep Teal numerals");
       if(approachDetails.steps.some(step=>step.numberToTitleGap<10||step.numberToTitleGap>18||step.titleToDescriptionGap<5||step.titleToDescriptionGap>9))problems.push("Section 02 step internal spacing is outside the approved rhythm");
       if(approachDetails.steps.some(step=>step.description.style.fontSize!=="14px"||step.description.style.lineHeight!=="27.3px"))problems.push("Section 02 step description typography differs from its approved readable body style");
       if(approachDetails.steps.some(step=>step.rect.width<280))problems.push("Section 02 step column is too narrow for comfortable Arabic reading");
