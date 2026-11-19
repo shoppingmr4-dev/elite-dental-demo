@@ -161,7 +161,7 @@ try {
     assert.equal(initial.horizontalOverflow, false, `${viewport.name}: horizontal overflow detected`);
     assert.deepEqual(initial.markerSystem.markers.map(({number,label,context})=>({number,label,context})),[
       {number:"01",label:"دليل الابتسامة",context:"hero"},
-      {number:"02",label:"خطوات واضحة",context:"paper"},
+      {number:"02",label:"خطوات التقييم",context:"paper"},
       {number:"03",label:"فهم اللون",context:"paper"},
       {number:"04",label:"الخيارات المتاحة",context:"canvas"},
       {number:"05",label:"قبل اتخاذ القرار",context:"paper"},
