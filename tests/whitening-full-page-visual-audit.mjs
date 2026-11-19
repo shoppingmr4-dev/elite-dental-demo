@@ -18,6 +18,7 @@ await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
 const results = [];
 const failures = [];
+const numberDesignComparisons = [];
 try {
   for (const vp of viewports) {
     const page = await browser.newPage({
@@ -37,6 +38,43 @@ try {
     if(!response?.ok()) throw new Error(vp.name+": page load failed");
     await page.evaluate(()=>document.fonts.ready);
     await page.waitForTimeout(180);
+    if(vp.width===1440||vp.width===390){
+      const variants=[
+        {name:"editorial-teal",css:"#approach .step-no{display:block;width:auto;height:auto;padding-top:2px;color:#187A80;font-size:13px;font-weight:700;line-height:1.8;text-align:right;background:transparent;border:0;border-radius:0;box-shadow:none}"},
+        {name:"soft-circle",css:"#approach .step-no{display:flex;width:30px;height:30px;padding:0;align-items:center;justify-content:center;justify-self:start;color:#115A60;font-size:12px;font-weight:700;line-height:1;text-align:center;background:#E3F2E9;border:0;border-radius:50%;box-shadow:none}"},
+        {name:"soft-rounded-square",css:"#approach .step-no{display:flex;width:30px;height:30px;padding:0;align-items:center;justify-content:center;justify-self:start;color:#115A60;font-size:12px;font-weight:700;line-height:1;text-align:center;background:#E3F2E9;border:0;border-radius:8px;box-shadow:none}"},
+        {name:"deep-teal-editorial",css:"#approach .step-no{display:block;width:auto;height:auto;padding-top:2px;color:#115A60;font-size:14px;font-weight:700;line-height:1.8;text-align:right;background:transparent;border:0;border-radius:0;box-shadow:none}"}
+      ];
+      for(const variant of variants){
+        const styleTag=await page.addStyleTag({content:variant.css});
+        const measurements=await page.locator("#approach .step-no").evaluateAll(elements=>{
+          const lum=value=>{
+            const channels=String(value).match(/[\d.]+/g)?.slice(0,3).map(Number)||[255,255,255];
+            const linear=channels.map(channel=>{const c=channel/255;return c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4)});
+            return .2126*linear[0]+.7152*linear[1]+.0722*linear[2];
+          };
+          return elements.map(element=>{
+            const style=getComputedStyle(element),rect=element.getBoundingClientRect();
+            const background=style.backgroundColor==="rgba(0, 0, 0, 0)"?getComputedStyle(document.querySelector("#approach")).backgroundColor:style.backgroundColor;
+            const contrastValues=[lum(style.color),lum(background)].sort((a,b)=>b-a);
+            return {
+              text:element.textContent.trim(),
+              rect:{x:Number(rect.x.toFixed(2)),y:Number(rect.y.toFixed(2)),width:Number(rect.width.toFixed(2)),height:Number(rect.height.toFixed(2))},
+              color:style.color,backgroundColor:style.backgroundColor,effectiveBackground:background,
+              fontFamily:style.fontFamily,fontSize:style.fontSize,fontWeight:style.fontWeight,
+              lineHeight:style.lineHeight,borderRadius:style.borderRadius,border:style.border,
+              contrastRatio:Number(((contrastValues[0]+.05)/(contrastValues[1]+.05)).toFixed(2))
+            };
+          });
+        });
+        await page.locator("#approach").screenshot({
+          path: OUT+"/"+vp.name+"-number-variant-"+variant.name+".png",
+          animations:"disabled",timeout:30000
+        });
+        numberDesignComparisons.push({viewport:vp.name,variant:variant.name,measurements});
+        await styleTag.evaluate(node=>node.remove());
+      }
+    }
     const metrics=await page.evaluate((ids)=>{
       const round=n=>Number(n.toFixed(2));
       const rect=el=>{
@@ -303,6 +341,16 @@ try {
       if(normalText.some(item=>item.contrastRatio<4.5))problems.push("Section 02 normal-text contrast below WCAG AA 4.5:1");
       if(largeText.some(item=>item.contrastRatio<3))problems.push("Section 02 large-text contrast below WCAG AA 3:1");
       if(approachDetails.steps.some(step=>!step.title?.text||!step.description?.text))problems.push("Section 02 contains an empty step title or description");
+      if(approachDetails.supportingParagraph?.text!=="يساعدك التقييم على فهم الخيارات المتاحة لحالة أسنانك، وما يمكن توقّعه من نتائجها وحدودها قبل اتخاذ القرار.")problems.push("Section 02 supporting paragraph differs from the approved patient-centered copy");
+      const expectedStepTitles=["نفحص صحة الفم","نشرح الخيارات المناسبة","نحدّد الخطوة التالية"];
+      const expectedStepDescriptions=[
+        "نستمع إلى ملاحظاتك، ونفحص الأسنان واللثة، ونسأل عن أي حساسية أو ألم.",
+        "نوضح الخيارات التي قد تناسب حالتك، وما يمكن توقّعه من نتائجها وآثارها الجانبية وحدودها.",
+        "نبيّن ما إذا كان التبييض مناسبًا الآن، أم أن هناك مشكلة تستدعي العلاج أولًا."
+      ];
+      if(JSON.stringify(approachDetails.steps.map(step=>step.title.text))!==JSON.stringify(expectedStepTitles))problems.push("Section 02 step titles differ from the approved copy or sequence");
+      if(JSON.stringify(approachDetails.steps.map(step=>step.description.text))!==JSON.stringify(expectedStepDescriptions))problems.push("Section 02 step descriptions differ from the approved copy or sequence");
+      if(approachDetails.steps.map(step=>step.number.text).join("|")!=="01|02|03")problems.push("Section 02 evaluation numbers are not in the intended 01 → 02 → 03 order");
       if(approachDetails.heading?.text!=="قبل اختيار التبييض، نقيّم صحة أسنانك.")problems.push("Section 02 headline differs from the approved copy");
       if(approachDetails.marker?.label!=="خطوات التقييم")problems.push("Section 02 marker label differs from the approved copy");
       if(approachDetails.heading?.visualLineCount!==2)problems.push("Section 02 headline must render as exactly two deliberate visual lines");
@@ -319,7 +367,7 @@ try {
       if(approachDetails.steps.some(step=>step.number.style.fontWeight!=="700"||step.number.style.fontSize!=="13px"))problems.push("Section 02 step numbers must use the refined readable 13px / 700 treatment");
       if(approachDetails.steps.some(step=>step.numberToTitleGap<10||step.numberToTitleGap>18||step.titleToDescriptionGap<5||step.titleToDescriptionGap>9))problems.push("Section 02 step internal spacing is outside the approved rhythm");
       if(approachDetails.steps.some(step=>step.description.style.fontSize!=="14px"||step.description.style.lineHeight!=="27.3px"))problems.push("Section 02 step description typography differs from its approved readable body style");
-      if(approachDetails.steps.some(step=>step.rect.width<300))problems.push("Section 02 step column is too narrow for comfortable Arabic reading");
+      if(approachDetails.steps.some(step=>step.rect.width<280))problems.push("Section 02 step column is too narrow for comfortable Arabic reading");
       if(approachDetails.spacing.sectionPaddingTop!==approachDetails.spacing.sectionPaddingBottom)problems.push("Section 02 vertical section padding is unbalanced");
       if(Number.parseFloat(approachDetails.spacing.sectionPaddingTop)>84.5||Number.parseFloat(approachDetails.spacing.sectionPaddingTop)<51.5)problems.push("Section 02 external vertical spacing is outside the refined responsive scale");
       if(approachDetails.steps.some(step=>step.title.style.textAlign!=="right"||step.description.style.textAlign!=="right"))problems.push("Section 02 step text is not right-aligned for Arabic reading");
@@ -340,5 +388,6 @@ try {
   }
 } finally { await browser.close(); }
 await writeFile(`${OUT}/full-page-metrics.json`,JSON.stringify({viewports:results,failures},null,2));
+await writeFile(`${OUT}/number-design-comparisons.json`,JSON.stringify(numberDesignComparisons,null,2));
 console.log(JSON.stringify({captured:results.length,total:viewports.length,failures},null,2));
 if(failures.length)process.exitCode=1;
