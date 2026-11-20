@@ -35,6 +35,9 @@ async function measureHeader(page) {
     const arabicBrandSize=Number.parseFloat(getComputedStyle(document.querySelector(".brand-name small")).fontSize);
     const nav=rect(document.querySelector("#main-nav"));
     const action=rect(document.querySelector(".header-action"));
+    const menuElement=document.querySelector("#menu-toggle");
+    const menu=rect(menuElement);
+    const menuVisible=getComputedStyle(menuElement).display!=="none" && menu.width>0 && menu.height>0;
     const actionIcon=rect(document.querySelector(".header-action .whatsapp-brand-icon"));
     const actionFontSize=Number.parseFloat(getComputedStyle(document.querySelector(".header-action")).fontSize);
     const headerProgress=Number.parseFloat(getComputedStyle(header).getPropertyValue("--header-progress"));
@@ -58,7 +61,7 @@ async function measureHeader(page) {
       actionHeight:action.height,
       actionFontSize,actionIcon,arabicBrandSize,brandMark,brandMarkImage,headerProgress,
       wordmarkSize:Number.parseFloat(getComputedStyle(document.querySelector(".brand-name strong")).fontSize),
-      brand,nav,action,
+      brand,nav,action,menu,menuVisible,
       brandNavGap:brand.left-nav.right,
       navActionGap:nav.left-action.right,
       navLinkGaps,
@@ -713,6 +716,29 @@ try {
     assert.equal(new URL(page.url()).hash, "", `${vp.name}: demo CTA must not create an unrelated anchor navigation`);
     await page.evaluate(() => window.scrollTo(0, 0));
     const initialHeaderMetrics = await measureHeader(page);
+    const verifyHeaderTouchTargets=(metrics,stateName)=>{
+      assert.ok(metrics.action.width>=44 && metrics.action.height>=44,
+        `${vp.name}: WhatsApp CTA must have an actual 44×44px minimum target in the ${stateName} state (measured ${metrics.action.width.toFixed(2)}×${metrics.action.height.toFixed(2)}px)`);
+      if(vp.width<=920){
+        assert.equal(metrics.menuVisible,true,
+          `${vp.name}: mobile menu button must be visible in the ${stateName} state`);
+        assert.ok(metrics.menu.width>=44 && metrics.menu.height>=44,
+          `${vp.name}: mobile menu must have an actual 44×44px minimum target in the ${stateName} state (measured ${metrics.menu.width.toFixed(2)}×${metrics.menu.height.toFixed(2)}px)`);
+      }else{
+        assert.equal(metrics.menuVisible,false,
+          `${vp.name}: desktop navigation must keep the mobile menu button hidden`);
+      }
+      return {
+        whatsapp:{width:Number(metrics.action.width.toFixed(2)),height:Number(metrics.action.height.toFixed(2))},
+        menu:{visible:metrics.menuVisible,width:Number(metrics.menu.width.toFixed(2)),height:Number(metrics.menu.height.toFixed(2))}
+      };
+    };
+    const initialTouchTargets=verifyHeaderTouchTargets(initialHeaderMetrics,"expanded");
+    if (vp.width===360) {
+      const mobileInitialScreenshotState=await captureHeader(page,`${OUT}/mobile-360-header-initial.png`);
+      assert.equal(mobileInitialScreenshotState.scrollY,0, `${vp.name}: initial mobile header screenshot must remain at the top`);
+      assert.equal(mobileInitialScreenshotState.compact,false, `${vp.name}: initial mobile header screenshot must show the expanded state`);
+    }
     if (vp.width===1440) {
       const initialScreenshotState=await captureHeader(page,`${OUT}/desktop-1440-header-initial.png`);
       assert.equal(initialScreenshotState.scrollY,0, `${vp.name}: initial header screenshot must preserve the top-of-page state`);
@@ -722,6 +748,8 @@ try {
     await page.waitForFunction(() => document.querySelector(".site-header")?.classList.contains("is-compact"), null, { timeout: 3000 });
     await page.waitForTimeout(360);
     const compactHeaderMetrics = await measureHeader(page);
+    const compactTouchTargets=verifyHeaderTouchTargets(compactHeaderMetrics,"compact");
+    const touchTargetMeasurements={expanded:initialTouchTargets,compact:compactTouchTargets};
     if (vp.width===1440) {
       const compactScreenshotState=await captureHeader(page,`${OUT}/desktop-1440-header-compact.png`);
       assert.ok(compactScreenshotState.scrollY>56, `${vp.name}: compact header screenshot must preserve the scrolled position`);
@@ -1090,7 +1118,7 @@ try {
     });
     await page.screenshot({ path: `${OUT}/${vp.name}.png`, fullPage: true, animations: "disabled" });
 
-    results.push({ ...vp, ...state, headerShrink, headerConvergence, pageErrors, localErrors });
+    results.push({ ...vp, ...state, headerShrink, headerConvergence, touchTargetMeasurements, pageErrors, localErrors });
     assert.equal(pageErrors.length, 0, `${vp.name}: JavaScript errors: ${pageErrors.join(" | ")}`);
     assert.equal(localErrors.length, 0, `${vp.name}: local resource errors: ${JSON.stringify(localErrors)}`);
     console.log(`[PASS] ${vp.name}: RTL, navigation typography and states, layout, anchors, menu, motion and overflow`);
