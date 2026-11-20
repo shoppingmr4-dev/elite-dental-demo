@@ -587,22 +587,57 @@ try {
               width,height
             };
           };
+          const splitCssList=value=>{
+            const parts=[];
+            let depth=0,start=0;
+            for(let index=0;index<value.length;index++){
+              if(value[index]==="(")depth++;
+              else if(value[index]===")")depth--;
+              else if(value[index]===","&&depth===0){parts.push(value.slice(start,index).trim());start=index+1;}
+            }
+            parts.push(value.slice(start).trim());
+            return parts.filter(Boolean);
+          };
+          const gradientStopColors=layer=>{
+            if(!/^(repeating-)?(linear|radial|conic)-gradient\(/i.test(layer.trim()))return null;
+            const tokens=layer.match(/rgba?\([^)]*\)|#[0-9a-f]{3,8}\b|transparent/gi)||[];
+            const colors=tokens.map(parseColor).filter(color=>color[3]>0);
+            return colors.length?colors:null;
+          };
           const effectiveBackground=element=>{
-            const layers=[];
-            for(let node=element;node&&node!==document.documentElement;node=node.parentElement){
+            const ancestry=[];
+            for(let node=element;node&&node!==document.documentElement;node=node.parentElement)ancestry.push(node);
+            let backgrounds=[[255,255,255,1]];
+            const sources=[];
+            for(const node of ancestry.reverse()){
               const style=getComputedStyle(node);
               const color=parseColor(style.backgroundColor);
-              if(color[3]>0)layers.push({color,source:node===element?"element background":node.tagName.toLowerCase()+(node.id?"#"+node.id:"")+" background"});
+              if(color[3]>0){
+                backgrounds=backgrounds.map(background=>composite(color,background));
+                sources.push(node.tagName.toLowerCase()+(node.id?"#"+node.id:"")+" background");
+              }
+              if(style.backgroundBlendMode!=="normal"){
+                return {backgrounds,source:sources.join(" → "),unresolved:"non-normal CSS background blending on "+node.tagName.toLowerCase()};
+              }
               if(style.backgroundImage!=="none"){
-                return {rgba:[255,255,255,1],source:"unresolved background image on "+(node.tagName.toLowerCase()+(node.id?"#"+node.id:"")),unresolved:"background image requires rendered-pixel inspection"};
+                const imageLayers=splitCssList(style.backgroundImage).filter(layer=>layer!=="none");
+                // CSS paints the first listed image on top, so resolve the image stack back-to-front.
+                for(const layer of imageLayers.reverse()){
+                  const stops=gradientStopColors(layer);
+                  if(!stops){
+                    return {backgrounds,source:sources.join(" → "),unresolved:"unsupported background image behind text: "+layer};
+                  }
+                  backgrounds=backgrounds.flatMap(background=>stops.map(stop=>composite(stop,background)));
+                  if(backgrounds.length>64){
+                    const unique=new Map(backgrounds.map(background=>[background.map(value=>Math.round(value*1000)/1000).join(","),background]));
+                    backgrounds=[...unique.values()].slice(0,64);
+                  }
+                  sources.push("gradient stop envelope on "+node.tagName.toLowerCase());
+                }
               }
             }
-            let background=[255,255,255,1];
-            for(const layer of layers.reverse())background=composite(layer.color,background);
-            let source=layers.length?layers[0].source:"default canvas";
-            const elementStyle=getComputedStyle(element);
             const text=textBounds(element);
-            if(!text)return {rgba:background,source,unresolved:"no measurable text range was found"};
+            if(!text)return {backgrounds,source:sources.join(" → ")||"default canvas",unresolved:"no measurable text range was found"};
             for(const pseudo of ["::before","::after"]){
               const style=getComputedStyle(element,pseudo);
               if(style.display==="none"||style.visibility!=="visible"||style.content==="none"||style.content==="normal")continue;
@@ -611,7 +646,7 @@ try {
               if(pseudoColor[3]<=0&&!hasImage)continue;
               const box=pseudoBounds(element,style);
               if(box.unresolved){
-                return {rgba:background,source,unresolved:pseudo+" has a visible background but its painted geometry is unresolved: "+box.unresolved};
+                return {backgrounds,source:sources.join(" → "),unresolved:pseudo+" has a visible background but its painted geometry is unresolved: "+box.unresolved};
               }
               const overlaps=box.right>text.left&&box.left<text.right&&box.bottom>text.top&&box.top<text.bottom;
               if(!overlaps)continue;
@@ -630,22 +665,19 @@ try {
                 pseudo,
                 bounds:{left:Number(box.left.toFixed(2)),right:Number(box.right.toFixed(2)),top:Number(box.top.toFixed(2)),bottom:Number(box.bottom.toFixed(2))},
                 textBounds:{left:Number(text.left.toFixed(2)),right:Number(text.right.toFixed(2)),top:Number(text.top.toFixed(2)),bottom:Number(text.bottom.toFixed(2))},
-                color:style.backgroundColor,
-                opacity:style.opacity,
-                zIndex:style.zIndex,
-                ownerIsolation:ownerStyle.isolation,
-                coversTextBounds:covers
+                color:style.backgroundColor,opacity:style.opacity,zIndex:style.zIndex,
+                ownerIsolation:ownerStyle.isolation,coversTextBounds:covers
               };
-              if(!covers)return {rgba:background,source:"ambiguous "+pseudo+" background",unresolved:"pseudo-element overlaps but does not fully cover the text bounds: "+JSON.stringify(diagnostic)};
-              if(hasImage)return {rgba:background,source:"ambiguous "+pseudo+" background image",unresolved:"pseudo-element background image cannot be reduced to a single verified color: "+JSON.stringify(diagnostic)};
-              if(!isBehindText)return {rgba:background,source:"ambiguous "+pseudo+" paint order",unresolved:"pseudo-element paint order relative to text is not proven: "+JSON.stringify(diagnostic)};
+              if(!covers)return {backgrounds,source:"ambiguous "+pseudo+" background",unresolved:"pseudo-element overlaps but does not fully cover the text bounds: "+JSON.stringify(diagnostic)};
+              if(hasImage)return {backgrounds,source:"ambiguous "+pseudo+" background image",unresolved:"pseudo-element background image cannot be reduced to a single verified color: "+JSON.stringify(diagnostic)};
+              if(!isBehindText)return {backgrounds,source:"ambiguous "+pseudo+" paint order",unresolved:"pseudo-element paint order relative to text is not proven: "+JSON.stringify(diagnostic)};
               const opacity=Math.max(0,Math.min(1,Number.parseFloat(style.opacity)));
               pseudoColor[3]*=Number.isFinite(opacity)?opacity:1;
-              background=composite(pseudoColor,background);
-              source=element.tagName.toLowerCase()+(element.className&&typeof element.className==="string"?"."+element.className.trim().split(/\s+/).join("."):"")+pseudo+" background ("+style.backgroundColor+"; z-index "+style.zIndex+")";
+              backgrounds=backgrounds.map(background=>composite(pseudoColor,background));
+              sources.push(element.tagName.toLowerCase()+(element.className&&typeof element.className==="string"?"."+element.className.trim().split(/\s+/).join("."):"")+pseudo+" background ("+style.backgroundColor+"; z-index "+style.zIndex+")");
               break;
             }
-            return {rgba:background,source};
+            return {backgrounds,source:sources.join(" → ")||"default canvas"};
           };
           const selectors=[
             ".hero h1",".hero-title-benefit",".hero-lead",".nav a",".header-action",
@@ -661,15 +693,20 @@ try {
             if(!el)return {selector,ratio:0,missing:true};
             const resolved=effectiveBackground(el);
             if(resolved.unresolved)return {selector,ratio:0,missing:true,backgroundSource:resolved.source,unresolved:resolved.unresolved};
-            const background=resolved.rgba;
-            const foreground=composite(parseColor(getComputedStyle(el).color),background);
-            const a=luminance(foreground),b=luminance(background);
+            const foregroundColor=parseColor(getComputedStyle(el).color);
+            const contrastCandidates=resolved.backgrounds.map(background=>{
+              const foreground=composite(foregroundColor,background);
+              const a=luminance(foreground),b=luminance(background);
+              return {background,ratio:(Math.max(a,b)+0.05)/(Math.min(a,b)+0.05)};
+            });
+            const worst=contrastCandidates.reduce((minimum,candidate)=>candidate.ratio<minimum.ratio?candidate:minimum,contrastCandidates[0]);
             return {
               selector,
-              ratio:Number(((Math.max(a,b)+0.05)/(Math.min(a,b)+0.05)).toFixed(3)),
+              ratio:Number(worst.ratio.toFixed(3)),
               foreground:getComputedStyle(el).color,
-              background:background.map(v=>Math.round(v)).slice(0,3),
-              backgroundSource:resolved.source
+              background:worst.background.map(v=>Math.round(v)).slice(0,3),
+              backgroundSource:resolved.source,
+              gradientCandidatesEvaluated:contrastCandidates.length
             };
           });
         })(),
