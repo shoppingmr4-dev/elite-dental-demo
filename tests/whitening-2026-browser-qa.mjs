@@ -160,6 +160,8 @@ try {
         headerRect:rect(document.querySelector(".site-header")),
         headerInnerRect:rect(document.querySelector(".header-inner")),
         heroWrapRect:rect(document.querySelector(".hero .wrap")),
+        heroHeadingRect:rect(heading),
+        heroActionsRect:rect(document.querySelector(".hero-actions")),
         headerPanelRadius:getComputedStyle(document.querySelector(".site-header"),"::before").borderTopLeftRadius,
         headerPanelTopInset:Number.parseFloat(getComputedStyle(document.querySelector(".site-header"),"::before").top),
         headerCompactInitially:document.querySelector(".site-header")?.classList.contains("is-compact") || false,
@@ -769,6 +771,13 @@ try {
     assert.equal(state.headlineBenefit, "لابتسامة أكثر إشراقًا", `${vp.name}: headline benefit phrase changed`);
     assert.equal(state.headlineOverflow, false, `${vp.name}: headline content overflows its box`);
     assert.ok(state.headingVisible, `${vp.name}: headline is not visible`);
+    if (vp.width > 720) {
+      assert.ok(state.heroHeadingRect.top - state.heroWrapRect.top <= 150,
+        vp.name + ": Hero headline is too far below the first-view content edge (" +
+        Math.round(state.heroHeadingRect.top - state.heroWrapRect.top) + "px)");
+      assert.ok(state.heroActionsRect.bottom <= state.headerRect.bottom + window.innerHeight * 0.72,
+        vp.name + ": Hero actions are too low in the first viewport");
+    }
     assert.equal(state.eyebrowLabel, "دليل الابتسامة", `${vp.name}: hero eyebrow label changed`);
     assert.equal(state.eyebrowIndex, "01", `${vp.name}: hero eyebrow sequence marker is missing`);
     assert.ok(state.eyebrowToothIcon, `${vp.name}: dental tooth icon is missing`);
