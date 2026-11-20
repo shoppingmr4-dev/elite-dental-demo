@@ -121,12 +121,12 @@ try {
       if (portrait && Math.abs(portrait.height / portrait.width - 1.5) > 0.03) issues.push("Hero dentist portrait aspect ratio is distorted");
       if (!disclosure || disclosure.width<=0 || disclosure.height<22 || disclosure.top<portrait.bottom-1 || disclosure.bottom>visual.bottom+1) issues.push("Visible AI-illustration disclosure is missing or detached from the portrait");
       if (disclosureText !== "الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا.") issues.push("Portrait disclosure must match the approved Arabic AI-generated image notice");
-      if (!heroPortrait || heroPortrait.getAttribute("src")!=="assets/ruwa-hero-portrait-v3.avif") issues.push("Hero must use the approved RUWA dentist portrait asset");
-      if (heroPortrait && (heroPortrait.naturalWidth!==448 || heroPortrait.naturalHeight!==672 || heroPortrait.getAttribute("width")!=="448" || heroPortrait.getAttribute("height")!=="672")) issues.push("Hero portrait intrinsic dimensions or reserved layout dimensions changed");
+      if (!heroPortrait || heroPortrait.getAttribute("src")!=="assets/ruwa-hero-90-768.webp") issues.push("Hero must use the approved RUWA dentist portrait asset");
+      if (heroPortrait && (heroPortrait.naturalWidth!==768 || heroPortrait.naturalHeight!==1152 || heroPortrait.getAttribute("width")!=="768" || heroPortrait.getAttribute("height")!=="1152")) issues.push("Hero portrait intrinsic dimensions or reserved layout dimensions changed");
       if (heroPortrait && heroPortrait.loading!=="eager") issues.push("Above-the-fold Hero portrait must use eager loading");
       if (heroPortrait && heroPortrait.getAttribute("fetchpriority")!=="high") issues.push("Hero portrait fetch priority must remain high");
       if (heroPortrait && getComputedStyle(heroPortrait).objectFit!=="contain") issues.push("Hero portrait must preserve its transparent cutout with object-fit: contain");
-      const heroImagePreload=document.querySelector('link[rel="preload"][as="image"][href="assets/ruwa-hero-portrait-v3.avif"]');
+      const heroImagePreload=document.querySelector('link[rel="preload"][as="image"][href="assets/ruwa-hero-90-768.webp"]');
       if (!heroImagePreload || heroImagePreload.getAttribute("fetchpriority")!=="high") issues.push("High-priority preload for the approved Hero portrait is missing");
       if (Math.abs(markerDesign.height - 40) > 0.5) issues.push(`Hero marker height should be 40px; got ${markerDesign.height}px`);
       if (markerDesign.labelFontSize !== "12px") issues.push(`Hero marker label should be 12px; got ${markerDesign.labelFontSize}`);

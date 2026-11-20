@@ -404,7 +404,7 @@ try {
         })()),
         heroVisualNodeCount:document.querySelectorAll(".photo-frame,.visual-backdrop,.visual-outline,.visual-index,.visual-caption,.visual-side-note,.photo-label").length,
         imageCount:document.querySelectorAll(".hero img").length,
-        heroImageLoaded:Boolean(heroPortrait?.complete&&heroPortrait.naturalWidth===448&&heroPortrait.naturalHeight===672),
+        heroImageLoaded:Boolean(heroPortrait?.complete&&heroPortrait.naturalWidth===768&&heroPortrait.naturalHeight===1152),
         heroImageVisible:Boolean(heroPortrait&&(()=>{
           const r=heroPortrait.getBoundingClientRect(),s=getComputedStyle(heroPortrait);
           return r.width>0&&r.height>0&&s.display!=="none"&&s.visibility==="visible"&&Number(s.opacity)>.99;
@@ -418,8 +418,8 @@ try {
         heroImageFetchPriority:heroPortrait?.getAttribute("fetchpriority")||"",
         heroImageObjectFit:heroPortrait?getComputedStyle(heroPortrait).objectFit:"",
         heroImageTiltDegrees:(()=>{if(!heroPortrait)return 0;const transform=getComputedStyle(heroPortrait).transform;if(transform==="none")return 0;const values=transform.slice(transform.indexOf("(")+1,-1).split(",").map(Number);return values.length===6?Math.atan2(values[1],values[0])*180/Math.PI:0;})(),
-        heroImagePreloadPresent:[...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>new URL(link.href).pathname.endsWith("/assets/ruwa-hero-portrait-v3.avif")),
-        heroImageMarkupReferencePresent:Boolean(document.querySelector(".hero")?.innerHTML.includes("assets/ruwa-hero-portrait-v3.avif")),
+        heroImagePreloadPresent:[...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>new URL(link.href).pathname.endsWith("/assets/ruwa-hero-90-768.webp")),
+        heroImageMarkupReferencePresent:Boolean(document.querySelector(".hero")?.innerHTML.includes("assets/ruwa-hero-90-768.webp")),
         heroImageTransparentPixelAlpha:(()=>{
           try{
             const canvas=document.createElement("canvas");
@@ -853,9 +853,9 @@ try {
     assert.ok(state.heroImageRect.width>0&&state.heroImageRect.height>0, `${vp.name}: Hero portrait has no rendered area`);
     const minimumPortraitWidth = vp.width <= 320 ? 270 : vp.width <= 390 ? 280 : vp.width <= 720 ? 290 : vp.width <= 920 ? 270 : 320;
     assert.ok(state.heroImageRect.width >= minimumPortraitWidth, `${vp.name}: portrait should render at least ${minimumPortraitWidth}px wide; got ${state.heroImageRect.width.toFixed(1)}px`);
-    assert.equal(state.heroImageSrc, "assets/ruwa-hero-portrait-v3.avif", `${vp.name}: Hero portrait must use the approved local asset`);
-    assert.equal(state.heroImageNaturalWidth, 448, `${vp.name}: Hero portrait intrinsic width changed unexpectedly`);
-    assert.equal(state.heroImageNaturalHeight, 672, `${vp.name}: Hero portrait intrinsic height changed unexpectedly`);
+    assert.equal(state.heroImageSrc, "assets/ruwa-hero-90-768.webp", `${vp.name}: Hero portrait must use the approved local asset`);
+    assert.equal(state.heroImageNaturalWidth, 768, `${vp.name}: Hero portrait intrinsic width changed unexpectedly`);
+    assert.equal(state.heroImageNaturalHeight, 1152, `${vp.name}: Hero portrait intrinsic height changed unexpectedly`);
     assert.ok(state.heroImageAlt.includes("طبيب أسنان")&&state.heroImageAlt.includes("مولّد بالذكاء الاصطناعي"), `${vp.name}: Arabic AI portrait alternative text is missing`);
     assert.equal(state.heroImageLoading, "eager", `${vp.name}: above-the-fold portrait must not lazy-load`);
     assert.equal(state.heroImageFetchPriority, "high", `${vp.name}: Hero portrait fetch priority is not high`);
