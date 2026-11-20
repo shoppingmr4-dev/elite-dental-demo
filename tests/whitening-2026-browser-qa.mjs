@@ -1203,6 +1203,12 @@ try {
       assert.equal(opened.expanded, "true", `${vp.name}: mobile menu aria state did not open`);
       assert.notEqual(opened.display, "none", `${vp.name}: mobile menu did not open`);
       await page.locator('#main-nav a[href="#approach"]').click();
+      // The page restores focus on the next animation frame after native hash navigation.
+      await page.waitForFunction(
+        () => document.activeElement===document.querySelector("#menu-toggle"),
+        null,
+        {timeout:3000}
+      );
       const closed = await page.evaluate(() => ({
         expanded:document.querySelector("#menu-toggle")?.getAttribute("aria-expanded"),
         display:getComputedStyle(document.querySelector("#main-nav")).display,
