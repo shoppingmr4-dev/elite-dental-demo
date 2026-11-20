@@ -7,6 +7,7 @@ const OUT = "artifacts/whitening-2026";
 await mkdir(OUT, { recursive: true });
 
 const viewports = [
+  { name: "mobile-320", width: 320, height: 740, mobile: true },
   { name: "mobile-360", width: 360, height: 800, mobile: true },
   { name: "mobile-390", width: 390, height: 844, mobile: true },
   { name: "mobile-430", width: 430, height: 900, mobile: true },
@@ -478,24 +479,51 @@ try {
         faqItems:document.querySelectorAll(".faq-item").length,
         clinicalReferences:[...document.querySelectorAll(".reference-note a")].map(a=>a.href),
         contrastChecks:(()=>{
-          const parse=color=>{const m=color.match(/[\d.]+/g)?.map(Number)||[];return m.slice(0,3).map(v=>v/255)};
-          const luminance=color=>{
-            const rgb=parse(color).map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4);
+          const parse=value=>{
+            const hex=value.trim().match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+            if(hex){
+              const raw=hex[1].length===3?hex[1].split("").map(ch=>ch+ch).join(""):hex[1];
+              return [parseInt(raw.slice(0,2),16),parseInt(raw.slice(2,4),16),parseInt(raw.slice(4,6),16),1];
+            }
+            const m=value.match(/[\d.]+/g)?.map(Number)||[0,0,0,1];
+            return [m[0]||0,m[1]||0,m[2]||0,m.length>3?m[3]:1];
+          };
+          const composite=(front,back)=>{
+            const a=front[3],out=a+back[3]*(1-a);
+            if(out<=0)return [0,0,0,0];
+            return [0,1,2].map(i=>(front[i]*a+back[i]*back[3]*(1-a))/out).concat(out);
+          };
+          const luminance=rgba=>{
+            const rgb=rgba.slice(0,3).map(v=>v/255).map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4);
             return 0.2126*rgb[0]+0.7152*rgb[1]+0.0722*rgb[2];
           };
-          return [
-            "#approach .approach-intro .eyebrow",
-            "#approach .step p",
-            "#options .section-head p",
-            "#faq .reference-note"
-          ].map(selector=>{
+          const effectiveBackground=el=>{
+            const layers=[];
+            for(let node=el;node&&node!==document.documentElement;node=node.parentElement){
+              const layer=parse(getComputedStyle(node).backgroundColor);
+              if(layer[3]>0)layers.push(layer);
+            }
+            let background=[255,255,255,1];
+            for(const layer of layers.reverse())background=composite(layer,background);
+            return background;
+          };
+          const selectors=[
+            ".hero h1",".hero-title-benefit",".hero-lead",".nav a",".header-action",
+            ".primary-cta",".consultation-cta","#approach .step p","#causes .info-card p",
+            "#options .option-card p","#options .option-card .option-note",
+            "#suitability .suitability-copy p","#suitability .check-item p",
+            "#expectations .expect-card p","#faq .faq-item summary","#faq .faq-answer",
+            "#faq .reference-note","#consultation .inquiry-field label",
+            "#consultation .contact-submit","#consultation .inquiry-status",".footer"
+          ];
+          return selectors.map(selector=>{
             const el=document.querySelector(selector);
-            if(!el)return {selector,ratio:0};
-            const section=el.closest("section");
-            const fg=getComputedStyle(el).color;
-            const bg=section?getComputedStyle(section).backgroundColor:"rgb(255,255,255)";
-            const a=luminance(fg),b=luminance(bg);
-            return {selector,ratio:(Math.max(a,b)+0.05)/(Math.min(a,b)+0.05)};
+            if(!el)return {selector,ratio:0,missing:true};
+            const background=effectiveBackground(el);
+            const foreground=composite(parse(getComputedStyle(el).color),background);
+            const a=luminance(foreground),b=luminance(background);
+            return {selector,ratio:Number(((Math.max(a,b)+0.05)/(Math.min(a,b)+0.05)).toFixed(3)),
+              foreground:getComputedStyle(el).color,background:background.map(v=>Math.round(v)).slice(0,3)};
           });
         })(),
         viewport:window.innerWidth
@@ -918,7 +946,37 @@ try {
     assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);
     assert.equal(state.faqItems, 4, `${vp.name}: the four focused FAQ entries are not present`);
     assert.ok(state.clinicalReferences.some(url=>url.includes("nhs.uk")) && state.clinicalReferences.some(url=>url.includes("ada.org")), `${vp.name}: clinical reference links are missing`);
-    assert.ok(state.contrastChecks.every(item=>item.ratio>=4.5), `${vp.name}: text contrast below WCAG AA: ${JSON.stringify(state.contrastChecks)}`);
+    assert.equal(state.contrastChecks.length,21, `${vp.name}: expanded representative contrast coverage is incomplete`);
+    assert.ok(state.contrastChecks.every(item=>!item.missing&&item.ratio>=4.5), `${vp.name}: representative text contrast below WCAG AA: ${JSON.stringify(state.contrastChecks)}`);
+
+    // Keyboard-tab to both Hero actions and measure their rendered focus indicators.
+    await page.evaluate(()=>document.activeElement?.blur());
+    let primaryFocused=false;
+    for(let step=0;step<32;step++){
+      await page.keyboard.press("Tab");
+      primaryFocused=await page.evaluate(()=>document.activeElement===document.querySelector(".primary-cta"));
+      if(primaryFocused)break;
+    }
+    assert.ok(primaryFocused, `${vp.name}: keyboard tab order did not reach the primary Hero CTA`);
+    const primaryFocus=await page.evaluate(()=>{
+      const element=document.querySelector(".primary-cta"),style=getComputedStyle(element);
+      const parse=value=>value.match(/[\d.]+/g).slice(0,3).map(Number);
+      const luminance=value=>{const rgb=parse(value).map(v=>v/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2]};
+      const ratio=(a,b)=>{const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+      const canvas=getComputedStyle(document.body).backgroundColor;
+      return {visible:element.matches(":focus-visible"),outline:style.outlineStyle,width:style.outlineWidth,color:style.outlineColor,
+        canvasContrast:ratio(style.outlineColor,canvas),whiteContrast:ratio(style.outlineColor,"rgb(255, 255, 255)")};
+    });
+    assert.ok(primaryFocus.visible&&primaryFocus.outline==="solid"&&primaryFocus.width==="3px", `${vp.name}: Hero primary focus indicator is not visibly rendered: ${JSON.stringify(primaryFocus)}`);
+    assert.ok(primaryFocus.canvasContrast>=3&&primaryFocus.whiteContrast>=3, `${vp.name}: Hero primary focus indicator contrast is below 3:1: ${JSON.stringify(primaryFocus)}`);
+    await page.keyboard.press("Tab");
+    const secondaryFocus=await page.evaluate(()=>{
+      const element=document.querySelector(".consultation-cta"),style=getComputedStyle(element);
+      const active=document.activeElement===element;
+      return {active,visible:element.matches(":focus-visible"),outline:style.outlineStyle,width:style.outlineWidth,color:style.outlineColor};
+    });
+    assert.ok(secondaryFocus.active&&secondaryFocus.visible&&secondaryFocus.outline==="solid"&&secondaryFocus.width==="3px", `${vp.name}: Hero secondary focus indicator is not visible: ${JSON.stringify(secondaryFocus)}`);
+    assert.equal(secondaryFocus.color,"rgb(17, 90, 96)", `${vp.name}: Hero CTA focus indicator should use the accessible deep-teal token`);
     assert.equal(state.missingAnchors.length, 0, `${vp.name}: broken in-page anchors: ${state.missingAnchors.join(", ")}`);
     assert.ok(state.skipLink, `${vp.name}: skip link missing`);
     assert.ok(state.faviconHref.endsWith("assets/ruwa-mark.png"), `${vp.name}: RUWA favicon link is missing`);
@@ -951,12 +1009,49 @@ try {
       const closed = await page.evaluate(() => ({
         expanded:document.querySelector("#menu-toggle")?.getAttribute("aria-expanded"),
         display:getComputedStyle(document.querySelector("#main-nav")).display,
-        hash:location.hash
+        hash:location.hash,focusOnToggle:document.activeElement===document.querySelector("#menu-toggle")
       }));
       assert.equal(closed.expanded, "false", `${vp.name}: mobile menu aria state did not close`);
       assert.equal(closed.display, "none", `${vp.name}: mobile menu remained open after selection`);
       assert.equal(closed.hash, "#approach", `${vp.name}: navigation target failed`);
+      assert.equal(closed.focusOnToggle,true,`${vp.name}: selecting a mobile navigation link must not leave focus inside the hidden menu`);
       await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#approach"]')?.getAttribute("aria-current")==="location",null,{timeout:3000});
+
+      await page.keyboard.press("Enter");
+      assert.equal(await page.locator("#menu-toggle").getAttribute("aria-expanded"),"true",`${vp.name}: keyboard activation did not open the mobile menu`);
+      await page.locator("#main-nav a").first().focus();
+      await page.keyboard.press("Escape");
+      const escaped=await page.evaluate(()=>({
+        expanded:document.querySelector("#menu-toggle")?.getAttribute("aria-expanded"),
+        display:getComputedStyle(document.querySelector("#main-nav")).display,
+        focusOnToggle:document.activeElement===document.querySelector("#menu-toggle")
+      }));
+      assert.equal(escaped.expanded,"false",`${vp.name}: Escape did not close the open mobile menu`);
+      assert.equal(escaped.display,"none",`${vp.name}: navigation remained visible after Escape`);
+      assert.equal(escaped.focusOnToggle,true,`${vp.name}: Escape must restore focus to the mobile menu button`);
+
+      await page.keyboard.press("Enter");
+      await page.locator("#main-nav a").nth(1).focus();
+      await page.setViewportSize({width:1024,height:vp.height});
+      const desktopResize=await page.evaluate(()=>({
+        expanded:document.querySelector("#menu-toggle")?.getAttribute("aria-expanded"),
+        navDisplay:getComputedStyle(document.querySelector("#main-nav")).display,
+        toggleDisplay:getComputedStyle(document.querySelector("#menu-toggle")).display,
+        focusInVisibleNav:document.activeElement?.closest("#main-nav")!==null
+      }));
+      assert.equal(desktopResize.expanded,"false",`${vp.name}: resizing to desktop must close the mobile menu state`);
+      assert.notEqual(desktopResize.navDisplay,"none",`${vp.name}: desktop navigation should be visible after resize`);
+      assert.equal(desktopResize.toggleDisplay,"none",`${vp.name}: mobile toggle should hide above the shared 920px breakpoint`);
+      assert.equal(desktopResize.focusInVisibleNav,true,`${vp.name}: resize must not leave focus on a hidden mobile control`);
+      await page.setViewportSize({width:vp.width,height:vp.height});
+      const mobileResize=await page.evaluate(()=>({
+        expanded:document.querySelector("#menu-toggle")?.getAttribute("aria-expanded"),
+        navDisplay:getComputedStyle(document.querySelector("#main-nav")).display,
+        focusOnToggle:document.activeElement===document.querySelector("#menu-toggle")
+      }));
+      assert.equal(mobileResize.expanded,"false",`${vp.name}: mobile menu state should remain closed after returning to mobile width`);
+      assert.equal(mobileResize.navDisplay,"none",`${vp.name}: mobile navigation should return to its collapsed state after resize`);
+      assert.equal(mobileResize.focusOnToggle,true,`${vp.name}: resize to mobile must move focus off the newly hidden desktop nav link`);
     }
 
     if (vp.width > 920) {
