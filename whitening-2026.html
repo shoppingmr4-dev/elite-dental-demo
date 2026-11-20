@@ -754,7 +754,6 @@ body,button,input,select,textarea{font-family:var(--body)}
 .site-header .menu-toggle {
  box-sizing:border-box;
  position:relative;
- display:grid;
  place-items:center;
  width:44px;
  height:44px;
@@ -782,6 +781,9 @@ body,button,input,select,textarea{font-family:var(--body)}
  width:19px;
  height:19px;
  margin:0;
+}
+@media(max-width:920px) {
+ .site-header .menu-toggle { display:grid; }
 }
 @media(max-width:720px) {
  .site-header .menu-toggle { --menu-toggle-visual-size:38px; }
