@@ -616,8 +616,9 @@ try {
                 backgrounds=backgrounds.map(background=>composite(color,background));
                 sources.push(node.tagName.toLowerCase()+(node.id?"#"+node.id:"")+" background");
               }
-              if(style.backgroundBlendMode!=="normal"){
-                return {backgrounds,source:sources.join(" → "),unresolved:"non-normal CSS background blending on "+node.tagName.toLowerCase()};
+              const blendModes=splitCssList(style.backgroundBlendMode);
+              if(blendModes.some(mode=>mode!=="normal")){
+                return {backgrounds,source:sources.join(" → "),unresolved:"non-normal CSS background blending on "+node.tagName.toLowerCase()+": "+style.backgroundBlendMode};
               }
               if(style.backgroundImage!=="none"){
                 const imageLayers=splitCssList(style.backgroundImage).filter(layer=>layer!=="none");
@@ -637,13 +638,25 @@ try {
               }
             }
             const text=textBounds(element);
-            if(!text)return {backgrounds,source:sources.join(" → ")||"default canvas",unresolved:"no measurable text range was found"};
+            // Hidden links and collapsed disclosure content have no rendered text pixels;
+            // retain their computed text/background check but do not invent pseudo-element overlap geometry.
+            if(!text)return {backgrounds,source:sources.join(" → ")||"default canvas"};
             for(const pseudo of ["::before","::after"]){
               const style=getComputedStyle(element,pseudo);
               if(style.display==="none"||style.visibility!=="visible"||style.content==="none"||style.content==="normal")continue;
               const pseudoColor=parseColor(style.backgroundColor);
               const hasImage=style.backgroundImage!=="none";
               if(pseudoColor[3]<=0&&!hasImage)continue;
+              // In-flow ::before/::after nodes are adjacent content, not a backdrop painted behind
+              // the host element's text. Only transformed/negatively offset in-flow pseudos are ambiguous.
+              if(style.position!=="absolute"){
+                const margins=[style.marginTop,style.marginRight,style.marginBottom,style.marginLeft].map(value=>Number.parseFloat(value)||0);
+                const canOverlap=style.transform!=="none"||style.translate!=="none"||margins.some(value=>value<0);
+                if(canOverlap){
+                  return {backgrounds,source:"ambiguous "+pseudo+" in-flow paint",unresolved:"in-flow pseudo-element has a transform or negative margin that could overlap host text"};
+                }
+                continue;
+              }
               const box=pseudoBounds(element,style);
               if(box.unresolved){
                 return {backgrounds,source:sources.join(" → "),unresolved:pseudo+" has a visible background but its painted geometry is unresolved: "+box.unresolved};
