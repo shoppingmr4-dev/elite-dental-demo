@@ -59,6 +59,8 @@ try {
       if(heroPortrait) await heroPortrait.decode();
       const portrait=rect(".hero-portrait");
       const visual=rect(".hero-visual");
+      const disclosure=rect(".hero-portrait-caption");
+      const disclosureText=document.querySelector(".hero-portrait-caption")?.textContent?.trim()||"";
       const hero=rect(".hero");
       const header = rect(".site-header");
       const marker = rect(".hero-eyebrow");
@@ -115,6 +117,10 @@ try {
       if (pageYOffset !== 0) issues.push("page did not start at scroll position zero");
       if (!portrait || portrait.width<=0 || portrait.height<=0 || portrait.display==="none" || portrait.visibility!=="visible" || portrait.opacity<=.99) issues.push("Hero dentist portrait is not visible");
       if (!visual || !hero || portrait.top<hero.top-1 || portrait.bottom>hero.bottom+1 || portrait.left<visual.left-1 || portrait.right>visual.right+1) issues.push("Hero dentist portrait is not contained in its visual area");
+      if (portrait && portrait.width < (window.innerWidth > 920 ? 350 : window.innerWidth <= 390 ? 250 : 260)) issues.push("Hero dentist portrait is too small to have meaningful visual presence");
+      if (portrait && Math.abs(portrait.height / portrait.width - 1.5) > 0.03) issues.push("Hero dentist portrait aspect ratio is distorted");
+      if (!disclosure || disclosure.width<=0 || disclosure.height<22 || disclosure.top<portrait.bottom-1 || disclosure.bottom>visual.bottom+1) issues.push("Visible AI-illustration disclosure is missing or detached from the portrait");
+      if (!/صورة توضيحية مولّدة بالذكاء الاصطناعي/.test(disclosureText) || !/لا تمثل طبيبًا أو موظفًا/.test(disclosureText)) issues.push("Portrait disclosure must clearly identify the image as AI-generated and not a real clinic employee");
       if (!heroPortrait || heroPortrait.getAttribute("src")!=="assets/ruwa-hero-90-768.webp") issues.push("Hero must use the approved RUWA dentist portrait asset");
       if (heroPortrait && (heroPortrait.naturalWidth!==768 || heroPortrait.naturalHeight!==1152 || heroPortrait.getAttribute("width")!=="768" || heroPortrait.getAttribute("height")!=="1152")) issues.push("Hero portrait intrinsic dimensions or reserved layout dimensions changed");
       if (heroPortrait && heroPortrait.loading!=="eager") issues.push("Above-the-fold Hero portrait must use eager loading");
@@ -141,6 +147,8 @@ try {
         visual,
         hero,
         portrait,
+        disclosure,
+        disclosureText,
         portraitSource:heroPortrait?.getAttribute("src")||"",
         portraitLoading:heroPortrait?.loading||"",
         portraitFetchPriority:heroPortrait?.getAttribute("fetchpriority")||"",
@@ -169,7 +177,7 @@ try {
       failures.push({ viewport: vp.name, issues: [...metrics.issues, ...pageErrors.map(error => `JavaScript error: ${error}`)] });
       console.log(`[FAIL] ${vp.name}: ${JSON.stringify({ issues: metrics.issues, heading: metrics.heading, paragraph: metrics.paragraph, primary: metrics.primary, secondary: metrics.secondary })}`);
     } else {
-      console.log(`[PASS] ${vp.name}: Hero marker mint-glass proportions, typography, icon, background, headline, paragraph, complete CTAs and overflow`);
+      console.log(`[PASS] ${vp.name}: Hero portrait prominence, truthful AI disclosure, marker, headline, complete CTAs and overflow`);
     }
     await page.close();
   }

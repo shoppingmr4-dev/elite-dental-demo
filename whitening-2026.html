@@ -122,9 +122,30 @@ body.dialog-open{overflow:hidden}
 .text-link{min-height:44px;display:inline-flex;align-items:center;gap:8px;padding:0 2px;border-bottom:1px solid #A9AAA0;color:var(--ink);font-size:12px;font-weight:800}
 .text-link svg{width:15px;height:15px;transition:transform .2s}
 .text-link:hover svg{transform:translateY(3px)}
-.hero-visual{position:relative;min-width:0;min-height:560px;display:flex;align-items:center;justify-content:flex-start;padding:3px 12px 3px 3px;isolation:isolate}
-.hero-visual::before{content:"";position:absolute;z-index:0;inset:3% -2% 4% 0;border-radius:50%;background:radial-gradient(ellipse at 49% 48%,rgba(24,122,128,.105) 0%,rgba(227,242,233,.34) 38%,rgba(227,242,233,0) 72%);filter:blur(15px);pointer-events:none}
-.hero-portrait{position:relative;z-index:1;display:block;width:min(100%,420px);height:auto;max-height:550px;object-fit:contain;object-position:center bottom;transform:rotate(1deg);transform-origin:50% 94%}
+.hero-visual{
+ position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+ gap:8px;min-width:0;min-height:675px;margin:0;padding:10px 12px 4px;isolation:isolate
+}
+/* A single quiet architectural arch gives the transparent dentist portrait a deliberate clinical-editorial stage. */
+.hero-visual::before{
+ content:"";position:absolute;z-index:0;inset:10px 7% 46px;
+ border:1px solid rgba(24,122,128,.16);
+ border-radius:48% 48% 18px 18px / 30% 30% 18px 18px;
+ background:#E5EFEC;box-shadow:inset 0 0 0 10px rgba(255,255,255,.28);
+ pointer-events:none
+}
+.hero-portrait{
+ position:relative;z-index:1;display:block;align-self:center;
+ width:auto;max-width:100%;height:auto;max-height:610px;
+ object-fit:contain;object-position:center bottom;transform:none
+}
+.hero-portrait-caption{
+ position:relative;z-index:2;max-width:min(100%,360px);margin:0;
+ padding:7px 12px;border:1px solid rgba(20,45,56,.10);border-radius:999px;
+ background:rgba(255,255,255,.9);color:var(--muted);
+ font-family:var(--body);font-size:11px;font-weight:500;line-height:1.65;
+ text-align:center
+}
 .section{padding-block:clamp(60px,7vw,94px)}
 /* RUWA Section 02 — one authoritative centered-introduction and editorial-step system. */
 .approach{background:var(--paper);padding-block:clamp(52px,6vw,84px)}
@@ -310,8 +331,10 @@ body.dialog-open{overflow:hidden}
  .nav a::after{display:none}
  .nav a:hover,.nav a:focus-visible{background:var(--lime);border-radius:8px}
  .menu-toggle{display:block}
- .hero-grid{gap:20px}.hero-visual{min-height:470px;justify-content:flex-start}
- .hero-portrait{width:min(100%,330px);max-height:460px;transform:rotate(.65deg)}
+ .hero-grid{gap:20px}
+ .hero-visual{min-height:560px;padding-inline:10px}
+ .hero-portrait{max-width:min(100%,390px);max-height:500px}
+ .hero-visual::before{inset:12px 5% 44px}
  .hero h1{font-size:clamp(39px,5.7vw,58px)}
 }
 @media(max-width:720px){
@@ -333,9 +356,9 @@ body.dialog-open{overflow:hidden}
  .hero h1{max-width:590px;margin:23px auto 16px;font-size:clamp(38px,9.5vw,57px);line-height:1.36}
  .hero-lead{margin-inline:auto;font-size:14px}
  .hero-actions{flex-direction:column;justify-content:center;align-items:center;margin-top:27px;gap:8px}
- .hero-visual{min-height:380px;width:min(100%,520px);margin-inline:auto;justify-content:center}
- .hero-visual::before{inset:4% 0;border-radius:50%}
- .hero-portrait{width:min(100%,320px);max-height:455px;transform:rotate(.45deg)}
+ .hero-visual{min-height:540px;width:min(100%,520px);margin-inline:auto;justify-content:flex-end;padding:8px 10px 4px;gap:8px}
+ .hero-visual::before{inset:8px 5% 42px;border-radius:48% 48% 16px 16px / 30% 30% 16px 16px}
+ .hero-portrait{max-width:min(100%,360px);max-height:535px}
  .contact-band{grid-template-columns:1fr;align-items:stretch;gap:22px}
  .inquiry-form{grid-template-columns:1fr}
  .contact-submit{width:100%}
@@ -349,8 +372,8 @@ body.dialog-open{overflow:hidden}
  .brand-name strong{font-size:25px;letter-spacing:.01em}.brand-name small{font-size:11px}
  .header-action{font-size:9px;padding:0 9px}
  .hero h1{font-size:36px}
- .hero-visual{min-height:330px}
- .hero-portrait{width:min(100%,300px);max-height:450px;transform:rotate(.25deg)}
+ .hero-visual{min-height:510px}
+ .hero-portrait{max-width:min(100%,330px);max-height:495px}
 }
 @media(prefers-reduced-motion:reduce){
  html{scroll-behavior:auto}
@@ -1125,9 +1148,10 @@ body,button,input,select,textarea{font-family:var(--body)}
       <a class="text-link consultation-cta" href="#consultation">اطلب استشارة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14m-7-7 7 7 7-7"/></svg></a>
      </div>
     </div>
-    <div class="hero-visual">
+    <figure class="hero-visual">
      <img class="hero-portrait" src="assets/ruwa-hero-90-768.webp" width="768" height="1152" alt="صورة توضيحية لطبيب أسنان مولّد بالذكاء الاصطناعي، يرتدي معطفًا أبيض وزيًا طبيًا كحليًا وسماعة طبيب." loading="eager" fetchpriority="high" decoding="async">
-    </div>
+     <figcaption class="hero-portrait-caption">صورة توضيحية مولّدة بالذكاء الاصطناعي؛ لا تمثل طبيبًا أو موظفًا في عيادة حقيقية.</figcaption>
+    </figure>
    </div>
    <nav class="hero-bottom" aria-label="استكشف موضوعات تبييض الأسنان">
     <a class="hero-bottom-item" href="#causes"><b aria-hidden="true">01</b><span>لماذا يتغيّر لون الأسنان؟</span></a>
