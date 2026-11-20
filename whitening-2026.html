@@ -1365,7 +1365,19 @@ body,button,input,select,textarea{font-family:var(--body)}
    nav.classList.add("open");
   }else close();
  });
- nav.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>close({restoreFocus:window.innerWidth<=920})));
+ nav.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>{
+  const restoreMobileFocus=window.innerWidth<=920;
+  close();
+  // Restore focus after the anchor's default hash-navigation action has completed.
+  // This prevents the browser from leaving focus on a link inside the now-hidden mobile menu.
+  if(restoreMobileFocus){
+   requestAnimationFrame(()=>{
+    if(window.innerWidth<=920&&button.getAttribute("aria-expanded")==="false"&&!nav.classList.contains("open")&&button.getClientRects().length){
+     button.focus({preventScroll:true});
+    }
+   });
+  }
+ }));
  document.addEventListener("keydown",event=>{
   if(event.key==="Escape"&&button.getAttribute("aria-expanded")==="true"){
    event.preventDefault();
