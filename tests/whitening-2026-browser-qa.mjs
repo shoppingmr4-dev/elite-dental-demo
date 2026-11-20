@@ -628,11 +628,11 @@ try {
         marker.backdropFilter.includes("blur")&&
         marker.numberContrast>=4.5&&marker.labelContrast>=4.5;
     }),vp.name + ": plain-text number geometry, capsule spacing, RTL order, vertical rule, glass frame, or AA contrast failed: " + JSON.stringify(state.allSectionMarkers));
-    assert.equal(state.heroBackgroundHarmony.canvas,"#F4F7F6",`${vp.name}: canvas token drifted`);
+    assert.equal(state.heroBackgroundHarmony.canvas,"#F4F7FA",`${vp.name}: canvas token drifted`);
     assert.equal(state.heroBackgroundHarmony.paper,"#FFFFFF",`${vp.name}: paper token drifted`);
-    assert.equal(state.heroBackgroundHarmony.body,"rgb(244, 247, 246)",`${vp.name}: page canvas is no longer the intended soft mist tone`);
+    assert.equal(state.heroBackgroundHarmony.body,"rgb(244, 247, 250)",`${vp.name}: page canvas is no longer the intended soft mist tone`);
     assert.equal(state.heroBackgroundHarmony.headerSurface,"rgba(255, 255, 255, 0.93)",`${vp.name}: glass header surface changed`);
-    assert.equal(state.heroBackgroundHarmony.headerBorder,"rgba(221, 230, 227, 0.92)",`${vp.name}: glass header border changed`);
+    assert.equal(state.heroBackgroundHarmony.headerBorder,"rgba(220, 229, 234, 0.92)",`${vp.name}: glass header border changed`);
     assert.equal(state.heroBackgroundHarmony.heroBottom,"rgba(0, 0, 0, 0)",`${vp.name}: frameless Hero topic navigation gained an unintended background`);
     assert.equal(state.heroBackgroundHarmony.approach,"rgb(255, 255, 255)",`${vp.name}: next section surface changed`);
     assert.ok(state.heroBackgroundHarmony.heroGradients.includes("radial-gradient"),
