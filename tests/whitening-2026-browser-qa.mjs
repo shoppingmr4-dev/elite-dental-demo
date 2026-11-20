@@ -775,7 +775,7 @@ try {
       assert.ok(state.heroHeadingRect.top - state.heroWrapRect.top <= 150,
         vp.name + ": Hero headline is too far below the first-view content edge (" +
         Math.round(state.heroHeadingRect.top - state.heroWrapRect.top) + "px)");
-      assert.ok(state.heroActionsRect.bottom <= state.headerRect.bottom + window.innerHeight * 0.72,
+      assert.ok(state.heroActionsRect.bottom <= state.headerRect.bottom + vp.height * 0.72,
         vp.name + ": Hero actions are too low in the first viewport");
     }
     assert.equal(state.eyebrowLabel, "دليل الابتسامة", `${vp.name}: hero eyebrow label changed`);
