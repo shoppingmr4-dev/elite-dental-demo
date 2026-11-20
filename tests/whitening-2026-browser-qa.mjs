@@ -405,6 +405,11 @@ try {
         heroVisualNodeCount:document.querySelectorAll(".photo-frame,.visual-backdrop,.visual-outline,.visual-index,.visual-caption,.visual-side-note,.photo-label").length,
         imageCount:document.querySelectorAll(".hero img").length,
         heroImageLoaded:Boolean(heroPortrait?.complete&&heroPortrait.naturalWidth===768&&heroPortrait.naturalHeight===1152),
+        heroTitleKickerColor:getComputedStyle(document.querySelector(".hero-title-kicker")).color,
+        heroLeadFontSize:Number.parseFloat(getComputedStyle(document.querySelector(".hero-lead")).fontSize),
+        heroLeadLineHeight:Number.parseFloat(getComputedStyle(document.querySelector(".hero-lead")).lineHeight),
+        heroCaptionFontSize:Number.parseFloat(getComputedStyle(document.querySelector(".hero-portrait-caption")).fontSize),
+        heroNumbersFontVariant:getComputedStyle(document.querySelector(".hero-eyebrow-index")).fontVariantNumeric,
         heroImageVisible:Boolean(heroPortrait&&(()=>{
           const r=heroPortrait.getBoundingClientRect(),s=getComputedStyle(heroPortrait);
           return r.width>0&&r.height>0&&s.display!=="none"&&s.visibility==="visible"&&Number(s.opacity)>.99;
@@ -764,6 +769,14 @@ try {
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
     assert.equal(state.heroLead, "تختلف أسباب تغيّر لون الأسنان ونتائج التبييض من حالة لأخرى. لذلك يبدأ التقييم بفحص الأسنان واللثة، ثم يشرح لك طبيب الأسنان الخيارات المناسبة لحالتك وما يمكن توقعه من كل خيار.", `${vp.name}: hero supporting copy changed`);
+    assert.equal(state.heroTitleKickerColor, "rgb(48, 74, 84)", `${vp.name}: the introductory headline line must stay in the calm secondary ink tone`);
+    assert.equal(state.heroCaptionFontSize, 12, `${vp.name}: the AI image disclosure must remain comfortably readable`);
+    assert.ok(state.heroNumbersFontVariant.includes("tabular-nums"), `${vp.name}: numbered labels must use consistent tabular figures`);
+    if (vp.width <= 720) {
+      assert.ok(state.heroLeadFontSize >= 16, `${vp.name}: mobile supporting copy must be at least 16px`);
+      assert.ok(state.heroLeadLineHeight >= 29 && state.heroLeadLineHeight <= 31, `${vp.name}: mobile supporting-copy line height must preserve Arabic readability`);
+    }
+
     assert.equal(state.redundantHeroNotesPresent, false, `${vp.name}: repetitive hero notes should be removed`);
     assert.equal(state.headlineLines, 3, `${vp.name}: headline must use the intended three-level composition`);
     assert.equal(state.headlineKicker, "اكتشف خيارات", `${vp.name}: headline introduction changed`);
