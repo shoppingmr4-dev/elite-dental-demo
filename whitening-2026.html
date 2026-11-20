@@ -1350,16 +1350,37 @@ body,button,input,select,textarea{font-family:var(--body)}
  const button=document.getElementById("menu-toggle");
  const nav=document.getElementById("main-nav");
  if(!button||!nav)return;
- const close=()=>{nav.classList.remove("open");button.setAttribute("aria-expanded","false");button.setAttribute("aria-label","فتح القائمة")};
+ const close=({restoreFocus=false}={})=>{
+  if(button.getAttribute("aria-expanded")!=="true")return;
+  nav.classList.remove("open");
+  button.setAttribute("aria-expanded","false");
+  button.setAttribute("aria-label","فتح القائمة");
+  if(restoreFocus&&button.getClientRects().length)button.focus();
+ };
  button.addEventListener("click",()=>{
   const open=button.getAttribute("aria-expanded")!=="true";
-  button.setAttribute("aria-expanded",String(open));
-  button.setAttribute("aria-label",open?"إغلاق القائمة":"فتح القائمة");
-  nav.classList.toggle("open",open);
+  if(open){
+   button.setAttribute("aria-expanded","true");
+   button.setAttribute("aria-label","إغلاق القائمة");
+   nav.classList.add("open");
+  }else close();
  });
- nav.querySelectorAll("a").forEach(link=>link.addEventListener("click",close));
- document.addEventListener("keydown",event=>{if(event.key==="Escape")close()});
- window.addEventListener("resize",()=>{if(window.innerWidth>720)close()});
+ nav.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>close({restoreFocus:window.innerWidth<=920})));
+ document.addEventListener("keydown",event=>{
+  if(event.key==="Escape"&&button.getAttribute("aria-expanded")==="true"){
+   event.preventDefault();
+   close({restoreFocus:true});
+  }
+ });
+ window.addEventListener("resize",()=>{
+  if(window.innerWidth>920&&button.getAttribute("aria-expanded")==="true"){
+   const focusWasOnToggle=document.activeElement===button;
+   close();
+   if(focusWasOnToggle)(nav.querySelector('a[aria-current="location"]')||nav.querySelector("a"))?.focus();
+  }else if(window.innerWidth<=920&&nav.contains(document.activeElement)&&button.getAttribute("aria-expanded")!=="true"){
+   button.focus();
+  }
+ });
 })();
 
 (function(){
