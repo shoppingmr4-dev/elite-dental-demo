@@ -1236,6 +1236,10 @@ try {
       await page.keyboard.press("Enter");
       await page.locator("#main-nav a").nth(1).focus();
       await page.setViewportSize({width:1024,height:vp.height});
+      await page.waitForFunction(()=>window.innerWidth>920&&
+        document.querySelector("#menu-toggle")?.getAttribute("aria-expanded")==="false"&&
+        getComputedStyle(document.querySelector("#main-nav")).display!=="none",
+        null,{timeout:3000});
       const desktopResize=await page.evaluate(()=>({
         expanded:document.querySelector("#menu-toggle")?.getAttribute("aria-expanded"),
         navDisplay:getComputedStyle(document.querySelector("#main-nav")).display,
@@ -1247,6 +1251,10 @@ try {
       assert.equal(desktopResize.toggleDisplay,"none",`${vp.name}: mobile toggle should hide above the shared 920px breakpoint`);
       assert.equal(desktopResize.focusInVisibleNav,true,`${vp.name}: resize must not leave focus on a hidden mobile control`);
       await page.setViewportSize({width:vp.width,height:vp.height});
+      await page.waitForFunction(()=>window.innerWidth<=920&&
+        document.querySelector("#menu-toggle")?.getAttribute("aria-expanded")==="false"&&
+        document.activeElement===document.querySelector("#menu-toggle"),
+        null,{timeout:3000});
       const mobileResize=await page.evaluate(()=>({
         expanded:document.querySelector("#menu-toggle")?.getAttribute("aria-expanded"),
         navDisplay:getComputedStyle(document.querySelector("#main-nav")).display,
