@@ -479,33 +479,173 @@ try {
         faqItems:document.querySelectorAll(".faq-item").length,
         clinicalReferences:[...document.querySelectorAll(".reference-note a")].map(a=>a.href),
         contrastChecks:(()=>{
-          const parse=value=>{
-            const hex=value.trim().match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+          const parseColor=value=>{
+            const normalized=value.trim();
+            if(normalized==="transparent")return [0,0,0,0];
+            const hex=normalized.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
             if(hex){
               const raw=hex[1].length===3?hex[1].split("").map(ch=>ch+ch).join(""):hex[1];
               return [parseInt(raw.slice(0,2),16),parseInt(raw.slice(2,4),16),parseInt(raw.slice(4,6),16),1];
             }
-            const m=value.match(/[\d.]+/g)?.map(Number)||[0,0,0,1];
-            return [m[0]||0,m[1]||0,m[2]||0,m.length>3?m[3]:1];
+            const values=normalized.match(/[\d.]+/g)?.map(Number)||[];
+            if(values.length<3)return [0,0,0,0];
+            return [values[0],values[1],values[2],values.length>3?values[3]:1];
           };
           const composite=(front,back)=>{
-            const a=front[3],out=a+back[3]*(1-a);
+            const alpha=front[3],out=alpha+back[3]*(1-alpha);
             if(out<=0)return [0,0,0,0];
-            return [0,1,2].map(i=>(front[i]*a+back[i]*back[3]*(1-a))/out).concat(out);
+            return [0,1,2].map(i=>(front[i]*alpha+back[i]*back[3]*(1-alpha))/out).concat(out);
           };
           const luminance=rgba=>{
             const rgb=rgba.slice(0,3).map(v=>v/255).map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4);
             return 0.2126*rgb[0]+0.7152*rgb[1]+0.0722*rgb[2];
           };
-          const effectiveBackground=el=>{
+          const parseLength=(value,reference)=>{
+            if(!value||value==="auto")return null;
+            if(value.endsWith("%"))return Number.parseFloat(value)*reference/100;
+            const number=Number.parseFloat(value);
+            return Number.isFinite(number)?number:null;
+          };
+          const textBounds=element=>{
+            const walker=document.createTreeWalker(element,NodeFilter.SHOW_TEXT);
+            const rects=[];
+            while(walker.nextNode()){
+              const node=walker.currentNode;
+              if(!node.nodeValue.trim())continue;
+              const range=document.createRange();
+              range.selectNodeContents(node);
+              for(const rect of range.getClientRects()){
+                if(rect.width>0&&rect.height>0)rects.push(rect);
+              }
+            }
+            if(!rects.length)return null;
+            return {
+              left:Math.min(...rects.map(rect=>rect.left)),
+              right:Math.max(...rects.map(rect=>rect.right)),
+              top:Math.min(...rects.map(rect=>rect.top)),
+              bottom:Math.max(...rects.map(rect=>rect.bottom))
+            };
+          };
+          const pseudoBounds=(element,style)=>{
+            if(style.position!=="absolute")return {unresolved:"pseudo-element is not absolutely positioned"};
+            const ownerRect=element.getBoundingClientRect();
+            const containingBlock={
+              left:ownerRect.left+element.clientLeft,
+              top:ownerRect.top+element.clientTop,
+              width:element.clientWidth,
+              height:element.clientHeight
+            };
+            const contentWidth=parseLength(style.width,containingBlock.width);
+            const contentHeight=parseLength(style.height,containingBlock.height);
+            if(contentWidth===null||contentHeight===null||contentWidth<=0||contentHeight<=0){
+              return {unresolved:"pseudo-element has an unresolved or empty used size"};
+            }
+            const horizontalPadding=parseLength(style.paddingLeft,0)+parseLength(style.paddingRight,0);
+            const verticalPadding=parseLength(style.paddingTop,0)+parseLength(style.paddingBottom,0);
+            const horizontalBorder=parseLength(style.borderLeftWidth,0)+parseLength(style.borderRightWidth,0);
+            const verticalBorder=parseLength(style.borderTopWidth,0)+parseLength(style.borderBottomWidth,0);
+            const width=style.boxSizing==="border-box"?contentWidth:contentWidth+horizontalPadding+horizontalBorder;
+            const height=style.boxSizing==="border-box"?contentHeight:contentHeight+verticalPadding+verticalBorder;
+            const leftInset=parseLength(style.left,containingBlock.width);
+            const rightInset=parseLength(style.right,containingBlock.width);
+            const topInset=parseLength(style.top,containingBlock.height);
+            const bottomInset=parseLength(style.bottom,containingBlock.height);
+            if((leftInset===null&&rightInset===null)||(topInset===null&&bottomInset===null)){
+              return {unresolved:"pseudo-element has an unresolved static position"};
+            }
+            const marginLeft=parseLength(style.marginLeft,0)||0;
+            const marginTop=parseLength(style.marginTop,0)||0;
+            const left=containingBlock.left+(leftInset!==null?leftInset:containingBlock.width-rightInset-width)+marginLeft;
+            const top=containingBlock.top+(topInset!==null?topInset:containingBlock.height-bottomInset-height)+marginTop;
+            let corners=[
+              [left,top],[left+width,top],[left,top+height],[left+width,top+height]
+            ];
+            const transform=style.transform;
+            if(transform&&transform!=="none"){
+              const matrix=transform.match(/^matrix\(([^)]+)\)$/);
+              if(!matrix)return {unresolved:"pseudo-element uses a transform that the geometry audit cannot resolve: "+transform};
+              const values=matrix[1].split(",").map(Number);
+              if(values.length!==6||!values.every(Number.isFinite))return {unresolved:"pseudo-element transform matrix is invalid"};
+              const [a,b,c,d,e,f]=values;
+              const origins=style.transformOrigin.split(/\s+/);
+              const originX=parseLength(origins[0],width);
+              const originY=parseLength(origins[1],height);
+              if(originX===null||originY===null)return {unresolved:"pseudo-element transform origin is unresolved"};
+              corners=corners.map(([x,y])=>{
+                const localX=x-left-originX,localY=y-top-originY;
+                return [
+                  left+originX+a*localX+c*localY+e,
+                  top+originY+b*localX+d*localY+f
+                ];
+              });
+            }
+            return {
+              left:Math.min(...corners.map(point=>point[0])),
+              right:Math.max(...corners.map(point=>point[0])),
+              top:Math.min(...corners.map(point=>point[1])),
+              bottom:Math.max(...corners.map(point=>point[1])),
+              width,height
+            };
+          };
+          const effectiveBackground=element=>{
             const layers=[];
-            for(let node=el;node&&node!==document.documentElement;node=node.parentElement){
-              const layer=parse(getComputedStyle(node).backgroundColor);
-              if(layer[3]>0)layers.push(layer);
+            for(let node=element;node&&node!==document.documentElement;node=node.parentElement){
+              const style=getComputedStyle(node);
+              const color=parseColor(style.backgroundColor);
+              if(color[3]>0)layers.push({color,source:node===element?"element background":node.tagName.toLowerCase()+(node.id?"#"+node.id:"")+" background"});
+              if(style.backgroundImage!=="none"){
+                return {rgba:[255,255,255,1],source:"unresolved background image on "+(node.tagName.toLowerCase()+(node.id?"#"+node.id:"")),unresolved:"background image requires rendered-pixel inspection"};
+              }
             }
             let background=[255,255,255,1];
-            for(const layer of layers.reverse())background=composite(layer,background);
-            return background;
+            for(const layer of layers.reverse())background=composite(layer.color,background);
+            let source=layers.length?layers[0].source:"default canvas";
+            const elementStyle=getComputedStyle(element);
+            const text=textBounds(element);
+            if(!text)return {rgba:background,source,unresolved:"no measurable text range was found"};
+            for(const pseudo of ["::before","::after"]){
+              const style=getComputedStyle(element,pseudo);
+              if(style.display==="none"||style.visibility!=="visible"||style.content==="none"||style.content==="normal")continue;
+              const pseudoColor=parseColor(style.backgroundColor);
+              const hasImage=style.backgroundImage!=="none";
+              if(pseudoColor[3]<=0&&!hasImage)continue;
+              const box=pseudoBounds(element,style);
+              if(box.unresolved){
+                return {rgba:background,source,unresolved:pseudo+" has a visible background but its painted geometry is unresolved: "+box.unresolved};
+              }
+              const overlaps=box.right>text.left&&box.left<text.right&&box.bottom>text.top&&box.top<text.bottom;
+              if(!overlaps)continue;
+              const covers=box.left<=text.left+0.75&&box.right>=text.right-0.75&&box.top<=text.top+0.75&&box.bottom>=text.bottom-0.75;
+              const ownerStyle=getComputedStyle(element);
+              const zIndex=Number.parseInt(style.zIndex,10);
+              const createsStackingContext=ownerStyle.isolation==="isolate"||
+                Number.parseFloat(ownerStyle.opacity)<1||
+                ownerStyle.transform!=="none"||
+                ownerStyle.filter!=="none"||
+                ownerStyle.perspective!=="none"||
+                ((ownerStyle.position==="fixed"||ownerStyle.position==="sticky")&&ownerStyle.zIndex!=="auto")||
+                (ownerStyle.position!=="static"&&ownerStyle.zIndex!=="auto");
+              const isBehindText=Number.isFinite(zIndex)&&zIndex<0&&createsStackingContext;
+              const diagnostic={
+                pseudo,
+                bounds:{left:Number(box.left.toFixed(2)),right:Number(box.right.toFixed(2)),top:Number(box.top.toFixed(2)),bottom:Number(box.bottom.toFixed(2))},
+                textBounds:{left:Number(text.left.toFixed(2)),right:Number(text.right.toFixed(2)),top:Number(text.top.toFixed(2)),bottom:Number(text.bottom.toFixed(2))},
+                color:style.backgroundColor,
+                opacity:style.opacity,
+                zIndex:style.zIndex,
+                ownerIsolation:ownerStyle.isolation,
+                coversTextBounds:covers
+              };
+              if(!covers)return {rgba:background,source:"ambiguous "+pseudo+" background",unresolved:"pseudo-element overlaps but does not fully cover the text bounds: "+JSON.stringify(diagnostic)};
+              if(hasImage)return {rgba:background,source:"ambiguous "+pseudo+" background image",unresolved:"pseudo-element background image cannot be reduced to a single verified color: "+JSON.stringify(diagnostic)};
+              if(!isBehindText)return {rgba:background,source:"ambiguous "+pseudo+" paint order",unresolved:"pseudo-element paint order relative to text is not proven: "+JSON.stringify(diagnostic)};
+              const opacity=Math.max(0,Math.min(1,Number.parseFloat(style.opacity)));
+              pseudoColor[3]*=Number.isFinite(opacity)?opacity:1;
+              background=composite(pseudoColor,background);
+              source=element.tagName.toLowerCase()+(element.className&&typeof element.className==="string"?"."+element.className.trim().split(/\s+/).join("."):"")+pseudo+" background ("+style.backgroundColor+"; z-index "+style.zIndex+")";
+              break;
+            }
+            return {rgba:background,source};
           };
           const selectors=[
             ".hero h1",".hero-title-benefit",".hero-lead",".nav a",".header-action",
@@ -519,11 +659,18 @@ try {
           return selectors.map(selector=>{
             const el=document.querySelector(selector);
             if(!el)return {selector,ratio:0,missing:true};
-            const background=effectiveBackground(el);
-            const foreground=composite(parse(getComputedStyle(el).color),background);
+            const resolved=effectiveBackground(el);
+            if(resolved.unresolved)return {selector,ratio:0,missing:true,backgroundSource:resolved.source,unresolved:resolved.unresolved};
+            const background=resolved.rgba;
+            const foreground=composite(parseColor(getComputedStyle(el).color),background);
             const a=luminance(foreground),b=luminance(background);
-            return {selector,ratio:Number(((Math.max(a,b)+0.05)/(Math.min(a,b)+0.05)).toFixed(3)),
-              foreground:getComputedStyle(el).color,background:background.map(v=>Math.round(v)).slice(0,3)};
+            return {
+              selector,
+              ratio:Number(((Math.max(a,b)+0.05)/(Math.min(a,b)+0.05)).toFixed(3)),
+              foreground:getComputedStyle(el).color,
+              background:background.map(v=>Math.round(v)).slice(0,3),
+              backgroundSource:resolved.source
+            };
           });
         })(),
         viewport:window.innerWidth
