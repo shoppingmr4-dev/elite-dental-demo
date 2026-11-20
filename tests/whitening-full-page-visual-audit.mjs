@@ -215,6 +215,13 @@ try {
             columnGap:gridStyle.columnGap,rowGap:gridStyle.rowGap,
             stepListGridTemplateColumns:approachListStyle?.display==="grid"?getComputedStyle(approachList).gridTemplateColumns:"",
             stepListColumnCount:approachListStyle?.display==="grid"?getComputedStyle(approachList).gridTemplateColumns.trim().split(/\s+/).length:0,
+            stepListSemantics:{
+              tagName:approachList?.tagName||"",
+              role:approachList?.getAttribute("role")||"",
+              accessibleLabel:approachList?.getAttribute("aria-label")||"",
+              itemTags:[...(approachList?.children||[])].map(item=>item.tagName),
+              numbersHiddenFromAssistiveTechnology:approachSteps.every(step=>step.querySelector(".step-no")?.getAttribute("aria-hidden")==="true")
+            },
             introStyle:approachIntroStyle,stepListStyle:approachListStyle,
             introRect,listRect,
             markerCenterOffset:round((rect(approachMarker).x+rect(approachMarker).width/2)-(rect(approachGrid).x+rect(approachGrid).width/2)),
@@ -376,6 +383,12 @@ try {
       if(approachDetails.steps.some(step=>step.title.style.textAlign!=="right"||step.description.style.textAlign!=="right"))problems.push("Section 02 step text is not right-aligned for Arabic reading");
       if([approachDetails.composition.markerCenterOffset,approachDetails.composition.headingCenterOffset,approachDetails.composition.paragraphCenterOffset].some(offset=>Math.abs(offset)>1))problems.push("Section 02 centered introduction is horizontally unbalanced");
       if(approachDetails.spacing.paragraphToStepList<24)problems.push("Section 02 introduction and evaluation steps are too close");
+      const stepListSemantics=approachDetails.composition.stepListSemantics;
+      if(stepListSemantics?.tagName!=="OL"||stepListSemantics?.role!=="list"||
+        stepListSemantics?.accessibleLabel!=="مراحل التقييم"||
+        JSON.stringify(stepListSemantics?.itemTags)!==JSON.stringify(["LI","LI","LI"])||
+        stepListSemantics?.numbersHiddenFromAssistiveTechnology!==true)
+        problems.push("Section 02 must expose its three sequential steps as a labelled ordered list without announcing visible numbers twice");
       const expectedStepColumns=vp.width>900?3:1;
       if(approachDetails.composition.stepListColumnCount!==expectedStepColumns)problems.push("Section 02 step layout does not match the responsive column rule");
     }

@@ -212,19 +212,17 @@ try {
             betweenNumberAndIcon:numberBounds.left>bounds.right&&bounds.left>iconBounds.right&&
               numberBounds.left-bounds.right<12&&bounds.left-iconBounds.right<12};
         })(),
-        benefitUnderline:(()=>{
-          const accent=document.querySelector(".hero-title-benefit .accent");
-          const svg=accent?.querySelector(".accent-underline");
-          const path=svg?.querySelector("path");
-          if(!accent||!svg||!path)return null;
-          const bounds=rect(accent),svgBounds=rect(svg),svgStyle=getComputedStyle(svg),pathStyle=getComputedStyle(path);
-          const pathBounds=path.getBBox(),start=path.getPointAtLength(0),end=path.getPointAtLength(path.getTotalLength());
-          const pathBottom=svgBounds.top+(pathBounds.y+pathBounds.height)/12*svgBounds.height;
-          return {textWidth:bounds.width,lineWidth:svgBounds.width,widthRatio:svgBounds.width/bounds.width,
-            height:svgBounds.height,strokeWidth:Number.parseFloat(pathStyle.strokeWidth),
-            strokeColor:pathStyle.stroke,strokeLinecap:pathStyle.strokeLinecap,
-            curveHeight:pathBounds.height,slopeDelta:end.y-start.y,bottom:svgStyle.bottom,
-            lineGap:pathBottom-bounds.bottom,pathD:path.getAttribute("d")||""};
+        benefitTreatment:(()=>{
+          const benefit=document.querySelector(".hero-title-benefit");
+          if(!benefit)return null;
+          const style=getComputedStyle(benefit);
+          return {
+            text:benefit.innerText.replace(/\s+/g," ").trim(),
+            color:style.color,fontSize:style.fontSize,fontWeight:style.fontWeight,
+            textDecorationLine:style.textDecorationLine,
+            accentElements:benefit.querySelectorAll(".accent").length,
+            underlineElements:benefit.querySelectorAll(".accent-underline,svg").length
+          };
         })(),
                 heroBackgroundHarmony:(()=>{
           const root=getComputedStyle(document.documentElement);
@@ -555,20 +553,12 @@ try {
     assert.ok(state.eyebrowRule.angle>=6&&state.eyebrowRule.angle<=10,
       vp.name + ": Hero separator must have the approved subtle 6–10 degree vertical tilt: " + JSON.stringify(state.eyebrowRule));
     assert.equal(state.eyebrowRule.color,"rgb(24, 122, 128)",vp.name + ": Hero separator must use RUWA teal");
-    assert.ok(state.benefitUnderline && state.benefitUnderline.widthRatio>=.95&&state.benefitUnderline.widthRatio<=1,
-      vp.name + ": SVG underline must cover 95–100% of the rendered accent phrase: " + JSON.stringify(state.benefitUnderline));
-    assert.ok(state.benefitUnderline.strokeWidth>=2.5&&state.benefitUnderline.strokeWidth<=3,
-      vp.name + ": SVG underline stroke must remain visibly 2.5–3px: " + JSON.stringify(state.benefitUnderline));
-    assert.equal(state.benefitUnderline.strokeColor,"rgb(184, 93, 74)",vp.name + ": SVG underline must retain the RUWA coral accent");
-    assert.equal(state.benefitUnderline.strokeLinecap,"round",vp.name + ": SVG underline ends must be rounded");
-    assert.ok(state.benefitUnderline.curveHeight>=4.5,
-      vp.name + ": SVG underline must contain a real visible Bézier curve, not a straight border: " + JSON.stringify(state.benefitUnderline));
-    assert.ok(state.benefitUnderline.slopeDelta<=-1.5&&state.benefitUnderline.slopeDelta>=-5.5,
-      vp.name + ": SVG underline must retain a subtle diagonal inclination: " + JSON.stringify(state.benefitUnderline));
-    assert.ok(state.benefitUnderline.lineGap>=-1&&state.benefitUnderline.lineGap<=14,
-      vp.name + ": curved underline must remain immediately beneath the phrase: " + JSON.stringify(state.benefitUnderline));
-    assert.ok(Number.parseFloat(state.benefitUnderline.bottom)<-2,
-      vp.name + ": SVG underline must be positioned beneath, not across, the lettering");
+    assert.ok(state.benefitTreatment,vp.name + ": the patient-benefit line is missing");
+    assert.equal(state.benefitTreatment.text,"لابتسامة أكثر إشراقًا",vp.name + ": complete patient-benefit phrase changed");
+    assert.equal(state.benefitTreatment.color,"rgb(24, 122, 128)",vp.name + ": complete benefit line must use RUWA Teal");
+    assert.equal(state.benefitTreatment.textDecorationLine,"none",vp.name + ": benefit line must not acquire a decorative underline");
+    assert.equal(state.benefitTreatment.accentElements,0,vp.name + ": the benefit phrase must not contain an isolated accent span");
+    assert.equal(state.benefitTreatment.underlineElements,0,vp.name + ": the benefit phrase must not contain a decorative SVG underline");
     assert.equal(state.sectionMarkerChips.length,6,vp.name + ": all six content section markers must retain the shared glass component");
     assert.ok(state.sectionMarkerChips.every(chip=>chip.height>=42&&chip.height<=46&&chip.borderWidth==="1px"&&
       chip.borderRadius==="999px"&&chip.backgroundColor!=="rgba(0, 0, 0, 0)"&&chip.backdropFilter.includes("blur")),

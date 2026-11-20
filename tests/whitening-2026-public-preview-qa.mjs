@@ -114,16 +114,17 @@ try {
             separatorWidth:getComputedStyle(marker.querySelector(".section-marker-divider")).width,
             separatorHeight:getComputedStyle(marker.querySelector(".section-marker-divider")).height
           })),
-          underline:(()=>{
-            const svg=document.querySelector(".accent-underline"),path=svg?.querySelector("path");
-            const accent=document.querySelector(".hero-title-benefit .accent");
-            return svg&&path&&accent?{
-              widthRatio:svg.getBoundingClientRect().width/accent.getBoundingClientRect().width,
-              curveHeight:path.getBBox().height,
-              strokeWidth:getComputedStyle(path).strokeWidth,
-              stroke:getComputedStyle(path).stroke,
-              linecap:getComputedStyle(path).strokeLinecap
-            }:null;
+          benefit:(()=>{
+            const element=document.querySelector(".hero-title-benefit");
+            if(!element)return null;
+            const style=getComputedStyle(element);
+            return {
+              text:element.innerText.replace(/\s+/g," ").trim(),
+              color:style.color,
+              textDecorationLine:style.textDecorationLine,
+              accentElements:element.querySelectorAll(".accent").length,
+              underlineElements:element.querySelectorAll(".accent-underline,svg").length
+            };
           })()
         },
         progress: Number.parseFloat(getComputedStyle(header).getPropertyValue("--header-progress")),
@@ -175,13 +176,13 @@ try {
       Number.parseFloat(marker.separatorHeight)>=14.2&&Number.parseFloat(marker.separatorHeight)<=14.6&&
       Math.abs(Number.parseFloat(marker.separatorHeight)-marker.numberHeight)<=.2),
       `${viewport.name}: published marker numbers must remain plain text and each separator must match the number height`);
-    assert.ok(initial.markerSystem.underline&&initial.markerSystem.underline.widthRatio>=.95&&
-      initial.markerSystem.underline.widthRatio<=1&&initial.markerSystem.underline.curveHeight>=4.5&&
-      Number.parseFloat(initial.markerSystem.underline.strokeWidth)>=2.5&&
-      Number.parseFloat(initial.markerSystem.underline.strokeWidth)<=3&&
-      initial.markerSystem.underline.stroke==="rgb(184, 93, 74)"&&
-      initial.markerSystem.underline.linecap==="round",
-      `${viewport.name}: published Hero accent underline is not the approved curved SVG stroke`);
+    assert.ok(initial.markerSystem.benefit&&
+      initial.markerSystem.benefit.text==="لابتسامة أكثر إشراقًا"&&
+      initial.markerSystem.benefit.color==="rgb(24, 122, 128)"&&
+      initial.markerSystem.benefit.textDecorationLine==="none"&&
+      initial.markerSystem.benefit.accentElements===0&&
+      initial.markerSystem.benefit.underlineElements===0,
+      `${viewport.name}: published Hero benefit line does not use the complete, unadorned RUWA Teal treatment`);
     assert.deepEqual(initial.navLabels,
       ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","الأسئلة الشائعة"],
       `${viewport.name}: the five navigation labels or their order changed`);
