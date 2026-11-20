@@ -34,7 +34,9 @@ async function measureHeader(page) {
     const brandMarkImage=rect(document.querySelector(".brand-mark img"));
     const arabicBrandSize=Number.parseFloat(getComputedStyle(document.querySelector(".brand-name small")).fontSize);
     const nav=rect(document.querySelector("#main-nav"));
-    const action=rect(document.querySelector(".header-action"));
+    const actionElement=document.querySelector(".header-action");
+    const action=rect(actionElement);
+    const actionVisualHeight=Number.parseFloat(getComputedStyle(actionElement,"::before").height);
     const menuElement=document.querySelector("#menu-toggle");
     const menu=rect(menuElement);
     const menuVisible=getComputedStyle(menuElement).display!=="none" && menu.width>0 && menu.height>0;
@@ -59,7 +61,7 @@ async function measureHeader(page) {
       headerWidth:headerRect.width,
       headerCenter:headerRect.left+headerRect.width/2,
       actionHeight:action.height,
-      actionFontSize,actionIcon,arabicBrandSize,brandMark,brandMarkImage,headerProgress,
+      actionFontSize,actionVisualHeight,actionIcon,arabicBrandSize,brandMark,brandMarkImage,headerProgress,
       wordmarkSize:Number.parseFloat(getComputedStyle(document.querySelector(".brand-name strong")).fontSize),
       brand,nav,action,menu,menuVisible,
       brandNavGap:brand.left-nav.right,
@@ -804,7 +806,7 @@ try {
     assert.ok(compactHeaderMetrics.visualRight<initialHeaderMetrics.visualRight, `${vp.name}: visual right edge did not move inward`);
     assert.ok(Math.abs(compactHeaderMetrics.panelTop-compactHeaderMetrics.panelBottom)<=0.75, `${vp.name}: vertical shell inset must remain balanced`);
     assert.ok(compactHeaderMetrics.visualHeight<initialHeaderMetrics.visualHeight, `${vp.name}: actual floating shell height did not decrease`);
-    assert.ok(compactHeaderMetrics.actionHeight < initialHeaderMetrics.actionHeight, `${vp.name}: header CTA did not become more compact on scroll`);
+    assert.ok(compactHeaderMetrics.actionVisualHeight < initialHeaderMetrics.actionVisualHeight, `${vp.name}: visible WhatsApp pill did not become more compact on scroll`);
     assert.ok(compactHeaderMetrics.wordmarkSize < initialHeaderMetrics.wordmarkSize, `${vp.name}: brand wordmark did not become more compact on scroll`);
     let headerConvergence=null;
     if (vp.width>920) {
