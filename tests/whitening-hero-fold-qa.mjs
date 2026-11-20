@@ -120,7 +120,7 @@ try {
       if (portrait && portrait.width < (window.innerWidth > 920 ? 350 : window.innerWidth <= 390 ? 250 : 260)) issues.push("Hero dentist portrait is too small to have meaningful visual presence");
       if (portrait && Math.abs(portrait.height / portrait.width - 1.5) > 0.03) issues.push("Hero dentist portrait aspect ratio is distorted");
       if (!disclosure || disclosure.width<=0 || disclosure.height<22 || disclosure.top<portrait.bottom-1 || disclosure.bottom>visual.bottom+1) issues.push("Visible AI-illustration disclosure is missing or detached from the portrait");
-      if (!/صورة توضيحية مولّدة بالذكاء الاصطناعي/.test(disclosureText) || !/لا تمثل طبيبًا أو موظفًا/.test(disclosureText)) issues.push("Portrait disclosure must clearly identify the image as AI-generated and not a real clinic employee");
+      if (disclosureText !== "الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا.") issues.push("Portrait disclosure must match the approved Arabic AI-generated image notice");
       if (!heroPortrait || heroPortrait.getAttribute("src")!=="assets/ruwa-hero-90-768.webp") issues.push("Hero must use the approved RUWA dentist portrait asset");
       if (heroPortrait && (heroPortrait.naturalWidth!==768 || heroPortrait.naturalHeight!==1152 || heroPortrait.getAttribute("width")!=="768" || heroPortrait.getAttribute("height")!=="1152")) issues.push("Hero portrait intrinsic dimensions or reserved layout dimensions changed");
       if (heroPortrait && heroPortrait.loading!=="eager") issues.push("Above-the-fold Hero portrait must use eager loading");
