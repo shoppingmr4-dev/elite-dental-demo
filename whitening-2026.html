@@ -747,6 +747,49 @@ body,button,input,select,textarea{font-family:var(--body)}
 }
 
 
+/* Minimum WCAG-friendly touch areas without changing the compact header's visual artwork. */
+.site-header .header-action {
+ min-height:44px;
+}
+.site-header .menu-toggle {
+ box-sizing:border-box;
+ position:relative;
+ display:grid;
+ place-items:center;
+ width:44px;
+ height:44px;
+ padding:0;
+ border:0;
+ border-radius:50%;
+ background:transparent;
+}
+.site-header .menu-toggle::before {
+ content:"";
+ position:absolute;
+ top:50%;
+ left:50%;
+ width:var(--menu-toggle-visual-size,42px);
+ height:var(--menu-toggle-visual-size,42px);
+ transform:translate(-50%,-50%);
+ border:1px solid var(--line);
+ border-radius:50%;
+ background:var(--paper);
+ pointer-events:none;
+}
+.site-header .menu-toggle svg {
+ position:relative;
+ z-index:1;
+ width:19px;
+ height:19px;
+ margin:0;
+}
+@media(max-width:720px) {
+ .site-header .menu-toggle { --menu-toggle-visual-size:38px; }
+}
+@media(max-width:390px) {
+ .site-header .menu-toggle { --menu-toggle-visual-size:36px; }
+}
+
 /* RUWA Hero CTA pair: clear primary and secondary actions. */
 .hero-actions{
  display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;
