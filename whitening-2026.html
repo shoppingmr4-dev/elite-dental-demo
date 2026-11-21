@@ -1115,11 +1115,14 @@ body,button,input,select,textarea{font-family:var(--body)}
 
 
 /* RUWA Section 02 — focused 2026 readability refinement.
-   Keep the established layout, palette, numbering and component spacing unchanged. */
+   Preserve the established design; improve Arabic body-text legibility and mobile breathing room. */
 #approach .approach-intro p,
 #approach .step p {
  font-size:16px;
  line-height:1.85;
+}
+@media(max-width:600px) {
+ #approach .approach-grid { gap:28px; }
 }
 
 </style>
