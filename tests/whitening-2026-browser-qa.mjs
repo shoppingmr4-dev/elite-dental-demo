@@ -947,6 +947,18 @@ try {
     const dialog=page.locator("#contact-unavailable-dialog");
     const heroTrigger=page.locator(".primary-cta");
     const headerTrigger=page.locator(".header-action");
+    const brokenControls = await page.locator("[aria-controls]").evaluateAll(elements =>
+      elements.flatMap(element =>
+        (element.getAttribute("aria-controls") || "")
+          .split(/\s+/)
+          .filter(Boolean)
+          .filter(id => !document.getElementById(id))
+          .map(id => id)
+      )
+    );
+    assert.deepEqual(brokenControls, [], vp.name + ": every aria-controls target must exist");
+    assert.equal(await heroTrigger.getAttribute("aria-controls"), "contact-unavailable-dialog", vp.name + ": Hero contact control must reference the actual dialog");
+    assert.equal(await headerTrigger.getAttribute("aria-controls"), "contact-unavailable-dialog", vp.name + ": header contact control must reference the actual dialog");
     await heroTrigger.focus();
     await page.keyboard.press("Enter");
     await page.waitForFunction(() => document.querySelector("#contact-unavailable-dialog")?.open === true, null, { timeout: 3000 });
