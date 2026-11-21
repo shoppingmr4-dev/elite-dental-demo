@@ -356,8 +356,8 @@ try {
           const lr=link.getBoundingClientRect(),br=button.getBoundingClientRect(),style=getComputedStyle(link);
           const stacked=lr.top>=br.bottom-1;
           const gap=stacked?lr.top-br.bottom:Math.max(0,br.left-lr.right,lr.left-br.right);
-          return {text:link.innerText.trim(),href:link.getAttribute("href"),minHeight:lr.height,
-            stacked,gap,display:style.display,flow:getComputedStyle(link.parentElement).flexDirection};
+          return {text:link.innerText.trim(),href:link.getAttribute("href"),tag:link.tagName,
+            channel:link.getAttribute("data-contact-action"),minHeight:lr.height,stacked,gap,display:style.display,flow:getComputedStyle(link.parentElement).flexDirection};
         })(),
         spacingAudit:(()=>{
           const gap=(a,b)=>{
@@ -486,12 +486,12 @@ try {
           const href=a.getAttribute("href") || "";
           return href.startsWith("tel:") || a.hostname==="wa.me" || a.hostname==="api.whatsapp.com";
         }),
-        inquiryButton:Boolean(document.querySelector('#consultation [data-contact-action="whatsapp"]')),
-         inquiryTopicLabel:Boolean(document.querySelector('#consultation [data-contact-action="phone"]')),
+        finalWhatsAppButton:Boolean(document.querySelector('#consultation [data-contact-action="whatsapp"]')),
+         finalPhoneButton:Boolean(document.querySelector('#consultation [data-contact-action="phone"]')),
          contactChannelCounts:{
            whatsapp:document.querySelectorAll('[data-contact-action="whatsapp"]').length,
            phone:document.querySelectorAll('[data-contact-action="phone"]').length
-         }
+         },
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
         contentSections:["approach","causes","options","suitability","expectations","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
         optionCards:document.querySelectorAll(".option-card").length,
@@ -942,7 +942,7 @@ try {
     assert.equal(audit.faq.referenceMargin,"24px", vp.name + ": reference note spacing changed");
     assert.ok(Number.parseFloat(audit.contactFooter.contactToFooter)>=52, vp.name + ": contact-to-footer separation is too tight");
     assert.equal(state.liveContactChannelPresent, false, `${vp.name}: demo must not contain a live WhatsApp or phone destination`);
-    assert.ok(state.inquiryButton && state.inquiryTopicLabel, `${vp.name}: final WhatsApp and phone contact controls are missing`);
+    assert.ok(state.finalWhatsAppButton && state.finalPhoneButton, `${vp.name}: final WhatsApp and phone contact controls are missing`);
      assert.deepEqual(state.contactChannelCounts,{whatsapp:3,phone:2},`${vp.name}: page must have exactly three WhatsApp and two phone actions`);
     const dialog=page.locator("#contact-unavailable-dialog");
     const heroTrigger=page.locator(".primary-cta");
