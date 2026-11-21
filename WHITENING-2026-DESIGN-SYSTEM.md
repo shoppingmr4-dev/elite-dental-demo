@@ -68,14 +68,15 @@ The identity is intentionally restrained. Avoid reintroducing the previous cobal
 - Arabic display text uses neutral letter spacing (no negative tracking) and generous line height.
 - Keep Arabic copy natural, concise, readable on mobile, and appropriate for Saudi visitors.
 
-## Image art direction
+## Immutable approved Hero image — provenance requires confirmation
 
-- Hero image: Emily Gaibor / Pexels, photo ID 37458050.
-- Source: https://www.pexels.com/photo/dentist-in-a-modern-dental-office-37458050/
-- Image role: illustrative stock portrait of a male dentist in a contemporary dental office.
-- The page explicitly discloses that the photo is not the actual dentist or staff of the fictional clinic.
-- Keep the visible credit and stock-photo disclosure. Never present this image as a real employee, patient, testimonial, or treatment result.
-- Use a concise, unrotated light disclosure label: «صورة توضيحية من Pexels؛ لا تمثل طبيبًا أو موظفًا بالعيادة.» Keep the extra vertical decorative note off mobile screens.
+- Protected asset: `assets/ruwa-hero-90-768.webp`.
+- Verified Git blob at the audit baseline: `11209e185ca8d671f74e54eda8fdefb1d42382d2`.
+- File size: 105,004 bytes. Intrinsic dimensions: 768 × 1152.
+- The current `whitening-2026.html` markup and visible caption identify the portrait as AI-generated. Earlier design notes attributed a Pexels photograph (Emily Gaibor, photo ID 37458050) to the Hero. These provenance descriptions conflict and must not be silently reconciled.
+- Keep the current page disclosure unchanged while the asset's origin is confirmed by the project owner. Do not claim a Pexels credit or describe it as an actual clinic employee until provenance and usage rights are verified.
+- The approved image is locked: do not replace, regenerate, retouch, recolor, recrop, resize, reposition, transform, or redesign it. Preserve its source path, figure placement, approved presentation, and loading priority.
+- Never present this image as an actual employee, patient, testimonial, or treatment result.
 - Do not create before/after claims or imply guaranteed clinical outcomes.
 
 ## Page architecture
@@ -88,7 +89,7 @@ The identity is intentionally restrained. Avoid reintroducing the previous cobal
 6. Treatment options: in-office professional whitening, dentist-supervised custom take-home trays, and care for surface staining.
 7. Suitability: oral health, sensitivity or cracks, existing restorations, and pregnancy/breastfeeding considerations.
 8. Realistic expectations: possible temporary sensitivity, gum irritation, individual variation, and the fact that restorations do not whiten like natural teeth.
-9. FAQ: six concise questions with native, keyboard-operable disclosure controls.
+9. FAQ: four concise questions with native, keyboard-operable disclosure controls.
 10. Inquiry-preparation panel and footer with the fictional-demo disclosure and image attribution.
 
 The aim is to answer real visitor questions without adding fake proof points, fabricated clinic credentials, testimonials, ratings, or statistics.
@@ -148,7 +149,7 @@ Until real clinic contact details and operational readiness are provided, keep b
 
 ## Quality assurance
 
-The prior approved preview revision passed Playwright and Lighthouse. The expanded page adds five educational sections, six FAQ entries, additional navigation targets, tablet navigation behavior, and the WhatsApp portfolio-preview dialog. The browser QA script covers the expanded experience.
+The prior approved preview revision passed Playwright and Lighthouse. The expanded page adds five educational sections, four FAQ entries, additional navigation targets, tablet navigation behavior, and the WhatsApp portfolio-preview dialog. The browser QA script covers the expanded experience.
 
 **Verified:** Playwright and Lighthouse passed on code commit `c1a4b051b95ded4f1a29a39bbf2add94ebdb6ca2`. Browser checks passed at 360×800, 390×844, 768×1024, and 1440×900; both Cairo and IBM Plex Sans Arabic loaded locally, with no browser errors or horizontal overflow. Lighthouse: mobile Performance 96; desktop Performance 100; Accessibility, Best Practices, and SEO 100 on both. The following documentation-only commit does not change the tested page or test script. Record the new revision and results here only after the new workflow completes successfully.
 
@@ -166,3 +167,57 @@ Replace demo-specific material only after the actual clinic approves it:
 5. Final client review and deployment authorization.
 
 Until those inputs exist, keep the project clearly labeled as a fictional portfolio concept.
+
+
+## Full-page production-readiness audit — 21 November 2026
+
+### Verified current state
+
+- RUWA is a fictional portfolio concept created by Apex Studio, not a commissioned or operating dental clinic.
+- The current page contains eight content sections in this order: Hero, assessment approach, causes of discoloration, whitening options, suitability, realistic expectations, FAQ, and inquiry/consultation.
+- The FAQ currently contains four native `details` entries. Older references to six FAQs were stale and are corrected above.
+- The current clinical-information sequence is coherent and not demonstrably scattered. The strongest blockers are missing business identity, real service/offer details, authentic authority, and a live contact/booking path.
+- The two WhatsApp-labelled buttons open the explanatory local portfolio-preview dialog. They do not open WhatsApp.
+- The consultation control prepares/copies an inquiry message locally. There is no HTML `form`, submission endpoint, telephone destination, clinic address, opening-hours block, or map.
+- No GA4, Google Ads conversion, or Meta Pixel identifier/event integration is configured in the page.
+- The document has a title, meta description, Open Graph title/description/image, and favicon. No canonical URL or factual local-business schema is configured; those should only be added when the real production domain and verified business details exist.
+
+### Image protection
+
+The approved Hero portrait was not modified. The browser suite now asserts the expected asset path, intrinsic and declared dimensions, original `figure.hero-visual` parent, object-fit and focal-position values. The GitHub Actions workflow also checks the exact Git blob SHA before running browser QA. These safeguards are intended to prevent accidental asset replacement or alteration.
+
+### Production blockers
+
+Do not remove the fictional-project disclosure or represent RUWA as a real clinic until the project owner supplies and verifies:
+
+1. Official clinic name, operating jurisdiction, city, address, map location, hours, and ownership-approved public contact details.
+2. Actual treatment/service scope, patient journey, available treatment methods, pricing and offer terms (if any), with clinical review.
+3. Real dental professional names, roles, qualifications, licence details and permitted photographs.
+4. Real clinic/interior photographs and image licences/consents.
+5. A monitored official WhatsApp Business account, staffed phone line, or an actual booking provider and tested destination.
+6. A privacy notice, lawful data-handling process, form endpoint (if used), retention policy, and required consent controls.
+7. Approved analytics identifiers, event definitions, attribution configuration, and any consent gates.
+8. Target-jurisdiction review of healthcare advertising, professional advertising, privacy, testimonials, and before/after imagery.
+
+No patient testimonials, ratings, before/after gallery, doctor profile, address, pricing, promotion, or business credential should be invented or added as placeholder-looking proof.
+
+### Recommended production architecture after verification
+
+1. Protected Hero (unchanged image) with clinic/service/geography facts only after verification.
+2. A concise trust and clinic-information strip using verified facts, not decorative badges.
+3. The actual whitening service and any genuine offer.
+4. Assessment and patient journey.
+5. Causes and treatment options, combined or shortened where this removes repetition without losing clinically useful explanations.
+6. Suitability, safety, and realistic expectations; merge overlapping material only after clinician review.
+7. FAQ tailored to the service and target campaign.
+8. Clinic location, operating hours, verified contact and final CTA.
+9. Accurate footer and privacy/legal links.
+
+This is a conditional architecture, not permission to add empty sections. If a factual input is unavailable, leave the corresponding production content unclaimed and record it as a blocker.
+
+### QA and skill availability
+
+- Baseline branch HEAD at audit start: `f51745f2320312c63847a54ae12045178340e100`.
+- Baseline Playwright workflow run #44843573088 succeeded for the existing page across the configured 320–1440px responsive test widths. That run did not execute Lighthouse.
+- Existing project workflows use Playwright/Chromium. Lighthouse is present in package dependencies but must not be claimed as run unless the relevant audit step executes.
+- The current tool skill registry exposed the plugin-management skill only; Anthropic Frontend Design, UI/UX Pro Max, and Vercel Web Interface Guidelines were not available as installable skill packages in this session. W3C and Google Ads official guidance were used as external references; skill availability is not overstated.
