@@ -52,6 +52,7 @@ Requires Node.js 22 for the current RUWA QA workflow.
 
 - Install dependencies: **npm install**
 - Check repository/page/document consistency: **npm run test:ruwa:consistency**
+  - The gate verifies the eight-section order, four FAQ entries, five contact controls, all `aria-controls` targets, the protected Hero disclosure, and both preview redirects.
 - Build the legacy root-page stylesheet only: **npm run build:css**
 - Existing legacy responsive test: **npm run test:responsive**
 
