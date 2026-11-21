@@ -1,223 +1,158 @@
-# Apex Studio — RUWA Dental Whitening Landing Page
+# Apex Studio — RUWA Dental Whitening Design and Implementation System
 
-**Project status:** Expanded landing page in staged review; retesting the new educational content  
-**Page:** `whitening-2026.html`  
-**Branch:** `feature/elite-whitening-world-class-2026`  
-**Locale:** Saudi Arabic, right-to-left  
-**Project type:** Fictional-clinic portfolio demonstration, not commissioned client work
+**Project:** fictional RUWA dental-whitening portfolio concept  
+**Current source of truth:** whitening-2026.html  
+**Working branch:** feature/elite-whitening-world-class-2026  
+**Pull request:** #9 (draft; not merged)  
+**Locale:** ar-SA · RTL  
+**Status:** portfolio preview only; not a live clinic website
 
-## Purpose and positioning
+## 1. Purpose and source-of-truth rules
 
-Apex Studio created this concept to demonstrate a considered Arabic landing-page experience for a dental whitening service. The page explains why an oral-health assessment should precede treatment selection, outlines common professional options and limitations, answers common questions, and provides a transparent inquiry-preparation interaction.
+This document describes the current implementation, not a proposed or historical design.
 
-The clinic name **RUWA | رُواء لطب الأسنان** is fictional and created solely for this portfolio concept. It is not a real clinic name cleared for commercial use, a completed client engagement, or a live booking service.
+There is one maintained RUWA implementation: **whitening-2026.html**. The files **whitening-preview.html** and **preview/ruwa/index.html** are compatibility redirect pages and must not contain a second copy of the landing page.
 
-## Design direction
+The root **index.html** is a separate legacy Elite Dental Clinic demo. The RUWA workstream must not silently replace it or modify its Tailwind stylesheet.
 
-**Modern Clinical Editorial.**
+RUWA is a fictional portfolio identity. No real clinic, dentist, employee, qualification, patient, review, rating, treatment result, price, address, opening time, phone number, or booking service is represented.
 
-The page uses a calm light clinical canvas, deep blue-green typography, a restrained teal accent, and limited warm details. The visual hierarchy starts with the protected headline and hero image, moves to patient education, then ends with a clear next step.
+## 2. Brand and visual direction
 
-Transferable reference principles:
-- **Apple:** deliberate image composition, whitespace, hierarchy, and visual restraint.
-- **Stripe:** clear value proposition and a focused primary visitor action.
-- **Notion:** simple components and consistent visual language.
-- **Linear:** careful spacing, states, focus behavior, and motion details.
-- **Vercel:** lightweight implementation and dependable technical execution.
+**Direction:** Modern Clinical Editorial — contemporary, clear, calm, responsive, and service-focused.
 
-These are directional references only. Do not copy proprietary artwork, page layouts, or brand identities.
-
-## Brand identity
-
-- Fictional brand name: **رُواء | RUWA** (working portfolio identity; trademark availability has not been legally cleared).
-- Arabic name: **رُواء لطب الأسنان**.
-- English wordmark: **Ruwa**, set in **Cormorant Garamond** (500 italic) as a restrained serif signature; loaded from Google Fonts with `display=swap`. The Arabic descriptor remains in IBM Plex Sans Arabic.
-- Logo mark: preserve the exact supplied reference composition: the deep-navy stylized **R** and the turquoise crescent smile placed inside its open bowl. Do not separate, reposition, reinterpret, or redraw these forms.
-- Header logo is transparent and unboxed. The favicon uses the same transparent PNG mark.
-- Primary logo asset: `assets/ruwa-mark.png`, containing the supplied mark with its white background removed and original proportions preserved.
-- Palette: deep ink `#142D38` and teal `#187A80`, matching the landing page system.
-- Keep the logo crisp at small sizes; do not add shadows, gradients, bevels, or decorative effects.
-- Keep the English wordmark restrained and legible; avoid highly decorative handwritten scripts. Only the English wordmark uses Cormorant Garamond.
-
-## Current design tokens
-
-| Token | HEX | Use |
+| Token | Value | Role |
 |---|---|---|
-| Canvas | `#F4F7F6` | Main page background |
-| Paper | `#FFFFFF` | Content surfaces |
-| Ink | `#142D38` | Primary text and dark contact panel |
-| Ink 2 | `#304A54` | Secondary text |
-| Muted | `#5C6D72` | Supporting text |
-| Line | `#DDE6E3` | Borders and separators |
-| Teal | `#187A80` | Primary action and key accents |
-| Deep teal | `#115A60` | Hover and deeper accents |
-| Warm accent | `#B85D4A` | Small editorial details |
-| Soft mint | `#E3F2E9` | Subtle highlight |
-| WhatsApp green | `#25D366` | Brand icon accent only in the portfolio demo; no live WhatsApp destination is configured |
+| Canvas | #F4F7FA | Main background |
+| Paper | #FFFFFF | Content surfaces |
+| Ink | #142D38 | Primary text |
+| Ink 2 | #304A54 | Secondary text |
+| Muted | #5C6D72 | Supporting text |
+| Line | #DCE5EA | Borders and dividers |
+| Teal | #187A80 | Primary action and key accent |
+| Deep teal | #115A60 | Hover and emphasis |
+| Coral | #B85D4A | Small editorial detail |
+| Pale blue | #EAF3F8 | Quiet background tint |
+| WhatsApp green | #25D366 | Icon recognition only; not the button background |
 
-The identity is intentionally restrained. Avoid reintroducing the previous cobalt/coral/acid-lime mix or decorative elements that compete with the headline and primary action.
+Do not add decorative trust badges, ratings, clinic logos, or medical credentials. Do not imitate proprietary artwork or copy another brand's page.
 
-## Typography
+## 3. Typography and layout
 
-- Arabic display/headings: **Cairo**, self-hosted locally in WOFF2 weights 700 and 800.
-- Body, navigation, controls, and supporting text: **IBM Plex Sans Arabic**, loaded locally.
-- Numeric and Latin-only labels stay on the body stack so Arabic-only Cairo files are not requested for Latin glyphs.
-- Fallbacks: Tahoma and sans-serif.
-- Current hero headline: **«اكتشف خيارات تبييض الأسنان لابتسامة أكثر إشراقًا»**. The three-tier hierarchy sets «تبييض الأسنان» as the dominant service phrase, with a quieter lead-in and a teal-highlighted benefit phrase; Cairo 800 is the approved display face.
-- Type scale: hero 42–72px, section headings 30–44px, card headings 17–19px, body 14–16px, controls 13–14px, metadata 10–13px.
-- Arabic display text uses neutral letter spacing (no negative tracking) and generous line height.
-- Keep Arabic copy natural, concise, readable on mobile, and appropriate for Saudi visitors.
+- Arabic display and headings: locally hosted Cairo, weights 700 and 800.
+- Arabic interface and body: locally hosted IBM Plex Sans Arabic.
+- Latin RUWA wordmark: locally hosted Cormorant Garamond, italic 500.
+- Arabic copy remains natural, concise, and localized for a Saudi Arabic audience.
+- Page direction is RTL; layout, icon placement, navigation, and focus order must remain correct for Arabic reading.
+- Keep the first screen clear: one service proposition, supporting explanation, primary action, secondary contact option, and approved image.
+- Maintain responsive behavior rather than using fixed desktop-only dimensions.
+- Respect prefers-reduced-motion and preserve visible keyboard focus.
 
-## Immutable approved Hero image — provenance requires confirmation
+## 4. Approved Hero portrait — protected
 
-- Protected asset: `assets/ruwa-hero-90-768.webp`.
-- Verified Git blob at the audit baseline: `11209e185ca8d671f74e54eda8fdefb1d42382d2`.
-- File size: 105,004 bytes. Intrinsic dimensions: 768 × 1152.
-- The current `whitening-2026.html` markup and visible caption identify the portrait as AI-generated. Earlier design notes attributed a Pexels photograph (Emily Gaibor, photo ID 37458050) to the Hero. These provenance descriptions conflict and must not be silently reconciled.
-- Keep the current page disclosure unchanged while the asset's origin is confirmed by the project owner. Do not claim a Pexels credit or describe it as an actual clinic employee until provenance and usage rights are verified.
-- The approved image is locked: do not replace, regenerate, retouch, recolor, recrop, resize, reposition, transform, or redesign it. Preserve its source path, figure placement, approved presentation, and loading priority.
-- Never present this image as an actual employee, patient, testimonial, or treatment result.
-- Do not create before/after claims or imply guaranteed clinical outcomes.
+- Asset: assets/ruwa-hero-90-768.webp
+- Approved Git blob SHA: 11209e185ca8d671f74e54eda8fdefb1d42382d2
+- File size: 105,004 bytes
+- Intrinsic size: 768 × 1152
+- HTML class: hero-portrait
+- Current presentation: contained image, bottom-centered focal position, eager loading, and high fetch priority.
 
-## Page architecture
+The current page alt text and visible disclosure state that this is an AI-generated illustrative dentist portrait, not a real dentist. Keep that disclosure. Never assign a real name, credential, clinic affiliation, patient identity, or testimonial to this image.
 
-1. Slim announcement strip with a single concise whitening message, without repeating the clinic name or decorative glyphs.
-2. Sticky branded navigation with a white translucent surface, refined spacing, and a compact rounded menu panel on tablet and phone.
-3. Hero: three-tier service-first headline, supporting explanation, a primary «تواصل عبر واتساب» demo CTA with a WhatsApp icon, a secondary guide link, and an editorial image with a quiet stock-photo disclosure. Both primary CTAs open the same transparent portfolio-preview dialog.
-4. Assessment approach: understand the case, explain possible options, and identify the next step.
-5. Causes of discoloration: surface staining compared with deeper changes in natural tooth color.
-6. Treatment options: in-office professional whitening, dentist-supervised custom take-home trays, and care for surface staining.
-7. Suitability: oral health, sensitivity or cracks, existing restorations, and pregnancy/breastfeeding considerations.
-8. Realistic expectations: possible temporary sensitivity, gum irritation, individual variation, and the fact that restorations do not whiten like natural teeth.
-9. FAQ: four concise questions with native, keyboard-operable disclosure controls.
-10. Inquiry-preparation panel and footer with the fictional-demo disclosure and image attribution.
+The approved file, its HTML element, figure placement, dimensions, focal position, framing, transform, and loading priority are protected. The source image's earlier documentation was inconsistent; the old Pexels-based preview has been retired. Do not add an external stock-photo credit to this image.
 
-The aim is to answer real visitor questions without adding fake proof points, fabricated clinic credentials, testimonials, ratings, or statistics.
+## 5. Current page architecture — exactly 8 content sections
 
-## Clinical content guardrails
+Header and announcement strip:
+- RUWA wordmark and Arabic descriptor.
+- Five navigation links to the visitor journey.
+- One WhatsApp-labelled header action.
+- Mobile menu with aria-expanded state and keyboard behavior.
 
-The educational copy is intentionally general and non-diagnostic:
-- A dental examination and history help identify causes of discoloration and factors that may affect suitability.
-- Options may include professionally administered whitening, dentist-supplied custom take-home trays, and management of surface stains. These are not interchangeable and are not suitable for everyone.
-- Whitening toothpastes mainly help remove some external stains; they should not be described as equivalent to professional bleaching.
-- Only natural teeth change shade with bleaching; fillings, crowns, veneers, and implant restorations do not whiten in the same way.
-- Temporary tooth sensitivity and gum irritation are possible adverse effects.
-- Untreated dental disease or unhealthy gums may need attention before cosmetic whitening is considered.
-- Pregnancy and breastfeeding are presented as matters to discuss with a clinician; the NHS advises against whitening during those periods.
-- Never promise an exact shade, a guaranteed outcome, or a fixed duration for every patient.
+Content sections in actual DOM order:
 
-The page includes educational links to the NHS and American Dental Association. All medical copy must be reviewed by a licensed dentist in the intended jurisdiction before use by a real clinic.
+| Order | ID | Section | Current role |
+|---:|---|---|---|
+| 01 | top | Hero | Explain the whitening subject and give the first contact action |
+| 02 | approach | Assessment approach | Explain why oral-health assessment comes first |
+| 03 | causes | Causes of discoloration | Explain surface staining and deeper colour changes |
+| 04 | options | Whitening options | Explain general options without claiming they are RUWA clinic services |
+| 05 | suitability | Suitability and safety | Explain factors that may affect suitability or timing |
+| 06 | expectations | Realistic expectations | Explain possible sensitivity, individual variation, and restorations |
+| 07 | faq | Frequently asked questions | Answer four focused visitor questions |
+| 08 | consultation | Final contact | Offer WhatsApp and phone actions with an explicit inactive state |
 
-Primary references:
-- NHS, “Teeth whitening” (reviewed 19 August 2025): https://www.nhs.uk/tests-and-treatments/teeth-whitening/
-- American Dental Association, “Whitening” (updated 11 November 2026): https://www.ada.org/resources/ada-library/oral-health-topics/whitening
-- ADA public guide, “Teeth Whitening”: https://www.mouthhealthy.org/all-topics-a-z/teeth-whitening
+The footer preserves the fictional portfolio disclosure and AI-image disclosure. There is no doctor profile, testimonial section, review score, before/after gallery, price list, clinic map, or real location because no verified source material exists.
 
-## Interaction behavior
+## 6. FAQ source of truth
 
-- Navigation links follow the visitor journey: assessment steps, causes of discoloration, whitening options, suitability, and FAQs. The wordmark links back to the top, so no duplicate “Home” link is needed; the assessment CTA remains a separate, clearly labelled button.
-- The compact navigation supports open/close state, `aria-expanded`, Escape-to-close, and closes after a selection.
-- FAQ entries use native `details` and `summary` elements.
-- The header and hero CTAs both use **«تواصل عبر واتساب»** with the recognizable WhatsApp brand glyph, while retaining RUWA's teal button surface (`#187A80`).
-- Both CTAs are native buttons that open one shared HTML `dialog`; neither contains a phone number, external URL, or live WhatsApp destination.
-- The dialog is visibly labeled as an Apex Studio portfolio preview and explains that a real clinic's approved WhatsApp Business account will be connected at handoff.
-- The dialog explicitly states that no conversation is opened and no visitor data is sent or stored in this demo.
-- The dialog supports close buttons, Escape, backdrop click, focus placement on its heading, and focus restoration to the exact trigger. Background scrolling is locked only while the dialog is open.
-- A live WhatsApp destination must only be added after the real clinic supplies and approves its verified business contact details and response process.
-- Do not describe the current interaction as a live message, clinical assessment, or completed booking.
+There are **4 native HTML details/summary FAQ entries** in the current page. The tests assert this exact count.
 
-## Live-clinic contact-channel strategy (future production use)
+Do not describe the current page as having six FAQs. Do not add duplicate questions simply to increase page length. Add a question only when it answers a real, relevant visitor concern and the answer has been clinically reviewed.
 
-For this dental-whitening landing-page use case, the preferred default primary channel is **the clinic's verified official WhatsApp Business account**, but only when the clinic confirms that reception actively monitors it during published hours and has a clear response owner. The live CTA should then read **«تواصل عبر واتساب»**, open the verified click-to-chat destination, and use a recognizable WhatsApp mark. Keep the button surface in RUWA teal (`#187A80`) so the page retains its visual identity; the channel label and icon provide the functional distinction. Do not use the WhatsApp green token merely to make the button more noticeable.
+## 7. Contact behavior — exact current state
 
-This is a strategic default, not a claim that WhatsApp will always produce the highest conversion. If the clinic cannot answer messages reliably, do not make WhatsApp the primary action. Use a real online booking system instead only when it displays genuine appointment availability and completes the booking with a clear confirmation; otherwise use a verified, staffed phone line with a `tel:` link. Never label an inquiry as a confirmed appointment.
+There are **3 WhatsApp actions and 2 phone actions**:
 
-Before enabling a live contact CTA, obtain the clinic's approved destination and confirm ownership, operating hours, response responsibility, and the exact post-click behavior. Do not invent numbers or point to a personal/unmonitored account.
+- Header: WhatsApp.
+- Hero: WhatsApp.
+- Hero secondary action: phone.
+- Final contact area: WhatsApp and phone.
 
-Use chat for basic service questions and appointment coordination, not as a substitute for clinical assessment. Do not prompt visitors to send dental photographs, detailed medical histories, diagnoses, or other sensitive health information through an ordinary chat flow. Saudi SDAIA guidance identifies data related to an individual's health as sensitive personal data under the PDPL and describes additional safeguards for processing it: https://dgp.sdaia.gov.sa/wps/portal/pdp/knowledgecenter/details/PDPL/. Any collection of clinical information must use a clinic-approved, privacy-compliant channel and workflow.
+The central JavaScript configuration contains empty values for WHATSAPP_NUMBER and PHONE_NUMBER. With those values empty:
 
-Until real clinic contact details and operational readiness are provided, keep both demo CTAs **«تواصل عبر واتساب»** opening the local explanatory preview dialog only. Do not attach a fake `wa.me` URL or imply that a conversation has started.
+- No WhatsApp chat opens.
+- No tel: call begins.
+- No external number or live destination is fabricated.
+- The click opens the native contact-unavailable dialog.
+- The dialog identifies which channel is not activated.
+- The dialog supports its close controls, Escape, backdrop click, focus placement, focus restoration, and temporary background scroll lock.
+- The page does not collect or transmit visitor data.
 
-## Engineering constraints
+Every control that uses aria-controls must reference an element ID that exists. The contact controls must reference contact-unavailable-dialog; the mobile menu toggle must reference main-nav.
 
-- Preserve static HTML/CSS/JavaScript and the existing GitHub Pages architecture.
-- Reuse local font assets.
-- Avoid unnecessary dependencies or UI frameworks.
-- Keep all work on the feature branch.
-- Do not alter `main`, `index.html`, production routing, or live deployment settings without explicit approval.
-- Do not invent clinic staff, credentials, address, reviews, ratings, patient counts, or treatment results.
+There is no HTML form, lead endpoint, appointment inventory, booking confirmation, message-copy feature, or actual clinic contact channel in this version. Do not call a dialog opening a booking or conversion.
 
-## Quality assurance
+## 8. Clinical and trust-content boundaries
 
-The prior approved preview revision passed Playwright and Lighthouse. The expanded page adds five educational sections, four FAQ entries, additional navigation targets, tablet navigation behavior, and the WhatsApp portfolio-preview dialog. The browser QA script covers the expanded experience.
+The copy is general educational information, not diagnosis or individualized clinical advice. It describes possible options and limitations without guaranteeing outcomes.
 
-**Verified:** Playwright and Lighthouse passed on code commit `c1a4b051b95ded4f1a29a39bbf2add94ebdb6ca2`. Browser checks passed at 360×800, 390×844, 768×1024, and 1440×900; both Cairo and IBM Plex Sans Arabic loaded locally, with no browser errors or horizontal overflow. Lighthouse: mobile Performance 96; desktop Performance 100; Accessibility, Best Practices, and SEO 100 on both. The following documentation-only commit does not change the tested page or test script. Record the new revision and results here only after the new workflow completes successfully.
+Before adaptation for a real clinic:
+- A licensed dentist in the intended jurisdiction must review all medical claims and safety wording.
+- Verify which treatments the clinic actually offers.
+- Verify all professional identities, roles, qualifications, and licences before publishing them.
+- Use only genuine, authorized testimonials or results if local rules permit them.
+- Do not fabricate ratings, review counts, before/after photos, clinical outcomes, equipment, facilities, discounts, or prices.
+- Do not ask visitors to send dental photographs or sensitive health details through an ordinary marketing chat.
 
-**Latest CTA verification (14 November 2026):** GitHub Actions run [#120](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/43649799213) passed on code commit `d1daab495eb9c2a4fc64f4957f7603a722301f66`. Playwright passed at 360×800, 390×844, 768×1024, 1024×900, and 1440×900, including both WhatsApp CTAs, the native preview dialog, Escape and close-button behavior, focus restoration, scroll-lock cleanup, and the absence of fake contact destinations. Mobile and desktop Lighthouse audits completed successfully. [Screenshots and HTML/JSON reports](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/43649799213/artifacts/14135776596) were uploaded; no Lighthouse scores are asserted here.
+A doctor/team section, authentic reviews, clinic photographs, pricing, maps, and opening hours are conditional future additions, not empty design placeholders.
 
-The dedicated workflow checks 360×800, 390×844, 768×1024, 1024×900, and 1440×900. It checks exact hero headline text and its three-tier hierarchy, Cairo heading loading, IBM Plex body loading, local font loading, responsive navigation, all in-page anchors, section/card counts, FAQ open/close behavior, both WhatsApp CTAs, native dialog semantics, explanatory copy, Escape and close-button behavior, focus restoration, absence of fake contact destinations, image loading, reduced-motion behavior, JavaScript errors, and horizontal overflow. It also creates mobile and desktop Lighthouse reports.
+## 9. Engineering constraints
 
-## Before any real-client launch
+- Standalone static HTML/CSS/JavaScript page.
+- Keep GitHub Pages compatibility; do not require a server runtime or database.
+- Keep all current work on the RUWA feature branch.
+- Do not modify main, the legacy root index, deployment configuration, or the approved Hero asset without explicit project approval.
+- Do not introduce a framework or heavy third-party script unless a measured requirement justifies it.
+- Avoid analytics or advertising scripts that would transmit health-related information.
+- Do not add local-business structured data until real business facts and a production domain are verified.
 
-Replace demo-specific material only after the actual clinic approves it:
-1. Approved clinic identity, location, and verified contact details.
-2. Real team photography and credentials, with permission.
-3. Clinically reviewed service copy and approved claims.
-4. A real inquiry destination and privacy-compliant handling.
-5. Final client review and deployment authorization.
+## 10. Quality and verification
 
-Until those inputs exist, keep the project clearly labeled as a fictional portfolio concept.
+The dedicated workflow is .github/workflows/whitening-2026-browser-qa.yml. It verifies:
+- Approved Hero image Git blob SHA.
+- Full-page responsive rendering and section captures.
+- Hero content visibility before scrolling.
+- Playwright interaction checks across mobile, tablet, laptop, and desktop widths.
+- Internal navigation, mobile menu, floating header, FAQ open/close, contact actions, modal focus behavior, and no horizontal overflow.
+- The public immutable preview in Chromium.
 
+The last successful pre-maintenance browser run was GitHub Actions run 44848880255 on commit 62b69fd3c7f2008282b0d28443e1b827bcdba478. It passed all configured steps, including the protected-image check and public-preview verification. This run did not execute Lighthouse; no Lighthouse score is asserted here. Any later source change must be verified by a new run before claiming it passes.
 
-## Full-page production-readiness audit — 21 November 2026
+## 11. Redirect and deployment behavior
 
-### Verified current state
+- Canonical maintained page: whitening-2026.html
+- Legacy alias: whitening-preview.html → whitening-2026.html
+- Public path alias: preview/ruwa/index.html → ../../whitening-2026.html
 
-- RUWA is a fictional portfolio concept created by Apex Studio, not a commissioned or operating dental clinic.
-- The current page contains eight content sections in this order: Hero, assessment approach, causes of discoloration, whitening options, suitability, realistic expectations, FAQ, and inquiry/consultation.
-- The FAQ currently contains four native `details` entries. Older references to six FAQs were stale and are corrected above.
-- The current clinical-information sequence is coherent and not demonstrably scattered. The strongest blockers are missing business identity, real service/offer details, authentic authority, and a live contact/booking path.
-- The two WhatsApp-labelled buttons open the explanatory local portfolio-preview dialog. They do not open WhatsApp.
-- The consultation control prepares/copies an inquiry message locally. There is no HTML `form`, submission endpoint, telephone destination, clinic address, opening-hours block, or map.
-- No GA4, Google Ads conversion, or Meta Pixel identifier/event integration is configured in the page.
-- The document has a title, meta description, Open Graph title/description/image, and favicon. No canonical URL or factual local-business schema is configured; those should only be added when the real production domain and verified business details exist.
-
-### Image protection
-
-The approved Hero portrait was not modified. The browser suite now asserts the expected asset path, intrinsic and declared dimensions, original `figure.hero-visual` parent, object-fit and focal-position values. The GitHub Actions workflow also checks the exact Git blob SHA before running browser QA. These safeguards are intended to prevent accidental asset replacement or alteration.
-
-### Production blockers
-
-Do not remove the fictional-project disclosure or represent RUWA as a real clinic until the project owner supplies and verifies:
-
-1. Official clinic name, operating jurisdiction, city, address, map location, hours, and ownership-approved public contact details.
-2. Actual treatment/service scope, patient journey, available treatment methods, pricing and offer terms (if any), with clinical review.
-3. Real dental professional names, roles, qualifications, licence details and permitted photographs.
-4. Real clinic/interior photographs and image licences/consents.
-5. A monitored official WhatsApp Business account, staffed phone line, or an actual booking provider and tested destination.
-6. A privacy notice, lawful data-handling process, form endpoint (if used), retention policy, and required consent controls.
-7. Approved analytics identifiers, event definitions, attribution configuration, and any consent gates.
-8. Target-jurisdiction review of healthcare advertising, professional advertising, privacy, testimonials, and before/after imagery.
-
-No patient testimonials, ratings, before/after gallery, doctor profile, address, pricing, promotion, or business credential should be invented or added as placeholder-looking proof.
-
-### Recommended production architecture after verification
-
-1. Protected Hero (unchanged image) with clinic/service/geography facts only after verification.
-2. A concise trust and clinic-information strip using verified facts, not decorative badges.
-3. The actual whitening service and any genuine offer.
-4. Assessment and patient journey.
-5. Causes and treatment options, combined or shortened where this removes repetition without losing clinically useful explanations.
-6. Suitability, safety, and realistic expectations; merge overlapping material only after clinician review.
-7. FAQ tailored to the service and target campaign.
-8. Clinic location, operating hours, verified contact and final CTA.
-9. Accurate footer and privacy/legal links.
-
-This is a conditional architecture, not permission to add empty sections. If a factual input is unavailable, leave the corresponding production content unclaimed and record it as a blocker.
-
-### QA and skill availability
-
-- Baseline branch HEAD at audit start: `f51745f2320312c63847a54ae12045178340e100`.
-- Baseline Playwright workflow run #44843573088 succeeded for the existing page across the configured 320–1440px responsive test widths. That run did not execute Lighthouse.
-- Existing project workflows use Playwright/Chromium. Lighthouse is present in package dependencies but must not be claimed as run unless the relevant audit step executes.
-- The current tool skill registry exposed the plugin-management skill only; Anthropic Frontend Design, UI/UX Pro Max, and Vercel Web Interface Guidelines were not available as installable skill packages in this session. W3C and Google Ads official guidance were used as external references; skill availability is not overstated.
+GitHub Pages deploys from main only. The working branch and draft PR are not a production deployment.
