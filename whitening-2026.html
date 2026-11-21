@@ -77,33 +77,33 @@ img{display:block;max-width:100%}
 .header-action{gap:9px}
 .primary-cta{gap:10px}
 body.dialog-open{overflow:hidden}
-.whatsapp-demo-dialog{
+.contact-dialog{
  width:min(520px,calc(100% - 32px));max-width:none;max-height:calc(100dvh - 32px);
  margin:auto;padding:0;overflow:auto;border:1px solid rgba(20,45,56,.12);
  border-radius:24px;background:var(--paper);color:var(--ink);
  box-shadow:0 28px 90px rgba(7,25,31,.28);direction:rtl
 }
-.whatsapp-demo-dialog::backdrop{background:rgba(8,25,31,.62);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
-.whatsapp-demo-dialog[open]{animation:whatsappDialogIn .22s cubic-bezier(.2,.75,.25,1) both}
-.whatsapp-demo-panel{position:relative;padding:clamp(26px,5vw,38px);text-align:center}
-.whatsapp-demo-close{
+.contact-dialog::backdrop{background:rgba(8,25,31,.62);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.contact-dialog[open]{animation:contactDialogIn .22s cubic-bezier(.2,.75,.25,1) both}
+.contact-dialog-panel{position:relative;padding:clamp(26px,5vw,38px);text-align:center}
+.contact-dialog-close{
  position:absolute;top:15px;left:15px;width:38px;height:38px;display:grid;place-items:center;
  border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--ink);cursor:pointer;
  transition:background .18s,border-color .18s
 }
-.whatsapp-demo-close:hover{background:var(--lime);border-color:rgba(24,122,128,.25)}
-.whatsapp-demo-close svg{width:17px;height:17px}
-.whatsapp-demo-kicker{display:inline-flex;align-items:center;gap:7px;margin:2px 0 19px;color:var(--blue);font-size:10px;font-weight:800;letter-spacing:.04em}
-.whatsapp-demo-kicker:before{content:"";width:18px;height:2px;border-radius:2px;background:var(--coral)}
-.whatsapp-demo-symbol{width:58px;height:58px;display:grid;place-items:center;margin:0 auto 17px;border-radius:19px;background:var(--lime);color:var(--blue-deep)}
-.whatsapp-demo-symbol svg{width:30px;height:30px}
-.whatsapp-demo-title{margin:0 0 13px;font-family:var(--display);font-size:clamp(21px,4vw,27px);font-weight:800;line-height:1.5}
-.whatsapp-demo-description{max-width:410px;margin:0 auto;color:var(--ink2);font-size:14px;line-height:2}
-.whatsapp-demo-note{margin:17px 0 22px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#F7F9FA;color:var(--muted);font-size:11px;line-height:1.9}
-.whatsapp-demo-dismiss{min-height:46px;min-width:142px;padding:0 22px;border:0;border-radius:13px;background:var(--blue);color:#fff;font:700 13px var(--body);cursor:pointer;transition:background .18s,transform .18s}
-.whatsapp-demo-dismiss:hover{background:var(--blue-deep);transform:translateY(-1px)}
-.whatsapp-demo-dismiss:active{transform:translateY(0)}
-@keyframes whatsappDialogIn{from{opacity:0;transform:translateY(9px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+.contact-dialog-close:hover{background:var(--lime);border-color:rgba(24,122,128,.25)}
+.contact-dialog-close svg{width:17px;height:17px}
+.contact-dialog-kicker{display:inline-flex;align-items:center;gap:7px;margin:2px 0 19px;color:var(--blue);font-size:10px;font-weight:800;letter-spacing:.04em}
+.contact-dialog-kicker:before{content:"";width:18px;height:2px;border-radius:2px;background:var(--coral)}
+.contact-dialog-symbol{width:58px;height:58px;display:grid;place-items:center;margin:0 auto 17px;border-radius:19px;background:var(--lime);color:var(--blue-deep)}
+.contact-dialog-symbol svg{width:30px;height:30px}
+.contact-dialog-title{margin:0 0 13px;font-family:var(--display);font-size:clamp(21px,4vw,27px);font-weight:800;line-height:1.5}
+.contact-dialog-description{max-width:410px;margin:0 auto;color:var(--ink2);font-size:14px;line-height:2}
+.contact-dialog-note{margin:17px 0 22px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#F7F9FA;color:var(--muted);font-size:11px;line-height:1.9}
+.contact-dialog-dismiss{min-height:46px;min-width:142px;padding:0 22px;border:0;border-radius:13px;background:var(--blue);color:#fff;font:700 13px var(--body);cursor:pointer;transition:background .18s,transform .18s}
+.contact-dialog-dismiss:hover{background:var(--blue-deep);transform:translateY(-1px)}
+.contact-dialog-dismiss:active{transform:translateY(0)}
+@keyframes contactDialogIn{from{opacity:0;transform:translateY(9px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 .menu-toggle{display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--ink)}
 .menu-toggle svg{width:19px;height:19px;margin:auto}
 .hero{position:relative;overflow:hidden;isolation:isolate;padding-block:clamp(24px,3.2vw,44px) clamp(28px,4vw,52px);background:radial-gradient(ellipse at 84% 18%,rgba(24,122,128,.02) 0%,rgba(24,122,128,0) 42%),radial-gradient(ellipse at 10% 82%,rgba(24,122,128,.01) 0%,rgba(24,122,128,0) 36%),var(--canvas)}
@@ -122,6 +122,7 @@ body.dialog-open{overflow:hidden}
 .text-link{min-height:44px;display:inline-flex;align-items:center;gap:8px;padding:0 2px;border-bottom:1px solid #A9AAA0;color:var(--ink);font-size:12px;font-weight:800}
 .text-link svg{width:15px;height:15px;transition:transform .2s}
 .text-link:hover svg{transform:translateY(3px)}
+.phone-cta:hover svg{transform:none}
 .hero-visual{
  position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
  gap:8px;min-width:0;min-height:675px;margin:0;padding:10px 12px 4px;isolation:isolate
@@ -228,18 +229,17 @@ body.dialog-open{overflow:hidden}
 .contact-eyebrow{display:inline-block;margin-bottom:11px;color:#A9DCD2;font-size:9px;font-weight:800;letter-spacing:.14em;direction:ltr}
 .contact-band h2{margin:0 0 9px;font-family:var(--display);font-size:clamp(20px,2.7vw,31px);line-height:1.5}
 .contact-band p{margin:0;color:rgba(255,255,255,.86);font-size:11px;line-height:1.9}
-.inquiry-form{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:11px}
-.inquiry-field{display:grid;gap:8px;min-width:0}
-.inquiry-field label{font-size:10px;font-weight:700;color:#FFFFFF}
-.inquiry-field select{width:100%;min-height:49px;padding:0 13px;border:1px solid rgba(255,255,255,.24);border-radius:10px;background:#FFFFFF;color:#18313B;font:inherit;font-size:11px}
-.inquiry-field select:focus-visible{outline:3px solid #A9DCD2;outline-offset:3px}
-.contact-submit{min-height:49px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 16px;border:0;border-radius:999px;background:var(--blue);color:#FFFFFF;font:inherit;font-size:11px;font-weight:800;white-space:nowrap;cursor:pointer;transition:transform .2s,background .2s}
-.contact-submit:hover{background:var(--blue-deep);transform:translateY(-1px)}
-.contact-submit:active{transform:translateY(0) scale(.985)}
-.contact-submit svg{width:16px;height:16px}
-.inquiry-status{grid-column:1/-1;min-height:18px;margin:0;color:rgba(255,255,255,.9);font-size:11px;line-height:1.8}
-.inquiry-message{grid-column:1/-1;width:100%;min-height:75px;padding:11px;border:1px solid rgba(255,255,255,.25);border-radius:9px;background:rgba(255,255,255,.08);color:#FFFFFF;font:inherit;font-size:11px;line-height:1.8;resize:vertical}
-.inquiry-message[hidden]{display:none}
+.contact-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:12px}
+.contact-action{min-width:0;min-height:52px;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:0 18px;border:1px solid transparent;border-radius:999px;font:700 14px var(--body);line-height:1.4;text-align:center;cursor:pointer;transition:transform .2s ease,background-color .2s ease,border-color .2s ease,box-shadow .2s ease}
+.contact-action svg{width:19px;height:19px;flex:none}
+.contact-action--whatsapp{background:var(--blue);color:#FFFFFF;box-shadow:0 5px 15px rgba(24,122,128,.17)}
+.contact-action--phone{background:transparent;border-color:rgba(255,255,255,.42);color:#FFFFFF}
+.contact-action:hover{transform:translateY(-2px)}
+.contact-action--whatsapp:hover{background:var(--blue-deep);box-shadow:0 8px 20px rgba(0,0,0,.17)}
+.contact-action--phone:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.75)}
+.contact-action:active{transform:translateY(0)}
+.contact-action:focus-visible{outline:3px solid #A9DCD2;outline-offset:3px}
+.contact-privacy-note{grid-column:1/-1;margin:2px 0 0;color:rgba(255,255,255,.78);font-size:11px;line-height:1.9}
 
 /* Content sections: informative, clinically cautious, and visually consistent. */
 .content-section{padding-block:clamp(56px,6.5vw,88px)}
@@ -296,10 +296,10 @@ body.dialog-open{overflow:hidden}
  .suitability-grid{grid-template-columns:1fr;gap:26px}
 }
 @media(max-width:520px){
- .whatsapp-demo-dialog{width:calc(100% - 28px);max-height:calc(100dvh - 28px);border-radius:20px}
- .whatsapp-demo-panel{padding:28px 22px 23px}
- .whatsapp-demo-description{font-size:13px}
- .whatsapp-demo-dismiss{width:100%}
+ .contact-dialog{width:calc(100% - 28px);max-height:calc(100dvh - 28px);border-radius:20px}
+ .contact-dialog-panel{padding:28px 22px 23px}
+ .contact-dialog-description{font-size:13px}
+ .contact-dialog-dismiss{width:100%}
 }
 @media(max-width:600px){
  .cause-grid,.options-grid,.expect-grid{grid-template-columns:1fr}
@@ -319,8 +319,8 @@ body.dialog-open{overflow:hidden}
 .footer a{color:#A9DCD2;text-decoration:underline;text-underline-offset:3px}
 :focus-visible{outline:3px solid var(--coral);outline-offset:4px}
 @media(prefers-reduced-motion:reduce){
- .whatsapp-demo-dialog[open]{animation:none}
- .whatsapp-demo-close,.whatsapp-demo-dismiss{transition:none}
+ .contact-dialog[open]{animation:none}
+ .contact-dialog-close,.contact-dialog-dismiss{transition:none}
 }
 @keyframes copyEnter{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:920px){
@@ -360,9 +360,6 @@ body.dialog-open{overflow:hidden}
  .hero-visual::before{inset:8px 5% 42px;border-radius:48% 48% 16px 16px / 30% 30% 16px 16px}
  .hero-portrait{max-width:min(100%,360px);max-height:535px;transform:rotate(.45deg)}
  .contact-band{grid-template-columns:1fr;align-items:stretch;gap:22px}
- .inquiry-form{grid-template-columns:1fr}
- .contact-submit{width:100%}
- .inquiry-status{grid-column:auto}
  .footer-inner{align-items:flex-start;flex-direction:column}
 }
 @media(max-width:390px){
@@ -397,8 +394,8 @@ body,button,input,select,textarea{font-family:var(--body)}
 .section-head p,.suitability-copy p{font-size:15px;line-height:2}
 .info-card p,.option-card p,.faq-answer,.expect-card p{font-size:14.5px;line-height:2}
 .option-card .option-note{font-size:13px}.contact-band p{font-size:14px;line-height:1.95}
-.inquiry-field label{font-size:13px}.inquiry-field select,.contact-submit,.inquiry-message{font-size:14px}
-.inquiry-status,.reference-note{font-size:13px}.nav a{font-size:14px}
+.contact-action{font-size:14px}
+.contact-privacy-note,.reference-note{font-size:13px}.nav a{font-size:14px}
 .header-action,.primary-cta{font-size:14px;font-weight:700}.text-link{font-size:14px;font-weight:700}
 .eyebrow{font-size:11px;letter-spacing:0}
 .hero-bottom-item span{font-size:12px}.footer-inner{font-size:11px}
@@ -861,7 +858,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  width:100%;column-gap:15px;row-gap:10px;margin-top:24px;
 }
 .hero-actions .primary-cta,
-.hero-actions .consultation-cta{
+.hero-actions .consultation-cta{appearance:none;-webkit-appearance:none;cursor:pointer;
  min-height:54px;display:inline-flex;align-items:center;justify-content:center;
  border-radius:999px;font-family:var(--body);font-size:15px;font-weight:700;
  line-height:1.2;text-decoration:none;box-sizing:border-box;
@@ -1142,7 +1139,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    <a href="#suitability">هل يناسبك؟</a>
    <a href="#faq">الأسئلة الشائعة</a>
   </nav>
-  <button class="header-action whatsapp-cta" type="button" data-open-whatsapp-demo aria-haspopup="dialog" aria-controls="whatsapp-demo-dialog"><svg class="whatsapp-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2.01c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.47 1.34 4.98L2 22l5.2-1.37c1.43.78 3.1 1.19 4.84 1.19h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.91Zm0 18.1h-.01c-1.51 0-2.99-.4-4.28-1.17l-.31-.18-3.09.81.83-3.01-.2-.31a8.26 8.26 0 0 1-1.27-4.39c0-4.57 3.72-8.29 8.3-8.29 2.21 0 4.29.86 5.85 2.43a8.24 8.24 0 0 1 2.43 5.86c0 4.57-3.72 8.29-8.29 8.29Zm4.55-6.21c-.25-.12-1.48-.73-1.71-.81-.23-.08-.4-.12-.57.12-.17.25-.65.81-.8.98-.15.17-.3.19-.55.06-.25-.12-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.38.11-.5.11-.11.25-.3.37-.45.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.57-1.37-.78-1.88-.21-.49-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.53.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.21-1.1.15-1.2-.06-.1-.23-.16-.48-.28Z"/></svg>تواصل عبر واتساب</button>
+  <button class="header-action whatsapp-cta" type="button" data-contact-action="whatsapp" aria-haspopup="dialog" aria-controls="contact-dialog"><svg class="whatsapp-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2.01c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.47 1.34 4.98L2 22l5.2-1.37c1.43.78 3.1 1.19 4.84 1.19h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.91Zm0 18.1h-.01c-1.51 0-2.99-.4-4.28-1.17l-.31-.18-3.09.81.83-3.01-.2-.31a8.26 8.26 0 0 1-1.27-4.39c0-4.57 3.72-8.29 8.3-8.29 2.21 0 4.29.86 5.85 2.43a8.24 8.24 0 0 1 2.43 5.86c0 4.57-3.72 8.29-8.29 8.29Zm4.55-6.21c-.25-.12-1.48-.73-1.71-.81-.23-.08-.4-.12-.57.12-.17.25-.65.81-.8.98-.15.17-.3.19-.55.06-.25-.12-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.38.11-.5.11-.11.25-.3.37-.45.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.57-1.37-.78-1.88-.21-.49-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.53.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.21-1.1.15-1.2-.06-.1-.23-.16-.48-.28Z"/></svg>تواصل عبر واتساب</button>
   <button class="menu-toggle" id="menu-toggle" type="button" aria-label="فتح القائمة" aria-expanded="false" aria-controls="main-nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
  </div>
 </header>
@@ -1169,8 +1166,8 @@ body,button,input,select,textarea{font-family:var(--body)}
      </h1>
      <p class="hero-lead">تختلف أسباب تغيّر لون الأسنان ونتائج التبييض من حالة لأخرى. لذلك يبدأ التقييم بفحص الأسنان واللثة، ثم يشرح لك طبيب الأسنان الخيارات المناسبة لحالتك وما يمكن توقعه من كل خيار.</p>
      <div class="hero-actions">
-      <button class="primary-cta whatsapp-cta" type="button" data-open-whatsapp-demo aria-haspopup="dialog" aria-controls="whatsapp-demo-dialog"><svg class="whatsapp-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2.01c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.47 1.34 4.98L2 22l5.2-1.37c1.43.78 3.1 1.19 4.84 1.19h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.91Zm0 18.1h-.01c-1.51 0-2.99-.4-4.28-1.17l-.31-.18-3.09.81.83-3.01-.2-.31a8.26 8.26 0 0 1-1.27-4.39c0-4.57 3.72-8.29 8.3-8.29 2.21 0 4.29.86 5.85 2.43a8.24 8.24 0 0 1 2.43 5.86c0 4.57-3.72 8.29-8.29 8.29Zm4.55-6.21c-.25-.12-1.48-.73-1.71-.81-.23-.08-.4-.12-.57.12-.17.25-.65.81-.8.98-.15.17-.3.19-.55.06-.25-.12-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.38.11-.5.11-.11.25-.3.37-.45.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.57-1.37-.78-1.88-.21-.49-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.53.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.21-1.1.15-1.2-.06-.1-.23-.16-.48-.28Z"/></svg>تواصل عبر واتساب</button>
-      <a class="text-link consultation-cta" href="#consultation">اطلب استشارة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14m-7-7 7 7 7-7"/></svg></a>
+      <button class="primary-cta whatsapp-cta" type="button" data-contact-action="whatsapp" aria-haspopup="dialog" aria-controls="contact-dialog"><svg class="whatsapp-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2.01c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.47 1.34 4.98L2 22l5.2-1.37c1.43.78 3.1 1.19 4.84 1.19h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.91Zm0 18.1h-.01c-1.51 0-2.99-.4-4.28-1.17l-.31-.18-3.09.81.83-3.01-.2-.31a8.26 8.26 0 0 1-1.27-4.39c0-4.57 3.72-8.29 8.3-8.29 2.21 0 4.29.86 5.85 2.43a8.24 8.24 0 0 1 2.43 5.86c0 4.57-3.72 8.29-8.29 8.29Zm4.55-6.21c-.25-.12-1.48-.73-1.71-.81-.23-.08-.4-.12-.57.12-.17.25-.65.81-.8.98-.15.17-.3.19-.55.06-.25-.12-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.38.11-.5.11-.11.25-.3.37-.45.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.57-1.37-.78-1.88-.21-.49-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.53.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.21-1.1.15-1.2-.06-.1-.23-.16-.48-.28Z"/></svg>تواصل عبر واتساب</button>
+       <button class="text-link consultation-cta phone-cta" type="button" data-contact-action="phone" aria-haspopup="dialog" aria-controls="contact-unavailable-dialog">اتصل بالعيادة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.19 18a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.08 3.18 2 2 0 0 1 4.08 1h3a2 2 0 0 1 2 1.72l.45 3.12a2 2 0 0 1-.57 1.73L7.7 8.83a16 16 0 0 0 6 6l1.26-1.26a2 2 0 0 1 1.73-.57l3.12.45A2 2 0 0 1 22 16.92Z"/></svg></button>
      </div>
     </div>
     <figure class="hero-visual">
@@ -1355,44 +1352,28 @@ body,button,input,select,textarea{font-family:var(--body)}
  </section>
 
  <section class="contact-section" id="consultation" aria-labelledby="consultation-title">
-  <div class="wrap">
-   <div class="contact-band">
-    <div class="contact-copy">
-     <span class="contact-eyebrow">الخطوة التالية / 03</span>
-     <h2 id="consultation-title">ابدأ بسؤال واضح، لا بوعد سريع.</h2>
-     <p>اختر موضوع استفسارك، ثم جهّز رسالة يمكنك نسخها واستخدامها بنفسك. هذه تجربة للعرض فقط؛ لا تتصل بعيادة حقيقية، ولا تُرسل البيانات إلى جهة خارجية أو تُحفظ.</p>
-    </div>
-    <div class="inquiry-form">
-     <div class="inquiry-field">
-      <label for="inquiry-topic">ما الذي تود معرفته؟</label>
-      <select id="inquiry-topic" name="inquiry-topic">
-       <option value="هل التبييض مناسب لحالتي؟">مدى ملاءمة التبييض لحالتي</option>
-       <option value="ما خطوات التقييم قبل التبييض؟">خطوات التقييم قبل التبييض</option>
-       <option value="ما الخيارات المتاحة وما حدود نتائجها؟">الخيارات المتاحة والنتائج المتوقعة</option>
-      </select>
-     </div>
-     <button class="contact-submit" id="prepare-inquiry" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>نسخ رسالة الاستفسار</button>
-     <p class="inquiry-status" id="inquiry-status" role="status" aria-live="polite">نموذج تجريبي: لا يتم إرسال أي بيانات أو حفظها.</p>
-     <textarea class="inquiry-message" id="inquiry-message" rows="3" readonly hidden aria-label="رسالة الاستفسار الجاهزة"></textarea>
-    </div>
+  <div class="wrap"><div class="contact-band">
+   <div class="contact-copy"><span class="contact-eyebrow">تواصل معنا</span><h2 id="consultation-title">هل تفكر في تبييض الأسنان؟</h2><p>استفسر عن خيارات التبييض وما ينبغي معرفته قبل اتخاذ القرار. يظل اختيار الطريقة المناسبة مرتبطًا بفحص الأسنان واللثة وتقييم الحالة.</p></div>
+   <div class="contact-actions" aria-label="وسائل التواصل">
+    <button class="contact-action contact-action--whatsapp" type="button" data-contact-action="whatsapp" aria-haspopup="dialog" aria-controls="contact-unavailable-dialog"><svg class="whatsapp-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2.01c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.47 1.34 4.98L2 22l5.2-1.37c1.43.78 3.1 1.19 4.84 1.19h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.91Zm0 18.1h-.01c-1.51 0-2.99-.4-4.28-1.17l-.31-.18-3.09.81.83-3.01-.2-.31a8.26 8.26 0 0 1-1.27-4.39c0-4.57 3.72-8.29 8.3-8.29 2.21 0 4.29.86 5.85 2.43a8.24 8.24 0 0 1 2.43 5.86c0 4.57-3.72 8.29-8.29 8.29Zm4.55-6.21c-.25-.12-1.48-.73-1.71-.81-.23-.08-.4-.12-.57.12-.17.25-.65.81-.8.98-.15.17-.3.19-.55.06-.25-.12-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.38.11-.5.11-.11.25-.3.37-.45.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.57-1.37-.78-1.88-.21-.49-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.53.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.21-1.1.15-1.2-.06-.1-.23-.16-.48-.28Z"/></svg>تواصل عبر واتساب</button>
+    <button class="contact-action contact-action--phone" type="button" data-contact-action="phone" aria-haspopup="dialog" aria-controls="contact-unavailable-dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.19 18a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.08 3.18 2 2 0 0 1 4.08 1h3a2 2 0 0 1 2 1.72l.45 3.12a2 2 0 0 1-.57 1.73L7.7 8.83a16 16 0 0 0 6 6l1.26-1.26a2 2 0 0 1 1.73-.57l3.12.45A2 2 0 0 1 22 16.92Z"/></svg>اتصل بالعيادة</button>
+    <p class="contact-privacy-note">للاستفسارات العامة فقط؛ يُرجى عدم إرسال صور الأسنان أو معلومات صحية حساسة عبر المحادثات.</p>
    </div>
-  </div>
+  </div></div>
  </section>
 </main>
 
-<dialog class="whatsapp-demo-dialog" id="whatsapp-demo-dialog" aria-labelledby="whatsapp-demo-title" aria-describedby="whatsapp-demo-description" aria-modal="true">
- <div class="whatsapp-demo-panel">
-  <button class="whatsapp-demo-close" id="whatsapp-demo-close" type="button" aria-label="إغلاق نافذة معاينة واتساب">
-   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
-  </button>
-  <span class="whatsapp-demo-kicker">معاينة من Apex Studio</span>
-  <div class="whatsapp-demo-symbol" aria-hidden="true"><svg class="whatsapp-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2.01c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.47 1.34 4.98L2 22l5.2-1.37c1.43.78 3.1 1.19 4.84 1.19h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.91Zm0 18.1h-.01c-1.51 0-2.99-.4-4.28-1.17l-.31-.18-3.09.81.83-3.01-.2-.31a8.26 8.26 0 0 1-1.27-4.39c0-4.57 3.72-8.29 8.3-8.29 2.21 0 4.29.86 5.85 2.43a8.24 8.24 0 0 1 2.43 5.86c0 4.57-3.72 8.29-8.29 8.29Zm4.55-6.21c-.25-.12-1.48-.73-1.71-.81-.23-.08-.4-.12-.57.12-.17.25-.65.81-.8.98-.15.17-.3.19-.55.06-.25-.12-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.38.11-.5.11-.11.25-.3.37-.45.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.57-1.37-.78-1.88-.21-.49-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.53.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.21-1.1.15-1.2-.06-.1-.23-.16-.48-.28Z"/></svg></div>
-  <h2 class="whatsapp-demo-title" id="whatsapp-demo-title" tabindex="-1">تجربة التواصل عبر واتساب</h2>
-  <p class="whatsapp-demo-description" id="whatsapp-demo-description">هذه معاينة تجريبية لتجربة التواصل عبر واتساب. عند تطبيق الصفحة لعيادة حقيقية، سيتم ربط الزر بحساب واتساب الرسمي للعيادة لبدء المحادثة مباشرة.</p>
-  <p class="whatsapp-demo-note">لا يتم فتح محادثة فعلية أو إرسال أي بيانات في هذه النسخة التجريبية.</p>
-  <button class="whatsapp-demo-dismiss" id="whatsapp-demo-dismiss" type="button">إغلاق المعاينة</button>
- </div>
-</dialog>
+ <dialog class="contact-dialog" id="contact-unavailable-dialog" aria-labelledby="contact-dialog-title" aria-describedby="contact-dialog-description" aria-modal="true">
+  <div class="contact-dialog-panel">
+   <button class="contact-dialog-close" id="contact-dialog-close" type="button" aria-label="إغلاق نافذة معلومات التواصل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+   <span class="contact-dialog-kicker">قنوات التواصل</span>
+   <div class="contact-dialog-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-4-.99L3 21l1.99-5.5A8.4 8.4 0 0 1 4 11.5 8.5 8.5 0 1 1 21 11.5Z"/></svg></div>
+   <h2 class="contact-dialog-title" id="contact-dialog-title" tabindex="-1">معلومات التواصل</h2>
+   <p class="contact-dialog-description" id="contact-dialog-description">قنوات التواصل ستعمل مباشرة عند إضافة بيانات الاتصال الرسمية.</p>
+   <p class="contact-dialog-note">لن يتم فتح محادثة أو بدء اتصال قبل إعداد رقم صحيح.</p>
+   <button class="contact-dialog-dismiss" id="contact-dialog-dismiss" type="button">إغلاق</button>
+  </div>
+ </dialog>
 <footer class="footer"><div class="wrap footer-inner"><span>© 2026 RUWA — نموذج تجريبي من Apex Studio.</span><span>«الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا.»</span></div></footer>
 <script>
 (function(){
@@ -1449,27 +1430,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  });
 })();
 
-(function(){
- const button=document.getElementById("prepare-inquiry");
- const topic=document.getElementById("inquiry-topic");
- const status=document.getElementById("inquiry-status");
- const messageField=document.getElementById("inquiry-message");
- if(!button||!topic||!status||!messageField)return;
- button.addEventListener("click",async()=>{
-  const message=`السلام عليكم، أود الاستفسار عن تبييض الأسنان. ${topic.value} هل يمكن توضيح الخطوة المناسبة؟`;
-  messageField.value=message;
-  try{
-   if(!navigator.clipboard?.writeText)throw new Error("Clipboard unavailable");
-   await navigator.clipboard.writeText(message);
-   status.textContent="تم نسخ رسالة الاستفسار. الصقها في قناة التواصل التي تختارها؛ لم يتم إرسال أي بيانات.";
-  }catch{
-   messageField.hidden=false;
-   messageField.focus();
-   messageField.select();
-   status.textContent="جهّزنا الرسالة أدناه. انسخها يدويًا؛ لم يتم إرسال أي بيانات أو حفظها.";
-  }
- });
-})();
+
 
 // Floating RUWA header: one shared progress value and content-derived frame geometry.
 (function(){
@@ -1654,33 +1615,50 @@ body,button,input,select,textarea{font-family:var(--body)}
 })();
 
 
-// Portfolio-only WhatsApp preview: no external destination, message, or visitor data.
+// Central contact configuration. Add verified international numbers (digits only) when approved.
 (function(){
- const dialog=document.getElementById("whatsapp-demo-dialog");
- const title=document.getElementById("whatsapp-demo-title");
- const closeButton=document.getElementById("whatsapp-demo-close");
- const dismissButton=document.getElementById("whatsapp-demo-dismiss");
- const triggers=[...document.querySelectorAll("[data-open-whatsapp-demo]")];
- if(!dialog||!title||!closeButton||!dismissButton||!triggers.length)return;
+ const WHATSAPP_NUMBER = "";
+ const PHONE_NUMBER = "";
+ const dialog=document.getElementById("contact-unavailable-dialog");
+ const title=document.getElementById("contact-dialog-title");
+ const description=document.getElementById("contact-dialog-description");
+ const closeButton=document.getElementById("contact-dialog-close");
+ const dismissButton=document.getElementById("contact-dialog-dismiss");
+ const triggers=[...document.querySelectorAll("[data-contact-action]")];
+ if(!dialog||!title||!description||!closeButton||!dismissButton||!triggers.length)return;
+ const normalizeNumber=value=>{
+  const digits=String(value||"").replace(/\D/g,"");
+  return /^\d{8,15}$/.test(digits)?digits:"";
+ };
+ const whatsappNumber=normalizeNumber(WHATSAPP_NUMBER);
+ const phoneNumber=normalizeNumber(PHONE_NUMBER);
  let lastTrigger=null;
  const restoreFocus=()=>{
   document.body.classList.remove("dialog-open");
   if(lastTrigger?.isConnected)lastTrigger.focus();
   lastTrigger=null;
  };
- const closeDialog=()=>{if(dialog.open)dialog.close()};
- triggers.forEach(trigger=>trigger.addEventListener("click",()=>{
-  if(dialog.open)return;
+ const closeDialog=()=>{if(dialog.open)dialog.close();};
+ const showUnavailable=(trigger,channel)=>{
   lastTrigger=trigger;
+  const whatsapp=channel==="whatsapp";
+  title.textContent=whatsapp?"التواصل عبر واتساب غير مفعّل بعد":"الاتصال بالعيادة غير مفعّل بعد";
+  description.textContent=whatsapp
+   ?"لم تتم إضافة رقم واتساب الرسمي إلى إعدادات الصفحة. سيعمل هذا الزر مباشرة عند ربط رقم التواصل المعتمد."
+   :"لم تتم إضافة رقم الاتصال الرسمي إلى إعدادات الصفحة. سيعمل هذا الزر مباشرة عند ربط رقم العيادة المعتمد.";
   document.body.classList.add("dialog-open");
   dialog.showModal();
   title.focus();
+ };
+ triggers.forEach(trigger=>trigger.addEventListener("click",()=>{
+  const channel=trigger.dataset.contactAction;
+  if(channel==="whatsapp"&&whatsappNumber){window.open("https://wa.me/"+whatsappNumber,"_blank","noopener,noreferrer");return;}
+  if(channel==="phone"&&phoneNumber){window.location.href="tel:+"+phoneNumber;return;}
+  if(channel==="whatsapp"||channel==="phone")showUnavailable(trigger,channel);
  }));
  closeButton.addEventListener("click",closeDialog);
  dismissButton.addEventListener("click",closeDialog);
- dialog.addEventListener("click",event=>{
-  if(event.target===dialog)closeDialog();
- });
+ dialog.addEventListener("click",event=>{if(event.target===dialog)closeDialog();});
  dialog.addEventListener("close",restoreFocus);
 })();
 </script>
