@@ -48,7 +48,7 @@ No independent doctor profile, patient review/testimonial panel, rating score, b
 - The page has a document title, meta description, Open Graph title/description/image, and favicon.
 - The current Hero image is assets/ruwa-hero-90-768.webp.
 - The current Hero image alt text and visible caption explicitly identify it as AI-generated and not a real dentist.
-- FAQ count: **4** native details entries.
+- FAQ count: **4 native details entries**.
 - Contact controls: **3 WhatsApp actions and 2 phone actions**.
 - WHATSAPP_NUMBER and PHONE_NUMBER are intentionally empty.
 - When clicked with those values empty, the actions open the local contact-unavailable dialog. They do not open WhatsApp or begin a phone call.
