@@ -172,10 +172,10 @@ try {
         headerActionTag:document.querySelector(".header-action")?.tagName || "",
         headerActionHasChatIcon:Boolean(document.querySelector(".header-action svg")),
         headerActionWhatsAppIcon:Boolean(document.querySelector(".header-action .whatsapp-brand-icon")),
-        contactTriggerCount:document.querySelectorAll("[data-open-whatsapp-demo]").length,
-        demoDialogTag:document.querySelector("#whatsapp-demo-dialog")?.tagName || "",
-        demoDialogText:document.querySelector("#whatsapp-demo-dialog")?.innerText?.replace(/\\s+/g," ").trim() || "",
-        demoDialogInitialOpen:document.querySelector("#whatsapp-demo-dialog")?.open || false,
+        contactTriggerCount:document.querySelectorAll("[data-contact-action]").length,
+        demoDialogTag:document.querySelector("#contact-unavailable-dialog")?.tagName || "",
+        demoDialogText:document.querySelector("#contact-unavailable-dialog")?.innerText?.replace(/\\s+/g," ").trim() || "",
+        demoDialogInitialOpen:document.querySelector("#contact-unavailable-dialog")?.open || false,
         navLabels:[...document.querySelectorAll("#main-nav a")].map(a=>a.innerText.trim()),
         navHrefs:[...document.querySelectorAll("#main-nav a")].map(a=>a.getAttribute("href")),
         navLinkTypography:[...document.querySelectorAll("#main-nav a")].map(link=>{
@@ -392,7 +392,7 @@ try {
               referenceMargin:style(".reference-note")?.marginTop||null},
             contactFooter:{paddingBottom:style(".contact-section")?.paddingBottom||null,
               contactToFooter:gap(".contact-band",".footer"),contactGridGap:style(".contact-band")?.gap||null,
-              formGap:style(".inquiry-form")?.gap||null}
+              contactActionsGap:style(".contact-actions")?.gap||null}
           };
         })(),
         copy:copy ? rect(copy) : null,
@@ -486,8 +486,12 @@ try {
           const href=a.getAttribute("href") || "";
           return href.startsWith("tel:") || a.hostname==="wa.me" || a.hostname==="api.whatsapp.com";
         }),
-        inquiryButton:Boolean(document.querySelector("#prepare-inquiry")),
-        inquiryTopicLabel:Boolean(document.querySelector('label[for="inquiry-topic"]')),
+        inquiryButton:Boolean(document.querySelector('#consultation [data-contact-action="whatsapp"]')),
+         inquiryTopicLabel:Boolean(document.querySelector('#consultation [data-contact-action="phone"]')),
+         contactChannelCounts:{
+           whatsapp:document.querySelectorAll('[data-contact-action="whatsapp"]').length,
+           phone:document.querySelectorAll('[data-contact-action="phone"]').length
+         }
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
         contentSections:["approach","causes","options","suitability","expectations","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
         optionCards:document.querySelectorAll(".option-card").length,
@@ -714,8 +718,8 @@ try {
             "#options .option-card p","#options .option-card .option-note",
             "#suitability .suitability-copy p","#suitability .check-item p",
             "#expectations .expect-card p","#faq .faq-item summary","#faq .faq-answer",
-            "#faq .reference-note","#consultation .inquiry-field label",
-            "#consultation .contact-submit","#consultation .inquiry-status",".footer"
+            "#faq .reference-note","#consultation .contact-action--whatsapp",
+             "#consultation .contact-action--phone","#consultation .contact-privacy-note",".footer"
           ];
           return selectors.map(selector=>{
             const el=document.querySelector(selector);
@@ -758,11 +762,11 @@ try {
     assert.equal(state.headerActionHref, "", `${vp.name}: demo header CTA must not contain a fake external destination`);
     assert.equal(state.headerActionTag, "BUTTON", `${vp.name}: header CTA must open the local demo dialog`);
     assert.ok(state.headerActionHasChatIcon && state.headerActionWhatsAppIcon, `${vp.name}: WhatsApp brand icon is missing from header CTA`);
-    assert.equal(state.contactTriggerCount, 2, `${vp.name}: both primary CTAs must share one dialog trigger`);
+    assert.equal(state.contactTriggerCount, 5, `${vp.name}: all five WhatsApp and phone actions must use the shared unavailable-contact dialog`);
     assert.equal(state.demoDialogTag, "DIALOG", `${vp.name}: accessible native dialog is missing`);
     assert.equal(state.demoDialogInitialOpen, false, `${vp.name}: demo dialog should start closed`);
-    assert.ok(state.demoDialogText.includes("معاينة تجريبية لتجربة التواصل عبر واتساب"), `${vp.name}: demo dialog explanation is missing`);
-    assert.ok(state.demoDialogText.includes("لا يتم فتح محادثة فعلية أو إرسال أي بيانات"), `${vp.name}: demo dialog must disclose that no live contact occurs`);
+    assert.ok(state.demoDialogText.includes("قنوات التواصل ستعمل مباشرة عند إضافة بيانات الاتصال الرسمية"), `${vp.name}: contact dialog initial explanation is missing`);
+    assert.ok(state.demoDialogText.includes("لن يتم فتح محادثة أو بدء اتصال قبل إعداد رقم صحيح"), `${vp.name}: unavailable contact destinations must be disclosed`);
     assert.deepEqual(state.navLabels, ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
     assert.deepEqual(state.navHrefs, ["#approach","#causes","#options","#suitability","#faq"], `${vp.name}: navigation destinations are incorrect`);
     assert.equal(state.navLinkTypography.length,5, `${vp.name}: all five navigation links must be present`);
@@ -900,8 +904,10 @@ try {
     assert.equal(state.ctaHref, "", `${vp.name}: demo hero CTA must not navigate to an unrelated section`);
     assert.equal(state.heroCtaText, "تواصل عبر واتساب", vp.name + ": hero CTA copy is incorrect");
     assert.ok(state.heroSecondaryCta, vp.name + ": the secondary consultation link must remain visible");
-    assert.equal(state.heroSecondaryCta.text, "اطلب استشارة", vp.name + ": secondary consultation CTA wording changed");
-    assert.equal(state.heroSecondaryCta.href, "#consultation", vp.name + ": secondary consultation CTA destination changed");
+    assert.equal(state.heroSecondaryCta.text, "اتصل بالعيادة", vp.name + ": secondary phone CTA wording changed");
+    assert.equal(state.heroSecondaryCta.href, null, vp.name + ": phone CTA must not contain a fabricated number destination");
+     assert.equal(state.heroSecondaryCta.tag, "BUTTON", vp.name + ": phone CTA must be a button until a number is configured");
+     assert.equal(state.heroSecondaryCta.channel, "phone", vp.name + ": Hero secondary action should use the phone channel");
     assert.ok(state.heroSecondaryCta.minHeight>=44, vp.name + ": secondary CTA click target must be at least 44px tall");
     assert.ok(state.heroSecondaryCta.gap>=7&&state.heroSecondaryCta.gap<=18,
       vp.name + ": primary/secondary CTA spacing is not balanced: " + JSON.stringify(state.heroSecondaryCta));
@@ -936,18 +942,20 @@ try {
     assert.equal(audit.faq.referenceMargin,"24px", vp.name + ": reference note spacing changed");
     assert.ok(Number.parseFloat(audit.contactFooter.contactToFooter)>=52, vp.name + ": contact-to-footer separation is too tight");
     assert.equal(state.liveContactChannelPresent, false, `${vp.name}: demo must not contain a live WhatsApp or phone destination`);
-    assert.ok(state.inquiryButton && state.inquiryTopicLabel, `${vp.name}: interactive inquiry control or label missing`);
-    const dialog=page.locator("#whatsapp-demo-dialog");
+    assert.ok(state.inquiryButton && state.inquiryTopicLabel, `${vp.name}: final WhatsApp and phone contact controls are missing`);
+     assert.deepEqual(state.contactChannelCounts,{whatsapp:3,phone:2},`${vp.name}: page must have exactly three WhatsApp and two phone actions`);
+    const dialog=page.locator("#contact-unavailable-dialog");
     const heroTrigger=page.locator(".primary-cta");
     const headerTrigger=page.locator(".header-action");
     await heroTrigger.focus();
     await page.keyboard.press("Enter");
-    await page.waitForFunction(() => document.querySelector("#whatsapp-demo-dialog")?.open === true, null, { timeout: 3000 });
-    assert.equal(await page.evaluate(() => document.activeElement?.id), "whatsapp-demo-title", `${vp.name}: opening from the hero CTA must move focus to the dialog heading`);
+    await page.waitForFunction(() => document.querySelector("#contact-unavailable-dialog")?.open === true, null, { timeout: 3000 });
+    assert.equal(await page.evaluate(() => document.activeElement?.id), "contact-dialog-title", `${vp.name}: opening from the Hero WhatsApp CTA must move focus to the dialog heading`);
+     assert.equal(await page.locator("#contact-dialog-title").innerText(), "التواصل عبر واتساب غير مفعّل بعد", `${vp.name}: empty WhatsApp configuration should show its correct unavailable state`);
     assert.ok(await dialog.evaluate(el=>el.matches(":modal")), `${vp.name}: demo dialog must enter the native modal top layer`);
     await page.keyboard.press("Escape");
     await page.waitForFunction(() => {
-      const dialog=document.querySelector("#whatsapp-demo-dialog");
+      const dialog=document.querySelector("#contact-unavailable-dialog");
       return dialog?.open === false &&
         !document.body.classList.contains("dialog-open") &&
         document.activeElement?.classList.contains("primary-cta");
@@ -956,10 +964,10 @@ try {
     assert.equal(await page.evaluate(() => document.body.classList.contains("dialog-open")), false, `${vp.name}: body scroll lock must be removed after Escape`);
 
     await headerTrigger.click();
-    await page.waitForFunction(() => document.querySelector("#whatsapp-demo-dialog")?.open === true, null, { timeout: 3000 });
-    await page.locator("#whatsapp-demo-close").click();
+    await page.waitForFunction(() => document.querySelector("#contact-unavailable-dialog")?.open === true, null, { timeout: 3000 });
+    await page.locator("#contact-dialog-close").click();
     await page.waitForFunction(() => {
-      const dialog=document.querySelector("#whatsapp-demo-dialog");
+      const dialog=document.querySelector("#contact-unavailable-dialog");
       return dialog?.open === false &&
         !document.body.classList.contains("dialog-open") &&
         document.activeElement?.classList.contains("header-action");
@@ -967,10 +975,10 @@ try {
     assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("header-action")), true, `${vp.name}: close control must restore focus to the header trigger`);
 
     await heroTrigger.click();
-    await page.waitForFunction(() => document.querySelector("#whatsapp-demo-dialog")?.open === true, null, { timeout: 3000 });
-    await page.locator("#whatsapp-demo-dismiss").click();
+    await page.waitForFunction(() => document.querySelector("#contact-unavailable-dialog")?.open === true, null, { timeout: 3000 });
+    await page.locator("#contact-dialog-dismiss").click();
     await page.waitForFunction(() => {
-      const dialog=document.querySelector("#whatsapp-demo-dialog");
+      const dialog=document.querySelector("#contact-unavailable-dialog");
       return dialog?.open === false &&
         !document.body.classList.contains("dialog-open") &&
         document.activeElement?.classList.contains("primary-cta");
@@ -1209,7 +1217,7 @@ try {
       return {active,visible:element.matches(":focus-visible"),outline:style.outlineStyle,width:style.outlineWidth,color:style.outlineColor};
     });
     assert.ok(secondaryFocus.active&&secondaryFocus.visible&&secondaryFocus.outline==="solid"&&secondaryFocus.width==="3px", `${vp.name}: Hero secondary focus indicator is not visible: ${JSON.stringify(secondaryFocus)}`);
-    assert.equal(secondaryFocus.color,"rgb(17, 90, 96)", `${vp.name}: Hero CTA focus indicator should use the accessible deep-teal token`);
+    assert.equal(secondaryFocus.color,"rgb(17, 90, 96)", `${vp.name}: Hero phone CTA focus indicator should use the accessible deep-teal token`);
     assert.equal(state.missingAnchors.length, 0, `${vp.name}: broken in-page anchors: ${state.missingAnchors.join(", ")}`);
     assert.ok(state.skipLink, `${vp.name}: skip link missing`);
     assert.ok(state.faviconHref.endsWith("assets/ruwa-mark.png"), `${vp.name}: RUWA favicon link is missing`);
@@ -1437,18 +1445,26 @@ try {
     await faqQuestion.click();
     assert.equal(await faqQuestion.locator("xpath=..").getAttribute("open"), null, `${vp.name}: first FAQ item did not close`);
 
-    await page.locator("#prepare-inquiry").click();
-    await page.waitForFunction(() => {
-      const status=document.querySelector("#inquiry-status")?.textContent || "";
-      return status.includes("تم نسخ") || status.includes("جهّزنا");
-    }, null, { timeout: 5000 });
-    const inquiryResult = await page.evaluate(() => ({
-      message:document.querySelector("#inquiry-message")?.value || "",
-      status:document.querySelector("#inquiry-status")?.textContent || "",
-      fallbackVisible:!document.querySelector("#inquiry-message")?.hidden
-    }));
-    assert.ok(inquiryResult.message.includes("تبييض الأسنان"), `${vp.name}: inquiry message was not prepared`);
-    assert.ok(inquiryResult.status.includes("نسخ") || inquiryResult.status.includes("جهّزنا"), `${vp.name}: inquiry feedback is missing`);
+    const finalPhone=page.locator('#consultation [data-contact-action="phone"]');
+     await finalPhone.click();
+     await page.waitForFunction(() => {
+       const dialog=document.querySelector("#contact-unavailable-dialog");
+       return dialog?.open===true && document.querySelector("#contact-dialog-title")?.textContent==="الاتصال بالعيادة غير مفعّل بعد";
+     },null,{timeout:3000});
+     assert.equal(await page.evaluate(()=>document.activeElement?.id),"contact-dialog-title",`${vp.name}: unavailable phone action must focus the dialog heading`);
+     await page.locator("#contact-dialog-dismiss").click();
+     await page.waitForFunction(()=>!document.querySelector("#contact-unavailable-dialog")?.open,null,{timeout:3000});
+     assert.equal(await page.evaluate(()=>document.activeElement===document.querySelector('#consultation [data-contact-action="phone"]')),true,`${vp.name}: phone dialog close should restore trigger focus`);
+
+     const finalWhatsApp=page.locator('#consultation [data-contact-action="whatsapp"]');
+     await finalWhatsApp.click();
+     await page.waitForFunction(() => {
+       const dialog=document.querySelector("#contact-unavailable-dialog");
+       return dialog?.open===true && document.querySelector("#contact-dialog-title")?.textContent==="التواصل عبر واتساب غير مفعّل بعد";
+     },null,{timeout:3000});
+     await page.locator("#contact-dialog-close").click();
+     await page.waitForFunction(()=>!document.querySelector("#contact-unavailable-dialog")?.open,null,{timeout:3000});
+     assert.equal(await page.evaluate(()=>document.activeElement===document.querySelector('#consultation [data-contact-action="whatsapp"]')),true,`${vp.name}: WhatsApp dialog close should restore trigger focus`);
 
     await page.goto(BASE_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
     await page.evaluate(async () => {
