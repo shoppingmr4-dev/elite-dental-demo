@@ -1,0 +1,143 @@
+# RUWA Dental Whitening — Repository and Production-Readiness Audit
+
+**Audit date:** 21 November 2026  
+**Working branch:** feature/elite-whitening-world-class-2026  
+**Pull request:** #9 (draft; not merged)  
+**Canonical RUWA page:** whitening-2026.html  
+**Project type:** fictional Apex Studio portfolio demonstration  
+**Production verdict:** NOT READY for a real clinic; suitable as a staged portfolio preview after current QA passes.
+
+## 1. Executive finding
+
+RUWA is a fictional portfolio concept, not a commissioned or operating dental clinic. It must not be presented as a real clinic, and it must not acquire invented doctors, qualifications, ratings, testimonials, prices, addresses, opening hours, patient statistics, clinical outcomes, or appointment inventory.
+
+The current page has a coherent service-specific education journey. It contains **8 main content sections** plus the shared header, announcement strip, and footer. Its educational structure does not need extra placeholder sections. The missing items are real-business evidence and an operational conversion destination, not decorative content.
+
+## 2. Repository source-of-truth and route audit
+
+- Canonical implementation: **whitening-2026.html**.
+- Legacy path **whitening-preview.html** redirects to the canonical implementation.
+- Legacy public route **preview/ruwa/index.html** redirects to the canonical implementation.
+- These aliases must not contain a second landing-page implementation.
+- Root **index.html** is the repository's separate legacy Elite Dental Clinic demo. It is intentionally outside the RUWA workstream and remains unchanged.
+- The Tailwind build script and assets/css/site.css belong to that root-page workstream; they do not build or alter the standalone RUWA page.
+- GitHub Pages deployment is configured on main only. The feature branch and draft PR are not themselves a production deployment.
+
+## 3. Existing RUWA page inventory
+
+The actual current DOM order is:
+
+| Order | ID | Section | Decision | Evidence-based rationale |
+|---:|---|---|---|---|
+| Header | main-nav | Brand, five section links, WhatsApp-labelled CTA | KEEP | Directs visitors to the current patient-education journey. |
+| 01 | top | Hero | KEEP / protect | Explains the whitening subject and presents the approved illustrative portrait and first actions. |
+| 02 | approach | Assessment approach | KEEP | Explains why assessment precedes choosing an option. |
+| 03 | causes | Causes of discoloration | KEEP | Provides concise context about surface and deeper colour changes. |
+| 04 | options | Whitening options | IMPROVE only for a real clinic | General education is not proof that a real clinic offers all listed options. |
+| 05 | suitability | Suitability and safety | KEEP / clinical review required | Explains factors that may affect suitability or timing. |
+| 06 | expectations | Realistic expectations | KEEP | Covers possible sensitivity, individual variation, and restorations. |
+| 07 | faq | Frequently asked questions | KEEP | Four native details/summary entries are present. |
+| 08 | consultation | Final contact | KEEP / activate only with verified details | The actions disclose that real channels are not configured. |
+| Footer | — | Portfolio and image disclosures | KEEP | Prevents the sample from being mistaken for a real operating clinic. |
+
+No independent doctor profile, patient review/testimonial panel, rating score, before-and-after gallery, clinic gallery, pricing section, map, or hours-of-operation section exists in this page.
+
+## 4. Confirmed current content and interaction behavior
+
+- Page language is ar-SA and direction is RTL.
+- The page has a document title, meta description, Open Graph title/description/image, and favicon.
+- The current Hero image is assets/ruwa-hero-90-768.webp.
+- The current Hero image alt text and visible caption explicitly identify it as AI-generated and not a real dentist.
+- FAQ count: **4 native details entries**.
+- Contact controls: **3 WhatsApp actions and 2 phone actions**.
+- WHATSAPP_NUMBER and PHONE_NUMBER are intentionally empty.
+- When clicked with those values empty, the actions open the local contact-unavailable dialog. They do not open WhatsApp or begin a phone call.
+- Contact dialog ID: contact-unavailable-dialog.
+- The page has no HTML form, no lead endpoint, no appointment availability, no booking confirmation, no data collection, and no analytics/ad pixels.
+- It does not transmit or store visitor details.
+
+All aria-controls references must resolve to real IDs. The header and Hero contact controls must reference contact-unavailable-dialog; the mobile menu toggle must reference main-nav. The consistency and browser tests enforce this relationship.
+
+## 5. Protected Hero image
+
+- Path: assets/ruwa-hero-90-768.webp
+- Approved Git blob SHA: 11209e185ca8d671f74e54eda8fdefb1d42382d2
+- File size: 105,004 bytes
+- Intrinsic dimensions: 768 × 1152
+- HTML class: hero-portrait
+- Loading: eager, fetchpriority high.
+
+The binary is guarded by a Git SHA check in the dedicated workflow. Browser checks also validate its path, dimensions, parent figure, and presentation. The image must not be replaced, regenerated, retouched, recoloured, recropped, resized, repositioned, transformed, or otherwise restyled without explicit approval.
+
+The source-of-truth page and its current alt/caption identify this asset as AI-generated. Older preview documentation used a conflicting stock-image credit; both old preview paths are now redirects and that obsolete credit has been removed from RUWA materials. Do not reintroduce a stock-photo credit or imply that the pictured person is a real treating dentist.
+
+## 6. Missing real-clinic inputs
+
+The repository does not contain verified:
+- Operating clinic identity or registered business details.
+- Confirmed service location, street address, map point, or opening hours.
+- Official phone number or monitored WhatsApp Business account.
+- Actual booking destination or appointment inventory.
+- Named dentist, professional registration, licence, or qualifications.
+- Authentic clinician/team/facility photographs.
+- Actual treatment menu and service availability.
+- Approved service prices, package contents, discounts, or offer terms.
+- Authentic patient reviews, ratings, or clinical outcome evidence.
+- Clinic privacy notice, data controller/contact, retention policy, or secure lead-handling endpoint.
+
+These are production blockers. Do not add placeholder-looking proof to the demo.
+
+## 7. Recommended production information architecture
+
+Once genuine clinic data is supplied and approved, use this one conversion-oriented sequence:
+
+1. Hero — service, real clinic context, honest benefit, and one primary action.
+2. Verified trust strip — only verifiable clinic and professional facts.
+3. Understanding the problem — concise reasons and concerns relevant to whitening.
+4. Assessment journey — what is assessed and why.
+5. Real service options — only the methods actually offered, plus accurate terms/pricing when confirmed.
+6. Doctor profile — a concise verified profile when the treating professional and publishable qualifications are confirmed; may be integrated into the trust strip.
+7. Suitability and safety — clinically reviewed constraints and expectations.
+8. Patient reviews — conditional on genuine, authorized material and applicable rules; omit when unavailable.
+9. FAQ — focused questions based on real visitor concerns.
+10. Location and contact — genuine address, hours, directions, staffed contact, and final CTA.
+11. Footer — accurate business, privacy, and legal information.
+
+Before/after results, clinic photographs, detailed team galleries, promotions, and price cards are conditional, not compulsory sections. Never insert them without authentic source material.
+
+## 8. Clinical integrity and ethical persuasion
+
+The current page is educational and non-diagnostic. Before adapting it to a real clinic:
+- A licensed dentist in the intended jurisdiction must review all clinical copy, suitability language, and safety claims.
+- Confirm which treatments are provided by the clinic.
+- Do not guarantee shade, duration, or individual results.
+- Do not imply that a general FAQ answer is individualized medical advice.
+- Do not request dental images or detailed medical history through ordinary marketing chat.
+- Do not send sensitive health information to standard advertising or analytics tools.
+- Verify local healthcare advertising, professional, privacy, and consumer rules with competent official or legal sources before launch.
+
+## 9. Accessibility, responsive design, and technical requirements
+
+Targets for future production:
+- WCAG 2.2 AA review, including keyboard navigation, focus visibility, contrast, semantics, and touch targets.
+- Correct ar-SA RTL structure and readable Arabic line lengths.
+- No horizontal overflow, clipping, overlap, or inaccessible controls.
+- Reduced-motion support.
+- Core Web Vitals targets: LCP ≤ 2.5 s, INP < 200 ms, CLS < 0.1.
+
+The page has no canonical URL or LocalBusiness structured data. Those should only be added when a real production domain and verified business details exist.
+
+## 10. Test and verification baseline
+
+Before the latest repository-consistency maintenance:
+- GitHub Actions run 44848880255 succeeded on commit 62b69fd3c7f2008282b0d28443e1b827bcdba478.
+- The run checked the approved Hero image SHA, all content sections across viewports, Hero above-the-fold visibility, the Playwright browser suite, and the immutable public preview in Chromium.
+- Browser coverage included nine widths from 320px through 1440px.
+- The workflow did not execute Lighthouse; no Lighthouse score is claimed.
+- The maintenance adds a static repository-consistency test and an explicit browser assertion that every aria-controls ID resolves. A new workflow run is required before claiming the updated revision passes.
+
+## 11. Final verdict
+
+The RUWA portfolio page has a coherent 8-section education journey. Adding fabricated clinicians, patient reviews, ratings, clinic facts, or prices would be a regression. Keep the page honest and focused; add trust and commercial content only after the real business supplies verified data.
+
+The RUWA implementation remains staged on the feature branch. Do not merge the PR, publish a production site, or activate a contact channel without explicit approval and verified clinic information.

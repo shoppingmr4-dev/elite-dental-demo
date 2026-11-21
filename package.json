@@ -6,7 +6,8 @@
   "scripts": {
     "build:css": "tailwindcss -i ./src/tailwind.css -o ./assets/css/site.css --minify",
     "watch:css": "tailwindcss -i ./src/tailwind.css -o ./assets/css/site.css --watch",
-    "test:responsive": "node tests/responsive-smoke.mjs"
+    "test:responsive": "node tests/responsive-smoke.mjs",
+    "test:ruwa:consistency": "node tests/ruwa-repo-consistency.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "4.3.3",
