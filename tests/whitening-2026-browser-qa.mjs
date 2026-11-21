@@ -131,6 +131,7 @@ try {
       await document.fonts.load('800 48px "Cairo"', "التبييض");
       await document.fonts.load('400 16px "IBM Plex Sans Arabic"', "رعاية الأسنان");
       const heroPortrait=document.querySelector(".hero-portrait");
+      const heroVisual=document.querySelector(".hero-visual");
       if(heroPortrait) await heroPortrait.decode();
       await document.fonts.load('italic 500 31px "Cormorant Garamond"', "Ruwa");
       const rect = el => {
@@ -421,6 +422,14 @@ try {
         heroImageAlt:heroPortrait?.getAttribute("alt")||"",
         heroImageLoading:heroPortrait?.getAttribute("loading")||"",
         heroImageFetchPriority:heroPortrait?.getAttribute("fetchpriority")||"",
+        heroImageDeclaredWidth:Number(heroPortrait?.getAttribute("width")||0),
+        heroImageDeclaredHeight:Number(heroPortrait?.getAttribute("height")||0),
+        heroImageParentTag:heroPortrait?.parentElement?.tagName||"",
+        heroImageParentClass:typeof heroPortrait?.parentElement?.className==="string"?heroPortrait.parentElement.className:"",
+        heroVisualRect:heroVisual?rect(heroVisual):null,
+        heroVisualMinHeight:heroVisual?getComputedStyle(heroVisual).minHeight:"",
+        heroVisualPadding:heroVisual?getComputedStyle(heroVisual).padding:"",
+        heroImageObjectPosition:heroPortrait?getComputedStyle(heroPortrait).objectPosition:"",
         heroImageObjectFit:heroPortrait?getComputedStyle(heroPortrait).objectFit:"",
         heroImageTiltDegrees:(()=>{if(!heroPortrait)return 0;const transform=getComputedStyle(heroPortrait).transform;if(transform==="none")return 0;const values=transform.slice(transform.indexOf("(")+1,-1).split(",").map(Number);return values.length===6?Math.atan2(values[1],values[0])*180/Math.PI:0;})(),
         heroImagePreloadPresent:[...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>new URL(link.href).pathname.endsWith("/assets/ruwa-hero-90-768.webp")),
@@ -869,6 +878,11 @@ try {
     assert.equal(state.heroImageSrc, "assets/ruwa-hero-90-768.webp", `${vp.name}: Hero portrait must use the approved local asset`);
     assert.equal(state.heroImageNaturalWidth, 768, `${vp.name}: Hero portrait intrinsic width changed unexpectedly`);
     assert.equal(state.heroImageNaturalHeight, 1152, `${vp.name}: Hero portrait intrinsic height changed unexpectedly`);
+    assert.equal(state.heroImageDeclaredWidth, 768, `${vp.name}: the approved Hero image width attribute must remain unchanged`);
+    assert.equal(state.heroImageDeclaredHeight, 1152, `${vp.name}: the approved Hero image height attribute must remain unchanged`);
+    assert.equal(state.heroImageParentTag, "FIGURE", `${vp.name}: the approved Hero image must remain inside its original figure`);
+    assert.equal(state.heroImageParentClass, "hero-visual", `${vp.name}: the approved Hero image must remain inside .hero-visual`);
+    assert.equal(state.heroImageObjectPosition, "50% 100%", `${vp.name}: the approved Hero image focal positioning changed`);
     assert.ok(state.heroImageAlt.includes("طبيب أسنان")&&state.heroImageAlt.includes("مولّد بالذكاء الاصطناعي"), `${vp.name}: Arabic AI portrait alternative text is missing`);
     assert.equal(state.heroImageLoading, "eager", `${vp.name}: above-the-fold portrait must not lazy-load`);
     assert.equal(state.heroImageFetchPriority, "high", `${vp.name}: Hero portrait fetch priority is not high`);
