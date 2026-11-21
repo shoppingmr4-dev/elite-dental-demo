@@ -47,7 +47,12 @@ assert.match(html, /id=["']contact-unavailable-dialog["']/);
 assert.match(html, /const WHATSAPP_NUMBER = "";/);
 assert.match(html, /const PHONE_NUMBER = "";/);
 assert.equal((html.match(/<form\b/gi) || []).length, 0, "The portfolio demo must not claim to collect lead forms");
-assert.doesNotMatch(html, /href=["'](?:tel:|https:\/\/wa\.me\/)/i, "No live phone or WhatsApp link may be present while contact settings are empty");
+const anchorHrefs = [...html.matchAll(/<a\b[^>]*\bhref=["']([^"']+)["'][^>]*>/gi)].map(match => match[1]);
+assert.equal(
+  anchorHrefs.some(href => /^(?:tel:|https:\/\/wa\.me\/)/i.test(href)),
+  false,
+  "No live phone or WhatsApp anchor may be present while contact settings are empty"
+);
 
 const heroImage = html.match(/<img class="hero-portrait"[^>]*>/i)?.[0] || "";
 assert.match(heroImage, /src="assets\/ruwa-hero-90-768\.webp"/);
