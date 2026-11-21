@@ -41,6 +41,20 @@ jobs:
       - name: Check out the staged landing page
         uses: actions/checkout@v4
 
+      - name: Verify the approved RUWA Hero image is unchanged
+        shell: bash
+        run: |
+          expected="11209e185ca8d671f74e54eda8fdefb1d42382d2"
+          actual="$(git rev-parse HEAD:assets/ruwa-hero-90-768.webp)"
+          echo "Approved Hero image blob: $actual"
+          if [ "$actual" != "$expected" ]; then
+            echo "The approved Hero image asset was modified or replaced."
+            echo "Expected: $expected"
+            echo "Actual:   $actual"
+            exit 1
+          fi
+          echo "The approved Hero image asset is byte-for-byte unchanged."
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
