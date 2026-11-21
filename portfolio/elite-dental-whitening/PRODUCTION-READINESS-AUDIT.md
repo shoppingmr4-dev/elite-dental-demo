@@ -1,174 +1,143 @@
-# RUWA Dental Whitening — Production Readiness Audit
+# RUWA Dental Whitening — Repository and Production-Readiness Audit
 
 **Audit date:** 21 November 2026  
-**Audited branch baseline:** `f51745f2320312c63847a54ae12045178340e100`  
-**Working branch:** `feature/elite-whitening-world-class-2026`  
-**Pull request:** #9 (open draft; not merged)  
-**Target file:** `whitening-2026.html`  
-**Verdict:** **NOT READY — real-clinic and conversion blockers remain.**
+**Working branch:** feature/elite-whitening-world-class-2026  
+**Pull request:** #9 (draft; not merged)  
+**Canonical RUWA page:** whitening-2026.html  
+**Project type:** fictional Apex Studio portfolio demonstration  
+**Production verdict:** NOT READY for a real clinic; suitable as a staged portfolio preview after current QA passes.
 
 ## 1. Executive finding
 
-RUWA is documented in this repository as a fictional Apex Studio portfolio concept, not a commissioned or operating dental clinic. It is not truthful to relabel the existing page as a real clinic website, remove its demo disclosure, add invented proof, or enable a fabricated booking flow.
+RUWA is a fictional portfolio concept, not a commissioned or operating dental clinic. It must not be presented as a real clinic, and it must not acquire invented doctors, qualifications, ratings, testimonials, prices, addresses, opening hours, patient statistics, clinical outcomes, or appointment inventory.
 
-The present page has a coherent patient-education journey, but it is not yet a production landing page for a real dental business. Its principal gaps are the lack of real clinic identity, verified medical authority, authentic commercial/service details, location/contact information, a working appointment destination, and privacy/measurement configuration.
+The current page has a coherent service-specific education journey. It contains **8 main content sections** plus the shared header, announcement strip, and footer. Its educational structure does not need extra placeholder sections. The missing items are real-business evidence and an operational conversion destination, not decorative content.
 
-**No changes were made to `whitening-2026.html` in this audit.** Without the missing business facts, restructuring the visible page into a purported real clinic offer would either create empty sections or misrepresent the business. Keep the portfolio disclosure and current preview interactions until verified client information is supplied.
+## 2. Repository source-of-truth and route audit
 
-## 2. Approved Hero image — locked and verified
+- Canonical implementation: **whitening-2026.html**.
+- Legacy path **whitening-preview.html** redirects to the canonical implementation.
+- Legacy public route **preview/ruwa/index.html** redirects to the canonical implementation.
+- These aliases must not contain a second landing-page implementation.
+- Root **index.html** is the repository's separate legacy Elite Dental Clinic demo. It is intentionally outside the RUWA workstream and remains unchanged.
+- The Tailwind build script and assets/css/site.css belong to that root-page workstream; they do not build or alter the standalone RUWA page.
+- GitHub Pages deployment is configured on main only. The feature branch and draft PR are not themselves a production deployment.
 
-The approved Hero image is protected:
+## 3. Existing RUWA page inventory
 
-- Path: `assets/ruwa-hero-90-768.webp`
-- Git blob SHA at audit baseline: `11209e185ca8d671f74e54eda8fdefb1d42382d2`
-- File size: **105,004 bytes**
-- Intrinsic dimensions: **768 × 1152**
-- HTML element: `.hero-portrait`
-- Parent figure: `figure.hero-visual`
-- Declared width/height: **768 / 1152**
-- Loading priority: `loading="eager"`, `fetchpriority="high"`
-- Fit and focal position: `object-fit: contain`, `object-position: center bottom`
+The actual current DOM order is:
 
-The image binary, its HTML element, caption, CSS, framing, crop, size, transform and position were not edited. A CI asset-SHA guard and Playwright assertions were added to protect the approved image in future changes.
+| Order | ID | Section | Decision | Evidence-based rationale |
+|---:|---|---|---|---|
+| Header | main-nav | Brand, five section links, WhatsApp-labelled CTA | KEEP | Directs visitors to the current patient-education journey. |
+| 01 | top | Hero | KEEP / protect | Explains the whitening subject and presents the approved illustrative portrait and first actions. |
+| 02 | approach | Assessment approach | KEEP | Explains why assessment precedes choosing an option. |
+| 03 | causes | Causes of discoloration | KEEP | Provides concise context about surface and deeper colour changes. |
+| 04 | options | Whitening options | IMPROVE only for a real clinic | General education is not proof that a real clinic offers all listed options. |
+| 05 | suitability | Suitability and safety | KEEP / clinical review required | Explains factors that may affect suitability or timing. |
+| 06 | expectations | Realistic expectations | KEEP | Covers possible sensitivity, individual variation, and restorations. |
+| 07 | faq | Frequently asked questions | KEEP | Four native details/summary entries are present. |
+| 08 | consultation | Final contact | KEEP / activate only with verified details | The actions disclose that real channels are not configured. |
+| Footer | — | Portfolio and image disclosures | KEEP | Prevents the sample from being mistaken for a real operating clinic. |
 
-**Provenance discrepancy:** the current HTML alt text and caption say the portrait is AI-generated. Older design documentation attributed a Pexels photograph (Emily Gaibor, photo ID 37458050) to the Hero. These statements conflict. The image is preserved, but its provenance should be confirmed by the project owner before any stock-credit or commercial-use claim is made. Continue to disclose it as illustrative and never present it as an actual member of a real clinic's team.
+No independent doctor profile, patient review/testimonial panel, rating score, before-and-after gallery, clinic gallery, pricing section, map, or hours-of-operation section exists in this page.
 
-## 3. Existing page inventory and disposition
+## 4. Confirmed current content and interaction behavior
 
-The current structure contains eight main content sections, plus the sticky header and footer.
+- Page language is ar-SA and direction is RTL.
+- The page has a document title, meta description, Open Graph title/description/image, and favicon.
+- The current Hero image is assets/ruwa-hero-90-768.webp.
+- The current Hero image alt text and visible caption explicitly identify it as AI-generated and not a real dentist.
+- FAQ count: **4** native details entries.
+- Contact controls: **3 WhatsApp actions and 2 phone actions**.
+- WHATSAPP_NUMBER and PHONE_NUMBER are intentionally empty.
+- When clicked with those values empty, the actions open the local contact-unavailable dialog. They do not open WhatsApp or begin a phone call.
+- Contact dialog ID: contact-unavailable-dialog.
+- The page has no HTML form, no lead endpoint, no appointment availability, no booking confirmation, no data collection, and no analytics/ad pixels.
+- It does not transmit or store visitor details.
 
-| Existing order | Section | Purpose and audit decision |
-|---|---|---|
-| Header | Brand, five navigation links, WhatsApp-labelled action | Keep the compact navigation. The button is a preview trigger, not a live contact destination. |
-| 01 | Hero — «اكتشف خيارات تبييض الأسنان لابتسامة أكثر إشراقًا» | Keep the approved headline/image composition for the portfolio version. A production version needs verified clinic name, geography and actual service details; do not edit the image. |
-| 02 | Assessment approach | Keep. It explains evaluation before treatment selection and helps set responsible expectations. |
-| 03 | Causes of discoloration | Keep, but review with a licensed dentist before clinic use. It provides relevant context; it should not expand into a long generic article. |
-| 04 | Whitening options | Keep subject to confirming which methods the actual clinic offers. The current copy is general education, not proof that RUWA provides these services. |
-| 05 | Suitability and safety | Keep. Clinically review all claims for the target jurisdiction. |
-| 06 | Realistic expectations | Keep. Consider merging overlapping material with suitability only after clinical review; it currently has a distinct purpose. |
-| 07 | FAQ | Keep. The actual HTML contains **four** native `details` entries, not six as older project notes stated. |
-| 08 | Consultation/inquiry preparation | Keep only as an explicitly labelled portfolio interaction. It is not a working lead form or booking service. |
-| Footer | Portfolio disclosure and image disclosure | Keep while this remains a fictional portfolio concept. |
+All aria-controls references must resolve to real IDs. The header and Hero contact controls must reference contact-unavailable-dialog; the mobile menu toggle must reference main-nav. The consistency and browser tests enforce this relationship.
 
-The current sequence—Hero → assessment → causes → options → suitability → realistic expectations → FAQ → inquiry—is not demonstrably scattered. It follows a clinically understandable explanation path. Adding empty doctor, review, price, location or offer sections without authentic source information would reduce trust rather than improve conversion.
+## 5. Protected Hero image
 
-## 4. Current conversion and technical state
+- Path: assets/ruwa-hero-90-768.webp
+- Approved Git blob SHA: 11209e185ca8d671f74e54eda8fdefb1d42382d2
+- File size: 105,004 bytes
+- Intrinsic dimensions: 768 × 1152
+- HTML class: hero-portrait
+- Loading: eager, fetchpriority high.
 
-### CTA and inquiry behavior
+The binary is guarded by a Git SHA check in the dedicated workflow. Browser checks also validate its path, dimensions, parent figure, and presentation. The image must not be replaced, regenerated, retouched, recoloured, recropped, resized, repositioned, transformed, or otherwise restyled without explicit approval.
 
-- The header and Hero WhatsApp-labelled controls open the same local explanatory HTML dialog.
-- The dialog explicitly says this is a portfolio preview and that no conversation is opened or visitor data transmitted.
-- The consultation panel includes a topic selector and a button that prepares/copies a message.
-- There is **no** HTML `<form>`, form submission endpoint, live WhatsApp URL, telephone link, real booking system, or confirmed appointment event.
-- A local copy action is not a lead submission. A dialog opening is not a WhatsApp click or a booking.
+The source-of-truth page and its current alt/caption identify this asset as AI-generated. Older preview documentation used a conflicting stock-image credit; both old preview paths are now redirects and that obsolete credit has been removed from RUWA materials. Do not reintroduce a stock-photo credit or imply that the pictured person is a real treating dentist.
 
-These interactions must not be represented as production conversions.
+## 6. Missing real-clinic inputs
 
-### Business proof and content
+The repository does not contain verified:
+- Operating clinic identity or registered business details.
+- Confirmed service location, street address, map point, or opening hours.
+- Official phone number or monitored WhatsApp Business account.
+- Actual booking destination or appointment inventory.
+- Named dentist, professional registration, licence, or qualifications.
+- Authentic clinician/team/facility photographs.
+- Actual treatment menu and service availability.
+- Approved service prices, package contents, discounts, or offer terms.
+- Authentic patient reviews, ratings, or clinical outcome evidence.
+- Clinic privacy notice, data controller/contact, retention policy, or secure lead-handling endpoint.
 
-The repository does not supply verified:
-- Operating clinic name or registered business identity.
-- City, address, map location or opening hours.
-- Telephone number or official WhatsApp Business number.
-- Named dentists, professional registration/licences or qualifications.
-- Authentic clinic/team photographs.
-- Actual service menu and treatment availability.
-- Prices, package contents, promotion or offer terms.
-- Patient reviews, ratings or outcome evidence.
-- Booking-system URL or appointment inventory.
+These are production blockers. Do not add placeholder-looking proof to the demo.
 
-Do not invent or visually imply these items.
+## 7. Recommended production information architecture
 
-### Privacy, analytics and SEO
+Once genuine clinic data is supplied and approved, use this one conversion-oriented sequence:
 
-- No real lead collection currently takes place.
-- No clinic privacy policy, data retention notice, consent management, or form destination is supplied.
-- No GA4, Google Ads conversion ID, Meta Pixel ID, or corresponding configured events were found in the page.
-- The page has a title, meta description, Open Graph title/description/image, and favicon.
-- A canonical URL and structured local-business data are not configured. Add them only after the production domain and verified clinic facts exist.
-- A service landing page should not transmit dental history, diagnoses, photos or other sensitive health information to advertising/analytics platforms.
+1. Hero — service, real clinic context, honest benefit, and one primary action.
+2. Verified trust strip — only verifiable clinic and professional facts.
+3. Understanding the problem — concise reasons and concerns relevant to whitening.
+4. Assessment journey — what is assessed and why.
+5. Real service options — only the methods actually offered, plus accurate terms/pricing when confirmed.
+6. Doctor profile — a concise verified profile when the treating professional and publishable qualifications are confirmed; may be integrated into the trust strip.
+7. Suitability and safety — clinically reviewed constraints and expectations.
+8. Patient reviews — conditional on genuine, authorized material and applicable rules; omit when unavailable.
+9. FAQ — focused questions based on real visitor concerns.
+10. Location and contact — genuine address, hours, directions, staffed contact, and final CTA.
+11. Footer — accurate business, privacy, and legal information.
 
-## 5. Production blockers — required inputs
+Before/after results, clinic photographs, detailed team galleries, promotions, and price cards are conditional, not compulsory sections. Never insert them without authentic source material.
 
-| Priority | Required input | Why it is needed |
-|---|---|---|
-| P0 | Official clinic identity, target country/city and approved brand details | Cannot truthfully identify the business or localize legal requirements without it. |
-| P0 | Verified official phone / WhatsApp Business / real booking destination | The page needs a functioning, monitored conversion route. |
-| P0 | Actual service scope and available whitening methods | Existing educational options do not establish which services a real clinic provides. |
-| P0 | Clinical review by a licensed dentist in the target jurisdiction | Medical claims, safety statements and treatment information require professional approval. |
-| P1 | Clinic address, hours, directions and approved location/map | Needed for local relevance and useful clinic contact information. |
-| P1 | Dentist names, accurate titles, credentials and permission to publish | Needed before any medical-team or authority section is created. |
-| P1 | Real clinic photographs and licence/consent records | Needed before showing the clinic or staff as authentic. |
-| P1 | Actual fees and offer terms, if a campaign promotes a price or discount | Prevents misleading commercial claims. |
-| P1 | Privacy notice, data controller/contact, retention and secure inquiry handling | Needed before collecting personal information. |
-| P2 | Analytics accounts, measurement IDs, event definitions and consent rules | Needed to measure real conversions without mistaking clicks for confirmed bookings. |
-| P2 | Legal/regulatory review and campaign-owner authorization | Needed before paid advertising and publication. |
+## 8. Clinical integrity and ethical persuasion
 
-Patient testimonials and before/after images are **not presumed necessary**. Their use must be checked against the rules of the actual target jurisdiction and must never be fabricated.
+The current page is educational and non-diagnostic. Before adapting it to a real clinic:
+- A licensed dentist in the intended jurisdiction must review all clinical copy, suitability language, and safety claims.
+- Confirm which treatments are provided by the clinic.
+- Do not guarantee shade, duration, or individual results.
+- Do not imply that a general FAQ answer is individualized medical advice.
+- Do not request dental images or detailed medical history through ordinary marketing chat.
+- Do not send sensitive health information to standard advertising or analytics tools.
+- Verify local healthcare advertising, professional, privacy, and consumer rules with competent official or legal sources before launch.
 
-## 6. Recommended production information architecture
+## 9. Accessibility, responsive design, and technical requirements
 
-Once the P0/P1 inputs exist, use this conversion-oriented sequence. Do not create empty sections to fill the outline.
+Targets for future production:
+- WCAG 2.2 AA review, including keyboard navigation, focus visibility, contrast, semantics, and touch targets.
+- Correct ar-SA RTL structure and readable Arabic line lengths.
+- No horizontal overflow, clipping, overlap, or inaccessible controls.
+- Reduced-motion support.
+- Core Web Vitals targets: LCP ≤ 2.5 s, INP < 200 ms, CLS < 0.1.
 
-1. **Hero:** protected approved image, the actual service, clear geography, honest benefit and one primary CTA.
-2. **Verified clinic trust strip:** only substantiated facts, licence/credentials or clinic facts that are permissible to publish.
-3. **Actual service and offer:** scope, what's included, fees and conditions only when confirmed.
-4. **Patient journey / assessment:** what happens before a treatment choice and how the appointment proceeds.
-5. **Treatment options:** only methods offered by the real clinic; condense the causes-of-discoloration explanation if it interrupts the service journey.
-6. **Suitability, safety and realistic expectations:** keep clinically important limits and adverse-effect information; merge duplicate paragraphs/cards where that improves clarity.
-7. **FAQ:** four current topics may be retained and expanded only for real, recurring patient objections.
-8. **Location and contact:** address, hours, directions, verified contact and final CTA.
-9. **Footer:** legal/identity/privacy information that is accurate for the business.
+The page has no canonical URL or LocalBusiness structured data. Those should only be added when a real production domain and verified business details exist.
 
-A doctor/team profile, patient evidence, pricing block or promotional offer is conditional on genuine source material and applicable rules. Do not force these into the page.
+## 10. Test and verification baseline
 
-## 7. Paid-advertising readiness
-
-Google Ads' official guidance emphasizes relevance between ad and landing page, mobile usability, ease of contact, simple navigation, quick loading, important information near the top, and useful original content. Its destination requirements also require a functional, accessible, useful destination that is easy to navigate and not misleading.
-
-References:
-- [Google Ads — Optimize your ads and landing pages](https://support.google.com/google-ads/answer/6238826)
-- [Google Ads — Destination requirements](https://support.google.com/adspolicy/answer/6368661)
-
-This is a design/readiness review, not an approval or guarantee of campaign acceptance. The present RUWA portfolio page is not a live business destination and must not be launched as one.
-
-The design-system file identifies Saudi Arabic as the intended locale, but no actual operating clinic or target campaign jurisdiction has been confirmed. Obtain jurisdiction-specific legal/healthcare-advertising review before publication. If Saudi Arabia is confirmed, check current MOH/SFDA requirements and PDPL/privacy requirements with the responsible professional; do not assume a generic Google Ads review is sufficient.
-
-## 8. Accessibility and performance
-
-Use WCAG 2.2 AA and WAI-ARIA guidance as review references:
-- [WCAG 2.2](https://www.w3.org/TR/wcag/)
-- [WAI-ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/)
-
-Core Web Vitals targets are:
-- LCP: ≤ 2.5 seconds.
-- INP: < 200 milliseconds.
-- CLS: < 0.1.
-
-These are targets, not measured outcomes in this audit.
-
-## 9. QA baseline and protection added
-
-Baseline evidence before this audit:
-- GitHub Actions run [#44843573088](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/44843573088) succeeded on baseline commit `f51745f2320312c63847a54ae12045178340e100`.
-- The existing Playwright suite checked the page at 320, 360, 390, 430, 768, 1024, 1280, 1366 and 1440 CSS-pixel widths.
-- That run did not include a Lighthouse step; no Lighthouse score is claimed for it.
-
-This audit adds:
-1. A CI guard that fails if the Git blob SHA of `assets/ruwa-hero-90-768.webp` differs from the approved baseline SHA.
-2. Playwright assertions that preserve the image's source, declared and intrinsic dimensions, parent `figure.hero-visual`, and focal position.
-3. Additional report fields recording the Hero image/container geometry during responsive browser QA.
-
-The audit does not claim a successful test for the new guard until the new GitHub Actions run for the resulting commit finishes successfully.
-
-## 10. Skills and tool availability
-
-The tool skill registry available in this execution exposed the plugin-management skill only. The requested Anthropic Frontend Design, UI/UX Pro Max and Vercel Web Interface Guidelines were not available as installable skill packages in this session, so this audit does not claim they were loaded.
-
-The repository does include Playwright and an established Chromium/GitHub Actions test workflow. Official Google Ads and W3C references above were consulted as external standards.
+Before the latest repository-consistency maintenance:
+- GitHub Actions run 44848880255 succeeded on commit 62b69fd3c7f2008282b0d28443e1b827bcdba478.
+- The run checked the approved Hero image SHA, all content sections across viewports, Hero above-the-fold visibility, the Playwright browser suite, and the immutable public preview in Chromium.
+- Browser coverage included nine widths from 320px through 1440px.
+- The workflow did not execute Lighthouse; no Lighthouse score is claimed.
+- The maintenance adds a static repository-consistency test and an explicit browser assertion that every aria-controls ID resolves. A new workflow run is required before claiming the updated revision passes.
 
 ## 11. Final verdict
 
-**NOT READY — essential real-business and conversion requirements are missing.**
+The RUWA portfolio page has a coherent 8-section education journey. Adding fabricated clinicians, patient reviews, ratings, clinic facts, or prices would be a regression. Keep the page honest and focused; add trust and commercial content only after the real business supplies verified data.
 
-The approved Hero image remains protected. The existing page structure is coherent enough to retain as the current portfolio version. The next production stage depends on verified clinic details, real service/clinical approval, and an operational contact/booking destination—not on adding decorative sections or replacing approved design work.
+The RUWA implementation remains staged on the feature branch. Do not merge the PR, publish a production site, or activate a contact channel without explicit approval and verified clinic information.
