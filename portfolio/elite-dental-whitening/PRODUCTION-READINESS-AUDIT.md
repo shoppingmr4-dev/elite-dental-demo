@@ -9,14 +9,13 @@
 
 ## 1. Executive finding
 
-RUWA remains a fictional portfolio concept and is not an operating dental clinic. The page has been expanded into a more complete **single-page landing page** with **14 main content sections** in one continuous document. It demonstrates clinic-style components without presenting them as real business facts.
+RUWA remains a fictional portfolio concept and is not an operating dental clinic. The page has been expanded into a more complete **single-page landing page** with **13 main content sections** in one continuous document. It demonstrates clinic-style components without presenting them as real business facts.
 
 The page includes:
 - One AI-generated fictional dentist portrait, clearly disclosed and not assigned a real identity or credentials.
 - Two blank white team-image spaces.
 - Three sample review-copy cards, visibly identified as illustrative and not actual patient feedback.
 - Two blank white facilities-image spaces.
-- A sample Riyadh-market schedule, visibly identified as fictional and not actual opening hours.
 - A responsive multi-column footer.
 - No invented phone number, WhatsApp number, street address, map point, social account, actual patient review, aggregate rating, price, professional credential, or booking service.
 - FAQ: **4 native details entries**.
@@ -32,7 +31,7 @@ The page includes:
 - The approved Hero portrait remains at **assets/ruwa-hero-90-768.webp** with approved Git blob SHA **11209e185ca8d671f74e54eda8fdefb1d42382d2**. It must remain unchanged.
 - New supporting image: **assets/ruwa-dentist-demo.webp**, an AI-generated illustrative male clinician portrait.
 
-## 3. Current single-page architecture — 14 sections
+## 3. Current single-page architecture — 13 sections
 
 | Order | ID | Section | Purpose |
 |---:|---|---|---|
@@ -48,11 +47,9 @@ The page includes:
 | 10 | facilities | Facility image spaces | Two blank white frames reserved for future authentic imagery |
 | 11 | reviews | Sample reviews | Three disclosed sample-copy cards, no genuine ratings |
 | 12 | faq | FAQ | Four native details/summary entries |
-| 13 | hours | Illustrative visit information | Fictional Riyadh-market sample schedule; no real location |
-| 14 | consultation | Final contact | Inactive WhatsApp and phone controls with truthful dialog |
+| 13 | consultation | Final contact | Inactive WhatsApp and phone controls with truthful dialog |
 
-All elements remain inside **one landing page**. Internal anchors navigate within the same document; no separate service, doctor, or location pages were created.
-
+All elements remain inside **one landing page**. Internal anchors navigate within the same document; no separate service, doctor, location, or appointment-hours sections are present.
 ## 4. Demonstration content and disclosures
 
 ### Clinician portrait
@@ -64,11 +61,8 @@ Three review-style text cards are present only to demonstrate the component's ap
 ### Facilities
 Two intentionally blank white image frames are retained for future authentic clinic images. They do not depict a real premises or equipment.
 
-### Riyadh-market hours
-The page displays a sample schedule of Saturday–Thursday, 9:00 AM–9:00 PM, with Friday closed. This is marked as an illustrative design schedule, not actual RUWA opening hours. Publicly listed Riyadh clinic schedules vary by clinic and branch; examples checked during this revision include Safad Dental Center, Lavie Dental Clinic, Downtown Medical Clinics, and Magrabi Health. Those examples are reference points only, not evidence about RUWA.
-
 ### Location and contact
-The page uses Riyadh only as an illustrative target-market context. It contains no street address, map destination, phone number, or WhatsApp number. The existing central phone and WhatsApp configuration remains empty. Contact buttons continue to open the explanatory unavailable-contact dialog; no live call, message, lead form, appointment inventory, or booking confirmation is created.
+The page contains no street address, map destination, phone number, or WhatsApp number. The existing central phone and WhatsApp configuration remains empty. Contact buttons continue to open the explanatory unavailable-contact dialog; no live call, message, lead form, appointment inventory, or booking confirmation is created.
 
 ## 5. Clinical integrity and ethical limits
 
@@ -79,7 +73,6 @@ Before adapting the concept for a real clinic:
 - Verify actual treatment availability and all professional credentials.
 - Replace the fictional profile with an authorized, genuine clinician profile.
 - Replace sample reviews only with authentic, authorized, compliant patient feedback.
-- Replace the schedule with the selected clinic branch's confirmed hours.
 - Supply verified address, contact channels, privacy details, and a real booking flow.
 - Do not imply guaranteed whitening results or universal suitability.
 - Do not request or transmit sensitive dental images or health information through ordinary marketing chat.
@@ -89,12 +82,12 @@ Before adapting the concept for a real clinic:
 The page remains standalone static HTML/CSS/JavaScript compatible with GitHub Pages. Existing local fonts, mobile navigation, header behavior, accessible contact dialog, native FAQ, reduced-motion support, and protected Hero image behavior are preserved.
 
 Required verification for this revision:
-- 14-section DOM order and unique IDs.
+- 13-section DOM order and unique IDs.
 - Internal navigation and no missing anchor targets.
 - Local dentist portrait loads and has explicit AI disclosure.
 - Sample-review disclosure is visible.
 - Two blank white facilities spaces remain present.
-- Illustrative-hours disclosure is visible.
+- No visit-hours section, schedule, or `#hours` anchor is present.
 - Empty phone/WhatsApp configuration and unavailable dialog remain intact.
 - Existing Hero image SHA remains unchanged.
 - Responsive browser checks across the configured viewport set.
