@@ -167,7 +167,8 @@ try {
       {number:"04",label:"الخيارات المتاحة",context:"canvas"},
       {number:"05",label:"قبل اتخاذ القرار",context:"paper"},
       {number:"06",label:"توقعات واقعية",context:"dark"},
-      {number:"07",label:"إجابات واضحة",context:"canvas"}
+      {number:"07",label:"الفريق الطبي",context:"paper"},
+      {number:"08",label:"إجابات واضحة",context:"canvas"}
     ], `${viewport.name}: immutable preview does not render the complete approved seven-marker system`);
     assert.ok(initial.markerSystem.markers.every(marker=>marker.numberWidth>=10&&marker.numberWidth<=22&&
       marker.numberHeight>=12&&marker.numberHeight<=18&&marker.numberBorder==="0px"&&
