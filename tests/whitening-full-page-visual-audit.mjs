@@ -13,7 +13,7 @@ const viewports = [
   { name: "mobile-390", width: 390, height: 844, mobile: true },
   { name: "mobile-360", width: 360, height: 800, mobile: true }
 ];
-const sectionIds = ["trust", "about", "causes", "approach", "options", "suitability", "expectations", "team", "facilities", "reviews", "faq", "hours", "consultation"];
+const sectionIds = ["trust", "about", "causes", "approach", "options", "suitability", "expectations", "team", "facilities", "reviews", "faq", "consultation"];
 await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
 const results = [];
@@ -408,7 +408,7 @@ try {
       const expectedStepColumns=vp.width>900?3:1;
       if(approachDetails.composition.stepListColumnCount!==expectedStepColumns)problems.push("Section 03 step layout does not match the responsive column rule");
     }
-    if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","trust","about","causes","approach","options","suitability","expectations","team","facilities","reviews","faq","hours","consultation"]))problems.push("page section order differs from the intended patient journey");
+    if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","trust","about","causes","approach","options","suitability","expectations","team","facilities","reviews","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
     if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");
     if(metrics.brokenAnchors.length)problems.push("broken in-page anchors");
     if(metrics.images.some(i=>!i.complete||i.naturalWidth===0))problems.push("broken image asset");
