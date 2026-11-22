@@ -17,13 +17,13 @@ The old paths **whitening-preview.html** and **preview/ruwa/index.html** are com
 
 RUWA is a fictional portfolio concept created by Apex Studio. It is not a commissioned or operating clinic and is not cleared as a real commercial brand.
 
-The current single-page landing page has **14 content sections** (Hero, trust principles, About, causes of discoloration, assessment approach, whitening options, suitability and safety, realistic expectations, illustrative team, blank facilities gallery, sample reviews, FAQ, illustrative visit information, and final contact) and **4 FAQ entries**.
+The current single-page landing page has **13 content sections** (Hero, trust principles, About, causes of discoloration, assessment approach, whitening options, suitability and safety, realistic expectations, illustrative team, blank facilities gallery, sample reviews, FAQ, and final contact) and **4 FAQ entries**.
 
 The Hero portrait at assets/ruwa-hero-90-768.webp is the approved AI-generated illustrative image. The page's Arabic alt text and disclosure identify it as AI-generated and explicitly state that it is not a real dentist. Its approved Git blob is protected by a CI SHA guard. Do not replace, edit, crop, recolor, reposition, or present it as a real clinician.
 
 There are **3 WhatsApp actions and 2 phone actions**. The WhatsApp and phone configuration values are intentionally empty. Every action therefore opens the local accessible dialog explaining that the relevant channel is not activated. No real phone number, WhatsApp URL, booking system, lead form, patient data collection, or appointment confirmation is configured.
 
-The page now includes one clearly disclosed AI-generated fictional clinician portrait, two intentionally blank team-image spaces, three sample review cards with prominent non-genuine-content disclosures, blank facility-image spaces, and illustrative Riyadh-market hours. None represents a real doctor, patient, rating, clinic facility, address, or operating schedule.
+The page now includes one clearly disclosed AI-generated fictional clinician portrait, two intentionally blank team-image spaces, three sample review cards with prominent non-genuine-content disclosures, and blank facility-image spaces. None represents a real doctor, patient, rating, clinic facility, or address.
 
 ## Page architecture
 
