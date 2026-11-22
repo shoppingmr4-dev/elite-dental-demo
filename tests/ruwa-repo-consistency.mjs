@@ -60,7 +60,7 @@ assert.match(heroImage, /width="768"/);
 assert.match(heroImage, /height="1152"/);
 assert.match(heroImage, /fetchpriority="high"/);
 assert.match(html, /الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا/);
-assert.match(html, /src="assets\\/ruwa-dentist-demo\\.webp"/);
+assert.ok(html.includes('src="assets/ruwa-dentist-demo.webp"'), "The fictional clinician demo portrait must be referenced locally.");
 assert.match(html, /صورة توضيحية مولّدة بالذكاء الاصطناعي لشخصية طبيب أسنان خيالية/);
 assert.match(html, /جميع النصوص أدناه تجريبية ومكتوبة لعرض التصميم فقط/);
 assert.match(html, /مواعيد افتراضية لأغراض عرض التصميم/);
