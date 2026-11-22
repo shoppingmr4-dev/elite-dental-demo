@@ -767,8 +767,8 @@ try {
     assert.equal(state.demoDialogInitialOpen, false, `${vp.name}: demo dialog should start closed`);
     assert.ok(state.demoDialogText.includes("قنوات التواصل ستعمل مباشرة عند إضافة بيانات الاتصال الرسمية"), `${vp.name}: contact dialog initial explanation is missing`);
     assert.ok(state.demoDialogText.includes("لن يتم فتح محادثة أو بدء اتصال قبل إعداد رقم صحيح"), `${vp.name}: unavailable contact destinations must be disclosed`);
-    assert.deepEqual(state.navLabels, ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
-    assert.deepEqual(state.navHrefs, ["#approach","#causes","#options","#suitability","#faq"], `${vp.name}: navigation destinations are incorrect`);
+    assert.deepEqual(state.navLabels, ["عن رُواء","الفريق","خيارات التبييض","آراء توضيحية","معلومات الزيارة"], `${vp.name}: navigation labels or order are incorrect`);
+    assert.deepEqual(state.navHrefs, ["#about","#team","#options","#reviews","#hours"], `${vp.name}: navigation destinations are incorrect`);
     assert.equal(state.navLinkTypography.length,5, `${vp.name}: all five navigation links must be present`);
     assert.ok(state.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic") && link.fontSize===14 &&
@@ -1263,7 +1263,7 @@ try {
       }));
       assert.equal(opened.expanded, "true", `${vp.name}: mobile menu aria state did not open`);
       assert.notEqual(opened.display, "none", `${vp.name}: mobile menu did not open`);
-      await page.locator('#main-nav a[href="#approach"]').click();
+      await page.locator('#main-nav a[href="#about"]').click();
       // The page restores focus on the next animation frame after native hash navigation.
       await page.waitForFunction(
         () => document.activeElement===document.querySelector("#menu-toggle"),
@@ -1277,9 +1277,9 @@ try {
       }));
       assert.equal(closed.expanded, "false", `${vp.name}: mobile menu aria state did not close`);
       assert.equal(closed.display, "none", `${vp.name}: mobile menu remained open after selection`);
-      assert.equal(closed.hash, "#approach", `${vp.name}: navigation target failed`);
+      assert.equal(closed.hash, "#about", `${vp.name}: navigation target failed`);
       assert.equal(closed.focusOnToggle,true,`${vp.name}: selecting a mobile navigation link must not leave focus inside the hidden menu`);
-      await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#approach"]')?.getAttribute("aria-current")==="location",null,{timeout:3000});
+      await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#about"]')?.getAttribute("aria-current")==="location",null,{timeout:3000});
 
       await page.keyboard.press("Enter");
       assert.equal(await page.locator("#menu-toggle").getAttribute("aria-expanded"),"true",`${vp.name}: keyboard activation did not open the mobile menu`);
@@ -1348,10 +1348,10 @@ try {
       });
       assert.ok(focusState.active&&focusState.visible&&focusState.outlineStyle==="solid"&&focusState.outlineWidth==="2px",
         `${vp.name}: keyboard focus state is not clearly visible: ${JSON.stringify(focusState)}`);
-      await page.locator('#main-nav a[href="#causes"]').click();
+      await page.locator('#main-nav a[href="#options"]').click();
       await page.waitForFunction(()=>{
-        const section=document.querySelector("#causes");
-        const link=document.querySelector('#main-nav a[href="#causes"]');
+        const section=document.querySelector("#options");
+        const link=document.querySelector('#main-nav a[href="#options"]');
         return link?.getAttribute("aria-current")==="location"&&
           section?.getBoundingClientRect().top<=window.innerHeight*.32+1;
       },null,{timeout:6000});
@@ -1365,11 +1365,11 @@ try {
         };
         requestAnimationFrame(check);
       }));
-      await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#causes"]')?.getAttribute("aria-current")==="location",null,{timeout:1500});
-      const activeLink=page.locator('#main-nav a[href="#causes"]');
+      await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#options"]')?.getAttribute("aria-current")==="location",null,{timeout:1500});
+      const activeLink=page.locator('#main-nav a[href="#options"]');
       await page.mouse.move(0,0);
       await page.waitForFunction(()=>{
-        const link=document.querySelector('#main-nav a[href="#causes"]');
+        const link=document.querySelector('#main-nav a[href="#options"]');
         return link&&getComputedStyle(link).color==="rgb(17, 90, 96)";
       },null,{timeout:1500});
       const activeState=await activeLink.evaluate(link=>{
@@ -1401,11 +1401,11 @@ try {
 
       // Validate full-width active indicators on all five navigation sections.
       const navTargets=[
-        {href:"#approach",id:"approach"},
-        {href:"#causes",id:"causes"},
+        {href:"#about",id:"about"},
+        {href:"#team",id:"team"},
         {href:"#options",id:"options"},
-        {href:"#suitability",id:"suitability"},
-        {href:"#faq",id:"faq"}
+        {href:"#reviews",id:"reviews"},
+        {href:"#hours",id:"hours"}
       ];
       for(const target of navTargets){
         await page.mouse.move(0,0);
