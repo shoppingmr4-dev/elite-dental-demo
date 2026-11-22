@@ -17,13 +17,13 @@ The old paths **whitening-preview.html** and **preview/ruwa/index.html** are com
 
 RUWA is a fictional portfolio concept created by Apex Studio. It is not a commissioned or operating clinic and is not cleared as a real commercial brand.
 
-The current page has **8 content sections** (Hero, assessment, causes, options, suitability, expectations, FAQ, and contact) and **4 FAQ entries**.
+The current single-page landing page has **14 content sections** (Hero, trust strip, About, illustrative team, assessment, causes, options, blank facilities gallery, suitability, expectations, sample reviews, FAQ, illustrative hours, and final contact) and **4 FAQ entries**.
 
 The Hero portrait at assets/ruwa-hero-90-768.webp is the approved AI-generated illustrative image. The page's Arabic alt text and disclosure identify it as AI-generated and explicitly state that it is not a real dentist. Its approved Git blob is protected by a CI SHA guard. Do not replace, edit, crop, recolor, reposition, or present it as a real clinician.
 
 There are **3 WhatsApp actions and 2 phone actions**. The WhatsApp and phone configuration values are intentionally empty. Every action therefore opens the local accessible dialog explaining that the relevant channel is not activated. No real phone number, WhatsApp URL, booking system, lead form, patient data collection, or appointment confirmation is configured.
 
-No doctor identity, qualification, clinic address, hours, fee, patient review, rating, patient photograph, treatment result, or business credential is supplied as verified information. Never invent one.
+The page now includes one clearly disclosed AI-generated fictional clinician portrait, two intentionally blank team-image spaces, three sample review cards with prominent non-genuine-content disclosures, blank facility-image spaces, and illustrative Riyadh-market hours. None represents a real doctor, patient, rating, clinic facility, address, or operating schedule.
 
 ## Page architecture
 
@@ -52,7 +52,7 @@ Requires Node.js 22 for the current RUWA QA workflow.
 
 - Install dependencies: **npm install**
 - Check repository/page/document consistency: **npm run test:ruwa:consistency**
-  - The gate verifies the eight-section order, four FAQ entries, five contact controls, all `aria-controls` targets, the protected Hero disclosure, and both preview redirects.
+  - The gate verifies the 14-section single-page order, four FAQ entries, five contact controls, demo-content disclosures, the local clinician image, blank image placeholders, all `aria-controls` targets, the protected Hero disclosure, and both preview redirects.
 - Build the legacy root-page stylesheet only: **npm run build:css**
 - Existing legacy responsive test: **npm run test:responsive**
 

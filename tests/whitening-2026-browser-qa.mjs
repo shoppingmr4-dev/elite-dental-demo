@@ -493,7 +493,7 @@ try {
            phone:document.querySelectorAll('[data-contact-action="phone"]').length
          },
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
-        contentSections:["approach","causes","options","suitability","expectations","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
+        contentSections:["trust","about","team","approach","causes","options","facilities","suitability","expectations","reviews","faq","hours","consultation"].map(id=>Boolean(document.getElementById(id))),
         optionCards:document.querySelectorAll(".option-card").length,
         causeCards:document.querySelectorAll(".info-card").length,
         faqItems:document.querySelectorAll(".faq-item").length,
@@ -1192,8 +1192,13 @@ try {
         `${vp.name}: navigation/CTA gap did not restore at the top`);
     }
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
-    assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
-    assert.deepEqual(state.pageSectionOrder, ["top","approach","causes","options","suitability","expectations","faq","consultation"], `${vp.name}: page sections are missing or not in the approved patient-journey order`);
+    assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more required RUWA landing-page sections are missing`);
+      assert.ok(await page.locator(".team-photo img").evaluate(img=>img.complete && img.naturalWidth>0), `${vp.name}: generated dentist demonstration portrait did not load`);
+      assert.ok(await page.locator(".team-section .section-disclaimer").isVisible(), `${vp.name}: fictional clinician disclosure is missing`);
+      assert.ok(await page.locator(".review-disclaimer").isVisible(), `${vp.name}: sample-review disclosure is missing`);
+      assert.ok(await page.locator(".hours-disclaimer").isVisible(), `${vp.name}: illustrative opening-hours disclosure is missing`);
+      assert.equal(await page.locator(".facility-photo-blank").count(), 2, `${vp.name}: the two deliberately blank white facility-image areas are missing`);
+    assert.deepEqual(state.pageSectionOrder, ["top","trust","about","team","approach","causes","options","facilities","suitability","expectations","reviews","faq","hours","consultation"], `${vp.name}: page sections are missing or not in the approved single-page patient-journey order`);
     assert.deepEqual(state.duplicateIds, [], `${vp.name}: duplicate HTML IDs detected`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
     assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);

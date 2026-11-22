@@ -27,8 +27,8 @@ const [
 const sectionIds = [...html.matchAll(/<section\b[^>]*\bid=["']([^"']+)["']/gi)].map(match => match[1]);
 assert.deepEqual(
   sectionIds,
-  ["top", "approach", "causes", "options", "suitability", "expectations", "faq", "consultation"],
-  "RUWA must keep the approved eight-section visitor journey in order"
+  ["top", "trust", "about", "team", "approach", "causes", "options", "facilities", "suitability", "expectations", "reviews", "faq", "hours", "consultation"],
+  "RUWA must keep the approved 14-section single-page visitor journey in order"
 );
 
 const faqCount = [...html.matchAll(/<details\b/gi)].length;
@@ -60,6 +60,12 @@ assert.match(heroImage, /width="768"/);
 assert.match(heroImage, /height="1152"/);
 assert.match(heroImage, /fetchpriority="high"/);
 assert.match(html, /الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا/);
+assert.match(html, /src="assets\\/ruwa-dentist-demo\\.webp"/);
+assert.match(html, /صورة توضيحية مولّدة بالذكاء الاصطناعي لشخصية طبيب أسنان خيالية/);
+assert.match(html, /جميع النصوص أدناه تجريبية ومكتوبة لعرض التصميم فقط/);
+assert.match(html, /مواعيد افتراضية لأغراض عرض التصميم/);
+assert.match(html, /رقم الهاتف وواتساب غير مضافين إلى نموذج العرض/);
+assert.equal([...html.matchAll(/class="facility-photo-blank"/g)].length, 2, "Two intentionally blank white facility-image spaces must remain.");
 
 assert.match(rootAlias, /http-equiv="refresh" content="0;url=whitening-2026\.html"/);
 assert.match(publicAlias, /http-equiv="refresh" content="0;url=\.\.\/\.\.\/whitening-2026\.html"/);
@@ -77,20 +83,20 @@ for (const [name, content] of [
   assert.match(content, /RUWA/, name + " must identify the RUWA project");
 }
 
-assert.match(readme, /8 content sections/);
+assert.match(readme, /14 content sections/);
 assert.match(readme, /4 FAQ entries/);
 assert.match(readme, /3 WhatsApp actions and 2 phone actions/);
-assert.match(designSystem, /8 content sections/);
+assert.match(designSystem, /14 content sections/);
 assert.match(designSystem, /4 native HTML details\/summary FAQ entries/);
 assert.match(designSystem, /3 WhatsApp actions and 2 phone actions/);
-assert.match(caseStudy, /8 أقسام رئيسية/);
+assert.match(caseStudy, /14 قسمًا رئيسيًا/);
 assert.match(caseStudy, /4 أسئلة/);
 assert.match(caseStudy, /3 أزرار واتساب وزري اتصال/);
-assert.match(productionAudit, /8 main content sections/);
+assert.match(productionAudit, /14 main content sections/);
 assert.match(productionAudit, /4 native details entries/);
 assert.match(productionAudit, /3 WhatsApp actions and 2 phone actions/);
 
 console.log("RUWA repository consistency: PASS");
-console.log("Sections: 8 | FAQ: 4 | WhatsApp actions: 3 | Phone actions: 2");
+console.log("Sections: 14 | FAQ: 4 | WhatsApp actions: 3 | Phone actions: 2");
 console.log("ARIA controls: all targets exist | Hero AI illustration disclosure: present");
 console.log("Legacy preview paths: both redirect to whitening-2026.html");
