@@ -27,9 +27,15 @@ const [
 const sectionIds = [...html.matchAll(/<section\b[^>]*\bid=["']([^"']+)["']/gi)].map(match => match[1]);
 assert.deepEqual(
   sectionIds,
-  ["top", "approach", "causes", "options", "suitability", "expectations", "faq", "consultation"],
-  "RUWA must keep the approved eight-section visitor journey in order"
+  ["top", "approach", "causes", "options", "suitability", "expectations", "team", "faq", "consultation"],
+  "RUWA must keep the approved nine-section visitor journey in order"
 );
+
+const teamSection = html.slice(html.indexOf('id="team"'), html.indexOf("</section>", html.indexOf('id="team"')) + 10);
+assert.ok(teamSection.includes("assets/ruwa-dentist-hero.webp"), "RUWA team portrait asset is missing");
+assert.ok(teamSection.includes("الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا"), "RUWA team portrait disclosure is missing");
+assert.ok(teamSection.includes("تُضاف بعد التحقق من الاسم والمؤهلات والترخيص المهني"), "RUWA profile must disclose that real credentials are not yet supplied");
+assert.equal([...teamSection.matchAll(/class="team-principle"/g)].length, 3, "RUWA team section must contain exactly three concise principles");
 
 const faqCount = [...html.matchAll(/<details\b/gi)].length;
 assert.equal(faqCount, 4, "RUWA must contain exactly four focused native FAQ entries");
@@ -77,16 +83,16 @@ for (const [name, content] of [
   assert.match(content, /RUWA/, name + " must identify the RUWA project");
 }
 
-assert.match(readme, /8 content sections/);
+assert.match(readme, /9 content sections/);
 assert.match(readme, /4 FAQ entries/);
 assert.match(readme, /3 WhatsApp actions and 2 phone actions/);
-assert.match(designSystem, /8 content sections/);
+assert.match(designSystem, /9 content sections/);
 assert.match(designSystem, /4 native HTML details\/summary FAQ entries/);
 assert.match(designSystem, /3 WhatsApp actions and 2 phone actions/);
-assert.match(caseStudy, /8 أقسام رئيسية/);
+assert.match(caseStudy, /9 أقسام رئيسية/);
 assert.match(caseStudy, /4 أسئلة/);
 assert.match(caseStudy, /3 أزرار واتساب وزري اتصال/);
-assert.match(productionAudit, /8 main content sections/);
+assert.match(productionAudit, /9 main content sections/);
 assert.match(productionAudit, /4 native details entries/);
 assert.match(productionAudit, /3 WhatsApp actions and 2 phone actions/);
 
