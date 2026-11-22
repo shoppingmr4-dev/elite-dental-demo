@@ -13,7 +13,7 @@ const viewports = [
   { name: "mobile-390", width: 390, height: 844, mobile: true },
   { name: "mobile-360", width: 360, height: 800, mobile: true }
 ];
-const sectionIds = ["trust", "about", "causes", "approach", "options", "suitability", "expectations", "team", "facilities", "reviews", "faq", "consultation"];
+const sectionIds = ["approach", "causes", "options", "suitability", "expectations", "faq", "consultation"];
 await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
 const results = [];
@@ -37,21 +37,6 @@ try {
     const response=await page.goto(BASE_URL,{waitUntil:"domcontentloaded",timeout:45000});
     if(!response?.ok()) throw new Error(vp.name+": page load failed");
     await page.evaluate(()=>document.fonts.ready);
-    // The team portrait is intentionally lazy-loaded in production. For a full-page audit,
-    // request every local image explicitly so the audit checks its real decoded asset.
-    await page.evaluate(async()=>{
-      const images=[...document.images];
-      await Promise.all(images.map(async img=>{
-        img.loading="eager";
-        if(!img.complete){
-          await new Promise(resolve=>{
-            img.addEventListener("load",resolve,{once:true});
-            img.addEventListener("error",resolve,{once:true});
-          });
-        }
-        if(img.complete&&img.naturalWidth>0)await img.decode().catch(()=>{});
-      }));
-    });
     await page.waitForTimeout(180);
     if(vp.width===1440||vp.width===390){
       const variants=[
@@ -351,7 +336,7 @@ try {
     if(metrics.horizontalOverflow>1)problems.push("horizontal overflow "+metrics.horizontalOverflow+"px");
     if(metrics.sections.some(s=>s.missing))problems.push("missing section");
     const approachDetails=metrics.approachDetails;
-    if(!approachDetails||approachDetails.steps.length!==3)problems.push("Section 03 must contain one heading and exactly three evaluation steps");
+    if(!approachDetails||approachDetails.steps.length!==3)problems.push("Section 02 must contain one heading and exactly three evaluation steps");
     if(approachDetails){
       const normalText=[
         approachDetails.supportingParagraph?.style,
@@ -362,53 +347,53 @@ try {
         approachDetails.marker?.labelDetails?.style
       ].filter(Boolean);
       const largeText=[approachDetails.heading?.style].filter(Boolean);
-      if(normalText.some(item=>item.contrastRatio<4.5))problems.push("Section 03 normal-text contrast below WCAG AA 4.5:1");
-      if(largeText.some(item=>item.contrastRatio<3))problems.push("Section 03 large-text contrast below WCAG AA 3:1");
-      if(approachDetails.steps.some(step=>!step.title?.text||!step.description?.text))problems.push("Section 03 contains an empty step title or description");
-      if(approachDetails.supportingParagraph?.text!=="لا يحدّد لون الأسنان وحده مدى ملاءمة التبييض؛ فصحة الفم جزء أساسي من القرار.")problems.push("Section 03 supporting paragraph differs from the approved patient-centered copy");
+      if(normalText.some(item=>item.contrastRatio<4.5))problems.push("Section 02 normal-text contrast below WCAG AA 4.5:1");
+      if(largeText.some(item=>item.contrastRatio<3))problems.push("Section 02 large-text contrast below WCAG AA 3:1");
+      if(approachDetails.steps.some(step=>!step.title?.text||!step.description?.text))problems.push("Section 02 contains an empty step title or description");
+      if(approachDetails.supportingParagraph?.text!=="لا يحدّد لون الأسنان وحده مدى ملاءمة التبييض؛ فصحة الفم جزء أساسي من القرار.")problems.push("Section 02 supporting paragraph differs from the approved patient-centered copy");
       const expectedStepTitles=["نبدأ بفهم حالتك","نستعرض الخيارات المتاحة لحالتك","نحدّد الخطوة التالية"];
       const expectedStepDescriptions=[
         "نستمع إلى ملاحظاتك، ونفحص الأسنان واللثة، ونسأل عن أي حساسية أو ألم.",
         "نوضح لكل خيار نتائجه المتوقعة، وآثاره الجانبية المحتملة، وحدوده.",
         "نبيّن ما إذا كان التبييض مناسبًا الآن، أم أن هناك مشكلة تستدعي العلاج أولًا."
       ];
-      if(JSON.stringify(approachDetails.steps.map(step=>step.title.text))!==JSON.stringify(expectedStepTitles))problems.push("Section 03 step titles differ from the approved copy or sequence");
-      if(JSON.stringify(approachDetails.steps.map(step=>step.description.text))!==JSON.stringify(expectedStepDescriptions))problems.push("Section 03 step descriptions differ from the approved copy or sequence");
-      if(approachDetails.steps.map(step=>step.number.text).join("|")!=="01|02|03")problems.push("Section 03 evaluation numbers are not in the intended 01 → 02 → 03 order");
-      if(approachDetails.heading?.text!=="قبل اختيار التبييض، نقيّم صحة فمك.")problems.push("Section 03 headline differs from the approved copy");
-      if(approachDetails.marker?.label!=="خطوات التقييم")problems.push("Section 03 marker label differs from the approved copy");
-      if(approachDetails.marker?.ariaLabel!=="القسم الثالث: خطوات التقييم")problems.push("Section 03 accessible marker name differs from the approved Arabic label");
-      if(approachDetails.heading?.visualLineCount!==2)problems.push("Section 03 headline must render as exactly two deliberate visual lines");
-      if(approachDetails.heading?.style.color!=="rgb(20, 45, 56)")problems.push("Section 03 headline base color must use the approved RUWA deep ink");
-      if(approachDetails.headlineAccent?.text!=="نقيّم صحة فمك."||approachDetails.headlineAccent?.style.color!=="rgb(24, 122, 128)")problems.push("Section 03 must apply the restrained Teal accent to the complete key statement only");
-      if(approachDetails.headlineAccent?.style.contrastRatio<4.5)problems.push("Section 03 Teal headline accent falls below normal-text WCAG AA contrast");
-      if(!approachDetails.fontAvailability?.cairo700||!approachDetails.fontAvailability?.ibm400||!approachDetails.fontAvailability?.ibm700)problems.push("Section 03 required local Cairo or IBM Plex Arabic font face did not pass document.fonts.check()");
-      if(approachDetails.steps.some(step=>!step.title.style.fontLoaded||!step.description.style.fontLoaded||!step.number.style.fontLoaded))problems.push("Section 03 contains a text role whose requested primary font is not available");
-      if(approachDetails.heading?.style.textAlign!=="center")problems.push("Section 03 heading is not centered");
-      if(approachDetails.steps.some(step=>step.style.backdropFilter!=="none"||step.style.boxShadow!=="none"||step.style.borderRadius!=="0px"||step.style.backgroundColor!=="rgba(0, 0, 0, 0)"))problems.push("Section 03 step components must remain minimal editorial blocks, not glass or boxed cards");
-      if(!approachDetails.oneLineComparison||approachDetails.oneLineComparison.naturalWidth<=0||approachDetails.oneLineComparison.availableWidth<=0)problems.push("Section 03 one-line headline comparison could not be measured");
-      if(approachDetails.supportingParagraph?.style.textAlign!=="center")problems.push("Section 03 supporting paragraph is not centered");
-      if(approachDetails.steps.some(step=>step.title.style.color!=="rgb(20, 45, 56)"||step.description.style.color!=="rgb(92, 109, 114)"||step.number.style.color!=="rgb(17, 90, 96)"))problems.push("Section 03 step text roles do not use the consistent RUWA color hierarchy");
-      if(approachDetails.steps.some(step=>step.number.style.fontWeight!=="700"||step.number.style.fontSize!=="12px"||step.number.style.backgroundColor!=="rgb(227, 242, 233)"||step.number.style.borderRadius!=="50%"||step.number.rect.width!==28||step.number.rect.height!==28))problems.push("Section 03 step numbers must use the refined 28px Soft Mint circular marker with 12px Deep Teal numerals");
-      if(approachDetails.steps.some(step=>step.numberToTitleGap<10||step.numberToTitleGap>18.5||step.titleToDescriptionGap<5||step.titleToDescriptionGap>9))problems.push("Section 03 step internal spacing is outside the approved rhythm");
-      if(approachDetails.steps.some(step=>step.description.style.fontSize!=="16px"||step.description.style.lineHeight!=="29.6px"))problems.push("Section 03 step descriptions must use the approved 16px / 1.85 readable Arabic body style");
-      if(approachDetails.supportingParagraph?.style.fontSize!=="16px"||approachDetails.supportingParagraph?.style.lineHeight!=="29.6px")problems.push("Section 03 introduction must use the approved 16px / 1.85 readable Arabic body style");
-      if(approachDetails.steps.some(step=>step.rect.width<280))problems.push("Section 03 step column is too narrow for comfortable Arabic reading");
-      if(approachDetails.spacing.sectionPaddingTop!==approachDetails.spacing.sectionPaddingBottom)problems.push("Section 03 vertical section padding is unbalanced");
-      if(Number.parseFloat(approachDetails.spacing.sectionPaddingTop)>84.5||Number.parseFloat(approachDetails.spacing.sectionPaddingTop)<51.5)problems.push("Section 03 external vertical spacing is outside the refined responsive scale");
-      if(approachDetails.steps.some(step=>step.title.style.textAlign!=="right"||step.description.style.textAlign!=="right"))problems.push("Section 03 step text is not right-aligned for Arabic reading");
-      if([approachDetails.composition.markerCenterOffset,approachDetails.composition.headingCenterOffset,approachDetails.composition.paragraphCenterOffset].some(offset=>Math.abs(offset)>1))problems.push("Section 03 centered introduction is horizontally unbalanced");
-      if(approachDetails.spacing.paragraphToStepList<24)problems.push("Section 03 introduction and evaluation steps are too close");
+      if(JSON.stringify(approachDetails.steps.map(step=>step.title.text))!==JSON.stringify(expectedStepTitles))problems.push("Section 02 step titles differ from the approved copy or sequence");
+      if(JSON.stringify(approachDetails.steps.map(step=>step.description.text))!==JSON.stringify(expectedStepDescriptions))problems.push("Section 02 step descriptions differ from the approved copy or sequence");
+      if(approachDetails.steps.map(step=>step.number.text).join("|")!=="01|02|03")problems.push("Section 02 evaluation numbers are not in the intended 01 → 02 → 03 order");
+      if(approachDetails.heading?.text!=="قبل اختيار التبييض، نقيّم صحة فمك.")problems.push("Section 02 headline differs from the approved copy");
+      if(approachDetails.marker?.label!=="خطوات التقييم")problems.push("Section 02 marker label differs from the approved copy");
+      if(approachDetails.marker?.ariaLabel!=="القسم الثاني: خطوات التقييم")problems.push("Section 02 accessible marker name differs from the approved Arabic label");
+      if(approachDetails.heading?.visualLineCount!==2)problems.push("Section 02 headline must render as exactly two deliberate visual lines");
+      if(approachDetails.heading?.style.color!=="rgb(20, 45, 56)")problems.push("Section 02 headline base color must use the approved RUWA deep ink");
+      if(approachDetails.headlineAccent?.text!=="نقيّم صحة فمك."||approachDetails.headlineAccent?.style.color!=="rgb(24, 122, 128)")problems.push("Section 02 must apply the restrained Teal accent to the complete key statement only");
+      if(approachDetails.headlineAccent?.style.contrastRatio<4.5)problems.push("Section 02 Teal headline accent falls below normal-text WCAG AA contrast");
+      if(!approachDetails.fontAvailability?.cairo700||!approachDetails.fontAvailability?.ibm400||!approachDetails.fontAvailability?.ibm700)problems.push("Section 02 required local Cairo or IBM Plex Arabic font face did not pass document.fonts.check()");
+      if(approachDetails.steps.some(step=>!step.title.style.fontLoaded||!step.description.style.fontLoaded||!step.number.style.fontLoaded))problems.push("Section 02 contains a text role whose requested primary font is not available");
+      if(approachDetails.heading?.style.textAlign!=="center")problems.push("Section 02 heading is not centered");
+      if(approachDetails.steps.some(step=>step.style.backdropFilter!=="none"||step.style.boxShadow!=="none"||step.style.borderRadius!=="0px"||step.style.backgroundColor!=="rgba(0, 0, 0, 0)"))problems.push("Section 02 step components must remain minimal editorial blocks, not glass or boxed cards");
+      if(!approachDetails.oneLineComparison||approachDetails.oneLineComparison.naturalWidth<=0||approachDetails.oneLineComparison.availableWidth<=0)problems.push("Section 02 one-line headline comparison could not be measured");
+      if(approachDetails.supportingParagraph?.style.textAlign!=="center")problems.push("Section 02 supporting paragraph is not centered");
+      if(approachDetails.steps.some(step=>step.title.style.color!=="rgb(20, 45, 56)"||step.description.style.color!=="rgb(92, 109, 114)"||step.number.style.color!=="rgb(17, 90, 96)"))problems.push("Section 02 step text roles do not use the consistent RUWA color hierarchy");
+      if(approachDetails.steps.some(step=>step.number.style.fontWeight!=="700"||step.number.style.fontSize!=="12px"||step.number.style.backgroundColor!=="rgb(227, 242, 233)"||step.number.style.borderRadius!=="50%"||step.number.rect.width!==28||step.number.rect.height!==28))problems.push("Section 02 step numbers must use the refined 28px Soft Mint circular marker with 12px Deep Teal numerals");
+      if(approachDetails.steps.some(step=>step.numberToTitleGap<10||step.numberToTitleGap>18.5||step.titleToDescriptionGap<5||step.titleToDescriptionGap>9))problems.push("Section 02 step internal spacing is outside the approved rhythm");
+      if(approachDetails.steps.some(step=>step.description.style.fontSize!=="16px"||step.description.style.lineHeight!=="29.6px"))problems.push("Section 02 step descriptions must use the approved 16px / 1.85 readable Arabic body style");
+      if(approachDetails.supportingParagraph?.style.fontSize!=="16px"||approachDetails.supportingParagraph?.style.lineHeight!=="29.6px")problems.push("Section 02 introduction must use the approved 16px / 1.85 readable Arabic body style");
+      if(approachDetails.steps.some(step=>step.rect.width<280))problems.push("Section 02 step column is too narrow for comfortable Arabic reading");
+      if(approachDetails.spacing.sectionPaddingTop!==approachDetails.spacing.sectionPaddingBottom)problems.push("Section 02 vertical section padding is unbalanced");
+      if(Number.parseFloat(approachDetails.spacing.sectionPaddingTop)>84.5||Number.parseFloat(approachDetails.spacing.sectionPaddingTop)<51.5)problems.push("Section 02 external vertical spacing is outside the refined responsive scale");
+      if(approachDetails.steps.some(step=>step.title.style.textAlign!=="right"||step.description.style.textAlign!=="right"))problems.push("Section 02 step text is not right-aligned for Arabic reading");
+      if([approachDetails.composition.markerCenterOffset,approachDetails.composition.headingCenterOffset,approachDetails.composition.paragraphCenterOffset].some(offset=>Math.abs(offset)>1))problems.push("Section 02 centered introduction is horizontally unbalanced");
+      if(approachDetails.spacing.paragraphToStepList<24)problems.push("Section 02 introduction and evaluation steps are too close");
       const stepListSemantics=approachDetails.composition.stepListSemantics;
       if(stepListSemantics?.tagName!=="OL"||stepListSemantics?.role!=="list"||
         stepListSemantics?.accessibleLabel!=="مراحل التقييم"||
         JSON.stringify(stepListSemantics?.itemTags)!==JSON.stringify(["LI","LI","LI"])||
         stepListSemantics?.numbersHiddenFromAssistiveTechnology!==true)
-        problems.push("Section 03 must expose its three sequential steps as a labelled ordered list without announcing visible numbers twice");
+        problems.push("Section 02 must expose its three sequential steps as a labelled ordered list without announcing visible numbers twice");
       const expectedStepColumns=vp.width>900?3:1;
-      if(approachDetails.composition.stepListColumnCount!==expectedStepColumns)problems.push("Section 03 step layout does not match the responsive column rule");
+      if(approachDetails.composition.stepListColumnCount!==expectedStepColumns)problems.push("Section 02 step layout does not match the responsive column rule");
     }
-    if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","trust","about","causes","approach","options","suitability","expectations","team","facilities","reviews","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
+    if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","approach","causes","options","suitability","expectations","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
     if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");
     if(metrics.brokenAnchors.length)problems.push("broken in-page anchors");
     if(metrics.images.some(i=>!i.complete||i.naturalWidth===0))problems.push("broken image asset");

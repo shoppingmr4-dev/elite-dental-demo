@@ -162,8 +162,8 @@ try {
     assert.equal(initial.horizontalOverflow, false, `${viewport.name}: horizontal overflow detected`);
     assert.deepEqual(initial.markerSystem.markers.map(({number,label,context})=>({number,label,context})),[
       {number:"01",label:"دليل الابتسامة",context:"hero"},
-      {number:"02",label:"أسباب تغيّر اللون",context:"paper"},
-      {number:"03",label:"خطوات التقييم",context:"paper"},
+      {number:"02",label:"خطوات التقييم",context:"paper"},
+      {number:"03",label:"أسباب تغيّر اللون",context:"paper"},
       {number:"04",label:"الخيارات المتاحة",context:"canvas"},
       {number:"05",label:"قبل اتخاذ القرار",context:"paper"},
       {number:"06",label:"توقعات واقعية",context:"dark"},
@@ -184,8 +184,8 @@ try {
       initial.markerSystem.benefit.underlineElements===0,
       `${viewport.name}: published Hero benefit line does not use the complete, unadorned RUWA Teal treatment`);
     assert.deepEqual(initial.navLabels,
-      ["عن رُواء","خيارات التبييض","الفريق","آراء توضيحية"],
-      `${viewport.name}: the four navigation labels or their order changed`);
+      ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","الأسئلة الشائعة"],
+      `${viewport.name}: the five navigation labels or their order changed`);
     assert.ok(initial.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic")&&link.fontSize===14&&
       link.fontWeight===600&&Math.abs(link.lineHeight-22.4)<.2&&

@@ -35,7 +35,7 @@ RUWA is a fictional portfolio identity. No real clinic, dentist, employee, quali
 | Pale blue | #EAF3F8 | Quiet background tint |
 | WhatsApp green | #25D366 | Icon recognition only; not the button background |
 
-Do not add genuine-looking ratings, review counts, clinic credentials, or trust badges. The small trust strip is permitted only as an explicit statement of the demo’s educational scope and non-guaranteeing approach. Do not imitate proprietary artwork or copy another brand's page.
+Do not add decorative trust badges, ratings, clinic logos, or medical credentials. Do not imitate proprietary artwork or copy another brand's page.
 
 ## 3. Typography and layout
 
@@ -61,11 +61,11 @@ The current page alt text and visible disclosure state that this is an AI-genera
 
 The approved file, its HTML element, figure placement, dimensions, focal position, framing, transform, and loading priority are protected. The source image's earlier documentation was inconsistent; the old Pexels-based preview has been retired. Do not add an external stock-photo credit to this image.
 
-## 5. Current page architecture — 14 content sections in one continuous landing page
+## 5. Current page architecture — exactly 8 content sections
 
 Header and announcement strip:
 - RUWA wordmark and Arabic descriptor.
-- Four navigation links to the visitor journey.
+- Five navigation links to the visitor journey.
 - One WhatsApp-labelled header action.
 - Mobile menu with aria-expanded state and keyboard behavior.
 
@@ -73,21 +73,16 @@ Content sections in actual DOM order:
 
 | Order | ID | Section | Current role |
 |---:|---|---|---|
-| 01 | top | Hero | Focused whitening proposition and protected Hero portrait |
-| 02 | trust | Demonstration principles | Clarify educational scope without false credentials |
-| 03 | about | About RUWA | Explain the fictional portfolio concept |
-| 04 | causes | Causes of discoloration | Explain surface staining and deeper colour changes |
-| 05 | approach | Assessment approach | Explain why oral-health assessment comes before treatment choice |
-| 06 | options | Whitening options | Educational overview of general treatment options |
-| 07 | suitability | Suitability and safety | Explain factors that may affect suitability or timing |
-| 08 | expectations | Realistic expectations | Sensitivity, individual variation, restorations, and limitations |
-| 09 | team | Illustrative team | One AI-generated fictional profile and two blank image spaces |
-| 10 | facilities | Facility image spaces | Two blank white frames reserved for future authentic imagery |
-| 11 | reviews | Sample reviews | Three disclosed sample-copy cards, no genuine ratings |
-| 12 | faq | Frequently asked questions | Four native details/summary entries |
-| 13 | consultation | Final contact | Inactive WhatsApp and phone controls with truthful dialog |
+| 01 | top | Hero | Explain the whitening subject and give the first contact action |
+| 02 | approach | Assessment approach | Explain why oral-health assessment comes first |
+| 03 | causes | Causes of discoloration | Explain surface staining and deeper colour changes |
+| 04 | options | Whitening options | Explain general options without claiming they are RUWA clinic services |
+| 05 | suitability | Suitability and safety | Explain factors that may affect suitability or timing |
+| 06 | expectations | Realistic expectations | Explain possible sensitivity, individual variation, and restorations |
+| 07 | faq | Frequently asked questions | Answer four focused visitor questions |
+| 08 | consultation | Final contact | Offer WhatsApp and phone actions with an explicit inactive state |
 
-The footer is a responsive multi-column portfolio footer. The team section contains one AI-generated illustrative clinician portrait and two blank white image spaces; the reviews section contains three disclosed sample-copy cards without star scores or aggregate ratings; the facilities gallery remains blank; and the footer's final column points to contact information only. No actual doctor, patient, clinic, address, or operating schedule is represented.
+The footer preserves the fictional portfolio disclosure and AI-image disclosure. There is no doctor profile, testimonial section, review score, before/after gallery, price list, clinic map, or real location because no verified source material exists.
 
 ## 6. FAQ source of truth
 
@@ -130,7 +125,7 @@ Before adaptation for a real clinic:
 - Do not fabricate ratings, review counts, before/after photos, clinical outcomes, equipment, facilities, discounts, or prices.
 - Do not ask visitors to send dental photographs or sensitive health details through an ordinary marketing chat.
 
-A doctor/team section, authentic reviews, clinic photographs, pricing, and maps are conditional future additions, not empty design placeholders.
+A doctor/team section, authentic reviews, clinic photographs, pricing, maps, and opening hours are conditional future additions, not empty design placeholders.
 
 ## 9. Engineering constraints
 

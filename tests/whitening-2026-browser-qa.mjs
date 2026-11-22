@@ -493,7 +493,7 @@ try {
            phone:document.querySelectorAll('[data-contact-action="phone"]').length
          },
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
-        contentSections:["trust","about","team","approach","causes","options","facilities","suitability","expectations","reviews","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
+        contentSections:["approach","causes","options","suitability","expectations","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
         optionCards:document.querySelectorAll(".option-card").length,
         causeCards:document.querySelectorAll(".info-card").length,
         faqItems:document.querySelectorAll(".faq-item").length,
@@ -767,9 +767,9 @@ try {
     assert.equal(state.demoDialogInitialOpen, false, `${vp.name}: demo dialog should start closed`);
     assert.ok(state.demoDialogText.includes("قنوات التواصل ستعمل مباشرة عند إضافة بيانات الاتصال الرسمية"), `${vp.name}: contact dialog initial explanation is missing`);
     assert.ok(state.demoDialogText.includes("لن يتم فتح محادثة أو بدء اتصال قبل إعداد رقم صحيح"), `${vp.name}: unavailable contact destinations must be disclosed`);
-    assert.deepEqual(state.navLabels, ["عن رُواء","خيارات التبييض","الفريق","آراء توضيحية"], `${vp.name}: navigation labels or order are incorrect`);
-    assert.deepEqual(state.navHrefs, ["#about","#options","#team","#reviews"], `${vp.name}: navigation destinations are incorrect`);
-    assert.equal(state.navLinkTypography.length,4, `${vp.name}: all five navigation links must be present`);
+    assert.deepEqual(state.navLabels, ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
+    assert.deepEqual(state.navHrefs, ["#approach","#causes","#options","#suitability","#faq"], `${vp.name}: navigation destinations are incorrect`);
+    assert.equal(state.navLinkTypography.length,5, `${vp.name}: all five navigation links must be present`);
     assert.ok(state.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic") && link.fontSize===14 &&
       link.fontWeight===600 && Math.abs(link.lineHeight-22.4)<.2 &&
@@ -830,8 +830,8 @@ try {
       vp.name + ": all six section marker glass frames must share compact dimensions and translucency: " + JSON.stringify(state.sectionMarkerChips));
     const expectedMarkers=[
       {number:"01",label:"دليل الابتسامة",context:"hero"},
-      {number:"02",label:"أسباب تغيّر اللون",context:"paper"},
-      {number:"03",label:"خطوات التقييم",context:"paper"},
+      {number:"02",label:"خطوات التقييم",context:"paper"},
+      {number:"03",label:"أسباب تغيّر اللون",context:"paper"},
       {number:"04",label:"الخيارات المتاحة",context:"canvas"},
       {number:"05",label:"قبل اتخاذ القرار",context:"paper"},
       {number:"06",label:"توقعات واقعية",context:"dark"},
@@ -1192,25 +1192,8 @@ try {
         `${vp.name}: navigation/CTA gap did not restore at the top`);
     }
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
-    assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more required RUWA landing-page sections are missing`);
-      const teamPortrait=page.locator(".team-photo img");
-      await teamPortrait.scrollIntoViewIfNeeded();
-      await page.waitForFunction(()=>{
-        const img=document.querySelector(".team-photo img");
-        return Boolean(img&&img.complete&&img.naturalWidth>0);
-      },null,{timeout:10000});
-      await teamPortrait.evaluate(img=>img.decode());
-      assert.ok(await teamPortrait.evaluate(img=>img.complete&&img.naturalWidth>0), `${vp.name}: generated dentist demonstration portrait did not load after entering the viewport`);
-      await page.evaluate(()=>window.scrollTo({top:0,behavior:"instant"}));
-      await page.waitForFunction(()=>{
-        const header=document.querySelector(".site-header");
-        return !header?.classList.contains("is-compact")&&
-          Number.parseFloat(getComputedStyle(header).getPropertyValue("--header-progress"))<0.001;
-      },null,{timeout:3000});
-      assert.ok(await page.locator(".team-section .section-disclaimer").isVisible(), `${vp.name}: fictional clinician disclosure is missing`);
-      assert.ok(await page.locator(".review-disclaimer").isVisible(), `${vp.name}: sample-review disclosure is missing`);
-      assert.equal(await page.locator(".facility-photo-blank").count(), 2, `${vp.name}: the two deliberately blank white facility-image areas are missing`);
-    assert.deepEqual(state.pageSectionOrder, ["top","trust","about","causes","approach","options","suitability","expectations","team","facilities","reviews","faq","consultation"], `${vp.name}: page sections are missing or not in the approved single-page patient-journey order`);
+    assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
+    assert.deepEqual(state.pageSectionOrder, ["top","approach","causes","options","suitability","expectations","faq","consultation"], `${vp.name}: page sections are missing or not in the approved patient-journey order`);
     assert.deepEqual(state.duplicateIds, [], `${vp.name}: duplicate HTML IDs detected`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
     assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);
@@ -1219,29 +1202,15 @@ try {
     assert.equal(state.contrastChecks.length,21, `${vp.name}: expanded representative contrast coverage is incomplete`);
     assert.ok(state.contrastChecks.every(item=>!item.missing&&item.ratio>=4.5), `${vp.name}: representative text contrast below WCAG AA: ${JSON.stringify(state.contrastChecks)}`);
 
-    // Start keyboard QA from a deterministic document-level focus origin so earlier
-    // click/scroll checks cannot leave the browser's sequential focus position ambiguous.
-    await page.evaluate(()=>{
-      document.activeElement?.blur();
-      document.body.setAttribute("tabindex","-1");
-      document.body.focus({preventScroll:true});
-    });
-    assert.equal(await page.evaluate(()=>document.activeElement===document.body),true,
-      `${vp.name}: could not establish the document-level keyboard test starting point`);
+    // Keyboard-tab to both Hero actions and measure their rendered focus indicators.
+    await page.evaluate(()=>document.activeElement?.blur());
     let primaryFocused=false;
-    const tabSequence=[];
     for(let step=0;step<32;step++){
       await page.keyboard.press("Tab");
-      const active=await page.evaluate(()=>{
-        const el=document.activeElement;
-        return {tag:el?.tagName||"",id:el?.id||"",className:typeof el?.className==="string"?el.className:"",text:(el?.innerText||el?.getAttribute?.("aria-label")||"").trim().slice(0,70)};
-      });
-      tabSequence.push(active);
       primaryFocused=await page.evaluate(()=>document.activeElement===document.querySelector(".primary-cta"));
       if(primaryFocused)break;
     }
-    await page.evaluate(()=>document.body.removeAttribute("tabindex"));
-    assert.ok(primaryFocused, `${vp.name}: natural keyboard tab order did not reach the primary Hero CTA within 32 stops. Sequence: ${JSON.stringify(tabSequence)}`);
+    assert.ok(primaryFocused, `${vp.name}: keyboard tab order did not reach the primary Hero CTA`);
     const primaryFocus=await page.evaluate(()=>{
       const element=document.querySelector(".primary-cta"),style=getComputedStyle(element);
       const parse=value=>value.match(/[\d.]+/g).slice(0,3).map(Number);
@@ -1289,7 +1258,7 @@ try {
       }));
       assert.equal(opened.expanded, "true", `${vp.name}: mobile menu aria state did not open`);
       assert.notEqual(opened.display, "none", `${vp.name}: mobile menu did not open`);
-      await page.locator('#main-nav a[href="#about"]').click();
+      await page.locator('#main-nav a[href="#approach"]').click();
       // The page restores focus on the next animation frame after native hash navigation.
       await page.waitForFunction(
         () => document.activeElement===document.querySelector("#menu-toggle"),
@@ -1303,9 +1272,9 @@ try {
       }));
       assert.equal(closed.expanded, "false", `${vp.name}: mobile menu aria state did not close`);
       assert.equal(closed.display, "none", `${vp.name}: mobile menu remained open after selection`);
-      assert.equal(closed.hash, "#about", `${vp.name}: navigation target failed`);
+      assert.equal(closed.hash, "#approach", `${vp.name}: navigation target failed`);
       assert.equal(closed.focusOnToggle,true,`${vp.name}: selecting a mobile navigation link must not leave focus inside the hidden menu`);
-      await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#about"]')?.getAttribute("aria-current")==="location",null,{timeout:3000});
+      await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#approach"]')?.getAttribute("aria-current")==="location",null,{timeout:3000});
 
       await page.keyboard.press("Enter");
       assert.equal(await page.locator("#menu-toggle").getAttribute("aria-expanded"),"true",`${vp.name}: keyboard activation did not open the mobile menu`);
@@ -1374,10 +1343,10 @@ try {
       });
       assert.ok(focusState.active&&focusState.visible&&focusState.outlineStyle==="solid"&&focusState.outlineWidth==="2px",
         `${vp.name}: keyboard focus state is not clearly visible: ${JSON.stringify(focusState)}`);
-      await page.locator('#main-nav a[href="#options"]').click();
+      await page.locator('#main-nav a[href="#causes"]').click();
       await page.waitForFunction(()=>{
-        const section=document.querySelector("#options");
-        const link=document.querySelector('#main-nav a[href="#options"]');
+        const section=document.querySelector("#causes");
+        const link=document.querySelector('#main-nav a[href="#causes"]');
         return link?.getAttribute("aria-current")==="location"&&
           section?.getBoundingClientRect().top<=window.innerHeight*.32+1;
       },null,{timeout:6000});
@@ -1391,11 +1360,11 @@ try {
         };
         requestAnimationFrame(check);
       }));
-      await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#options"]')?.getAttribute("aria-current")==="location",null,{timeout:1500});
-      const activeLink=page.locator('#main-nav a[href="#options"]');
+      await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#causes"]')?.getAttribute("aria-current")==="location",null,{timeout:1500});
+      const activeLink=page.locator('#main-nav a[href="#causes"]');
       await page.mouse.move(0,0);
       await page.waitForFunction(()=>{
-        const link=document.querySelector('#main-nav a[href="#options"]');
+        const link=document.querySelector('#main-nav a[href="#causes"]');
         return link&&getComputedStyle(link).color==="rgb(17, 90, 96)";
       },null,{timeout:1500});
       const activeState=await activeLink.evaluate(link=>{
@@ -1425,12 +1394,13 @@ try {
       assert.ok(activeHoverState.underlineScale>=0.99&&activeHoverState.underlineScale<=1.01,
         `${vp.name}: active + hover underline must remain full-width`);
 
-      // Validate full-width active indicators on all four navigation sections.
+      // Validate full-width active indicators on all five navigation sections.
       const navTargets=[
-        {href:"#about",id:"about"},
+        {href:"#approach",id:"approach"},
+        {href:"#causes",id:"causes"},
         {href:"#options",id:"options"},
-        {href:"#team",id:"team"},
-        {href:"#reviews",id:"reviews"}
+        {href:"#suitability",id:"suitability"},
+        {href:"#faq",id:"faq"}
       ];
       for(const target of navTargets){
         await page.mouse.move(0,0);
