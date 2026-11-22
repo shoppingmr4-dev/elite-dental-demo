@@ -718,7 +718,7 @@ try {
             ".primary-cta",".consultation-cta","#approach .step p","#causes .info-card p",
             "#options .option-card p","#options .option-card .option-note",
             "#suitability .suitability-copy p","#suitability .check-item p",
-            "#expectations .expect-card p","#team .team-copy h2","#team .team-lead","#team .team-principle p","#faq .faq-item summary,"#faq .faq-answer",
+            "#expectations .expect-card p","#team .team-copy h2","#team .team-lead","#team .team-principle p","#faq .faq-item summary","#faq .faq-answer",
             "#faq .reference-note","#consultation .contact-action--whatsapp",
              "#consultation .contact-action--phone","#consultation .contact-privacy-note",".footer"
           ];
@@ -828,7 +828,7 @@ try {
     assert.equal(state.sectionMarkerChips.length,7,vp.name + ": all seven content section markers must retain the shared glass component");
     assert.ok(state.sectionMarkerChips.every(chip=>chip.height>=42&&chip.height<=46&&chip.borderWidth==="1px"&&
       chip.borderRadius==="999px"&&chip.backgroundColor!=="rgba(0, 0, 0, 0)"&&chip.backdropFilter.includes("blur")),
-      vp.name + ": all seven section marker glass frames must share compact dimensions and translucency:  + JSON.stringify(state.sectionMarkerChips));
+      vp.name + ": all seven section marker glass frames must share compact dimensions and translucency: " + JSON.stringify(state.sectionMarkerChips));
     const expectedMarkers=[
       {number:"01",label:"دليل الابتسامة",context:"hero"},
       {number:"02",label:"خطوات التقييم",context:"paper"},
@@ -841,7 +841,7 @@ try {
     ];
     assert.equal(state.allSectionMarkers.length,8,vp.name + ": all eight numbered markers must be present");
     assert.deepEqual(state.allSectionMarkers.map(({number,label,context})=>({number,label,context})),expectedMarkers,
-      vp.name + ": all seven numbers, Arabic labels, and contextual surfaces must match the approved sequence");
+      vp.name + ": all eight numbers, Arabic labels, and contextual surfaces must match the approved sequence");
     assert.ok(state.allSectionMarkers.every(marker=>{
       const approvedCapsule=marker.isHero
         ? marker.markerHeight>=38&&marker.markerHeight<=42&&marker.markerPadding==="4px 10px"&&marker.markerGap==="7px"
