@@ -493,7 +493,8 @@ try {
            phone:document.querySelectorAll('[data-contact-action="phone"]').length
          },
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
-        contentSections:["approach","causes","options","suitability","expectations","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
+        contentSections:["approach","causes","options","suitability","expectations","team","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
+        teamProfile:(()=>{const section=document.getElementById("team"),image=section?.querySelector(".team-portrait img");return {heading:section?.querySelector("h2")?.innerText.trim()||"",imageSrc:image?.getAttribute("src")||"",imageAlt:image?.getAttribute("alt")||"",disclosure:section?.querySelector(".team-portrait-disclosure")?.innerText.trim()||"",profileNote:section?.querySelector(".team-portrait-caption p")?.innerText.trim()||"",principleCount:section?.querySelectorAll(".team-principle").length||0};})(),
         optionCards:document.querySelectorAll(".option-card").length,
         causeCards:document.querySelectorAll(".info-card").length,
         faqItems:document.querySelectorAll(".faq-item").length,
@@ -717,7 +718,7 @@ try {
             ".primary-cta",".consultation-cta","#approach .step p","#causes .info-card p",
             "#options .option-card p","#options .option-card .option-note",
             "#suitability .suitability-copy p","#suitability .check-item p",
-            "#expectations .expect-card p","#faq .faq-item summary","#faq .faq-answer",
+            "#expectations .expect-card p","#team .team-copy h2","#team .team-lead","#team .team-principle p","#faq .faq-item summary,"#faq .faq-answer",
             "#faq .reference-note","#consultation .contact-action--whatsapp",
              "#consultation .contact-action--phone","#consultation .contact-privacy-note",".footer"
           ];
@@ -824,10 +825,10 @@ try {
     assert.equal(state.benefitTreatment.textDecorationLine,"none",vp.name + ": benefit line must not acquire a decorative underline");
     assert.equal(state.benefitTreatment.accentElements,0,vp.name + ": the benefit phrase must not contain an isolated accent span");
     assert.equal(state.benefitTreatment.underlineElements,0,vp.name + ": the benefit phrase must not contain a decorative SVG underline");
-    assert.equal(state.sectionMarkerChips.length,6,vp.name + ": all six content section markers must retain the shared glass component");
+    assert.equal(state.sectionMarkerChips.length,7,vp.name + ": all seven content section markers must retain the shared glass component");
     assert.ok(state.sectionMarkerChips.every(chip=>chip.height>=42&&chip.height<=46&&chip.borderWidth==="1px"&&
       chip.borderRadius==="999px"&&chip.backgroundColor!=="rgba(0, 0, 0, 0)"&&chip.backdropFilter.includes("blur")),
-      vp.name + ": all six section marker glass frames must share compact dimensions and translucency: " + JSON.stringify(state.sectionMarkerChips));
+      vp.name + ": all seven section marker glass frames must share compact dimensions and translucency:  + JSON.stringify(state.sectionMarkerChips));
     const expectedMarkers=[
       {number:"01",label:"دليل الابتسامة",context:"hero"},
       {number:"02",label:"خطوات التقييم",context:"paper"},
@@ -835,9 +836,10 @@ try {
       {number:"04",label:"الخيارات المتاحة",context:"canvas"},
       {number:"05",label:"قبل اتخاذ القرار",context:"paper"},
       {number:"06",label:"توقعات واقعية",context:"dark"},
-      {number:"07",label:"إجابات واضحة",context:"canvas"}
+      {number:"07",label:"الفريق الطبي",context:"paper"},
+      {number:"08",label:"إجابات واضحة",context:"canvas"}
     ];
-    assert.equal(state.allSectionMarkers.length,7,vp.name + ": all seven numbered markers must be present");
+    assert.equal(state.allSectionMarkers.length,8,vp.name + ": all eight numbered markers must be present");
     assert.deepEqual(state.allSectionMarkers.map(({number,label,context})=>({number,label,context})),expectedMarkers,
       vp.name + ": all seven numbers, Arabic labels, and contextual surfaces must match the approved sequence");
     assert.ok(state.allSectionMarkers.every(marker=>{
@@ -1193,13 +1195,19 @@ try {
     }
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
-    assert.deepEqual(state.pageSectionOrder, ["top","approach","causes","options","suitability","expectations","faq","consultation"], `${vp.name}: page sections are missing or not in the approved patient-journey order`);
+    assert.deepEqual(state.pageSectionOrder, ["top","approach","causes","options","suitability","expectations","team","faq","consultation"], `${vp.name}: page sections are missing or not in the approved patient-journey order`);
     assert.deepEqual(state.duplicateIds, [], `${vp.name}: duplicate HTML IDs detected`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
     assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);
     assert.equal(state.faqItems, 4, `${vp.name}: the four focused FAQ entries are not present`);
+    assert.equal(state.teamProfile.heading,"رعاية تبدأ بفهم حالتك.",`${vp.name}: team headline changed`);
+    assert.equal(state.teamProfile.imageSrc,"assets/ruwa-dentist-hero.webp",`${vp.name}: team image path changed`);
+    assert.match(state.teamProfile.imageAlt,/مولّدة بالذكاء الاصطناعي/);
+    assert.match(state.teamProfile.disclosure,/لا تمثل طبيبًا حقيقيًا/);
+    assert.match(state.teamProfile.profileNote,/الاسم والمؤهلات والترخيص المهني/);
+    assert.equal(state.teamProfile.principleCount,3,`${vp.name}: team principle count changed`);
     assert.ok(state.clinicalReferences.some(url=>url.includes("nhs.uk")) && state.clinicalReferences.some(url=>url.includes("ada.org")), `${vp.name}: clinical reference links are missing`);
-    assert.equal(state.contrastChecks.length,21, `${vp.name}: expanded representative contrast coverage is incomplete`);
+    assert.equal(state.contrastChecks.length,24, `${vp.name}: expanded representative contrast coverage is incomplete`);
     assert.ok(state.contrastChecks.every(item=>!item.missing&&item.ratio>=4.5), `${vp.name}: representative text contrast below WCAG AA: ${JSON.stringify(state.contrastChecks)}`);
 
     // Keyboard-tab to both Hero actions and measure their rendered focus indicators.
