@@ -27,8 +27,8 @@ const [
 const sectionIds = [...html.matchAll(/<section\b[^>]*\bid=["']([^"']+)["']/gi)].map(match => match[1]);
 assert.deepEqual(
   sectionIds,
-  ["top", "trust", "about", "causes", "approach", "options", "suitability", "expectations", "team", "facilities", "reviews", "faq", "hours", "consultation"],
-  "RUWA must keep the approved 14-section single-page visitor journey in the validated order"
+  ["top", "trust", "about", "causes", "approach", "options", "suitability", "expectations", "team", "facilities", "reviews", "faq", "consultation"],
+  "RUWA must keep the approved 13-section single-page visitor journey in the validated order"
 );
 
 const faqCount = [...html.matchAll(/<details\b/gi)].length;
@@ -63,7 +63,7 @@ assert.match(html, /الصورة توضيحية مولّدة بالذكاء ال
 assert.ok(html.includes('src="assets/ruwa-dentist-demo.webp"'), "The fictional clinician demo portrait must be referenced locally.");
 assert.match(html, /صورة توضيحية مولّدة بالذكاء الاصطناعي لشخصية طبيب أسنان خيالية/);
 assert.match(html, /جميع النصوص أدناه تجريبية ومكتوبة لعرض التصميم فقط/);
-assert.match(html, /مواعيد افتراضية لأغراض عرض التصميم/);
+assert.doesNotMatch(html, /id=["']hours["']|hours-section|hours-disclaimer|مواعيد افتراضية|ساعات العمل/);
 assert.match(html, /رقم الهاتف وواتساب غير مضافين إلى نموذج العرض/);
 assert.equal([...html.matchAll(/class="facility-photo-blank"/g)].length, 2, "Two intentionally blank white facility-image spaces must remain.");
 
