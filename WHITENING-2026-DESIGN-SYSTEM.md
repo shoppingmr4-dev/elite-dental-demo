@@ -65,7 +65,7 @@ The approved file, its HTML element, figure placement, dimensions, focal positio
 
 Header and announcement strip:
 - RUWA wordmark and Arabic descriptor.
-- Five navigation links to the visitor journey.
+- Four navigation links to the visitor journey.
 - One WhatsApp-labelled header action.
 - Mobile menu with aria-expanded state and keyboard behavior.
 
@@ -85,10 +85,9 @@ Content sections in actual DOM order:
 | 10 | facilities | Facility image spaces | Two blank white frames reserved for future authentic imagery |
 | 11 | reviews | Sample reviews | Three disclosed sample-copy cards, no genuine ratings |
 | 12 | faq | Frequently asked questions | Four native details/summary entries |
-| 13 | hours | Illustrative visit information | Fictional Riyadh-market sample schedule; no real location |
-| 14 | consultation | Final contact | Inactive WhatsApp and phone controls with truthful dialog |
+| 13 | consultation | Final contact | Inactive WhatsApp and phone controls with truthful dialog |
 
-The footer is a responsive multi-column portfolio footer. The team section contains one AI-generated illustrative clinician portrait and two blank white image spaces; the reviews section contains three disclosed sample-copy cards without star scores or aggregate ratings; the facilities gallery remains blank; and the visit section uses explicitly fictional hours and a market-only Riyadh context. No actual doctor, patient, clinic, address, or operating schedule is represented.
+The footer is a responsive multi-column portfolio footer. The team section contains one AI-generated illustrative clinician portrait and two blank white image spaces; the reviews section contains three disclosed sample-copy cards without star scores or aggregate ratings; the facilities gallery remains blank; and the footer's final column points to contact information only. No actual doctor, patient, clinic, address, or operating schedule is represented.
 
 ## 6. FAQ source of truth
 
@@ -131,7 +130,7 @@ Before adaptation for a real clinic:
 - Do not fabricate ratings, review counts, before/after photos, clinical outcomes, equipment, facilities, discounts, or prices.
 - Do not ask visitors to send dental photographs or sensitive health details through an ordinary marketing chat.
 
-A doctor/team section, authentic reviews, clinic photographs, pricing, maps, and opening hours are conditional future additions, not empty design placeholders.
+A doctor/team section, authentic reviews, clinic photographs, pricing, and maps are conditional future additions, not empty design placeholders.
 
 ## 9. Engineering constraints
 
