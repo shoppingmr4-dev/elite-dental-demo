@@ -61,7 +61,7 @@ The current page alt text and visible disclosure state that this is an AI-genera
 
 The approved file, its HTML element, figure placement, dimensions, focal position, framing, transform, and loading priority are protected. The source image's earlier documentation was inconsistent; the old Pexels-based preview has been retired. Do not add an external stock-photo credit to this image.
 
-## 5. Current page architecture — exactly 8 content sections
+## 5. Current page architecture — exactly 9 content sections
 
 Header and announcement strip:
 - RUWA wordmark and Arabic descriptor.
@@ -79,10 +79,11 @@ Content sections in actual DOM order:
 | 04 | options | Whitening options | Explain general options without claiming they are RUWA clinic services |
 | 05 | suitability | Suitability and safety | Explain factors that may affect suitability or timing |
 | 06 | expectations | Realistic expectations | Explain possible sensitivity, individual variation, and restorations |
-| 07 | faq | Frequently asked questions | Answer four focused visitor questions |
-| 08 | consultation | Final contact | Offer WhatsApp and phone actions with an explicit inactive state |
+| 07 | team | Dentist/team | Present an explicitly illustrative profile template and AI-generated male portrait; no real identity or credentials are claimed |
+| 08 | faq | Frequently asked questions | Answer four focused visitor questions |
+| 09 | consultation | Final contact | Offer WhatsApp and phone actions with an explicit inactive state |
 
-The footer preserves the fictional portfolio disclosure and AI-image disclosure. There is no doctor profile, testimonial section, review score, before/after gallery, price list, clinic map, or real location because no verified source material exists.
+The footer preserves the fictional portfolio disclosure and AI-image disclosure. The team section is a clearly labelled demonstration template with one AI-generated illustrative portrait; it contains no real doctor identity, professional credentials, testimonial, review score, before/after gallery, price list, clinic map, or real location.
 
 ## 6. FAQ source of truth
 
@@ -125,7 +126,7 @@ Before adaptation for a real clinic:
 - Do not fabricate ratings, review counts, before/after photos, clinical outcomes, equipment, facilities, discounts, or prices.
 - Do not ask visitors to send dental photographs or sensitive health details through an ordinary marketing chat.
 
-A doctor/team section, authentic reviews, clinic photographs, pricing, maps, and opening hours are conditional future additions, not empty design placeholders.
+Authentic doctor identity and verified professional credentials, genuine reviews, clinic photographs, pricing, maps, and opening hours remain conditional future additions. The current team card is only a disclosed visual template.
 
 ## 9. Engineering constraints
 
