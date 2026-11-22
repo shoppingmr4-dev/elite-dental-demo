@@ -13,7 +13,7 @@ const viewports = [
   { name: "mobile-390", width: 390, height: 844, mobile: true },
   { name: "mobile-360", width: 360, height: 800, mobile: true }
 ];
-const sectionIds = ["approach", "causes", "options", "suitability", "expectations", "faq", "consultation"];
+const sectionIds = ["approach", "causes", "options", "suitability", "expectations", "team", "faq", "consultation"];
 await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
 const results = [];
@@ -298,7 +298,7 @@ try {
         images,brokenAnchors,emptyControls,
         counts:{sections:ids.length,steps:document.querySelectorAll(".step").length,causeCards:document.querySelectorAll(".info-card").length,
           optionCards:document.querySelectorAll(".option-card").length,suitabilityItems:document.querySelectorAll(".check-item").length,
-          expectationsCards:document.querySelectorAll(".expect-card").length,faqItems:document.querySelectorAll(".faq-item").length},
+          expectationsCards:document.querySelectorAll(".expect-card").length,teamPrinciples:document.querySelectorAll("#team .team-principle").length,teamPortraits:document.querySelectorAll("#team .team-portrait img").length,faqItems:document.querySelectorAll(".faq-item").length},
         headings:{h1:document.querySelectorAll("h1").length,h2:document.querySelectorAll("h2").length},
         footer:rect(document.querySelector(".footer")),footerStyle:style(document.querySelector(".footer"))
       };
@@ -393,7 +393,7 @@ try {
       const expectedStepColumns=vp.width>900?3:1;
       if(approachDetails.composition.stepListColumnCount!==expectedStepColumns)problems.push("Section 02 step layout does not match the responsive column rule");
     }
-    if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","approach","causes","options","suitability","expectations","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
+    if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","approach","causes","options","suitability","expectations","team","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
     if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");
     if(metrics.brokenAnchors.length)problems.push("broken in-page anchors");
     if(metrics.images.some(i=>!i.complete||i.naturalWidth===0))problems.push("broken image asset");
