@@ -38,6 +38,13 @@ try {
     if(!response?.ok()) throw new Error(vp.name+": page load failed");
     await page.evaluate(()=>document.fonts.ready);
     await page.waitForTimeout(180);
+    // Keep production images lazy-loaded; explicitly request the below-the-fold
+    // team portraits in this full-page QA pass before checking all image assets.
+    await page.evaluate(async()=>{
+      const portraits=[...document.querySelectorAll("#team .team-card img")];
+      portraits.forEach(image=>image.loading="eager");
+      await Promise.all(portraits.map(image=>image.decode().catch(()=>null)));
+    });
     if(vp.width===1440||vp.width===390){
       const variants=[
         {name:"editorial-teal",css:"#approach .step-no{display:block;width:auto;height:auto;padding-top:2px;color:#187A80;font-size:13px;font-weight:700;line-height:1.8;text-align:right;background:transparent;border:0;border-radius:0;box-shadow:none}"},
