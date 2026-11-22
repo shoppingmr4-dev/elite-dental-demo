@@ -493,7 +493,7 @@ try {
            phone:document.querySelectorAll('[data-contact-action="phone"]').length
          },
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
-        contentSections:["trust","about","team","approach","causes","options","facilities","suitability","expectations","reviews","faq","hours","consultation"].map(id=>Boolean(document.getElementById(id))),
+        contentSections:["trust","about","team","approach","causes","options","facilities","suitability","expectations","reviews","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
         optionCards:document.querySelectorAll(".option-card").length,
         causeCards:document.querySelectorAll(".info-card").length,
         faqItems:document.querySelectorAll(".faq-item").length,
@@ -767,9 +767,9 @@ try {
     assert.equal(state.demoDialogInitialOpen, false, `${vp.name}: demo dialog should start closed`);
     assert.ok(state.demoDialogText.includes("قنوات التواصل ستعمل مباشرة عند إضافة بيانات الاتصال الرسمية"), `${vp.name}: contact dialog initial explanation is missing`);
     assert.ok(state.demoDialogText.includes("لن يتم فتح محادثة أو بدء اتصال قبل إعداد رقم صحيح"), `${vp.name}: unavailable contact destinations must be disclosed`);
-    assert.deepEqual(state.navLabels, ["عن رُواء","خيارات التبييض","الفريق","آراء توضيحية","معلومات الزيارة"], `${vp.name}: navigation labels or order are incorrect`);
-    assert.deepEqual(state.navHrefs, ["#about","#options","#team","#reviews","#hours"], `${vp.name}: navigation destinations are incorrect`);
-    assert.equal(state.navLinkTypography.length,5, `${vp.name}: all five navigation links must be present`);
+    assert.deepEqual(state.navLabels, ["عن رُواء","خيارات التبييض","الفريق","آراء توضيحية"], `${vp.name}: navigation labels or order are incorrect`);
+    assert.deepEqual(state.navHrefs, ["#about","#options","#team","#reviews"], `${vp.name}: navigation destinations are incorrect`);
+    assert.equal(state.navLinkTypography.length,4, `${vp.name}: all five navigation links must be present`);
     assert.ok(state.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic") && link.fontSize===14 &&
       link.fontWeight===600 && Math.abs(link.lineHeight-22.4)<.2 &&
@@ -1209,9 +1209,8 @@ try {
       },null,{timeout:3000});
       assert.ok(await page.locator(".team-section .section-disclaimer").isVisible(), `${vp.name}: fictional clinician disclosure is missing`);
       assert.ok(await page.locator(".review-disclaimer").isVisible(), `${vp.name}: sample-review disclosure is missing`);
-      assert.ok(await page.locator(".hours-disclaimer").isVisible(), `${vp.name}: illustrative opening-hours disclosure is missing`);
       assert.equal(await page.locator(".facility-photo-blank").count(), 2, `${vp.name}: the two deliberately blank white facility-image areas are missing`);
-    assert.deepEqual(state.pageSectionOrder, ["top","trust","about","causes","approach","options","suitability","expectations","team","facilities","reviews","faq","hours","consultation"], `${vp.name}: page sections are missing or not in the approved single-page patient-journey order`);
+    assert.deepEqual(state.pageSectionOrder, ["top","trust","about","causes","approach","options","suitability","expectations","team","facilities","reviews","faq","consultation"], `${vp.name}: page sections are missing or not in the approved single-page patient-journey order`);
     assert.deepEqual(state.duplicateIds, [], `${vp.name}: duplicate HTML IDs detected`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
     assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);
@@ -1426,13 +1425,12 @@ try {
       assert.ok(activeHoverState.underlineScale>=0.99&&activeHoverState.underlineScale<=1.01,
         `${vp.name}: active + hover underline must remain full-width`);
 
-      // Validate full-width active indicators on all five navigation sections.
+      // Validate full-width active indicators on all four navigation sections.
       const navTargets=[
         {href:"#about",id:"about"},
-        {href:"#team",id:"team"},
         {href:"#options",id:"options"},
-        {href:"#reviews",id:"reviews"},
-        {href:"#hours",id:"hours"}
+        {href:"#team",id:"team"},
+        {href:"#reviews",id:"reviews"}
       ];
       for(const target of navTargets){
         await page.mouse.move(0,0);
