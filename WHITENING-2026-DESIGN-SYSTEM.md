@@ -76,17 +76,17 @@ Content sections in actual DOM order:
 | 01 | top | Hero | Focused whitening proposition and protected Hero portrait |
 | 02 | trust | Demonstration principles | Clarify educational scope without false credentials |
 | 03 | about | About RUWA | Explain the fictional portfolio concept |
-| 04 | team | Illustrative team | One AI-generated fictional profile and two blank image spaces |
-| 05 | approach | Assessment approach | Explain why oral-health assessment comes first |
-| 06 | causes | Causes of discoloration | Explain surface staining and deeper colour changes |
-| 07 | options | Whitening options | Educational overview of general treatment options |
-| 08 | facilities | Facility image spaces | Two blank white frames reserved for future authentic imagery |
-| 09 | suitability | Suitability and safety | Explain factors that may affect suitability or timing |
-| 10 | expectations | Realistic expectations | Explain sensitivity, individual variation, and restorations |
+| 04 | causes | Causes of discoloration | Explain surface staining and deeper colour changes |
+| 05 | approach | Assessment approach | Explain why oral-health assessment comes before treatment choice |
+| 06 | options | Whitening options | Educational overview of general treatment options |
+| 07 | suitability | Suitability and safety | Explain factors that may affect suitability or timing |
+| 08 | expectations | Realistic expectations | Sensitivity, individual variation, restorations, and limitations |
+| 09 | team | Illustrative team | One AI-generated fictional profile and two blank image spaces |
+| 10 | facilities | Facility image spaces | Two blank white frames reserved for future authentic imagery |
 | 11 | reviews | Sample reviews | Three disclosed sample-copy cards, no genuine ratings |
-| 12 | faq | Frequently asked questions | Answer four focused visitor questions |
-| 13 | hours | Illustrative visit information | Fictional Riyadh-market sample schedule, not actual opening hours |
-| 14 | consultation | Final contact | Offer WhatsApp and phone actions with explicit inactive state |
+| 12 | faq | Frequently asked questions | Four native details/summary entries |
+| 13 | hours | Illustrative visit information | Fictional Riyadh-market sample schedule; no real location |
+| 14 | consultation | Final contact | Inactive WhatsApp and phone controls with truthful dialog |
 
 The footer is a responsive multi-column portfolio footer. The team section contains one AI-generated illustrative clinician portrait and two blank white image spaces; the reviews section contains three disclosed sample-copy cards without star scores or aggregate ratings; the facilities gallery remains blank; and the visit section uses explicitly fictional hours and a market-only Riyadh context. No actual doctor, patient, clinic, address, or operating schedule is represented.
 
