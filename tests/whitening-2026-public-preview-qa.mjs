@@ -184,8 +184,8 @@ try {
       initial.markerSystem.benefit.underlineElements===0,
       `${viewport.name}: published Hero benefit line does not use the complete, unadorned RUWA Teal treatment`);
     assert.deepEqual(initial.navLabels,
-      ["عن رُواء","خيارات التبييض","الفريق","آراء توضيحية","معلومات الزيارة"],
-      `${viewport.name}: the five navigation labels or their order changed`);
+      ["عن رُواء","خيارات التبييض","الفريق","آراء توضيحية"],
+      `${viewport.name}: the four navigation labels or their order changed`);
     assert.ok(initial.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic")&&link.fontSize===14&&
       link.fontWeight===600&&Math.abs(link.lineHeight-22.4)<.2&&
