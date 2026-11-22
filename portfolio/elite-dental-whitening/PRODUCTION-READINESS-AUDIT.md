@@ -39,13 +39,13 @@ The page includes:
 | 01 | top | Hero | Focused whitening proposition and protected Hero visual |
 | 02 | trust | Demonstration principles | Clarify educational scope without false credentials |
 | 03 | about | About RUWA | Explain the fictional portfolio concept |
-| 04 | team | Illustrative team | One AI-generated fictional profile and two blank image spaces |
+| 04 | causes | Causes of discoloration | Explain surface and internal colour changes |
 | 05 | approach | Assessment approach | Explain why assessment precedes treatment choice |
-| 06 | causes | Causes of discoloration | Explain surface and internal colour changes |
-| 07 | options | Whitening options | Educational overview of general treatment options |
-| 08 | facilities | Facility image spaces | Two blank white frames reserved for future authentic imagery |
-| 09 | suitability | Suitability and safety | Explain factors that may affect suitability or timing |
-| 10 | expectations | Realistic expectations | Sensitivity, variation, and restorations |
+| 06 | options | Whitening options | Educational overview of general treatment options |
+| 07 | suitability | Suitability and safety | Explain factors that may affect suitability or timing |
+| 08 | expectations | Realistic expectations | Sensitivity, variation, restorations, and limitations |
+| 09 | team | Illustrative team | One AI-generated fictional profile and two blank image spaces |
+| 10 | facilities | Facility image spaces | Two blank white frames reserved for future authentic imagery |
 | 11 | reviews | Sample reviews | Three disclosed sample-copy cards, no genuine ratings |
 | 12 | faq | FAQ | Four native details/summary entries |
 | 13 | hours | Illustrative visit information | Fictional Riyadh-market sample schedule; no real location |
