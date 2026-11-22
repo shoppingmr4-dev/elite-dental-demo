@@ -63,7 +63,7 @@ assert.match(html, /الصورة توضيحية مولّدة بالذكاء ال
 assert.ok(html.includes('src="assets/ruwa-dentist-demo.webp"'), "The fictional clinician demo portrait must be referenced locally.");
 assert.match(html, /صورة توضيحية مولّدة بالذكاء الاصطناعي لشخصية طبيب أسنان خيالية/);
 assert.match(html, /جميع النصوص أدناه تجريبية ومكتوبة لعرض التصميم فقط/);
-assert.doesNotMatch(html, /id=["']hours["']|hours-section|hours-disclaimer|مواعيد افتراضية|ساعات العمل/);
+assert.doesNotMatch(html, /id=["']hours["']|href=["']#hours["']|hours-section|hours-disclaimer|\.hours-|مواعيد افتراضية|ساعات العمل/);
 assert.match(html, /رقم الهاتف وواتساب غير مضافين إلى نموذج العرض/);
 assert.equal([...html.matchAll(/class="facility-photo-blank"/g)].length, 2, "Two intentionally blank white facility-image spaces must remain.");
 
