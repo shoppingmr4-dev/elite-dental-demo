@@ -830,8 +830,8 @@ try {
       vp.name + ": all six section marker glass frames must share compact dimensions and translucency: " + JSON.stringify(state.sectionMarkerChips));
     const expectedMarkers=[
       {number:"01",label:"دليل الابتسامة",context:"hero"},
-      {number:"02",label:"خطوات التقييم",context:"paper"},
-      {number:"03",label:"أسباب تغيّر اللون",context:"paper"},
+      {number:"02",label:"أسباب تغيّر اللون",context:"paper"},
+      {number:"03",label:"خطوات التقييم",context:"paper"},
       {number:"04",label:"الخيارات المتاحة",context:"canvas"},
       {number:"05",label:"قبل اتخاذ القرار",context:"paper"},
       {number:"06",label:"توقعات واقعية",context:"dark"},
