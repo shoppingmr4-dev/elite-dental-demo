@@ -11,7 +11,7 @@
 
 RUWA is a fictional portfolio concept, not a commissioned or operating dental clinic. It must not be presented as a real clinic, and it must not acquire invented doctors, qualifications, ratings, testimonials, prices, addresses, opening hours, patient statistics, clinical outcomes, or appointment inventory.
 
-The current page has a coherent service-specific education journey. It contains **8 main content sections** plus the shared header, announcement strip, and footer. Its educational structure does not need extra placeholder sections. The missing items are real-business evidence and an operational conversion destination, not decorative content.
+The current page has a coherent service-specific education journey. It contains **9 main content sections** plus the shared header, announcement strip, and footer. Its educational structure does not need extra placeholder sections. The missing items are real-business evidence and an operational conversion destination, not decorative content.
 
 ## 2. Repository source-of-truth and route audit
 
@@ -36,11 +36,12 @@ The actual current DOM order is:
 | 04 | options | Whitening options | IMPROVE only for a real clinic | General education is not proof that a real clinic offers all listed options. |
 | 05 | suitability | Suitability and safety | KEEP / clinical review required | Explains factors that may affect suitability or timing. |
 | 06 | expectations | Realistic expectations | KEEP | Covers possible sensitivity, individual variation, and restorations. |
-| 07 | faq | Frequently asked questions | KEEP | Four native details/summary entries are present. |
-| 08 | consultation | Final contact | KEEP / activate only with verified details | The actions disclose that real channels are not configured. |
+| 07 | team | Dentist/team | KEEP / demo-only | One AI-generated illustrative male portrait and a clearly disclosed profile template; no real clinician identity or credentials are claimed. |
+| 08 | faq | Frequently asked questions | KEEP | Four native details/summary entries are present. |
+| 09 | consultation | Final contact | KEEP / activate only with verified details | The actions disclose that real channels are not configured. |
 | Footer | — | Portfolio and image disclosures | KEEP | Prevents the sample from being mistaken for a real operating clinic. |
 
-No independent doctor profile, patient review/testimonial panel, rating score, before-and-after gallery, clinic gallery, pricing section, map, or hours-of-operation section exists in this page.
+The team section contains a demo-only profile template and an AI-generated illustrative male portrait, not a real doctor profile or credentials. No patient review/testimonial panel, rating score, before-and-after gallery, clinic gallery, pricing section, map, or hours-of-operation section exists in this page.
 
 ## 4. Confirmed current content and interaction behavior
 
@@ -96,7 +97,7 @@ Once genuine clinic data is supplied and approved, use this one conversion-orien
 3. Understanding the problem — concise reasons and concerns relevant to whitening.
 4. Assessment journey — what is assessed and why.
 5. Real service options — only the methods actually offered, plus accurate terms/pricing when confirmed.
-6. Doctor profile — a concise verified profile when the treating professional and publishable qualifications are confirmed; may be integrated into the trust strip.
+6. Doctor profile — replace the current disclosed demonstration template only when the treating professional’s identity, registration, and publishable qualifications are verified; do not present the AI illustration as the real clinician.
 7. Suitability and safety — clinically reviewed constraints and expectations.
 8. Patient reviews — conditional on genuine, authorized material and applicable rules; omit when unavailable.
 9. FAQ — focused questions based on real visitor concerns.
