@@ -767,8 +767,8 @@ try {
     assert.equal(state.demoDialogInitialOpen, false, `${vp.name}: demo dialog should start closed`);
     assert.ok(state.demoDialogText.includes("قنوات التواصل ستعمل مباشرة عند إضافة بيانات الاتصال الرسمية"), `${vp.name}: contact dialog initial explanation is missing`);
     assert.ok(state.demoDialogText.includes("لن يتم فتح محادثة أو بدء اتصال قبل إعداد رقم صحيح"), `${vp.name}: unavailable contact destinations must be disclosed`);
-    assert.deepEqual(state.navLabels, ["عن رُواء","الفريق","خيارات التبييض","آراء توضيحية","معلومات الزيارة"], `${vp.name}: navigation labels or order are incorrect`);
-    assert.deepEqual(state.navHrefs, ["#about","#team","#options","#reviews","#hours"], `${vp.name}: navigation destinations are incorrect`);
+    assert.deepEqual(state.navLabels, ["عن رُواء","خيارات التبييض","الفريق","آراء توضيحية","معلومات الزيارة"], `${vp.name}: navigation labels or order are incorrect`);
+    assert.deepEqual(state.navHrefs, ["#about","#options","#team","#reviews","#hours"], `${vp.name}: navigation destinations are incorrect`);
     assert.equal(state.navLinkTypography.length,5, `${vp.name}: all five navigation links must be present`);
     assert.ok(state.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic") && link.fontSize===14 &&
