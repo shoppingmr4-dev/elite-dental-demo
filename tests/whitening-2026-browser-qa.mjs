@@ -1207,15 +1207,29 @@ try {
     assert.equal(state.contrastChecks.length,21, `${vp.name}: expanded representative contrast coverage is incomplete`);
     assert.ok(state.contrastChecks.every(item=>!item.missing&&item.ratio>=4.5), `${vp.name}: representative text contrast below WCAG AA: ${JSON.stringify(state.contrastChecks)}`);
 
-    // Keyboard-tab to both Hero actions and measure their rendered focus indicators.
-    await page.evaluate(()=>document.activeElement?.blur());
+    // Start keyboard QA from a deterministic document-level focus origin so earlier
+    // click/scroll checks cannot leave the browser's sequential focus position ambiguous.
+    await page.evaluate(()=>{
+      document.activeElement?.blur();
+      document.body.setAttribute("tabindex","-1");
+      document.body.focus({preventScroll:true});
+    });
+    assert.equal(await page.evaluate(()=>document.activeElement===document.body),true,
+      `${vp.name}: could not establish the document-level keyboard test starting point`);
     let primaryFocused=false;
+    const tabSequence=[];
     for(let step=0;step<32;step++){
       await page.keyboard.press("Tab");
+      const active=await page.evaluate(()=>{
+        const el=document.activeElement;
+        return {tag:el?.tagName||"",id:el?.id||"",className:typeof el?.className==="string"?el.className:"",text:(el?.innerText||el?.getAttribute?.("aria-label")||"").trim().slice(0,70)};
+      });
+      tabSequence.push(active);
       primaryFocused=await page.evaluate(()=>document.activeElement===document.querySelector(".primary-cta"));
       if(primaryFocused)break;
     }
-    assert.ok(primaryFocused, `${vp.name}: keyboard tab order did not reach the primary Hero CTA`);
+    await page.evaluate(()=>document.body.removeAttribute("tabindex"));
+    assert.ok(primaryFocused, `${vp.name}: natural keyboard tab order did not reach the primary Hero CTA within 32 stops. Sequence: ${JSON.stringify(tabSequence)}`);
     const primaryFocus=await page.evaluate(()=>{
       const element=document.querySelector(".primary-cta"),style=getComputedStyle(element);
       const parse=value=>value.match(/[\d.]+/g).slice(0,3).map(Number);
