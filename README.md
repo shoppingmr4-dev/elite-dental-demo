@@ -17,7 +17,7 @@ The old paths **whitening-preview.html** and **preview/ruwa/index.html** are com
 
 RUWA is a fictional portfolio concept created by Apex Studio. It is not a commissioned or operating clinic and is not cleared as a real commercial brand.
 
-The current page has **8 content sections** (Hero, assessment, causes, options, suitability, expectations, FAQ, and contact) and **4 FAQ entries**.
+The current page has **9 content sections** (Hero, assessment, causes, options, suitability, expectations, dentist/team, FAQ, and contact) and **4 FAQ entries**.
 
 The Hero portrait at assets/ruwa-hero-90-768.webp is the approved AI-generated illustrative image. The page's Arabic alt text and disclosure identify it as AI-generated and explicitly state that it is not a real dentist. Its approved Git blob is protected by a CI SHA guard. Do not replace, edit, crop, recolor, reposition, or present it as a real clinician.
 
@@ -33,8 +33,9 @@ No doctor identity, qualification, clinic address, hours, fee, patient review, r
 4. Whitening options — general educational descriptions, not a claim that a real clinic offers each option.
 5. Suitability and safety — factors that may affect suitability or timing.
 6. Realistic expectations — sensitivity, individual variation, and restorations.
-7. FAQ — four native HTML details/summary entries.
-8. Consultation/contact — WhatsApp and phone actions that disclose their inactive demo state.
+7. Dentist/team — one transparently AI-generated illustrative male portrait and a clearly labelled profile template; no real clinician identity, credentials, or claims are supplied.
+8. FAQ — four native HTML details/summary entries.
+9. Consultation/contact — WhatsApp and phone actions that disclose their inactive demo state.
 
 The shared header, navigation, announcement strip, and portfolio-disclosure footer support these sections; they are not additional numbered content sections.
 
@@ -52,7 +53,7 @@ Requires Node.js 22 for the current RUWA QA workflow.
 
 - Install dependencies: **npm install**
 - Check repository/page/document consistency: **npm run test:ruwa:consistency**
-  - The gate verifies the eight-section order, four FAQ entries, five contact controls, all `aria-controls` targets, the protected Hero disclosure, and both preview redirects.
+  - The gate verifies the nine-section order, the disclosed team portrait and three principles, four FAQ entries, five contact controls, all `aria-controls` targets, the protected Hero disclosure, and both preview redirects.
 - Build the legacy root-page stylesheet only: **npm run build:css**
 - Existing legacy responsive test: **npm run test:responsive**
 
