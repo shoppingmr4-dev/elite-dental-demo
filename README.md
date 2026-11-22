@@ -41,8 +41,7 @@ The current visitor journey follows this order:
 10. **Facilities image spaces:** two intentionally blank white frames; no real premises are implied.
 11. **Sample reviews:** three clearly disclosed sample-copy cards, not actual patient feedback.
 12. **FAQ:** four native HTML details/summary entries, including aftercare and duration.
-13. **Visit information:** a clearly fictional Riyadh-market sample schedule.
-14. **Final consultation/contact:** WhatsApp and phone actions that disclose their inactive demo state.
+13. **Final consultation/contact:** WhatsApp and phone actions that disclose their inactive demo state.
 
 The shared header, navigation, announcement strip, and portfolio-disclosure footer support the page; they are not additional numbered content sections.
 ## Separate legacy root page
