@@ -97,6 +97,6 @@ The workflow does not run Lighthouse unless separately configured and executed. 
 
 ## 7. Final production verdict
 
-The expanded page is a more complete portfolio landing-page demonstration, not a real clinic website. Its sample clinician, review copy, facility spaces, and schedule are deliberately disclosed as fictional. The phone and WhatsApp channels remain inactive.
+The expanded page is a more complete portfolio landing-page demonstration, not a real clinic website. Its sample clinician, review copy, and facility spaces are deliberately disclosed as fictional. The phone and WhatsApp channels remain inactive.
 
 Keep Pull Request #9 in Draft state. Do not merge, deploy, or present RUWA as an operating clinic without verified business information and clinical/legal approval.
