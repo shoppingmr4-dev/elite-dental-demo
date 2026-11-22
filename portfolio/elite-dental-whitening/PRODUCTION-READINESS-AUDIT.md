@@ -9,7 +9,7 @@
 
 ## 1. Executive finding
 
-RUWA remains a fictional portfolio concept and is not an operating dental clinic. The page has been expanded into a more complete **single-page landing page** with 14 continuous content sections. It demonstrates clinic-style components without presenting them as real business facts.
+RUWA remains a fictional portfolio concept and is not an operating dental clinic. The page has been expanded into a more complete **single-page landing page** with **14 main content sections** in one continuous document. It demonstrates clinic-style components without presenting them as real business facts.
 
 The page includes:
 - One AI-generated fictional dentist portrait, clearly disclosed and not assigned a real identity or credentials.
@@ -19,6 +19,8 @@ The page includes:
 - A sample Riyadh-market schedule, visibly identified as fictional and not actual opening hours.
 - A responsive multi-column footer.
 - No invented phone number, WhatsApp number, street address, map point, social account, actual patient review, aggregate rating, price, professional credential, or booking service.
+- FAQ: **4 native details entries**.
+- Contact controls: **3 WhatsApp actions and 2 phone actions**; both configuration values remain empty and open the existing unavailable-contact dialog.
 
 ## 2. Repository source of truth and protected assets
 
