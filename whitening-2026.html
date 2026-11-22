@@ -1227,6 +1227,9 @@ body,button,input,select,textarea{font-family:var(--body)}
 }
 @media(prefers-reduced-motion:reduce){.section-text-link{transition:none}}
 
+
+/* Kicker labels for the new demo sections are intentionally separate from numbered section-marker chips. */
+.section-kicker{display:inline-flex;align-items:center;gap:8px;color:var(--ink2);font-size:11px;font-weight:700;line-height:1.4}
 </style>
 </head>
 <body>
@@ -1319,7 +1322,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="content-section team-section" id="team" aria-labelledby="team-title">
   <div class="wrap">
    <div class="section-head">
-    <span class="eyebrow">شخصيات بصرية تجريبية</span>
+    <span class="section-kicker">شخصيات بصرية تجريبية</span>
     <h2 id="team-title">نموذج عرض لبطاقة الفريق الطبي.</h2>
     <p>هذه مساحة تصميمية توضح كيف يمكن تقديم ملف الطبيب في صفحة هبوط. الشخصية المصوّرة مولّدة بالذكاء الاصطناعي ولا تمثل طبيبًا حقيقيًا أو موظفًا في عيادة.</p>
    </div>
@@ -1439,7 +1442,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="content-section facilities-section" id="facilities" aria-labelledby="facilities-title">
   <div class="wrap">
    <div class="section-head">
-    <span class="eyebrow">مساحات بصرية محفوظة</span>
+    <span class="section-kicker">مساحات بصرية محفوظة</span>
     <h2 id="facilities-title">بيئة عيادية هادئة — مساحة مخصصة للصور.</h2>
     <p>أُبقيت مساحات الصور بيضاء كما طُلب، دون استخدام صور مخزنة أو الإيحاء بأنها مرافق حقيقية تابعة لرُواء.</p>
    </div>
@@ -1518,7 +1521,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="content-section reviews-section" id="reviews" aria-labelledby="reviews-title">
   <div class="wrap">
    <div class="section-head">
-    <span class="eyebrow">نماذج واجهة فقط · دون تقييم فعلي</span>
+    <span class="section-kicker">نماذج واجهة فقط · دون تقييم فعلي</span>
     <h2 id="reviews-title">كيف يمكن أن تظهر آراء المرضى؟</h2>
     <p>تعرض البطاقات التالية أمثلة تحريرية لتصميم مكوّن المراجعات، وليست اقتباسات من مرضى أو تجارب علاجية حقيقية.</p>
    </div>
@@ -1585,7 +1588,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="content-section hours-section" id="hours" aria-labelledby="hours-title">
   <div class="wrap hours-grid">
    <div class="hours-copy">
-    <span class="eyebrow">معلومات زيارة توضيحية</span>
+    <span class="section-kicker">معلومات زيارة توضيحية</span>
     <h2 id="hours-title">مواعيد افتراضية لسوق الرياض.</h2>
     <p>يعرض هذا الجدول مثالًا تصميميًا مستوحى من جداول منشورة لبعض عيادات الأسنان في الرياض. تختلف ساعات العمل بين العيادات والفروع، ولا تمثل هذه المواعيد جدول تشغيل فعليًا لرُواء.</p>
     <div class="hours-location">
