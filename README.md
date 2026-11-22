@@ -17,7 +17,7 @@ The old paths **whitening-preview.html** and **preview/ruwa/index.html** are com
 
 RUWA is a fictional portfolio concept created by Apex Studio. It is not a commissioned or operating clinic and is not cleared as a real commercial brand.
 
-The current single-page landing page has **14 content sections** (Hero, trust strip, About, illustrative team, assessment, causes, options, blank facilities gallery, suitability, expectations, sample reviews, FAQ, illustrative hours, and final contact) and **4 FAQ entries**.
+The current single-page landing page has **14 content sections** (Hero, trust principles, About, causes of discoloration, assessment approach, whitening options, suitability and safety, realistic expectations, illustrative team, blank facilities gallery, sample reviews, FAQ, illustrative visit information, and final contact) and **4 FAQ entries**.
 
 The Hero portrait at assets/ruwa-hero-90-768.webp is the approved AI-generated illustrative image. The page's Arabic alt text and disclosure identify it as AI-generated and explicitly state that it is not a real dentist. Its approved Git blob is protected by a CI SHA guard. Do not replace, edit, crop, recolor, reposition, or present it as a real clinician.
 
@@ -27,17 +27,24 @@ The page now includes one clearly disclosed AI-generated fictional clinician por
 
 ## Page architecture
 
-1. Hero — focused whitening proposition, approved illustrative portrait, and clear contact actions.
-2. Assessment approach — why evaluation precedes choosing a treatment.
-3. Causes of discoloration — surface stains and deeper colour changes.
-4. Whitening options — general educational descriptions, not a claim that a real clinic offers each option.
-5. Suitability and safety — factors that may affect suitability or timing.
-6. Realistic expectations — sensitivity, individual variation, and restorations.
-7. FAQ — four native HTML details/summary entries.
-8. Consultation/contact — WhatsApp and phone actions that disclose their inactive demo state.
+The current visitor journey follows this order:
 
-The shared header, navigation, announcement strip, and portfolio-disclosure footer support these sections; they are not additional numbered content sections.
+1. **Hero:** focused whitening proposition, approved illustrative portrait, and clear contact actions.
+2. **Trust principles:** clarify the educational scope and avoid guaranteed-result claims.
+3. **About RUWA:** explain the fictional portfolio concept and its content approach.
+4. **Causes of discoloration:** explain surface staining and deeper colour changes.
+5. **Assessment approach:** show why dental and gum health should be assessed before choosing an option.
+6. **Whitening options:** explain general approaches without claiming that a real clinic offers them.
+7. **Suitability and safety:** outline factors that may affect suitability or timing.
+8. **Realistic expectations:** discuss sensitivity, individual variation, restorations, and limitations.
+9. **Illustrative team:** one disclosed AI-generated portrait and two blank team-image spaces.
+10. **Facilities image spaces:** two intentionally blank white frames; no real premises are implied.
+11. **Sample reviews:** three clearly disclosed sample-copy cards, not actual patient feedback.
+12. **FAQ:** four native HTML details/summary entries, including aftercare and duration.
+13. **Visit information:** a clearly fictional Riyadh-market sample schedule.
+14. **Final consultation/contact:** WhatsApp and phone actions that disclose their inactive demo state.
 
+The shared header, navigation, announcement strip, and portfolio-disclosure footer support the page; they are not additional numbered content sections.
 ## Separate legacy root page
 
 The root **index.html** and **assets/css/site.css** belong to the repository's existing Elite Dental Clinic Tailwind demo. They are separate from RUWA and are intentionally not changed by RUWA page work.
