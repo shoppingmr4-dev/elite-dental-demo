@@ -27,8 +27,8 @@ const [
 const sectionIds = [...html.matchAll(/<section\b[^>]*\bid=["']([^"']+)["']/gi)].map(match => match[1]);
 assert.deepEqual(
   sectionIds,
-  ["top", "trust", "about", "team", "approach", "causes", "options", "facilities", "suitability", "expectations", "reviews", "faq", "hours", "consultation"],
-  "RUWA must keep the approved 14-section single-page visitor journey in order"
+  ["top", "trust", "about", "causes", "approach", "options", "suitability", "expectations", "team", "facilities", "reviews", "faq", "hours", "consultation"],
+  "RUWA must keep the approved 14-section single-page visitor journey in the validated order"
 );
 
 const faqCount = [...html.matchAll(/<details\b/gi)].length;
