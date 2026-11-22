@@ -13,7 +13,7 @@ const viewports = [
   { name: "mobile-390", width: 390, height: 844, mobile: true },
   { name: "mobile-360", width: 360, height: 800, mobile: true }
 ];
-const sectionIds = ["trust", "about", "team", "approach", "causes", "options", "facilities", "suitability", "expectations", "reviews", "faq", "hours", "consultation"];
+const sectionIds = ["trust", "about", "causes", "approach", "options", "suitability", "expectations", "team", "facilities", "reviews", "faq", "hours", "consultation"];
 await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
 const results = [];
