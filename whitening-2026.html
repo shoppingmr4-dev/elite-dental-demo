@@ -1125,52 +1125,42 @@ body,button,input,select,textarea{font-family:var(--body)}
 }
 
 
-/* RUWA dental team — a single, transparently illustrative profile section. */
-.team-section{padding-block:clamp(58px,6.8vw,92px);background:var(--paper);color:var(--ink)}
-.team-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(292px,.84fr);align-items:center;gap:clamp(32px,5.5vw,82px)}
-.team-copy{min-width:0}
-.team-copy>.section-marker{margin-bottom:0}
-.team-copy h2{max-width:680px;margin:16px 0 12px;font-family:var(--display);font-size:clamp(29px,3.8vw,43px);font-weight:800;line-height:1.45;letter-spacing:-.045em;color:var(--ink)}
-.team-lead{max-width:650px;margin:0;color:var(--muted);font-size:15px;line-height:2.05}
-.team-principles{display:grid;gap:0;margin:clamp(22px,2.8vw,30px) 0 0;padding:0;border-top:1px solid var(--line);list-style:none}
-.team-principle{display:grid;grid-template-columns:34px minmax(0,1fr);align-items:start;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
-.team-principle-number{padding-top:3px;color:var(--blue);font-family:var(--display);font-size:12px;font-weight:800;line-height:1.6;direction:ltr;text-align:center}
-.team-principle h3{margin:0 0 3px;color:var(--ink);font-family:var(--display);font-size:18px;font-weight:800;line-height:1.55}
-.team-principle p{margin:0;color:var(--muted);font-size:14px;line-height:1.9}
-.team-portrait{width:min(100%,440px);min-width:0;margin:0 auto}
-.team-portrait-art{position:relative;isolation:isolate;min-height:490px;aspect-ratio:.84;overflow:hidden;border:1px solid var(--line);border-radius:220px 220px 18px 18px;background:var(--lime)}
-.team-portrait-art::before{content:"";position:absolute;z-index:0;top:10%;left:11%;width:78%;aspect-ratio:1;border:1px solid rgba(24,122,128,.17);border-radius:50%;background:rgba(255,255,255,.48)}
-.team-portrait-art::after{content:"";position:absolute;z-index:0;right:14%;bottom:112px;left:14%;height:1px;background:rgba(20,45,56,.12)}
-.team-portrait-chip{position:absolute;z-index:2;top:20px;right:20px;padding:8px 12px;border:1px solid rgba(220,229,234,.95);border-radius:999px;background:rgba(255,255,255,.9);color:var(--ink2);font-size:11px;font-weight:700;line-height:1.5}
-.team-portrait-image{position:absolute;z-index:1;inset:43px 12px 116px;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
-.team-portrait-image img{display:block;width:auto;height:100%;max-width:100%;object-fit:contain;object-position:center bottom}
-.team-portrait-caption{position:absolute;z-index:2;right:14px;bottom:14px;left:14px;padding:15px 18px;border:1px solid rgba(220,229,234,.94);border-radius:14px;background:rgba(255,255,255,.97)}
-.team-portrait-caption span{display:block;margin-bottom:5px;color:var(--blue-deep);font-size:10px;font-weight:800;line-height:1.6}
-.team-portrait-caption strong{display:block;color:var(--ink);font-family:var(--display);font-size:17px;font-weight:800;line-height:1.55}
-.team-portrait-caption p{margin:3px 0 0;color:var(--muted);font-size:11px;line-height:1.85}
-.team-portrait-disclosure{margin:10px 4px 0;color:var(--muted);font-size:11px;line-height:1.8;text-align:center}
-@media(max-width:850px){
- .team-grid{grid-template-columns:minmax(0,1fr);gap:30px}
- .team-copy{max-width:760px}
- .team-portrait{width:min(100%,380px)}
- .team-portrait-art{min-height:465px}
+/* RUWA dental team — centered editorial introduction and three equal profile cards. */
+.team-section{padding-block:clamp(62px,6.8vw,92px);background:var(--paper);color:var(--ink)}
+.team-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+.team-intro{display:flex;flex-direction:column;align-items:center;max-width:780px;margin:0 auto;text-align:center}
+.team-intro>.section-marker{margin-inline:auto;justify-content:center}
+.team-intro h2{max-width:740px;margin:16px 0 12px;color:var(--ink);font-family:var(--display);font-size:clamp(30px,3.55vw,43px);font-weight:800;line-height:1.42;letter-spacing:-.04em;text-align:center}
+.team-lead{max-width:720px;margin:0 auto;color:var(--muted);font-size:15px;line-height:2;text-align:center}
+.team-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:stretch;margin:36px 0 0;padding:0;list-style:none}
+.team-card-item{display:flex;min-width:0}
+.team-card{display:flex;flex-direction:column;width:100%;min-width:0;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:var(--paper)}
+.team-card-media{position:relative;overflow:hidden;aspect-ratio:4/5;background:var(--lime)}
+.team-card-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 27%}
+.team-card-body{display:flex;flex:1;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px;min-height:150px;padding:18px 16px 20px;text-align:center}
+.team-card-label{display:block;color:var(--blue-deep);font-size:11px;font-weight:700;line-height:1.65}
+.team-card h3{margin:2px 0 0;color:var(--ink);font-family:var(--display);font-size:17px;font-weight:800;line-height:1.55}
+.team-card p{max-width:270px;margin:0;color:var(--muted);font-size:12px;line-height:1.85}
+.team-disclosure{max-width:760px;margin:22px auto 0;color:var(--muted);font-size:11px;line-height:1.85;text-align:center}
+@media(max-width:900px){
+ .team-section{padding-block:58px}
+ .team-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+ .team-card-item:last-child{grid-column:1/-1;justify-content:center}
+ .team-card-item:last-child .team-card{width:calc((100% - 18px)/2)}
 }
-@media(max-width:600px){
- .team-section{padding-block:54px}
- .team-grid{gap:25px}
- .team-copy h2{margin-top:13px;margin-bottom:10px;font-size:clamp(29px,7.3vw,35px);line-height:1.43}
+@media(max-width:620px){
+ .team-section{padding-block:52px}
+ .team-intro h2{margin-top:13px;margin-bottom:10px;font-size:clamp(29px,7.1vw,35px);line-height:1.42}
  .team-lead{font-size:14px;line-height:1.95}
- .team-principles{margin-top:21px}
- .team-principle{grid-template-columns:30px minmax(0,1fr);gap:12px;padding:13px 0}
- .team-principle h3{font-size:16px}
- .team-principle p{font-size:13px;line-height:1.9}
- .team-portrait{width:min(100%,350px)}
- .team-portrait-art{min-height:430px;aspect-ratio:.84}
- .team-portrait-chip{top:16px;right:16px;font-size:10px}
- .team-portrait-image{inset:39px 10px 112px}
- .team-portrait-caption{right:11px;bottom:11px;left:11px;padding:13px 15px}
- .team-portrait-caption strong{font-size:16px}
- .team-portrait-disclosure{font-size:10px}
+ .team-cards{grid-template-columns:minmax(0,1fr);gap:16px;margin-top:25px}
+ .team-card-item:last-child{grid-column:auto}
+ .team-card-item:last-child .team-card{width:100%}
+ .team-card{width:min(100%,390px);margin-inline:auto}
+ .team-card-media{aspect-ratio:4/5}
+ .team-card-body{min-height:132px;padding:15px 15px 17px}
+ .team-card h3{font-size:16px}
+ .team-card p{font-size:12px}
+ .team-disclosure{margin-top:18px;font-size:10px}
 }
 </style>
 </head>
@@ -1368,35 +1358,31 @@ body,button,input,select,textarea{font-family:var(--body)}
   </div>
  </section> 
  <section class="team-section" id="team" aria-labelledby="team-title">
-  <div class="wrap team-grid">
-   <div class="team-copy">
+  <div class="wrap team-wrap">
+   <header class="team-intro">
     <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم السابع: الفريق الطبي">
      <span class="section-marker-number" aria-hidden="true">07</span>
      <span class="section-marker-divider" aria-hidden="true"></span>
      <span class="section-marker-label">الفريق الطبي</span>
     </span>
     <h2 id="team-title">رعاية تبدأ بفهم حالتك.</h2>
-    <p class="team-lead">قبل اختيار طريقة التبييض، تأتي أهمية التقييم الطبي. يساعدك طبيب الأسنان على فهم سبب تغيّر لون أسنانك، ومراجعة صحة فمك، والتعرّف على الخيارات المناسبة لحالتك بوضوح.</p>
-    <ol class="team-principles" aria-label="مبادئ الرعاية الطبية">
-     <li class="team-principle"><span class="team-principle-number" aria-hidden="true">01</span><div><h3>تقييم فردي</h3><p>تبدأ التوصية بفحص الأسنان واللثة وفهم احتياجات كل حالة.</p></div></li>
-     <li class="team-principle"><span class="team-principle-number" aria-hidden="true">02</span><div><h3>شرح واضح</h3><p>التعرّف على الخيارات المتاحة ونتائجها المتوقعة وحدود كل خيار.</p></div></li>
-     <li class="team-principle"><span class="team-principle-number" aria-hidden="true">03</span><div><h3>قرار مدروس</h3><p>مناقشة الخطة المناسبة قبل البدء، دون وعود بنتيجة موحّدة للجميع.</p></div></li>
-    </ol>
-   </div>
-   <figure class="team-portrait">
-    <div class="team-portrait-art">
-     <span class="team-portrait-chip">نموذج بصري توضيحي</span>
-     <div class="team-portrait-image">
-      <img src="assets/ruwa-dentist-hero.webp" width="224" height="336" alt="صورة توضيحية مولّدة بالذكاء الاصطناعي لشخصية طبيب أسنان، ولا تمثل شخصًا حقيقيًا." loading="lazy" decoding="async">
-     </div>
-     <div class="team-portrait-caption">
-      <span>بطاقة تعريف تجريبية</span>
-      <strong>بيانات الطبيب الفعلية</strong>
-      <p>تُضاف بعد التحقق من الاسم والمؤهلات والترخيص المهني.</p>
-     </div>
-    </div>
-    <figcaption class="team-portrait-disclosure">الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا أو موظفًا في عيادة.</figcaption>
-   </figure>
+    <p class="team-lead">يبدأ اختيار التبييض المناسب بفهم صحة أسنانك واحتياجاتك. يساعدك التقييم الطبي على التعرف على الخيارات المتاحة، ومناقشة النتائج المتوقعة، واتخاذ قرار واضح يناسب حالتك.</p>
+   </header>
+   <ul class="team-cards" aria-label="ثلاث صور توضيحية لأطباء الأسنان">
+    <li class="team-card-item"><article class="team-card">
+     <div class="team-card-media"><img src="assets/ruwa-team-doctor-01.webp" width="224" height="350" alt="صورة توضيحية مولّدة بالذكاء الاصطناعي لطبيب أسنان رجل، ولا تمثل شخصًا حقيقيًا." loading="lazy" decoding="async"></div>
+     <div class="team-card-body"><span class="team-card-label">نموذج ملف طبي تجريبي</span><h3>بيانات الطبيب الفعلية</h3><p>تُضاف بعد التحقق من الهوية والمؤهلات والترخيص المهني.</p></div>
+    </article></li>
+    <li class="team-card-item"><article class="team-card">
+     <div class="team-card-media"><img src="assets/ruwa-team-doctor-02.webp" width="224" height="350" alt="صورة توضيحية مولّدة بالذكاء الاصطناعي لطبيب أسنان رجل، ولا تمثل شخصًا حقيقيًا." loading="lazy" decoding="async"></div>
+     <div class="team-card-body"><span class="team-card-label">نموذج ملف طبي تجريبي</span><h3>بيانات الطبيب الفعلية</h3><p>تُضاف بعد التحقق من الهوية والمؤهلات والترخيص المهني.</p></div>
+    </article></li>
+    <li class="team-card-item"><article class="team-card">
+     <div class="team-card-media"><img src="assets/ruwa-team-doctor-03.webp" width="224" height="350" alt="صورة توضيحية مولّدة بالذكاء الاصطناعي لطبيب أسنان رجل، ولا تمثل شخصًا حقيقيًا." loading="lazy" decoding="async"></div>
+     <div class="team-card-body"><span class="team-card-label">نموذج ملف طبي تجريبي</span><h3>بيانات الطبيب الفعلية</h3><p>تُضاف بعد التحقق من الهوية والمؤهلات والترخيص المهني.</p></div>
+    </article></li>
+   </ul>
+   <p class="team-disclosure">الصور المعروضة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل أطباء حقيقيين أو موظفين في عيادة.</p>
   </div>
  </section>
 

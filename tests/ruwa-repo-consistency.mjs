@@ -32,10 +32,15 @@ assert.deepEqual(
 );
 
 const teamSection = html.slice(html.indexOf('id="team"'), html.indexOf("</section>", html.indexOf('id="team"')) + 10);
-assert.ok(teamSection.includes("assets/ruwa-dentist-hero.webp"), "RUWA team portrait asset is missing");
-assert.ok(teamSection.includes("الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا"), "RUWA team portrait disclosure is missing");
-assert.ok(teamSection.includes("تُضاف بعد التحقق من الاسم والمؤهلات والترخيص المهني"), "RUWA profile must disclose that real credentials are not yet supplied");
-assert.equal([...teamSection.matchAll(/class="team-principle"/g)].length, 3, "RUWA team section must contain exactly three concise principles");
+const teamImageSources = [...teamSection.matchAll(/<img\b[^>]*src=["']([^"']+)["']/gi)].map(match => match[1]);
+assert.deepEqual(teamImageSources, [
+  "assets/ruwa-team-doctor-01.webp",
+  "assets/ruwa-team-doctor-02.webp",
+  "assets/ruwa-team-doctor-03.webp"
+], "RUWA must use three distinct existing dentist portraits");
+assert.ok(teamSection.includes("الصور المعروضة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل أطباء حقيقيين أو موظفين في عيادة"), "RUWA team disclosure is missing");
+assert.equal([...teamSection.matchAll(/<article class="team-card"/g)].length, 3, "RUWA team must contain exactly three profile cards");
+assert.equal([...teamSection.matchAll(/بيانات الطبيب الفعلية/g)].length, 3, "Each profile must reserve space for verified doctor information");
 
 const faqCount = [...html.matchAll(/<details\b/gi)].length;
 assert.equal(faqCount, 4, "RUWA must contain exactly four focused native FAQ entries");

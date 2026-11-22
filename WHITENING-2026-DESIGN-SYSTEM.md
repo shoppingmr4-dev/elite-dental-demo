@@ -79,11 +79,11 @@ Content sections in actual DOM order:
 | 04 | options | Whitening options | Explain general options without claiming they are RUWA clinic services |
 | 05 | suitability | Suitability and safety | Explain factors that may affect suitability or timing |
 | 06 | expectations | Realistic expectations | Explain possible sensitivity, individual variation, and restorations |
-| 07 | team | Dentist/team | Present an explicitly illustrative profile template and AI-generated male portrait; no real identity or credentials are claimed |
+| 07 | team | Dentist/team | Present three distinct AI-generated illustrative male portrait crops in equal cards; no real clinician identity or credentials are claimed |
 | 08 | faq | Frequently asked questions | Answer four focused visitor questions |
 | 09 | consultation | Final contact | Offer WhatsApp and phone actions with an explicit inactive state |
 
-The footer preserves the fictional portfolio disclosure and AI-image disclosure. The team section is a clearly labelled demonstration template with one AI-generated illustrative portrait; it contains no real doctor identity, professional credentials, testimonial, review score, before/after gallery, price list, clinic map, or real location.
+The footer preserves the fictional portfolio disclosure and AI-image disclosure. The team section contains three equal demonstration cards using distinct portraits extracted from an existing AI-generated RUWA concept image; it contains no real doctor identity, professional credentials, testimonial, review score, before/after gallery, price list, clinic map, or real location.
 
 ## 6. FAQ source of truth
 

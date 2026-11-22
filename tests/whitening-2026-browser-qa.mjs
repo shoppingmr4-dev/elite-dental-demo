@@ -124,6 +124,9 @@ try {
     await page.waitForTimeout(200);
 
     const state = await page.evaluate(async () => {
+      const teamImagesForDecode=[...document.querySelectorAll("#team .team-card img")];
+      teamImagesForDecode.forEach(image=>image.loading="eager");
+      await Promise.all(teamImagesForDecode.map(image=>image.decode().catch(()=>null)));
       const heading = document.querySelector("#hero-title");
       const copy = document.querySelector(".hero-copy");
       const nav = document.querySelector("#main-nav");
@@ -494,7 +497,7 @@ try {
          },
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
         contentSections:["approach","causes","options","suitability","expectations","team","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
-        teamProfile:(()=>{const section=document.getElementById("team"),image=section?.querySelector(".team-portrait img");return {heading:section?.querySelector("h2")?.innerText.trim()||"",imageSrc:image?.getAttribute("src")||"",imageAlt:image?.getAttribute("alt")||"",disclosure:section?.querySelector(".team-portrait-disclosure")?.innerText.trim()||"",profileNote:section?.querySelector(".team-portrait-caption p")?.innerText.trim()||"",principleCount:section?.querySelectorAll(".team-principle").length||0};})(),
+        teamProfile:(()=>{const section=document.getElementById("team"),wrap=section?.querySelector(".team-wrap"),heading=section?.querySelector("h2"),cards=[...(section?.querySelectorAll(".team-card")||[])],images=[...(section?.querySelectorAll(".team-card img")||[])],rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width,centerX:r.left+r.width/2};},hr=heading?rect(heading):null,wr=wrap?rect(wrap):null;return {heading:heading?.innerText.trim()||"",imageSources:images.map(image=>image.getAttribute("src")||""),imageAlts:images.map(image=>image.getAttribute("alt")||""),imagesLoaded:images.length===3&&images.every(image=>image.complete&&image.naturalWidth>0),disclosure:section?.querySelector(".team-disclosure")?.innerText.trim()||"",cardCount:cards.length,cardWidths:cards.map(card=>rect(card).width),gridColumns:section?.querySelector(".team-cards")?getComputedStyle(section.querySelector(".team-cards")).gridTemplateColumns.trim().split(/\s+/).length:0,headingCenterDelta:hr&&wr?Math.abs(hr.centerX-(wr.left+wr.right)/2):999,thirdCardCenterDelta:cards.length===3&&wr?Math.abs(rect(cards[2]).centerX-(wr.left+wr.right)/2):999};})(),
         optionCards:document.querySelectorAll(".option-card").length,
         causeCards:document.querySelectorAll(".info-card").length,
         faqItems:document.querySelectorAll(".faq-item").length,
@@ -718,7 +721,7 @@ try {
             ".primary-cta",".consultation-cta","#approach .step p","#causes .info-card p",
             "#options .option-card p","#options .option-card .option-note",
             "#suitability .suitability-copy p","#suitability .check-item p",
-            "#expectations .expect-card p","#team .team-copy h2","#team .team-lead","#team .team-principle p","#faq .faq-item summary","#faq .faq-answer",
+            "#expectations .expect-card p","#team .team-intro h2","#team .team-lead","#team .team-card h3","#team .team-card p","#team .team-disclosure","#faq .faq-item summary","#faq .faq-answer",
             "#faq .reference-note","#consultation .contact-action--whatsapp",
              "#consultation .contact-action--phone","#consultation .contact-privacy-note",".footer"
           ];
@@ -1200,14 +1203,19 @@ try {
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
     assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);
     assert.equal(state.faqItems, 4, `${vp.name}: the four focused FAQ entries are not present`);
-    assert.equal(state.teamProfile.heading,"رعاية تبدأ بفهم حالتك.",`${vp.name}: team headline changed`);
-    assert.equal(state.teamProfile.imageSrc,"assets/ruwa-dentist-hero.webp",`${vp.name}: team image path changed`);
-    assert.match(state.teamProfile.imageAlt,/مولّدة بالذكاء الاصطناعي/);
-    assert.match(state.teamProfile.disclosure,/لا تمثل طبيبًا حقيقيًا/);
-    assert.match(state.teamProfile.profileNote,/الاسم والمؤهلات والترخيص المهني/);
-    assert.equal(state.teamProfile.principleCount,3,`${vp.name}: team principle count changed`);
+    assert.equal(state.teamProfile.heading,"رعاية تبدأ بفهم حالتك.",vp.name + ": team headline changed");
+    assert.deepEqual(state.teamProfile.imageSources,["assets/ruwa-team-doctor-01.webp","assets/ruwa-team-doctor-02.webp","assets/ruwa-team-doctor-03.webp"],vp.name + ": team portrait sources changed");
+    assert.ok(state.teamProfile.imageAlts.every(alt=>/مولّدة بالذكاء الاصطناعي/.test(alt)),vp.name + ": AI image alt disclosures are missing");
+    assert.match(state.teamProfile.disclosure,/لا تمثل أطباء حقيقيين أو موظفين/);
+    assert.equal(state.teamProfile.cardCount,3,vp.name + ": exactly three profile cards must be present");
+    assert.equal(state.teamProfile.imagesLoaded,true,vp.name + ": one or more team portraits failed to load");
+    assert.ok(state.teamProfile.headingCenterDelta<=2,vp.name + ": team heading is not centered above the cards");
+    assert.ok(Math.max(...state.teamProfile.cardWidths)-Math.min(...state.teamProfile.cardWidths)<=1.5,vp.name + ": the three team cards have unequal widths");
+    const expectedTeamColumns=vp.width>900?3:vp.width>620?2:1;
+    assert.equal(state.teamProfile.gridColumns,expectedTeamColumns,vp.name + ": team grid columns do not match responsive layout");
+    if(vp.width>620&&vp.width<=900)assert.ok(state.teamProfile.thirdCardCenterDelta<=2,vp.name + ": third tablet card is not centered");
     assert.ok(state.clinicalReferences.some(url=>url.includes("nhs.uk")) && state.clinicalReferences.some(url=>url.includes("ada.org")), `${vp.name}: clinical reference links are missing`);
-    assert.equal(state.contrastChecks.length,24, `${vp.name}: expanded representative contrast coverage is incomplete`);
+    assert.equal(state.contrastChecks.length,26, `${vp.name}: expanded representative contrast coverage is incomplete`);
     assert.ok(state.contrastChecks.every(item=>!item.missing&&item.ratio>=4.5), `${vp.name}: representative text contrast below WCAG AA: ${JSON.stringify(state.contrastChecks)}`);
 
     // Keyboard-tab to both Hero actions and measure their rendered focus indicators.

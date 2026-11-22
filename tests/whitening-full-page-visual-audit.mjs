@@ -151,7 +151,7 @@ try {
         const wrap=el.querySelector(".wrap");
         const heading=el.querySelector("h2");
         const marker=el.querySelector(".section-marker");
-        const cards=[...el.querySelectorAll(".info-card,.option-card,.check-item,.expect-card,.faq-item,.step,.contact-band")];
+        const cards=[...el.querySelectorAll(".info-card,.option-card,.check-item,.expect-card,.team-card,.team-card-media,.team-card-body,.faq-item,.step,.contact-band")];
         const cardStyles=cards.map(card=>({className:card.className||card.tagName,rect:rect(card),style:style(card)}));
         return {
           id,rect:rect(el),style:style(el),
@@ -298,7 +298,7 @@ try {
         images,brokenAnchors,emptyControls,
         counts:{sections:ids.length,steps:document.querySelectorAll(".step").length,causeCards:document.querySelectorAll(".info-card").length,
           optionCards:document.querySelectorAll(".option-card").length,suitabilityItems:document.querySelectorAll(".check-item").length,
-          expectationsCards:document.querySelectorAll(".expect-card").length,teamPrinciples:document.querySelectorAll("#team .team-principle").length,teamPortraits:document.querySelectorAll("#team .team-portrait img").length,faqItems:document.querySelectorAll(".faq-item").length},
+          expectationsCards:document.querySelectorAll(".expect-card").length,teamCards:document.querySelectorAll("#team .team-card").length,teamPortraits:document.querySelectorAll("#team .team-card img").length,faqItems:document.querySelectorAll(".faq-item").length},
         headings:{h1:document.querySelectorAll("h1").length,h2:document.querySelectorAll("h2").length},
         footer:rect(document.querySelector(".footer")),footerStyle:style(document.querySelector(".footer"))
       };
@@ -394,6 +394,7 @@ try {
       if(approachDetails.composition.stepListColumnCount!==expectedStepColumns)problems.push("Section 02 step layout does not match the responsive column rule");
     }
     if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","approach","causes","options","suitability","expectations","team","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
+    if(metrics.counts.teamCards!==3||metrics.counts.teamPortraits!==3)problems.push("team section must render exactly three portrait cards");
     if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");
     if(metrics.brokenAnchors.length)problems.push("broken in-page anchors");
     if(metrics.images.some(i=>!i.complete||i.naturalWidth===0))problems.push("broken image asset");

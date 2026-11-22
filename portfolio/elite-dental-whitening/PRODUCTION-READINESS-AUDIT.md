@@ -36,12 +36,12 @@ The actual current DOM order is:
 | 04 | options | Whitening options | IMPROVE only for a real clinic | General education is not proof that a real clinic offers all listed options. |
 | 05 | suitability | Suitability and safety | KEEP / clinical review required | Explains factors that may affect suitability or timing. |
 | 06 | expectations | Realistic expectations | KEEP | Covers possible sensitivity, individual variation, and restorations. |
-| 07 | team | Dentist/team | KEEP / demo-only | One AI-generated illustrative male portrait and a clearly disclosed profile template; no real clinician identity or credentials are claimed. |
+| 07 | team | Dentist/team | KEEP / demo-only | Three distinct AI-generated illustrative male portraits extracted from the existing RUWA concept image; no real clinician identity or credentials are claimed. |
 | 08 | faq | Frequently asked questions | KEEP | Four native details/summary entries are present. |
 | 09 | consultation | Final contact | KEEP / activate only with verified details | The actions disclose that real channels are not configured. |
 | Footer | — | Portfolio and image disclosures | KEEP | Prevents the sample from being mistaken for a real operating clinic. |
 
-The team section contains a demo-only profile template and an AI-generated illustrative male portrait, not a real doctor profile or credentials. No patient review/testimonial panel, rating score, before-and-after gallery, clinic gallery, pricing section, map, or hours-of-operation section exists in this page.
+The team section contains three equal demo-only profile cards with distinct AI-generated illustrative male portraits extracted from an existing RUWA concept image; these are not real doctor profiles or credentials. No patient review/testimonial panel, rating score, before-and-after gallery, clinic gallery, pricing section, map, or hours-of-operation section exists in this page.
 
 ## 4. Confirmed current content and interaction behavior
 

@@ -33,7 +33,7 @@ No doctor identity, qualification, clinic address, hours, fee, patient review, r
 4. Whitening options — general educational descriptions, not a claim that a real clinic offers each option.
 5. Suitability and safety — factors that may affect suitability or timing.
 6. Realistic expectations — sensitivity, individual variation, and restorations.
-7. Dentist/team — one transparently AI-generated illustrative male portrait and a clearly labelled profile template; no real clinician identity, credentials, or claims are supplied.
+7. Dentist/team — three distinct male portrait crops extracted from an existing AI-generated RUWA concept image, clearly disclosed as illustrative; each card reserves space for verified clinician information and makes no real identity or credential claims.
 8. FAQ — four native HTML details/summary entries.
 9. Consultation/contact — WhatsApp and phone actions that disclose their inactive demo state.
 
