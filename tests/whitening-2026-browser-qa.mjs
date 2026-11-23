@@ -1352,6 +1352,7 @@ try {
         document.querySelector("#menu-toggle")?.getAttribute("aria-expanded")==="false"&&
         getComputedStyle(document.querySelector("#main-nav")).display!=="none",
         null,{timeout:3000});
+      // At a scrolled desktop width, the adaptive header intentionally retains its compact menu control.
       const desktopResize=await page.evaluate(()=>{
         const header=document.querySelector(".site-header"),nav=document.querySelector("#main-nav"),toggle=document.querySelector("#menu-toggle");
         const compact=header.classList.contains("is-compact");
