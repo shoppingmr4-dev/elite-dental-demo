@@ -496,10 +496,11 @@ try {
            phone:document.querySelectorAll('[data-contact-action="phone"]').length
          },
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
-        contentSections:["approach","causes","options","suitability","expectations","team","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
+        contentSections:["approach","causes","options","suitability","expectations","team","reviews","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
         teamProfile:(()=>{const section=document.getElementById("team"),wrap=section?.querySelector(".team-wrap"),heading=section?.querySelector("h2"),cards=[...(section?.querySelectorAll(".team-card")||[])],images=[...(section?.querySelectorAll(".team-card img")||[])],rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width,centerX:r.left+r.width/2};},hr=heading?rect(heading):null,wr=wrap?rect(wrap):null;return {heading:heading?.innerText.trim()||"",imageSources:images.map(image=>image.getAttribute("src")||""),imageAlts:images.map(image=>image.getAttribute("alt")||""),imagesLoaded:images.length===3&&images.every(image=>image.complete&&image.naturalWidth>0),disclosure:section?.querySelector(".team-disclosure")?.innerText.trim()||"",cardCount:cards.length,cardWidths:cards.map(card=>rect(card).width),gridColumns:section?.querySelector(".team-cards")?getComputedStyle(section.querySelector(".team-cards")).gridTemplateColumns.trim().split(/\s+/).length:0,headingCenterDelta:hr&&wr?Math.abs(hr.centerX-(wr.left+wr.right)/2):999,thirdCardCenterDelta:cards.length===3&&wr?Math.abs(rect(cards[2]).centerX-(wr.left+wr.right)/2):999};})(),
         optionCards:document.querySelectorAll(".option-card").length,
         causeCards:document.querySelectorAll(".info-card").length,
+        reviewSection:(()=>{const section=document.getElementById("reviews"),panel=section?.querySelector(".reviews-panel"),title=section?.querySelector("#reviews-title"),status=section?.querySelector(".reviews-status-note"),criteria=[...(section?.querySelectorAll(".reviews-criteria-list li")||[])],rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width};},pr=panel?rect(panel):null;return {present:Boolean(section&&panel),heading:title?.innerText.trim()||"",status:status?.innerText.trim()||"",criteriaCount:criteria.length,panelWidth:pr?.width||0,panelWithinViewport:Boolean(pr&&pr.left>=-1&&pr.right<=window.innerWidth+1),horizontalOverflow:section?section.scrollWidth>section.clientWidth:false,starCount:section?.querySelectorAll('[aria-label*="نجوم"],.rating,.stars,[data-rating]').length||0,reviewCards:section?.querySelectorAll(".review-card,.testimonial-card").length||0};})(),
         faqItems:document.querySelectorAll(".faq-item").length,
         clinicalReferences:[...document.querySelectorAll(".reference-note a")].map(a=>a.href),
         contrastChecks:(()=>{
@@ -721,7 +722,9 @@ try {
             ".primary-cta",".consultation-cta","#approach .step p","#causes .info-card p",
             "#options .option-card p","#options .option-card .option-note",
             "#suitability .suitability-copy p","#suitability .check-item p",
-            "#expectations .expect-card p","#team .team-intro h2","#team .team-lead","#team .team-card h3","#team .team-card p","#team .team-disclosure","#faq .faq-item summary","#faq .faq-answer",
+            "#expectations .expect-card p","#team .team-intro h2","#team .team-lead","#team .team-card h3","#team .team-card p","#team .team-disclosure",
+            "#reviews .reviews-head h2","#reviews .reviews-head p","#reviews .reviews-status h3","#reviews .reviews-status-copy","#reviews .reviews-status-note","#reviews .reviews-criteria-list p",
+            "#faq .faq-item summary","#faq .faq-answer",
             "#faq .reference-note","#consultation .contact-action--whatsapp",
              "#consultation .contact-action--phone","#consultation .contact-privacy-note",".footer"
           ];
@@ -771,9 +774,9 @@ try {
     assert.equal(state.demoDialogInitialOpen, false, `${vp.name}: demo dialog should start closed`);
     assert.ok(state.demoDialogText.includes("قنوات التواصل ستعمل مباشرة عند إضافة بيانات الاتصال الرسمية"), `${vp.name}: contact dialog initial explanation is missing`);
     assert.ok(state.demoDialogText.includes("لن يتم فتح محادثة أو بدء اتصال قبل إعداد رقم صحيح"), `${vp.name}: unavailable contact destinations must be disclosed`);
-    assert.deepEqual(state.navLabels, ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
-    assert.deepEqual(state.navHrefs, ["#approach","#causes","#options","#suitability","#faq"], `${vp.name}: navigation destinations are incorrect`);
-    assert.equal(state.navLinkTypography.length,5, `${vp.name}: all five navigation links must be present`);
+    assert.deepEqual(state.navLabels, ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","آراء المرضى","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
+    assert.deepEqual(state.navHrefs, ["#approach","#causes","#options","#suitability","#reviews","#faq"], `${vp.name}: navigation destinations are incorrect`);
+    assert.equal(state.navLinkTypography.length,6, `${vp.name}: all five navigation links must be present`);
     assert.ok(state.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic") && link.fontSize===14 &&
       link.fontWeight===600 && Math.abs(link.lineHeight-22.4)<.2 &&
@@ -828,10 +831,10 @@ try {
     assert.equal(state.benefitTreatment.textDecorationLine,"none",vp.name + ": benefit line must not acquire a decorative underline");
     assert.equal(state.benefitTreatment.accentElements,0,vp.name + ": the benefit phrase must not contain an isolated accent span");
     assert.equal(state.benefitTreatment.underlineElements,0,vp.name + ": the benefit phrase must not contain a decorative SVG underline");
-    assert.equal(state.sectionMarkerChips.length,7,vp.name + ": all seven content section markers must retain the shared glass component");
+    assert.equal(state.sectionMarkerChips.length,8,vp.name + ": all seven content section markers must retain the shared glass component");
     assert.ok(state.sectionMarkerChips.every(chip=>chip.height>=42&&chip.height<=46&&chip.borderWidth==="1px"&&
       chip.borderRadius==="999px"&&chip.backgroundColor!=="rgba(0, 0, 0, 0)"&&chip.backdropFilter.includes("blur")),
-      vp.name + ": all seven section marker glass frames must share compact dimensions and translucency: " + JSON.stringify(state.sectionMarkerChips));
+      vp.name + ": all eight section marker glass frames must share compact dimensions and translucency: " + JSON.stringify(state.sectionMarkerChips));
     const expectedMarkers=[
       {number:"01",label:"دليل الابتسامة",context:"hero"},
       {number:"02",label:"خطوات التقييم",context:"paper"},
@@ -840,9 +843,10 @@ try {
       {number:"05",label:"قبل اتخاذ القرار",context:"paper"},
       {number:"06",label:"توقعات واقعية",context:"dark"},
       {number:"07",label:"الفريق الطبي",context:"paper"},
-      {number:"08",label:"إجابات واضحة",context:"canvas"}
+      {number:"08",label:"آراء المرضى",context:"canvas"},
+      {number:"09",label:"إجابات واضحة",context:"canvas"}
     ];
-    assert.equal(state.allSectionMarkers.length,8,vp.name + ": all eight numbered markers must be present");
+    assert.equal(state.allSectionMarkers.length,9,vp.name + ": all eight numbered markers must be present");
     assert.deepEqual(state.allSectionMarkers.map(({number,label,context})=>({number,label,context})),expectedMarkers,
       vp.name + ": all eight numbers, Arabic labels, and contextual surfaces must match the approved sequence");
     assert.ok(state.allSectionMarkers.every(marker=>{
@@ -1198,10 +1202,17 @@ try {
     }
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
-    assert.deepEqual(state.pageSectionOrder, ["top","approach","causes","options","suitability","expectations","team","faq","consultation"], `${vp.name}: page sections are missing or not in the approved patient-journey order`);
+    assert.deepEqual(state.pageSectionOrder, ["top","approach","causes","options","suitability","expectations","team","reviews","faq","consultation"], `${vp.name}: page sections are missing or not in the approved patient-journey order`);
     assert.deepEqual(state.duplicateIds, [], `${vp.name}: duplicate HTML IDs detected`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
     assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);
+    assert.equal(state.reviewSection.present,true,`${vp.name}: patient reviews trust section is missing`);
+    assert.equal(state.reviewSection.heading,"رأي المريض يستحق أن يُعرض بأمانة.",`${vp.name}: patient reviews headline changed`);
+    assert.equal(state.reviewSection.status,"لا تتوفر تقييمات مرضى موثّقة ضمن هذا النموذج التجريبي.",`${vp.name}: transparent demo review status is missing`);
+    assert.equal(state.reviewSection.criteriaCount,3,`${vp.name}: all three review-publishing criteria must be present`);
+    assert.ok(state.reviewSection.panelWithinViewport&&!state.reviewSection.horizontalOverflow,`${vp.name}: review panel overflows its section or viewport`);
+    assert.equal(state.reviewSection.starCount,0,`${vp.name}: fabricated review stars or ratings detected`);
+    assert.equal(state.reviewSection.reviewCards,0,`${vp.name}: placeholder testimonial cards must not be presented as real reviews`);
     assert.equal(state.faqItems, 4, `${vp.name}: the four focused FAQ entries are not present`);
     assert.equal(state.teamProfile.heading,"رعاية تبدأ بفهم حالتك.",vp.name + ": team headline changed");
     assert.deepEqual(state.teamProfile.imageSources,["assets/ruwa-team-doctor-01.webp","assets/ruwa-team-doctor-02.webp","assets/ruwa-team-doctor-03.webp"],vp.name + ": team portrait sources changed");
@@ -1215,7 +1226,7 @@ try {
     assert.equal(state.teamProfile.gridColumns,expectedTeamColumns,vp.name + ": team grid columns do not match responsive layout");
     if(vp.width>620&&vp.width<=900)assert.ok(state.teamProfile.thirdCardCenterDelta<=2,vp.name + ": third tablet card is not centered");
     assert.ok(state.clinicalReferences.some(url=>url.includes("nhs.uk")) && state.clinicalReferences.some(url=>url.includes("ada.org")), `${vp.name}: clinical reference links are missing`);
-    assert.equal(state.contrastChecks.length,26, `${vp.name}: expanded representative contrast coverage is incomplete`);
+    assert.equal(state.contrastChecks.length,32, `${vp.name}: expanded representative contrast coverage is incomplete`);
     assert.ok(state.contrastChecks.every(item=>!item.missing&&item.ratio>=4.5), `${vp.name}: representative text contrast below WCAG AA: ${JSON.stringify(state.contrastChecks)}`);
 
     // Keyboard-tab to both Hero actions and measure their rendered focus indicators.
