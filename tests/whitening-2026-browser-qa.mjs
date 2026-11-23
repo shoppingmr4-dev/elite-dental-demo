@@ -723,7 +723,7 @@ try {
             "#options .option-card p","#options .option-card .option-note",
             "#suitability .suitability-copy p","#suitability .check-item p",
             "#expectations .expect-card p","#team .team-intro h2","#team .team-lead","#team .team-card h3","#team .team-card p","#team .team-disclosure",
-            "#reviews .reviews-head h2","#reviews .reviews-head p","#reviews .reviews-status h3","#reviews .reviews-status-copy","#reviews .reviews-status-note","#reviews .reviews-criteria-list p",
+            "#reviews .reviews-head h2","#reviews .reviews-head p","#reviews .reviews-preview-title","#reviews .reviews-rating-disclosure","#reviews .review-card-copy","#reviews .reviews-status-note","#reviews .reviews-criteria-list p",
             "#faq .faq-item summary","#faq .faq-answer",
             "#faq .reference-note","#consultation .contact-action--whatsapp",
              "#consultation .contact-action--phone","#consultation .contact-privacy-note",".footer"
@@ -1230,7 +1230,7 @@ try {
     assert.equal(state.teamProfile.gridColumns,expectedTeamColumns,vp.name + ": team grid columns do not match responsive layout");
     if(vp.width>620&&vp.width<=900)assert.ok(state.teamProfile.thirdCardCenterDelta<=2,vp.name + ": third tablet card is not centered");
     assert.ok(state.clinicalReferences.some(url=>url.includes("nhs.uk")) && state.clinicalReferences.some(url=>url.includes("ada.org")), `${vp.name}: clinical reference links are missing`);
-    assert.equal(state.contrastChecks.length,32, `${vp.name}: expanded representative contrast coverage is incomplete`);
+    assert.equal(state.contrastChecks.length,33, `${vp.name}: expanded representative contrast coverage is incomplete`);
     assert.ok(state.contrastChecks.every(item=>!item.missing&&item.ratio>=4.5), `${vp.name}: representative text contrast below WCAG AA: ${JSON.stringify(state.contrastChecks)}`);
 
     // Keyboard-tab to both Hero actions and measure their rendered focus indicators.
