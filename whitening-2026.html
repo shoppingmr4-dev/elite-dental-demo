@@ -1982,7 +1982,8 @@ body,button,input,select,textarea{font-family:var(--body)}
    if(item.section.getBoundingClientRect().top<=readingLine)active=item;
    else break;
   }
-  setCurrent(active);
+  if(active)setCurrent(active);
+  else if(window.scrollY<=56)setCurrent(null);
  };
  const scheduleUpdate=()=>{
   if(pendingFrame===null)pendingFrame=requestAnimationFrame(updateCurrent);
