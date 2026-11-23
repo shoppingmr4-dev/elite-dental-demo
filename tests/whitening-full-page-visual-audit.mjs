@@ -11,7 +11,7 @@ const viewports = [
   { name: "tablet-768", width: 768, height: 800 },
   { name: "mobile-430", width: 430, height: 900, mobile: true },
   { name: "mobile-390", width: 390, height: 844, mobile: true },
-  { name: "mobile-360", width: 360, height: 800, mobile: true }
+  { name: "mobile-360", width: 360, height: 800, mobile: true },\n  { name: "mobile-320", width: 320, height: 740, mobile: true }
 ];
 const sectionIds = ["approach", "causes", "options", "suitability", "expectations", "team", "reviews", "faq", "consultation"];
 await mkdir(OUT, { recursive: true });
@@ -158,7 +158,7 @@ try {
         const wrap=el.querySelector(".wrap");
         const heading=el.querySelector("h2");
         const marker=el.querySelector(".section-marker");
-        const cards=[...el.querySelectorAll(".info-card,.option-card,.check-item,.expect-card,.team-card,.team-card-media,.team-card-body,.reviews-panel,.reviews-criteria-list li,.faq-item,.step,.contact-band")];
+        const cards=[...el.querySelectorAll(".info-card,.option-card,.check-item,.expect-card,.team-card,.team-card-media,.team-card-body,.reviews-panel,.reviews-preview,.review-card,.reviews-criteria,.reviews-criteria-list li,.faq-item,.step,.contact-band")];
         const cardStyles=cards.map(card=>({className:card.className||card.tagName,rect:rect(card),style:style(card)}));
         return {
           id,rect:rect(el),style:style(el),
@@ -305,7 +305,7 @@ try {
         images,brokenAnchors,emptyControls,
         counts:{sections:ids.length,steps:document.querySelectorAll(".step").length,causeCards:document.querySelectorAll(".info-card").length,
           optionCards:document.querySelectorAll(".option-card").length,suitabilityItems:document.querySelectorAll(".check-item").length,
-          expectationsCards:document.querySelectorAll(".expect-card").length,teamCards:document.querySelectorAll("#team .team-card").length,teamPortraits:document.querySelectorAll("#team .team-card img").length,reviewCriteria:document.querySelectorAll("#reviews .reviews-criteria-list li").length,reviewStatus:document.querySelector("#reviews .reviews-status-note")?.innerText.trim()||"",faqItems:document.querySelectorAll(".faq-item").length},
+          expectationsCards:document.querySelectorAll(".expect-card").length,teamCards:document.querySelectorAll("#team .team-card").length,teamPortraits:document.querySelectorAll("#team .team-card img").length,reviewCriteria:document.querySelectorAll("#reviews .reviews-criteria-list li").length,reviewCards:document.querySelectorAll("#reviews .review-card").length,reviewStars:document.querySelectorAll("#reviews .reviews-stars [aria-hidden=true]").length,reviewDisclosure:document.querySelector("#reviews .reviews-rating-disclosure")?.innerText.trim()||"",reviewStatus:document.querySelector("#reviews .reviews-status-note")?.innerText.trim()||"",faqItems:document.querySelectorAll(".faq-item").length},
         headings:{h1:document.querySelectorAll("h1").length,h2:document.querySelectorAll("h2").length},
         footer:rect(document.querySelector(".footer")),footerStyle:style(document.querySelector(".footer"))
       };
@@ -407,7 +407,7 @@ try {
     }
     if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","approach","causes","options","suitability","expectations","team","reviews","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
     if(metrics.counts.teamCards!==3||metrics.counts.teamPortraits!==3)problems.push("team section must render exactly three portrait cards");
-    if(metrics.counts.reviewCriteria!==3||!metrics.counts.reviewStatus.includes("لا تتوفر تقييمات مرضى موثّقة"))problems.push("patient reviews transparency section is incomplete");
+    if(metrics.counts.reviewCriteria!==3||metrics.counts.reviewCards!==3||metrics.counts.reviewStars!==5||!metrics.counts.reviewDisclosure.includes("لا تمثل تقييمًا فعليًا")||!metrics.counts.reviewStatus.includes("لا تتوفر تقييمات مرضى موثّقة"))problems.push("patient reviews preview, demo cards, or transparency copy is incomplete");
     if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");
     if(metrics.brokenAnchors.length)problems.push("broken in-page anchors");
     if(metrics.images.some(i=>!i.complete||i.naturalWidth===0))problems.push("broken image asset");
