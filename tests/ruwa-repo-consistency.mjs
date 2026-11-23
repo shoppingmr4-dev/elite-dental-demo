@@ -72,6 +72,31 @@ assert.match(heroImage, /height="1152"/);
 assert.match(heroImage, /fetchpriority="high"/);
 assert.match(html, /الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا/);
 
+const footer = html.match(/<footer\\b[^>]*>[\\s\\S]*?<\\/footer>/i)?.[0] || "";
+assert.ok(footer, "RUWA must contain a semantic footer");
+const footerSocialIcons = [...footer.matchAll(/class="footer-social-icon footer-social-icon--([a-z]+)"/g)].map(match => match[1]);
+assert.deepEqual(
+  footerSocialIcons,
+  ["instagram", "snapchat", "tiktok", "x"],
+  "RUWA footer must display the four approved social platform icons"
+);
+assert.equal(
+  [...footer.matchAll(/<a\\b[^>]*href=["']https?:\\/\\/(?:www\\.)?(?:instagram|snapchat|tiktok|x)\\./gi)].length,
+  0,
+  "Social marks must remain icon-only until verified official account URLs are supplied"
+);
+const footerTargets = [...footer.matchAll(/href="#([^"]+)"/g)].map(match => match[1]);
+assert.ok(footerTargets.length >= 7, "RUWA footer must provide useful internal navigation");
+assert.deepEqual(
+  footerTargets.filter(target => !ids.has(target)),
+  [],
+  "Every RUWA footer navigation target must exist on the page"
+);
+assert.match(footer, /مفهوم تجريبي أُعدّ ضمن معرض أعمال Apex Studio/);
+assert.match(footer, /الصور المعروضة، بما فيها صور الأطباء، توضيحية مولّدة بالذكاء الاصطناعي/);
+assert.match(footer, /المحتوى للتوعية العامة فقط/);
+
+
 assert.match(rootAlias, /http-equiv="refresh" content="0;url=whitening-2026\.html"/);
 assert.match(publicAlias, /http-equiv="refresh" content="0;url=\.\.\/\.\.\/whitening-2026\.html"/);
 assert.match(rootAlias, /rel="canonical" href="whitening-2026\.html"/);
