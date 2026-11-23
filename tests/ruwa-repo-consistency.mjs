@@ -31,6 +31,12 @@ assert.deepEqual(
   "RUWA must keep the approved ten-section visitor journey in order"
 );
 
+assert.match(html, /--display:"IBM Plex Sans Arabic","Alexandria",Tahoma,sans-serif;/, "Arabic display headings must use the same IBM Plex Sans Arabic family as Elite Dental Clinic");
+assert.match(html, /--body:"IBM Plex Sans Arabic","Alexandria",Tahoma,sans-serif;/, "Arabic interface and body copy must use IBM Plex Sans Arabic");
+assert.match(html, /href="assets\/fonts\/Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys43PW5fslBEg0\.woff2"/, "IBM Plex Sans Arabic regular WOFF2 preload is missing");
+assert.match(html, /href="assets\/fonts\/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCRXMRrKATtYV0\.woff2"/, "IBM Plex Sans Arabic bold WOFF2 preload is missing");
+assert.doesNotMatch(html, /--display:"Cairo"/, "Cairo must not remain the Arabic display font");
+
 
 const headerStart = html.indexOf('<header class="site-header">');
 const headerEnd = html.indexOf("</header>", headerStart) + "</header>".length;

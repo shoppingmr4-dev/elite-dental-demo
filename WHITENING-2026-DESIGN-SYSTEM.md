@@ -39,8 +39,8 @@ Do not add decorative trust badges, ratings, clinic logos, or medical credential
 
 ## 3. Typography and layout
 
-- Arabic display and headings: locally hosted Cairo, weights 700 and 800.
-- Arabic interface and body: locally hosted IBM Plex Sans Arabic.
+- Arabic headings, navigation, interface, buttons, and body: locally hosted IBM Plex Sans Arabic, shared consistently across the full page.
+- Preserve the existing typographic hierarchy, sizes, line heights, and weights; change the family, not the layout.
 - Latin RUWA wordmark: locally hosted Cormorant Garamond, italic 500.
 - Arabic copy remains natural, concise, and localized for a Saudi Arabic audience.
 - Page direction is RTL; layout, icon placement, navigation, and focus order must remain correct for Arabic reading.

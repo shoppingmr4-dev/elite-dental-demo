@@ -132,7 +132,7 @@ try {
       const copy = document.querySelector(".hero-copy");
       const nav = document.querySelector("#main-nav");
       const toggle = document.querySelector("#menu-toggle");
-      await document.fonts.load('800 48px "Cairo"', "التبييض");
+      await document.fonts.load('700 48px "IBM Plex Sans Arabic"', "التبييض");
       await document.fonts.load('400 16px "IBM Plex Sans Arabic"', "رعاية الأسنان");
       const heroPortrait=document.querySelector(".hero-portrait");
       const heroVisual=document.querySelector(".hero-visual");
@@ -208,7 +208,8 @@ try {
             .some(el => el.scrollWidth > el.clientWidth + 1)
         )),
         headingFont:getComputedStyle(heading).fontFamily,
-        headingFontLoaded:document.fonts.check('800 48px "Cairo"', "التبييض"),
+        sectionHeadingFonts:[...document.querySelectorAll("h1,h2,h3,h4,h5,h6,.faq-item summary")].map(el=>getComputedStyle(el).fontFamily),
+        headingFontLoaded:document.fonts.check('700 48px "IBM Plex Sans Arabic"', "التبييض"),
         bodyFont:getComputedStyle(document.body).fontFamily,
         bodyFontLoaded:document.fonts.check('400 16px "IBM Plex Sans Arabic"', "رعاية الأسنان"),
         headingVisible:Boolean(heading && rect(heading).height > 0),
@@ -885,9 +886,10 @@ try {
     assert.equal(state.heroBackgroundHarmony.approach,"rgb(255, 255, 255)",`${vp.name}: next section surface changed`);
     assert.ok(state.heroBackgroundHarmony.heroGradients.includes("radial-gradient"),
       `${vp.name}: subtle hero background gradients are missing`);
-    assert.ok(state.headingFont.includes("Cairo"), `${vp.name}: expected Cairo headline font`);
+    assert.ok(state.headingFont.includes("IBM Plex Sans Arabic"), `${vp.name}: expected IBM Plex Sans Arabic headline font`);
     assert.ok(state.bodyFont.includes("IBM Plex Sans Arabic"), `${vp.name}: expected IBM Plex Sans Arabic body font`);
-    assert.ok(state.headingFontLoaded, `${vp.name}: local Cairo heading font failed to load`);
+    assert.ok(state.headingFontLoaded, `${vp.name}: local IBM Plex Sans Arabic heading font failed to load`);
+    assert.ok(state.sectionHeadingFonts.length > 0 && state.sectionHeadingFonts.every(font=>font.includes("IBM Plex Sans Arabic")), `${vp.name}: every Arabic section heading and FAQ question must use IBM Plex Sans Arabic`);
     assert.ok(state.bodyFontLoaded, `${vp.name}: local IBM Plex Sans Arabic font failed to load`);
     assert.equal(state.imageCount, 1, `${vp.name}: Hero must contain exactly one approved dentist portrait`);
     assert.equal(state.heroImageLoaded, true, `${vp.name}: approved local Hero portrait failed to load at its intrinsic size`);
