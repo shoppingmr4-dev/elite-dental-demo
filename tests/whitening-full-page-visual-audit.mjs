@@ -11,7 +11,8 @@ const viewports = [
   { name: "tablet-768", width: 768, height: 800 },
   { name: "mobile-430", width: 430, height: 900, mobile: true },
   { name: "mobile-390", width: 390, height: 844, mobile: true },
-  { name: "mobile-360", width: 360, height: 800, mobile: true },\n  { name: "mobile-320", width: 320, height: 740, mobile: true }
+  { name: "mobile-360", width: 360, height: 800, mobile: true },
+  { name: "mobile-320", width: 320, height: 740, mobile: true }
 ];
 const sectionIds = ["approach", "causes", "options", "suitability", "expectations", "team", "reviews", "faq", "consultation"];
 await mkdir(OUT, { recursive: true });

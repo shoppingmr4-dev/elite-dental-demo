@@ -42,16 +42,24 @@ assert.ok(teamSection.includes("الصور المعروضة توضيحية مو�
 assert.equal([...teamSection.matchAll(/<article class="team-card"/g)].length, 3, "RUWA team must contain exactly three profile cards");
 assert.equal([...teamSection.matchAll(/بيانات الطبيب الفعلية/g)].length, 3, "Each profile must reserve space for verified doctor information");
 
+
 const reviewsStart = html.indexOf('id="reviews"');
 const faqStart = html.indexOf('id="faq"');
 assert.ok(reviewsStart > html.indexOf('id="team"') && reviewsStart < faqStart, "Patient reviews must appear after the team and before FAQ");
 const reviewsSection = html.slice(reviewsStart, html.indexOf("</section>", reviewsStart) + 10);
 assert.ok(reviewsSection.includes("القسم الثامن: آراء المرضى"), "Patient reviews section marker must be number 08");
-assert.ok(reviewsSection.includes("كل تجربة تستحق أن تُعرض كما هي."), "Patient reviews headline is missing");\nassert.ok(reviewsSection.includes("النجوم المعروضة توضيحية لأغراض التصميم فقط، ولا تمثل تقييمًا فعليًا."), "Visible star-preview disclaimer is missing");\nassert.equal([...reviewsSection.matchAll(/aria-hidden="true">★<\\/span>/g)].length, 5, "Exactly five decorative preview stars must be present");\nassert.match(reviewsSection, /class="reviews-stars" role="img" aria-label="خمس نجوم توضيحية لأغراض التصميم فقط"/);
+assert.ok(reviewsSection.includes("كل تجربة تستحق أن تُعرض كما هي."), "Patient reviews headline is missing");
+assert.ok(reviewsSection.includes("النجوم المعروضة توضيحية لأغراض التصميم فقط، ولا تمثل تقييمًا فعليًا."), "Visible star-preview disclaimer is missing");
+assert.equal(reviewsSection.split('<span aria-hidden="true">★</span>').length - 1, 5, "Exactly five decorative preview stars must be present");
+assert.match(reviewsSection, /class="reviews-stars" role="img" aria-label="خمس نجوم توضيحية لأغراض التصميم فقط"/);
 assert.ok(reviewsSection.includes("لا تتوفر تقييمات مرضى موثّقة ضمن هذا النموذج التجريبي."), "Demo must disclose that no verified patient reviews are available");
 assert.equal([...reviewsSection.matchAll(/class="reviews-criteria-list"/g)].length, 1, "Review publication criteria must be presented once");
 assert.equal([...reviewsSection.matchAll(/<li>/g)].length, 3, "Three transparent review-publication criteria must be present");
-assert.equal([...reviewsSection.matchAll(/<article class="review-card">/g)].length, 3, "Exactly three review design cards must be present");\nassert.equal([...reviewsSection.matchAll(/class="review-card-label">نموذج توضيحي/g)].length, 3, "Every review card must be labelled as a demonstration");\nassert.equal([...reviewsSection.matchAll(/مساحة مخصصة لعرض رأي مريض موثّق بعد الحصول على موافقته/g)].length, 3, "All review cards must use explicit placeholder copy");\nassert.equal([...reviewsSection.matchAll(/لا يمثل رأيًا حقيقيًا/g)].length, 3, "Every card must disclose that it is not a real review");\nassert.doesNotMatch(reviewsSection, /\b[0-5]\.0?\s*\/\s*5\b|4\.9|Google|تجربة مريض حقيقية|قال أحد المرضى/, "No fabricated patient claim, average rating, or platform attribution may be displayed");
+assert.equal([...reviewsSection.matchAll(/<article class="review-card">/g)].length, 3, "Exactly three review design cards must be present");
+assert.equal([...reviewsSection.matchAll(/class="review-card-label">نموذج توضيحي/g)].length, 3, "Every review card must be labelled as a demonstration");
+assert.equal([...reviewsSection.matchAll(/مساحة مخصصة لعرض رأي مريض موثّق بعد الحصول على موافقته/g)].length, 3, "All review cards must use explicit placeholder copy");
+assert.equal([...reviewsSection.matchAll(/لا يمثل رأيًا حقيقيًا/g)].length, 3, "Every card must disclose that it is not a real review");
+assert.doesNotMatch(reviewsSection, /\b[0-5](?:\.\d)?\s*\/\s*5\b|4\.9|Google|تجربة مريض حقيقية|قال أحد المرضى/, "No fabricated patient claim, average rating, or platform attribution may be displayed");
 assert.doesNotMatch(html, /AggregateRating|reviewCount|ratingValue|itemprop=["']review/i, "No review or rating structured data may be added");
 assert.match(html, /القسم التاسع: إجابات واضحة/);
 assert.match(html, /<span class="section-marker-number" aria-hidden="true">09<\/span>/);
