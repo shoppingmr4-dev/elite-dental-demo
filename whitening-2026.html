@@ -1022,6 +1022,11 @@ body,button,input,select,textarea{font-family:var(--body)}
 .nav .nav-secondary{display:none}
 .nav.open .nav-secondary{display:flex}
 
+/* Keep the active destination visibly emphasized inside the compact dropdown as well. */
+.site-header .nav a[aria-current="location"]{color:var(--blue-deep);font-weight:700}
+.site-header .nav a[aria-current="location"]:hover,
+.site-header .nav a[aria-current="location"]:focus-visible{color:var(--blue-deep);font-weight:700}
+
 /* Compact desktop navigation: replace the visible link row with an accessible menu control. */
 @media(min-width:921px){
  .site-header.is-compact .nav:not(.open){

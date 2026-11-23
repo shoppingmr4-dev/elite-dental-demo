@@ -1443,8 +1443,9 @@ try {
       },null,{timeout:1500});
       const activeState=await activeLink.evaluate(link=>{
         const style=getComputedStyle(link);
-        return {color:style.color,fontWeight:style.fontWeight,underline:getComputedStyle(link,"::after").transform};
+        return {current:link.getAttribute("aria-current"),color:style.color,fontWeight:style.fontWeight,underline:getComputedStyle(link,"::after").transform};
       });
+      assert.equal(activeState.current,"location",`${vp.name}: active link lost its aria-current state after opening the adaptive menu`);
       assert.equal(activeState.color,"rgb(17, 90, 96)", `${vp.name}: active link color is incorrect`);
       assert.equal(activeState.fontWeight,"700", `${vp.name}: active link should be emphasized subtly`);
       assert.notEqual(activeState.underline,"matrix(0, 0, 0, 1, 0, 0)", `${vp.name}: active link underline is missing`);
