@@ -1132,11 +1132,11 @@ body,button,input,select,textarea{font-family:var(--body)}
 .team-intro>.section-marker{margin-inline:auto;justify-content:center}
 .team-intro h2{max-width:740px;margin:16px 0 12px;color:var(--ink);font-family:var(--display);font-size:clamp(30px,3.55vw,43px);font-weight:800;line-height:1.42;letter-spacing:-.04em;text-align:center}
 .team-lead{max-width:720px;margin:0 auto;color:var(--muted);font-size:15px;line-height:2;text-align:center}
-.team-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:stretch;margin:36px 0 0;padding:0;list-style:none}
+.team-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:stretch;width:100%;max-width:1150px;margin:32px auto 0;padding:0;list-style:none}
 .team-card-item{display:flex;min-width:0}
-.team-card{display:flex;flex-direction:column;width:100%;min-width:0;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:var(--paper)}
-.team-card-media{position:relative;overflow:hidden;aspect-ratio:4/5;background:var(--lime)}
-.team-card-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 27%}
+.team-card{display:flex;flex-direction:column;width:90%;min-width:0;margin-inline:auto;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:var(--paper)}
+.team-card-media{position:relative;overflow:hidden;aspect-ratio:4/5;background:#eef2f3}
+.team-card-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 22%}
 .team-card-body{display:flex;flex:1;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px;min-height:150px;padding:18px 16px 20px;text-align:center}
 .team-card-label{display:block;color:var(--blue-deep);font-size:11px;font-weight:700;line-height:1.65}
 .team-card h3{margin:2px 0 0;color:var(--ink);font-family:var(--display);font-size:17px;font-weight:800;line-height:1.55}
@@ -1144,18 +1144,18 @@ body,button,input,select,textarea{font-family:var(--body)}
 .team-disclosure{max-width:760px;margin:22px auto 0;color:var(--muted);font-size:11px;line-height:1.85;text-align:center}
 @media(max-width:900px){
  .team-section{padding-block:58px}
- .team-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
- .team-card-item:last-child{grid-column:1/-1;justify-content:center}
- .team-card-item:last-child .team-card{width:calc((100% - 18px)/2)}
+ .team-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;max-width:760px}
+ .team-card-item:last-child{grid-column:1/-1;width:calc((100% - 18px)/2);justify-self:center;justify-content:center}
+ .team-card-item:last-child .team-card{width:90%}
 }
 @media(max-width:620px){
  .team-section{padding-block:52px}
  .team-intro h2{margin-top:13px;margin-bottom:10px;font-size:clamp(29px,7.1vw,35px);line-height:1.42}
  .team-lead{font-size:14px;line-height:1.95}
- .team-cards{grid-template-columns:minmax(0,1fr);gap:16px;margin-top:25px}
- .team-card-item:last-child{grid-column:auto}
- .team-card-item:last-child .team-card{width:100%}
- .team-card{width:min(100%,390px);margin-inline:auto}
+ .team-cards{grid-template-columns:minmax(0,1fr);gap:16px;max-width:390px;margin:25px auto 0}
+ .team-card-item:last-child{grid-column:auto;width:100%;justify-self:stretch}
+ .team-card-item:last-child .team-card{width:min(90%,350px)}
+ .team-card{width:min(90%,350px);margin-inline:auto}
  .team-card-media{aspect-ratio:4/5}
  .team-card-body{min-height:132px;padding:15px 15px 17px}
  .team-card h3{font-size:16px}
@@ -1370,15 +1370,15 @@ body,button,input,select,textarea{font-family:var(--body)}
    </header>
    <ul class="team-cards" aria-label="ثلاث صور توضيحية لأطباء الأسنان">
     <li class="team-card-item"><article class="team-card">
-     <div class="team-card-media"><img src="assets/ruwa-team-doctor-01.webp" width="224" height="350" alt="صورة توضيحية مولّدة بالذكاء الاصطناعي لطبيب أسنان رجل، ولا تمثل شخصًا حقيقيًا." loading="lazy" decoding="async"></div>
+     <div class="team-card-media"><img src="assets/ruwa-team-doctor-01.webp" width="640" height="960" alt="صورة توضيحية مولّدة بالذكاء الاصطناعي لطبيب أسنان رجل، ولا تمثل شخصًا حقيقيًا." loading="lazy" decoding="async"></div>
      <div class="team-card-body"><span class="team-card-label">نموذج ملف طبي تجريبي</span><h3>بيانات الطبيب الفعلية</h3><p>تُضاف بعد التحقق من الهوية والمؤهلات والترخيص المهني.</p></div>
     </article></li>
     <li class="team-card-item"><article class="team-card">
-     <div class="team-card-media"><img src="assets/ruwa-team-doctor-02.webp" width="224" height="350" alt="صورة توضيحية مولّدة بالذكاء الاصطناعي لطبيب أسنان رجل، ولا تمثل شخصًا حقيقيًا." loading="lazy" decoding="async"></div>
+     <div class="team-card-media"><img src="assets/ruwa-team-doctor-02.webp" width="640" height="800" alt="صورة توضيحية مولّدة بالذكاء الاصطناعي لطبيب أسنان رجل، ولا تمثل شخصًا حقيقيًا." loading="lazy" decoding="async"></div>
      <div class="team-card-body"><span class="team-card-label">نموذج ملف طبي تجريبي</span><h3>بيانات الطبيب الفعلية</h3><p>تُضاف بعد التحقق من الهوية والمؤهلات والترخيص المهني.</p></div>
     </article></li>
     <li class="team-card-item"><article class="team-card">
-     <div class="team-card-media"><img src="assets/ruwa-team-doctor-03.webp" width="224" height="350" alt="صورة توضيحية مولّدة بالذكاء الاصطناعي لطبيب أسنان رجل، ولا تمثل شخصًا حقيقيًا." loading="lazy" decoding="async"></div>
+     <div class="team-card-media"><img src="assets/ruwa-team-doctor-03.webp" width="640" height="960" alt="صورة توضيحية مولّدة بالذكاء الاصطناعي لطبيب أسنان رجل، ولا تمثل شخصًا حقيقيًا." loading="lazy" decoding="async"></div>
      <div class="team-card-body"><span class="team-card-label">نموذج ملف طبي تجريبي</span><h3>بيانات الطبيب الفعلية</h3><p>تُضاف بعد التحقق من الهوية والمؤهلات والترخيص المهني.</p></div>
     </article></li>
    </ul>
