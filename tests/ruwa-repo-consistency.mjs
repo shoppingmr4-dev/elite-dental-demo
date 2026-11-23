@@ -28,7 +28,7 @@ const sectionIds = [...html.matchAll(/<section\b[^>]*\bid=["']([^"']+)["']/gi)].
 assert.deepEqual(
   sectionIds,
   ["top", "approach", "causes", "options", "suitability", "expectations", "team", "reviews", "faq", "consultation"],
-  "RUWA must keep the approved nine-section visitor journey in order"
+  "RUWA must keep the approved ten-section visitor journey in order"
 );
 
 const teamSection = html.slice(html.indexOf('id="team"'), html.indexOf("</section>", html.indexOf('id="team"')) + 10);
