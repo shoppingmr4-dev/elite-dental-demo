@@ -61,11 +61,11 @@ The current page alt text and visible disclosure state that this is an AI-genera
 
 The approved file, its HTML element, figure placement, dimensions, focal position, framing, transform, and loading priority are protected. The source image's earlier documentation was inconsistent; the old Pexels-based preview has been retired. Do not add an external stock-photo credit to this image.
 
-## 5. Current page architecture — exactly 9 content sections
+## 5. Current page architecture — exactly 10 content sections
 
 Header and announcement strip:
 - RUWA wordmark and Arabic descriptor.
-- Five navigation links to the visitor journey.
+- Six navigation links to the visitor journey, including patient reviews.
 - One WhatsApp-labelled header action.
 - Mobile menu with aria-expanded state and keyboard behavior.
 
@@ -80,10 +80,11 @@ Content sections in actual DOM order:
 | 05 | suitability | Suitability and safety | Explain factors that may affect suitability or timing |
 | 06 | expectations | Realistic expectations | Explain possible sensitivity, individual variation, and restorations |
 | 07 | team | Dentist/team | Present three distinct AI-generated illustrative male portrait crops in equal cards; no real clinician identity or credentials are claimed |
-| 08 | faq | Frequently asked questions | Answer four focused visitor questions |
-| 09 | consultation | Final contact | Offer WhatsApp and phone actions with an explicit inactive state |
+| 08 | reviews | Patient reviews | Present a transparent demo-only notice; no patient quotes, names, ratings, counts, or AggregateRating data are invented |
+| 09 | faq | Frequently asked questions | Answer four focused visitor questions |
+| 10 | consultation | Final contact | Offer WhatsApp and phone actions with an explicit inactive state |
 
-The footer preserves the fictional portfolio disclosure and AI-image disclosure. The team section contains three equal demonstration cards using distinct portraits extracted from an existing AI-generated RUWA concept image; it contains no real doctor identity, professional credentials, testimonial, review score, before/after gallery, price list, clinic map, or real location.
+The patient-reviews section appears after the dentist/team section and before FAQ. It is an editorial transparency panel, not a testimonial feed: it states that no verified patient reviews are available in this fictional demo and lists three publication principles (verifiable source, explicit permission, and faithful presentation). It includes no patient names, photos, quotes, star ratings, review counts, or Review/AggregateRating structured data. The footer preserves the fictional portfolio disclosure and AI-image disclosure. The team section contains three equal demonstration cards using distinct portraits extracted from an existing AI-generated RUWA concept image; it contains no real doctor identity or professional credentials.
 
 ## 6. FAQ source of truth
 
@@ -126,7 +127,7 @@ Before adaptation for a real clinic:
 - Do not fabricate ratings, review counts, before/after photos, clinical outcomes, equipment, facilities, discounts, or prices.
 - Do not ask visitors to send dental photographs or sensitive health details through an ordinary marketing chat.
 
-Authentic doctor identity and verified professional credentials, genuine reviews, clinic photographs, pricing, maps, and opening hours remain conditional future additions. The current team card is only a disclosed visual template.
+Authentic doctor identity and verified professional credentials, genuine reviews, clinic photographs, pricing, maps, and opening hours remain conditional future additions. The current reviews panel explains the publication standard without implying that real reviews exist; actual reviews may be added only when genuine, verifiable, authorized material is supplied. The current team card is only a disclosed visual template.
 
 ## 9. Engineering constraints
 
