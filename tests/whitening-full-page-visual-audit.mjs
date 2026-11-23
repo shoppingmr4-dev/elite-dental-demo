@@ -79,11 +79,6 @@ try {
           path: OUT+"/"+vp.name+"-number-variant-"+variant.name+".png",
           animations:"disabled",timeout:30000
         });
-     if(vp.width===1440||vp.width===390){
-       await page.locator("#reviews").screenshot({
-         path:`${OUT}/${vp.name}-section-reviews.png`,animations:"disabled",timeout:30000
-       });
-     }
         numberDesignComparisons.push({viewport:vp.name,variant:variant.name,measurements});
         await styleTag.evaluate(node=>node.remove());
         await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
@@ -319,6 +314,11 @@ try {
     await page.locator("#approach").screenshot({
       path:`${OUT}/${vp.name}-section-approach.png`,animations:"disabled",timeout:30000
     });
+     if(vp.width===1440||vp.width===390){
+       await page.locator("#reviews").screenshot({
+         path:`${OUT}/${vp.name}-section-reviews.png`,animations:"disabled",timeout:30000
+       });
+     }
     if(vp.width===1440||vp.width===390){
       await page.evaluate(()=>{
         const section=document.querySelector("#approach");
@@ -408,7 +408,6 @@ try {
     if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","approach","causes","options","suitability","expectations","team","reviews","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
     if(metrics.counts.teamCards!==3||metrics.counts.teamPortraits!==3)problems.push("team section must render exactly three portrait cards");
     if(metrics.counts.reviewCriteria!==3||!metrics.counts.reviewStatus.includes("لا تتوفر تقييمات مرضى موثّقة"))problems.push("patient reviews transparency section is incomplete");
-    if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","approach","causes","options","suitability","expectations","team","reviews","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
     if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");
     if(metrics.brokenAnchors.length)problems.push("broken in-page anchors");
     if(metrics.images.some(i=>!i.complete||i.naturalWidth===0))problems.push("broken image asset");
