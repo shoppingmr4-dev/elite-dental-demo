@@ -314,9 +314,43 @@ body.dialog-open{overflow:hidden}
 .faq-item summary{font-size:13px}
 }
 
-.footer{padding:19px 0 25px;background:var(--ink);color:rgba(255,255,255,.73)}
-.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:9px}
-.footer a{color:#A9DCD2;text-decoration:underline;text-underline-offset:3px}
+.footer{padding:clamp(46px,6vw,76px) 0 0;background:var(--ink);color:rgba(255,255,255,.76)}
+.footer-main{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(155px,.72fr) minmax(0,1.05fr);gap:clamp(28px,4.8vw,68px);padding-bottom:42px}
+.footer-brand-link{display:inline-flex;align-items:center;gap:12px;color:#fff}
+.footer-brand-mark{display:grid;place-items:center;width:45px;height:42px;flex:none}
+.footer-brand-mark img{width:43px;height:38px;object-fit:contain;filter:brightness(0) invert(1);opacity:.92}
+.footer-brand-name strong{display:block;color:#fff;font-family:"Cormorant Garamond",Georgia,serif;font-size:31px;font-style:italic;font-weight:500;letter-spacing:.01em;line-height:1.05;direction:ltr;text-align:right}
+.footer-brand-name small{display:block;margin-top:4px;color:rgba(255,255,255,.7);font-size:11px;line-height:1.5}
+.footer-brand-title{margin:24px 0 9px;color:#fff;font-family:var(--display);font-size:clamp(19px,2vw,23px);line-height:1.65}
+.footer-brand-copy{max-width:390px;margin:0;color:rgba(255,255,255,.72);font-size:13px;line-height:2}
+.footer-heading{margin:5px 0 18px;color:#fff;font-family:var(--display);font-size:15px;font-weight:800;line-height:1.7}
+.footer-nav ul{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+.footer-nav a{display:inline-flex;color:rgba(255,255,255,.76);font-size:13px;line-height:1.8;transition:color .2s ease}
+.footer-nav a:hover{color:#A9DCD2}
+.footer-notes p{margin:0 0 11px;color:rgba(255,255,255,.7);font-size:11px;line-height:1.95}
+.footer-notes p:last-child{margin-bottom:0}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.15)}
+.footer-bottom-inner{display:flex;align-items:center;justify-content:space-between;gap:15px;min-height:62px;color:rgba(255,255,255,.62);font-size:10px;line-height:1.8}
+.footer-credit{color:rgba(255,255,255,.72)}
+.footer-top-link{display:inline-flex;align-items:center;gap:7px;color:#A9DCD2;text-decoration:none;font-size:11px;transition:color .2s ease}
+.footer-top-link:hover{color:#fff}
+.footer-top-link span{font-size:17px;line-height:1}
+.footer a:focus-visible{outline:2px solid #A9DCD2;outline-offset:5px;border-radius:3px}
+@media(max-width:920px){
+ .footer-main{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:30px 28px}
+ .footer-brand{grid-column:1/-1}
+}
+@media(max-width:520px){
+ .footer{padding-top:42px}
+ .footer-main{grid-template-columns:minmax(0,1fr);gap:28px;padding-bottom:30px}
+ .footer-brand{grid-column:auto}
+ .footer-brand-title{margin-top:19px;font-size:20px}
+ .footer-heading{margin-bottom:13px}
+ .footer-bottom-inner{align-items:flex-start;flex-direction:column;justify-content:center;gap:5px;padding:15px 0}
+}
+@media(prefers-reduced-motion:reduce){
+ .footer-nav a,.footer-top-link{transition:none}
+}
 :focus-visible{outline:3px solid var(--coral);outline-offset:4px}
 @media(prefers-reduced-motion:reduce){
  .contact-dialog[open]{animation:none}
@@ -362,7 +396,7 @@ body.dialog-open{overflow:hidden}
  .contact-band{grid-template-columns:1fr;align-items:stretch;gap:22px}
   .contact-actions{grid-template-columns:1fr}
   .contact-action{width:100%}
- .footer-inner{align-items:flex-start;flex-direction:column}
+ 
 }
 @media(max-width:390px){
  :root{--gutter:17px}
@@ -1442,7 +1476,44 @@ body,button,input,select,textarea{font-family:var(--body)}
    <button class="contact-dialog-dismiss" id="contact-dialog-dismiss" type="button">إغلاق</button>
   </div>
  </dialog>
-<footer class="footer"><div class="wrap footer-inner"><span>© 2026 RUWA — نموذج تجريبي من Apex Studio.</span><span>«الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا.»</span></div></footer>
+<footer class="footer" aria-labelledby="footer-brand-title">
+ <div class="wrap">
+  <div class="footer-main">
+   <section class="footer-brand" aria-label="نبذة عن رُواء">
+    <a class="footer-brand-link" href="#top" aria-label="رُواء لطب الأسنان — العودة إلى أعلى الصفحة">
+     <span class="footer-brand-mark" aria-hidden="true"><img src="assets/ruwa-mark.png" alt="" width="43" height="38"></span>
+     <span class="footer-brand-name"><strong>Ruwa</strong><small>رُواء لطب الأسنان</small></span>
+    </a>
+    <h2 class="footer-brand-title" id="footer-brand-title">العناية تبدأ بفهم احتياجك.</h2>
+    <p class="footer-brand-copy">تعرّف إلى أسباب تغيّر لون الأسنان، وافهم خيارات التبييض والعوامل التي تساعد في تحديد ما قد يناسب حالتك.</p>
+   </section>
+   <nav class="footer-nav" aria-label="روابط داخل الصفحة">
+    <h2 class="footer-heading">استكشف الصفحة</h2>
+    <ul>
+     <li><a href="#approach">خطوات التقييم</a></li>
+     <li><a href="#causes">أسباب تغيّر اللون</a></li>
+     <li><a href="#options">خيارات التبييض</a></li>
+     <li><a href="#suitability">مدى ملاءمة التبييض</a></li>
+     <li><a href="#faq">الأسئلة الشائعة</a></li>
+     <li><a href="#consultation">قسم التواصل</a></li>
+    </ul>
+   </nav>
+   <section class="footer-notes" aria-labelledby="footer-notes-title">
+    <h2 class="footer-heading" id="footer-notes-title">معلومات مهمة</h2>
+    <p>هذا الموقع مفهوم تجريبي ضمن معرض أعمال Apex Studio، ولا يمثّل عيادة قائمة أو جهة طبية فعلية.</p>
+    <p>الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا؛ كما أن بقية صور الأطباء المعروضة توضيحية ولا تمثل أشخاصًا حقيقيين.</p>
+    <p>المعلومات الواردة للتوعية العامة، ولا تُغني عن فحص الأسنان واللثة واستشارة طبيب أسنان مؤهل.</p>
+   </section>
+  </div>
+  <div class="footer-bottom">
+   <div class="footer-bottom-inner">
+    <span>© 2026 رُواء. مفهوم تجريبي لأغراض العرض.</span>
+    <span class="footer-credit">التصميم والتطوير: Apex Studio</span>
+    <a class="footer-top-link" href="#top">العودة إلى أعلى الصفحة <span aria-hidden="true">↑</span></a>
+   </div>
+  </div>
+ </div>
+</footer>
 <script>
 (function(){
  const button=document.getElementById("menu-toggle");
