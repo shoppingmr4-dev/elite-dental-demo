@@ -27,7 +27,7 @@ const [
 const sectionIds = [...html.matchAll(/<section\b[^>]*\bid=["']([^"']+)["']/gi)].map(match => match[1]);
 assert.deepEqual(
   sectionIds,
-  ["top", "approach", "causes", "options", "suitability", "expectations", "team", "faq", "consultation"],
+  ["top", "approach", "causes", "options", "suitability", "expectations", "team", "reviews", "faq", "consultation"],
   "RUWA must keep the approved nine-section visitor journey in order"
 );
 
@@ -41,6 +41,21 @@ assert.deepEqual(teamImageSources, [
 assert.ok(teamSection.includes("الصور المعروضة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل أطباء حقيقيين أو موظفين في عيادة"), "RUWA team disclosure is missing");
 assert.equal([...teamSection.matchAll(/<article class="team-card"/g)].length, 3, "RUWA team must contain exactly three profile cards");
 assert.equal([...teamSection.matchAll(/بيانات الطبيب الفعلية/g)].length, 3, "Each profile must reserve space for verified doctor information");
+
+const reviewsStart = html.indexOf('id="reviews"');
+const faqStart = html.indexOf('id="faq"');
+assert.ok(reviewsStart > html.indexOf('id="team"') && reviewsStart < faqStart, "Patient reviews must appear after the team and before FAQ");
+const reviewsSection = html.slice(reviewsStart, html.indexOf("</section>", reviewsStart) + 10);
+assert.ok(reviewsSection.includes("القسم الثامن: آراء المرضى"), "Patient reviews section marker must be number 08");
+assert.ok(reviewsSection.includes("رأي المريض يستحق أن يُعرض بأمانة."), "Patient reviews headline is missing");
+assert.ok(reviewsSection.includes("لا تتوفر تقييمات مرضى موثّقة ضمن هذا النموذج التجريبي."), "Demo must disclose that no verified patient reviews are available");
+assert.equal([...reviewsSection.matchAll(/class="reviews-criteria-list"/g)].length, 1, "Review publication criteria must be presented once");
+assert.equal([...reviewsSection.matchAll(/<li>/g)].length, 3, "Three transparent review-publication criteria must be present");
+assert.doesNotMatch(reviewsSection, /★★★★★|★★★★|\b[0-5]\.0?\s*\/\s*5\b|تجربة مريض|قال أحد المرضى/, "No fake review quote or rating may be displayed");
+assert.doesNotMatch(html, /AggregateRating|reviewCount|ratingValue|itemprop=["']review/i, "No review or rating structured data may be added");
+assert.match(html, /القسم التاسع: إجابات واضحة/);
+assert.match(html, /<span class="section-marker-number" aria-hidden="true">09<\/span>/);
+
 
 const faqCount = [...html.matchAll(/<details\b/gi)].length;
 assert.equal(faqCount, 4, "RUWA must contain exactly four focused native FAQ entries");
@@ -72,26 +87,17 @@ assert.match(heroImage, /height="1152"/);
 assert.match(heroImage, /fetchpriority="high"/);
 assert.match(html, /الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا/);
 
-const footer = html.match(/<footer\\b[^>]*>[\\s\\S]*?<\\/footer>/i)?.[0] || "";
+const footerStart = html.indexOf('<footer class="footer"');
+const footerEnd = html.indexOf("</footer>", footerStart) + "</footer>".length;
+const footer = footerStart >= 0 && footerEnd > footerStart ? html.slice(footerStart, footerEnd) : "";
 assert.ok(footer, "RUWA must contain a semantic footer");
 const footerSocialIcons = [...footer.matchAll(/class="footer-social-icon footer-social-icon--([a-z]+)"/g)].map(match => match[1]);
-assert.deepEqual(
-  footerSocialIcons,
-  ["instagram", "snapchat", "tiktok", "x"],
-  "RUWA footer must display the four approved social platform icons"
-);
-assert.equal(
-  [...footer.matchAll(/<a\\b[^>]*href=["']https?:\\/\\/(?:www\\.)?(?:instagram|snapchat|tiktok|x)\\./gi)].length,
-  0,
-  "Social marks must remain icon-only until verified official account URLs are supplied"
-);
-const footerTargets = [...footer.matchAll(/href="#([^"]+)"/g)].map(match => match[1]);
-assert.ok(footerTargets.length >= 7, "RUWA footer must provide useful internal navigation");
-assert.deepEqual(
-  footerTargets.filter(target => !ids.has(target)),
-  [],
-  "Every RUWA footer navigation target must exist on the page"
-);
+assert.deepEqual(footerSocialIcons, ["instagram", "snapchat", "tiktok", "x"], "RUWA footer must display the four approved social platform icons");
+const footerAnchors = [...footer.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>/gi)].map(match => match[1]);
+assert.equal(footerAnchors.some(href => /instagram|snapchat|tiktok|x\.com/i.test(href)), false, "Social marks must remain icon-only without invented account URLs");
+const footerTargets = footerAnchors.filter(href => href.startsWith("#")).map(href => href.slice(1));
+assert.ok(footerTargets.length >= 8, "RUWA footer must provide useful internal navigation");
+assert.deepEqual(footerTargets.filter(target => !ids.has(target)), [], "Every RUWA footer navigation target must exist on the page");
 assert.match(footer, /مفهوم تجريبي أُعدّ ضمن معرض أعمال Apex Studio/);
 assert.match(footer, /الصور المعروضة، بما فيها صور الأطباء، توضيحية مولّدة بالذكاء الاصطناعي/);
 assert.match(footer, /المحتوى للتوعية العامة فقط/);
@@ -113,20 +119,20 @@ for (const [name, content] of [
   assert.match(content, /RUWA/, name + " must identify the RUWA project");
 }
 
-assert.match(readme, /9 content sections/);
+assert.match(readme, /10 content sections/);
 assert.match(readme, /4 FAQ entries/);
 assert.match(readme, /3 WhatsApp actions and 2 phone actions/);
-assert.match(designSystem, /9 content sections/);
+assert.match(designSystem, /10 content sections/);
 assert.match(designSystem, /4 native HTML details\/summary FAQ entries/);
 assert.match(designSystem, /3 WhatsApp actions and 2 phone actions/);
-assert.match(caseStudy, /9 أقسام رئيسية/);
+assert.match(caseStudy, /10 أقسام رئيسية/);
 assert.match(caseStudy, /4 أسئلة/);
 assert.match(caseStudy, /3 أزرار واتساب وزري اتصال/);
-assert.match(productionAudit, /9 main content sections/);
+assert.match(productionAudit, /10 main content sections/);
 assert.match(productionAudit, /4 native details entries/);
 assert.match(productionAudit, /3 WhatsApp actions and 2 phone actions/);
 
 console.log("RUWA repository consistency: PASS");
-console.log("Sections: 8 | FAQ: 4 | WhatsApp actions: 3 | Phone actions: 2");
+console.log("Sections: 10 | Reviews: transparent demo-only state | FAQ: 4 | WhatsApp actions: 3 | Phone actions: 2");
 console.log("ARIA controls: all targets exist | Hero AI illustration disclosure: present");
 console.log("Legacy preview paths: both redirect to whitening-2026.html");
