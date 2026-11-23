@@ -1352,16 +1352,27 @@ try {
         document.querySelector("#menu-toggle")?.getAttribute("aria-expanded")==="false"&&
         getComputedStyle(document.querySelector("#main-nav")).display!=="none",
         null,{timeout:3000});
-      const desktopResize=await page.evaluate(()=>({
-        expanded:document.querySelector("#menu-toggle")?.getAttribute("aria-expanded"),
-        navDisplay:getComputedStyle(document.querySelector("#main-nav")).display,
-        toggleDisplay:getComputedStyle(document.querySelector("#menu-toggle")).display,
-        focusInVisibleNav:document.activeElement?.closest("#main-nav")!==null
-      }));
+      const desktopResize=await page.evaluate(()=>{
+        const header=document.querySelector(".site-header"),nav=document.querySelector("#main-nav"),toggle=document.querySelector("#menu-toggle");
+        const compact=header.classList.contains("is-compact");
+        return {
+          expanded:toggle.getAttribute("aria-expanded"),
+          compact,
+          navDisplay:getComputedStyle(nav).display,
+          navVisibility:getComputedStyle(nav).visibility,
+          navInert:nav.inert,
+          toggleDisplay:getComputedStyle(toggle).display,
+          focusOnToggle:document.activeElement===toggle,
+          focusInVisibleNav:document.activeElement?.closest("#main-nav")!==null
+        };
+      });
       assert.equal(desktopResize.expanded,"false",`${vp.name}: resizing to desktop must close the mobile menu state`);
-      assert.notEqual(desktopResize.navDisplay,"none",`${vp.name}: desktop navigation should be visible after resize`);
-      assert.equal(desktopResize.toggleDisplay,"none",`${vp.name}: mobile toggle should hide above the shared 920px breakpoint`);
-      assert.equal(desktopResize.focusInVisibleNav,true,`${vp.name}: resize must not leave focus on a hidden mobile control`);
+      assert.notEqual(desktopResize.navDisplay,"none",`${vp.name}: desktop navigation track must remain measurable after resize`);
+      assert.equal(desktopResize.toggleDisplay,desktopResize.compact?"grid":"none",`${vp.name}: desktop menu control visibility must follow the adaptive compact state`);
+      assert.equal(desktopResize.navVisibility,desktopResize.compact?"hidden":"visible",`${vp.name}: desktop navigation visibility must match the adaptive header state`);
+      assert.equal(desktopResize.navInert,desktopResize.compact,`${vp.name}: desktop navigation inert state must match visibility`);
+      assert.equal(desktopResize.focusOnToggle,desktopResize.compact,`${vp.name}: when switching from mobile to compact desktop, focus must move to the visible menu control`);
+      assert.equal(desktopResize.focusInVisibleNav,!desktopResize.compact,`${vp.name}: focus must not remain in hidden desktop navigation`);
       await page.setViewportSize({width:vp.width,height:vp.height});
       await page.waitForFunction(()=>window.innerWidth<=920&&
         document.querySelector("#menu-toggle")?.getAttribute("aria-expanded")==="false"&&
