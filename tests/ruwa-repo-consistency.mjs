@@ -31,6 +31,20 @@ assert.deepEqual(
   "RUWA must keep the approved ten-section visitor journey in order"
 );
 
+
+const headerStart = html.indexOf('<header class="site-header">');
+const headerEnd = html.indexOf("</header>", headerStart) + "</header>".length;
+const headerMarkup = html.slice(headerStart, headerEnd);
+assert.ok(headerStart >= 0 && headerEnd > headerStart, "RUWA semantic header is missing");
+const headerLinks = [...headerMarkup.matchAll(/<a\b[^>]*href=["'](#[^"']+)["'][^>]*>/g)].map(match => match[1]);
+assert.deepEqual(headerLinks, ["#top","#approach","#causes","#options","#suitability","#reviews","#faq"], "Header must preserve its brand anchor and all six internal destinations");
+const secondaryHeaderLinks = [...headerMarkup.matchAll(/<a\b[^>]*class=["']nav-secondary["'][^>]*href=["'](#[^"']+)["'][^>]*>/g)].map(match => match[1]);
+assert.deepEqual(secondaryHeaderLinks, ["#approach","#causes","#reviews"], "Only the three secondary destinations may be hidden from the expanded desktop navigation");
+assert.match(html, /\.nav \.nav-secondary\{display:none\}/, "Secondary links must be hidden in the expanded desktop header");
+assert.match(html, /\.nav\.open \.nav-secondary\{display:flex\}/, "All secondary links must reappear when navigation opens");
+assert.match(html, /\.site-header\.is-compact \.menu-toggle/, "Compact desktop header must expose its menu control");
+assert.match(html, /nav\.inert=shouldCollapseNav\(\)&&button\.getAttribute\("aria-expanded"\)!=="true"/, "Closed collapsed navigation must be removed from keyboard interaction");
+
 const teamSection = html.slice(html.indexOf('id="team"'), html.indexOf("</section>", html.indexOf('id="team"')) + 10);
 const teamImageSources = [...teamSection.matchAll(/<img\b[^>]*src=["']([^"']+)["']/gi)].map(match => match[1]);
 assert.deepEqual(teamImageSources, [

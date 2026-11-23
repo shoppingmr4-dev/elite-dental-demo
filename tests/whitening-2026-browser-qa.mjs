@@ -40,11 +40,12 @@ async function measureHeader(page) {
     const actionVisualHeight=Number.parseFloat(getComputedStyle(actionElement,"::before").height);
     const menuElement=document.querySelector("#menu-toggle");
     const menu=rect(menuElement);
-    const menuVisible=getComputedStyle(menuElement).display!=="none" && menu.width>0 && menu.height>0;
+    const menuStyle=getComputedStyle(menuElement);
+    const menuVisible=menuStyle.display!=="none" && menuStyle.visibility!=="hidden" && menu.width>0 && menu.height>0;
     const actionIcon=rect(document.querySelector(".header-action .whatsapp-brand-icon"));
     const actionFontSize=Number.parseFloat(getComputedStyle(document.querySelector(".header-action")).fontSize);
     const headerProgress=Number.parseFloat(getComputedStyle(header).getPropertyValue("--header-progress"));
-    const linkRects=[...document.querySelectorAll("#main-nav a")].map(rect).sort((a,b)=>a.left-b.left);
+    const linkRects=[...document.querySelectorAll("#main-nav a")].filter(link=>getComputedStyle(link).display!=="none").map(rect).sort((a,b)=>a.left-b.left);
     const navLinkGaps=linkRects.slice(0,-1).map((link,index)=>linkRects[index+1].left-link.right);
     const targets=[
       ["brand",document.querySelector(".brand")],
@@ -53,7 +54,7 @@ async function measureHeader(page) {
       ["menu",document.querySelector("#menu-toggle")]
     ];
     const visibleGroups=targets
-      .filter(([,element])=>element && getComputedStyle(element).display!=="none")
+      .filter(([,element])=>element && getComputedStyle(element).display!=="none" && getComputedStyle(element).visibility!=="hidden")
       .map(([name,element])=>({name,...rect(element)}))
       .filter(group=>group.width>0 && group.height>0);
     return {
@@ -64,7 +65,7 @@ async function measureHeader(page) {
       actionHeight:action.height,
       actionFontSize,actionVisualHeight,actionIcon,arabicBrandSize,brandMark,brandMarkImage,headerProgress,
       wordmarkSize:Number.parseFloat(getComputedStyle(document.querySelector(".brand-name strong")).fontSize),
-      brand,nav,action,menu,menuVisible,
+      brand,nav,navVisibility:getComputedStyle(document.querySelector("#main-nav")).visibility,navInert:document.querySelector("#main-nav").inert,action,menu,menuVisible,
       brandNavGap:brand.left-nav.right,
       navActionGap:nav.left-action.right,
       navLinkGaps,
@@ -181,6 +182,9 @@ try {
         demoDialogInitialOpen:document.querySelector("#contact-unavailable-dialog")?.open || false,
         navLabels:[...document.querySelectorAll("#main-nav a")].map(a=>a.innerText.trim()),
         navHrefs:[...document.querySelectorAll("#main-nav a")].map(a=>a.getAttribute("href")),
+        navVisibleHrefs:[...document.querySelectorAll("#main-nav a")].filter(a=>{const r=a.getBoundingClientRect(),s=getComputedStyle(a);return s.display!=="none"&&s.visibility!=="hidden"&&r.width>0&&r.height>0}).map(a=>a.getAttribute("href")),
+        navSecondaryHrefs:[...document.querySelectorAll("#main-nav a.nav-secondary")].map(a=>a.getAttribute("href")),
+        navInert:nav.inert,
         navLinkTypography:[...document.querySelectorAll("#main-nav a")].map(link=>{
           const style=getComputedStyle(link),bounds=link.getBoundingClientRect();
           return {
@@ -776,6 +780,9 @@ try {
     assert.ok(state.demoDialogText.includes("لن يتم فتح محادثة أو بدء اتصال قبل إعداد رقم صحيح"), `${vp.name}: unavailable contact destinations must be disclosed`);
     assert.deepEqual(state.navLabels, ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","آراء المرضى","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
     assert.deepEqual(state.navHrefs, ["#approach","#causes","#options","#suitability","#reviews","#faq"], `${vp.name}: navigation destinations are incorrect`);
+    assert.deepEqual(state.navSecondaryHrefs,["#approach","#causes","#reviews"],`${vp.name}: secondary navigation destinations changed`);
+    assert.deepEqual(state.navVisibleHrefs,vp.width>920?["#options","#suitability","#faq"]:[],`${vp.name}: expanded desktop header must show only three priority links`);
+    assert.equal(state.navInert,vp.width<=920,`${vp.name}: closed mobile/tablet navigation must be inert`);
     assert.equal(state.navLinkTypography.length,6, `${vp.name}: all six navigation links must be present`);
     assert.ok(state.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic") && link.fontSize===14 &&
@@ -783,8 +790,8 @@ try {
       (link.letterSpacing==="normal"||link.letterSpacing==="0px") && link.color==="rgb(48, 74, 84)"
     ), `${vp.name}: navigation font, size, weight, line-height, tracking, or base color is incorrect: ${JSON.stringify(state.navLinkTypography)}`);
     if(vp.width>920){
-      assert.ok(state.navLinkTypography.every(link=>link.whiteSpace==="nowrap"&&link.height>=36),
-        `${vp.name}: desktop links must remain single-line with a comfortable hit area`);
+      assert.ok(state.navLinkTypography.filter((_,index)=>!state.navSecondaryHrefs.includes(state.navHrefs[index])).every(link=>link.whiteSpace==="nowrap"&&link.height>=36),
+        `${vp.name}: the three priority desktop links must remain single-line with comfortable hit areas`);
     }
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
@@ -1011,14 +1018,12 @@ try {
     const verifyHeaderTouchTargets=(metrics,stateName)=>{
       assert.ok(metrics.action.width>=44 && metrics.action.height>=44,
         `${vp.name}: WhatsApp CTA must have an actual 44×44px minimum target in the ${stateName} state (measured ${metrics.action.width.toFixed(2)}×${metrics.action.height.toFixed(2)}px)`);
-      if(vp.width<=920){
-        assert.equal(metrics.menuVisible,true,
-          `${vp.name}: mobile menu button must be visible in the ${stateName} state`);
+      const menuExpected=vp.width<=920||stateName==="compact";
+      assert.equal(metrics.menuVisible,menuExpected,
+        `${vp.name}: adaptive menu visibility is incorrect in the ${stateName} state`);
+      if(menuExpected){
         assert.ok(metrics.menu.width>=44 && metrics.menu.height>=44,
-          `${vp.name}: mobile menu must have an actual 44×44px minimum target in the ${stateName} state (measured ${metrics.menu.width.toFixed(2)}×${metrics.menu.height.toFixed(2)}px)`);
-      }else{
-        assert.equal(metrics.menuVisible,false,
-          `${vp.name}: desktop navigation must keep the mobile menu button hidden`);
+          `${vp.name}: menu control must have an actual 44×44px minimum target in the ${stateName} state (measured ${metrics.menu.width.toFixed(2)}×${metrics.menu.height.toFixed(2)}px)`);
       }
       return {
         whatsapp:{width:Number(metrics.action.width.toFixed(2)),height:Number(metrics.action.height.toFixed(2))},
@@ -1051,6 +1056,19 @@ try {
       const mobileScreenshotState=await captureHeader(page,`${OUT}/mobile-360-header-compact.png`);
       assert.ok(mobileScreenshotState.scrollY>56, `${vp.name}: mobile compact screenshot must preserve the scrolled position`);
       assert.equal(mobileScreenshotState.compact,true, `${vp.name}: mobile compact screenshot must preserve the compact state`);
+    }
+    if(vp.width>920){
+      assert.equal(compactHeaderMetrics.navVisibility,"hidden",`${vp.name}: desktop navigation must be visually hidden while compact`);
+      assert.equal(compactHeaderMetrics.navInert,true,`${vp.name}: hidden desktop navigation must not remain keyboard-focusable`);
+      assert.equal(compactHeaderMetrics.menuVisible,true,`${vp.name}: compact desktop header must show its menu control`);
+      await page.locator("#menu-toggle").click();
+      const desktopMenuOpen=await page.evaluate(()=>({expanded:document.querySelector("#menu-toggle").getAttribute("aria-expanded"),inert:document.querySelector("#main-nav").inert,visibility:getComputedStyle(document.querySelector("#main-nav")).visibility,links:[...document.querySelectorAll("#main-nav a")].filter(a=>{const r=a.getBoundingClientRect(),s=getComputedStyle(a);return s.display!=="none"&&s.visibility!=="hidden"&&r.width>0&&r.height>0}).map(a=>a.getAttribute("href"))}));
+      assert.equal(desktopMenuOpen.expanded,"true",`${vp.name}: compact desktop menu did not open`);
+      assert.equal(desktopMenuOpen.inert,false,`${vp.name}: opened desktop navigation must be interactive`);
+      assert.equal(desktopMenuOpen.visibility,"visible",`${vp.name}: compact desktop menu panel is not visible`);
+      assert.deepEqual(desktopMenuOpen.links,["#approach","#causes","#options","#suitability","#reviews","#faq"],`${vp.name}: compact desktop menu must expose every section destination`);
+      await page.keyboard.press("Escape");
+      await page.waitForFunction(()=>document.querySelector("#menu-toggle").getAttribute("aria-expanded")==="false"&&document.querySelector("#main-nav").inert===true&&document.activeElement===document.querySelector("#menu-toggle"),null,{timeout:3000});
     }
     assert.equal(initialHeaderMetrics.headerProgress,0, `${vp.name}: header must begin at shared progress 0`);
     assert.equal(compactHeaderMetrics.headerProgress,1, `${vp.name}: compact frame and content must reach shared progress 1 together`);
@@ -1285,10 +1303,14 @@ try {
       await page.locator("#menu-toggle").click();
       const opened = await page.evaluate(() => ({
         expanded:document.querySelector("#menu-toggle")?.getAttribute("aria-expanded"),
-        display:getComputedStyle(document.querySelector("#main-nav")).display
+        display:getComputedStyle(document.querySelector("#main-nav")).display,
+        inert:document.querySelector("#main-nav").inert,
+        visibleLinks:[...document.querySelectorAll("#main-nav a")].filter(a=>{const r=a.getBoundingClientRect(),s=getComputedStyle(a);return s.display!=="none"&&s.visibility!=="hidden"&&r.width>0&&r.height>0}).map(a=>a.getAttribute("href"))
       }));
       assert.equal(opened.expanded, "true", `${vp.name}: mobile menu aria state did not open`);
       assert.notEqual(opened.display, "none", `${vp.name}: mobile menu did not open`);
+      assert.equal(opened.inert,false,`${vp.name}: opened mobile navigation must not be inert`);
+      assert.deepEqual(opened.visibleLinks,["#approach","#causes","#options","#suitability","#reviews","#faq"],`${vp.name}: mobile menu must expose every section destination`);
       await page.locator('#main-nav a[href="#approach"]').click();
       // The page restores focus on the next animation frame after native hash navigation.
       await page.waitForFunction(
@@ -1299,12 +1321,13 @@ try {
       const closed = await page.evaluate(() => ({
         expanded:document.querySelector("#menu-toggle")?.getAttribute("aria-expanded"),
         display:getComputedStyle(document.querySelector("#main-nav")).display,
-        hash:location.hash,focusOnToggle:document.activeElement===document.querySelector("#menu-toggle")
+        hash:location.hash,focusOnToggle:document.activeElement===document.querySelector("#menu-toggle"),inert:document.querySelector("#main-nav").inert
       }));
       assert.equal(closed.expanded, "false", `${vp.name}: mobile menu aria state did not close`);
       assert.equal(closed.display, "none", `${vp.name}: mobile menu remained open after selection`);
       assert.equal(closed.hash, "#approach", `${vp.name}: navigation target failed`);
       assert.equal(closed.focusOnToggle,true,`${vp.name}: selecting a mobile navigation link must not leave focus inside the hidden menu`);
+      assert.equal(closed.inert,true,`${vp.name}: closed mobile navigation must be inert`);
       await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#approach"]')?.getAttribute("aria-current")==="location",null,{timeout:3000});
 
       await page.keyboard.press("Enter");
@@ -1314,11 +1337,13 @@ try {
       const escaped=await page.evaluate(()=>({
         expanded:document.querySelector("#menu-toggle")?.getAttribute("aria-expanded"),
         display:getComputedStyle(document.querySelector("#main-nav")).display,
-        focusOnToggle:document.activeElement===document.querySelector("#menu-toggle")
+        focusOnToggle:document.activeElement===document.querySelector("#menu-toggle"),
+        inert:document.querySelector("#main-nav").inert
       }));
       assert.equal(escaped.expanded,"false",`${vp.name}: Escape did not close the open mobile menu`);
       assert.equal(escaped.display,"none",`${vp.name}: navigation remained visible after Escape`);
       assert.equal(escaped.focusOnToggle,true,`${vp.name}: Escape must restore focus to the mobile menu button`);
+      assert.equal(escaped.inert,true,`${vp.name}: Escape must make the closed mobile navigation inert`);
 
       await page.keyboard.press("Enter");
       await page.locator("#main-nav a").nth(1).focus();
@@ -1357,10 +1382,10 @@ try {
       assert.equal(state.toggleDisplay, "none", `${vp.name}: mobile menu button should be hidden`);
       assert.ok(state.heroCopyLayoutValid, `${vp.name}: Hero copy must remain aligned to the intended right-hand content column`);
 
-      const firstLink=page.locator("#main-nav a").first();
+      const firstLink=page.locator('#main-nav a[href="#options"]');
       await firstLink.hover();
       await page.waitForFunction(()=>{
-        const link=document.querySelector("#main-nav a");
+        const link=document.querySelector('#main-nav a[href="#options"]');
         return link&&getComputedStyle(link).color==="rgb(24, 122, 128)";
       },null,{timeout:1200});
       const hoverColor=await firstLink.evaluate(link=>getComputedStyle(link).color);
@@ -1368,12 +1393,16 @@ try {
       await firstLink.focus();
       await page.keyboard.press("Tab");
       const focusState=await page.evaluate(()=>{
-        const link=document.querySelectorAll("#main-nav a")[1],style=getComputedStyle(link);
+        const link=document.querySelector('#main-nav a[href="#suitability"]'),style=getComputedStyle(link);
         return {active:document.activeElement===link,visible:link.matches(":focus-visible"),
           outlineStyle:style.outlineStyle,outlineWidth:style.outlineWidth,outlineColor:style.outlineColor};
       });
       assert.ok(focusState.active&&focusState.visible&&focusState.outlineStyle==="solid"&&focusState.outlineWidth==="2px",
         `${vp.name}: keyboard focus state is not clearly visible: ${JSON.stringify(focusState)}`);
+      await page.evaluate(()=>window.scrollTo(0,240));
+      await page.waitForFunction(()=>document.querySelector(".site-header")?.classList.contains("is-compact"),null,{timeout:3000});
+      await page.locator("#menu-toggle").click();
+      await page.waitForFunction(()=>document.querySelector("#main-nav")?.classList.contains("open"),null,{timeout:2000});
       await page.locator('#main-nav a[href="#causes"]').click();
       await page.waitForFunction(()=>{
         const section=document.querySelector("#causes");
@@ -1392,6 +1421,8 @@ try {
         requestAnimationFrame(check);
       }));
       await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#causes"]')?.getAttribute("aria-current")==="location",null,{timeout:1500});
+      await page.locator("#menu-toggle").click();
+      await page.waitForFunction(()=>document.querySelector("#main-nav")?.classList.contains("open"),null,{timeout:2000});
       const activeLink=page.locator('#main-nav a[href="#causes"]');
       await page.mouse.move(0,0);
       await page.waitForFunction(()=>{
@@ -1425,6 +1456,8 @@ try {
       assert.ok(activeHoverState.underlineScale>=0.99&&activeHoverState.underlineScale<=1.01,
         `${vp.name}: active + hover underline must remain full-width`);
 
+      await page.keyboard.press("Escape");
+
       // Validate full-width active indicators on all six navigation sections.
       const navTargets=[
         {href:"#approach",id:"approach"},
@@ -1436,6 +1469,10 @@ try {
       ];
       for(const target of navTargets){
         await page.mouse.move(0,0);
+        await page.evaluate(()=>window.scrollTo(0,240));
+        await page.waitForFunction(()=>document.querySelector(".site-header")?.classList.contains("is-compact"),null,{timeout:3000});
+        await page.locator("#menu-toggle").click();
+        await page.waitForFunction(()=>document.querySelector("#main-nav")?.classList.contains("open"),null,{timeout:2000});
         const targetLink=page.locator(`#main-nav a[href="${target.href}"]`);
         await targetLink.click();
         await page.waitForFunction(({href,id})=>{
@@ -1448,6 +1485,9 @@ try {
         await page.mouse.move(0,0);
         // The current-section underline animates for 220ms. Wait for the real
         // browser transition to finish before measuring its final 100% scale.
+        await page.locator("#menu-toggle").click();
+        await page.waitForFunction(()=>document.querySelector("#main-nav")?.classList.contains("open"),null,{timeout:2000});
+        await page.mouse.move(0,0);
         await page.waitForFunction(href=>{
           const link=document.querySelector(`#main-nav a[href="${href}"]`);
           if(!link||link.getAttribute("aria-current")!=="location")return false;
@@ -1480,7 +1520,10 @@ try {
           `${vp.name}: ${target.id} underline is not full-width: ${JSON.stringify(underline)}`);
         assert.ok(underline.lineScale>=.99&&underline.lineScale<=1.01,
           `${vp.name}: ${target.id} active underline transform is not 100%: ${JSON.stringify(underline)}`);
+        await page.keyboard.press("Escape");
       }
+      await page.evaluate(()=>window.scrollTo(0,0));
+      await page.waitForFunction(()=>!document.querySelector(".site-header")?.classList.contains("is-compact"),null,{timeout:3000});
     }
 
     const faqQuestion=page.locator(".faq-item summary").first();
