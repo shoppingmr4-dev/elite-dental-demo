@@ -831,7 +831,7 @@ try {
     assert.equal(state.benefitTreatment.textDecorationLine,"none",vp.name + ": benefit line must not acquire a decorative underline");
     assert.equal(state.benefitTreatment.accentElements,0,vp.name + ": the benefit phrase must not contain an isolated accent span");
     assert.equal(state.benefitTreatment.underlineElements,0,vp.name + ": the benefit phrase must not contain a decorative SVG underline");
-    assert.equal(state.sectionMarkerChips.length,8,vp.name + ": all seven content section markers must retain the shared glass component");
+    assert.equal(state.sectionMarkerChips.length,8,vp.name + ": all eight content section markers must retain the shared glass component");
     assert.ok(state.sectionMarkerChips.every(chip=>chip.height>=42&&chip.height<=46&&chip.borderWidth==="1px"&&
       chip.borderRadius==="999px"&&chip.backgroundColor!=="rgba(0, 0, 0, 0)"&&chip.backdropFilter.includes("blur")),
       vp.name + ": all eight section marker glass frames must share compact dimensions and translucency: " + JSON.stringify(state.sectionMarkerChips));
@@ -1421,12 +1421,13 @@ try {
       assert.ok(activeHoverState.underlineScale>=0.99&&activeHoverState.underlineScale<=1.01,
         `${vp.name}: active + hover underline must remain full-width`);
 
-      // Validate full-width active indicators on all five navigation sections.
+      // Validate full-width active indicators on all six navigation sections.
       const navTargets=[
         {href:"#approach",id:"approach"},
         {href:"#causes",id:"causes"},
         {href:"#options",id:"options"},
         {href:"#suitability",id:"suitability"},
+        {href:"#reviews",id:"reviews"},
         {href:"#faq",id:"faq"}
       ];
       for(const target of navTargets){
