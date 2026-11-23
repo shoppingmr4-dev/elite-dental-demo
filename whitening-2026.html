@@ -314,28 +314,98 @@ body.dialog-open{overflow:hidden}
 .faq-item summary{font-size:13px}
 }
 
-.footer{padding:clamp(46px,6vw,76px) 0 0;background:var(--ink);color:rgba(255,255,255,.76)}
-.footer-main{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(155px,.72fr) minmax(0,1.05fr);gap:clamp(28px,4.8vw,68px);padding-bottom:42px}
+.footer{
+ padding:clamp(52px,6.2vw,82px) 0 0;
+ position:relative;
+ isolation:isolate;
+ background:linear-gradient(155deg,#183A45 0%,#142D38 58%,#102832 100%);
+ color:rgba(255,255,255,.78)
+}
+.footer:before{
+ content:"";
+ position:absolute;
+ z-index:-1;
+ inset:0 0 auto;
+ height:1px;
+ background:linear-gradient(90deg,transparent,rgba(169,220,210,.48),transparent)
+}
+.footer-main{
+ display:grid;
+ grid-template-columns:minmax(0,1.12fr) minmax(175px,.72fr) minmax(0,1fr);
+ gap:clamp(30px,4.6vw,66px);
+ padding-bottom:46px
+}
 .footer-brand-link{display:inline-flex;align-items:center;gap:12px;color:#fff}
 .footer-brand-mark{display:grid;place-items:center;width:45px;height:42px;flex:none}
-.footer-brand-mark img{width:43px;height:38px;object-fit:contain;filter:brightness(0) invert(1);opacity:.92}
-.footer-brand-name strong{display:block;color:#fff;font-family:"Cormorant Garamond",Georgia,serif;font-size:31px;font-style:italic;font-weight:500;letter-spacing:.01em;line-height:1.05;direction:ltr;text-align:right}
-.footer-brand-name small{display:block;margin-top:4px;color:rgba(255,255,255,.7);font-size:11px;line-height:1.5}
-.footer-brand-title{margin:24px 0 9px;color:#fff;font-family:var(--display);font-size:clamp(19px,2vw,23px);line-height:1.65}
-.footer-brand-copy{max-width:390px;margin:0;color:rgba(255,255,255,.72);font-size:13px;line-height:2}
-.footer-heading{margin:5px 0 18px;color:#fff;font-family:var(--display);font-size:15px;font-weight:800;line-height:1.7}
-.footer-nav ul{display:grid;gap:12px;margin:0;padding:0;list-style:none}
-.footer-nav a{display:inline-flex;color:rgba(255,255,255,.76);font-size:13px;line-height:1.8;transition:color .2s ease}
+.footer-brand-mark img{width:43px;height:38px;object-fit:contain;filter:brightness(0) invert(1);opacity:.94}
+.footer-brand-name strong{
+ display:block;color:#fff;font-family:"Cormorant Garamond",Georgia,serif;
+ font-size:32px;font-style:italic;font-weight:500;letter-spacing:.01em;
+ line-height:1.05;direction:ltr;text-align:right
+}
+.footer-brand-name small{display:block;margin-top:4px;color:rgba(255,255,255,.72);font-size:11px;line-height:1.5}
+.footer-brand-title{
+ margin:23px 0 10px;color:#fff;font-family:var(--display);
+ font-size:clamp(20px,2vw,24px);font-weight:800;line-height:1.65
+}
+.footer-brand-copy{max-width:400px;margin:0;color:rgba(255,255,255,.78);font-size:13px;line-height:2.05}
+.footer-socials{display:flex;align-items:center;gap:10px;margin-top:22px}
+.footer-social-icon{
+ display:grid;place-items:center;width:42px;height:42px;flex:none;
+ overflow:hidden;border:1px solid rgba(255,255,255,.14);border-radius:12px;
+ box-shadow:0 5px 16px rgba(0,0,0,.12)
+}
+.footer-social-icon svg{display:block;width:21px;height:21px}
+.footer-social-icon--instagram{background:linear-gradient(145deg,#833AB4 0%,#C13584 43%,#E1306C 68%,#FCAF45 100%)}
+.footer-social-icon--snapchat{background:#FFFC00}
+.footer-social-icon--tiktok{background:#050505}
+.footer-social-icon--x{background:#fff}
+.footer-heading{
+ margin:5px 0 17px;color:#fff;font-family:var(--display);
+ font-size:16px;font-weight:800;line-height:1.7
+}
+.footer-nav ul{display:grid;gap:11px;margin:0;padding:0;list-style:none}
+.footer-nav a{
+ display:inline-flex;color:rgba(255,255,255,.78);
+ font-size:13px;line-height:1.9;transition:color .2s ease
+}
 .footer-nav a:hover{color:#A9DCD2}
-.footer-notes p{margin:0 0 11px;color:rgba(255,255,255,.7);font-size:11px;line-height:1.95}
+.footer-notes p{margin:0 0 12px;color:rgba(255,255,255,.76);font-size:12px;line-height:2}
 .footer-notes p:last-child{margin-bottom:0}
-.footer-bottom{border-top:1px solid rgba(255,255,255,.15)}
-.footer-bottom-inner{display:flex;align-items:center;justify-content:space-between;gap:15px;min-height:62px;color:rgba(255,255,255,.62);font-size:10px;line-height:1.8}
-.footer-credit{color:rgba(255,255,255,.72)}
-.footer-top-link{display:inline-flex;align-items:center;gap:7px;color:#A9DCD2;text-decoration:none;font-size:11px;transition:color .2s ease}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.16)}
+.footer-bottom-inner{
+ display:flex;align-items:center;justify-content:space-between;gap:15px;
+ min-height:66px;color:rgba(255,255,255,.68);font-size:11px;line-height:1.8
+}
+.footer-credit{color:rgba(255,255,255,.8)}
+.footer-top-link{
+ display:inline-flex;align-items:center;gap:7px;color:#A9DCD2;
+ text-decoration:none;font-size:12px;transition:color .2s ease
+}
 .footer-top-link:hover{color:#fff}
 .footer-top-link span{font-size:17px;line-height:1}
 .footer a:focus-visible{outline:2px solid #A9DCD2;outline-offset:5px;border-radius:3px}
+@media(max-width:920px){
+ .footer-main{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px 28px}
+ .footer-brand{grid-column:1/-1}
+}
+@media(max-width:520px){
+ .footer{padding-top:43px}
+ .footer-main{grid-template-columns:minmax(0,1fr);gap:29px;padding-bottom:32px}
+ .footer-brand{grid-column:auto}
+ .footer-brand-title{margin-top:19px;font-size:21px}
+ .footer-brand-copy{font-size:13px}
+ .footer-heading{margin-bottom:12px}
+ .footer-nav ul{gap:9px}
+ .footer-bottom-inner{
+  align-items:flex-start;flex-direction:column;justify-content:center;
+  gap:5px;padding:16px 0
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ .footer-nav a,.footer-top-link{transition:none}
+}
+:focus-visible{outline:2px solid #A9DCD2;outline-offset:5px;border-radius:3px}
 @media(max-width:920px){
  .footer-main{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:30px 28px}
  .footer-brand{grid-column:1/-1}
@@ -1485,30 +1555,56 @@ body,button,input,select,textarea{font-family:var(--body)}
      <span class="footer-brand-name"><strong>Ruwa</strong><small>رُواء لطب الأسنان</small></span>
     </a>
     <h2 class="footer-brand-title" id="footer-brand-title">العناية تبدأ بفهم احتياجك.</h2>
-    <p class="footer-brand-copy">تعرّف إلى أسباب تغيّر لون الأسنان، وافهم خيارات التبييض والعوامل التي تساعد في تحديد ما قد يناسب حالتك.</p>
+    <p class="footer-brand-copy">اعرف ما قد يغيّر لون أسنانك، وتعرّف إلى خيارات التبييض والعوامل التي يحدّد الطبيب على أساسها مدى ملاءمتها لحالتك.</p>
+    <div class="footer-socials" role="group" aria-label="أيقونات منصات التواصل الاجتماعي">
+     <span class="footer-social-icon footer-social-icon--instagram" role="img" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+       <rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5.2" fill="none" stroke="#fff" stroke-width="1.9"/>
+       <circle cx="12" cy="12" r="4.05" fill="none" stroke="#fff" stroke-width="1.9"/>
+       <circle cx="17.65" cy="6.55" r="1.15" fill="#fff"/>
+      </svg>
+     </span>
+     <span class="footer-social-icon footer-social-icon--snapchat" role="img" aria-label="Snapchat">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+       <path d="M12 2.35c-3.55 0-5.8 2.55-5.8 6.03 0 .78.1 1.58.25 2.32-.39.18-.72.12-1.28-.13-.63-.28-1.34-.6-1.76.02-.3.45-.12.93.39 1.22.42.24 1 .35 1.15.76.12.32.01.71-.14 1.08-.48 1.17-1.4 2.2-2.53 2.78-.42.22-1.06.39-.94.89.12.51.99.65 1.53.79.77.2 1.28.51 1.5 1.2.14.43.23.91.5 1.18.47.48 1.2.04 1.8.02.43-.02.76.15 1.13.36 1.12.64 2.22 1.12 4.2 1.12s3.08-.48 4.2-1.12c.37-.21.7-.38 1.13-.36.6.02 1.33.46 1.8-.02.27-.27.36-.75.5-1.18.22-.69.73-1 1.5-1.2.54-.14 1.41-.28 1.53-.79.12-.5-.52-.67-.94-.89-1.13-.58-2.05-1.61-2.53-2.78-.15-.37-.26-.76-.14-1.08.15-.41.73-.52 1.15-.76.51-.29.69-.77.39-1.22-.42-.62-1.13-.3-1.76-.02-.56.25-.89.31-1.28.13.15-.74.25-1.54.25-2.32 0-3.48-2.25-6.03-5.8-6.03Z" fill="#000"/>
+      </svg>
+     </span>
+     <span class="footer-social-icon footer-social-icon--tiktok" role="img" aria-label="TikTok">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+       <path d="M19.2 7.05a5.1 5.1 0 0 1-3.95-4.48V2h-3.5v13.7a2.9 2.9 0 1 1-2.9-2.9c.3 0 .6.05.88.14V9.35a6.4 6.4 0 1 0 5.52 6.35V8.7a8.4 8.4 0 0 0 4.95 1.6V6.8c-.34.12-.68.2-1 .25Z" transform="translate(-.8 .15)" fill="#25F4EE"/>
+       <path d="M19.2 7.05a5.1 5.1 0 0 1-3.95-4.48V2h-3.5v13.7a2.9 2.9 0 1 1-2.9-2.9c.3 0 .6.05.88.14V9.35a6.4 6.4 0 1 0 5.52 6.35V8.7a8.4 8.4 0 0 0 4.95 1.6V6.8c-.34.12-.68.2-1 .25Z" transform="translate(.8 -.15)" fill="#FE2C55"/>
+       <path d="M19.2 7.05a5.1 5.1 0 0 1-3.95-4.48V2h-3.5v13.7a2.9 2.9 0 1 1-2.9-2.9c.3 0 .6.05.88.14V9.35a6.4 6.4 0 1 0 5.52 6.35V8.7a8.4 8.4 0 0 0 4.95 1.6V6.8c-.34.12-.68.2-1 .25Z" fill="#fff"/>
+      </svg>
+     </span>
+     <span class="footer-social-icon footer-social-icon--x" role="img" aria-label="X">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+       <path d="M18.9 2H22l-6.78 7.75L23.2 22h-6.25l-4.9-6.41L6.44 22H3.3l7.25-8.29L2.8 2h6.4l4.43 5.83L18.9 2Zm-1.1 17.93h1.73L8.27 3.94H6.42L17.8 19.93Z" fill="#000"/>
+      </svg>
+     </span>
+    </div>
    </section>
    <nav class="footer-nav" aria-label="روابط داخل الصفحة">
-    <h2 class="footer-heading">استكشف الصفحة</h2>
+    <h2 class="footer-heading">روابط سريعة</h2>
     <ul>
      <li><a href="#approach">خطوات التقييم</a></li>
-     <li><a href="#causes">أسباب تغيّر اللون</a></li>
-     <li><a href="#options">خيارات التبييض</a></li>
+     <li><a href="#causes">أسباب تغيّر لون الأسنان</a></li>
+     <li><a href="#options">خيارات تبييض الأسنان</a></li>
      <li><a href="#suitability">مدى ملاءمة التبييض</a></li>
      <li><a href="#faq">الأسئلة الشائعة</a></li>
-     <li><a href="#consultation">قسم التواصل</a></li>
+     <li><a href="#consultation">تواصل معنا</a></li>
     </ul>
    </nav>
    <section class="footer-notes" aria-labelledby="footer-notes-title">
     <h2 class="footer-heading" id="footer-notes-title">معلومات مهمة</h2>
-    <p>هذا الموقع مفهوم تجريبي ضمن معرض أعمال Apex Studio، ولا يمثّل عيادة قائمة أو جهة طبية فعلية.</p>
-    <p>الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا؛ كما أن بقية صور الأطباء المعروضة توضيحية ولا تمثل أشخاصًا حقيقيين.</p>
-    <p>المعلومات الواردة للتوعية العامة، ولا تُغني عن فحص الأسنان واللثة واستشارة طبيب أسنان مؤهل.</p>
+    <p>رُواء مفهوم تجريبي أُعدّ ضمن معرض أعمال Apex Studio، ولا يمثّل عيادة قائمة أو جهة طبية فعلية.</p>
+    <p>الصور المعروضة، بما فيها صور الأطباء، توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثّل أشخاصًا حقيقيين.</p>
+    <p>المحتوى للتوعية العامة فقط، ولا يغني عن فحص طبيب الأسنان أو توصيته المهنية.</p>
    </section>
   </div>
   <div class="footer-bottom">
    <div class="footer-bottom-inner">
-    <span>© 2026 رُواء. مفهوم تجريبي لأغراض العرض.</span>
-    <span class="footer-credit">التصميم والتطوير: Apex Studio</span>
+    <span>© 2026 رُواء — نموذج تجريبي.</span>
+    <span class="footer-credit">التصميم والتنفيذ: Apex Studio</span>
     <a class="footer-top-link" href="#top">العودة إلى أعلى الصفحة <span aria-hidden="true">↑</span></a>
    </div>
   </div>
