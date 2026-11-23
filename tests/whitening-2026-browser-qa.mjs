@@ -776,7 +776,7 @@ try {
     assert.ok(state.demoDialogText.includes("لن يتم فتح محادثة أو بدء اتصال قبل إعداد رقم صحيح"), `${vp.name}: unavailable contact destinations must be disclosed`);
     assert.deepEqual(state.navLabels, ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","آراء المرضى","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
     assert.deepEqual(state.navHrefs, ["#approach","#causes","#options","#suitability","#reviews","#faq"], `${vp.name}: navigation destinations are incorrect`);
-    assert.equal(state.navLinkTypography.length,6, `${vp.name}: all five navigation links must be present`);
+    assert.equal(state.navLinkTypography.length,6, `${vp.name}: all six navigation links must be present`);
     assert.ok(state.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic") && link.fontSize===14 &&
       link.fontWeight===600 && Math.abs(link.lineHeight-22.4)<.2 &&
@@ -846,9 +846,9 @@ try {
       {number:"08",label:"آراء المرضى",context:"canvas"},
       {number:"09",label:"إجابات واضحة",context:"canvas"}
     ];
-    assert.equal(state.allSectionMarkers.length,9,vp.name + ": all eight numbered markers must be present");
+    assert.equal(state.allSectionMarkers.length,9,vp.name + ": all nine numbered markers must be present");
     assert.deepEqual(state.allSectionMarkers.map(({number,label,context})=>({number,label,context})),expectedMarkers,
-      vp.name + ": all eight numbers, Arabic labels, and contextual surfaces must match the approved sequence");
+      vp.name + ": all nine numbers, Arabic labels, and contextual surfaces must match the approved sequence");
     assert.ok(state.allSectionMarkers.every(marker=>{
       const approvedCapsule=marker.isHero
         ? marker.markerHeight>=38&&marker.markerHeight<=42&&marker.markerPadding==="4px 10px"&&marker.markerGap==="7px"
