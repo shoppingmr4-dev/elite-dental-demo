@@ -842,24 +842,25 @@ try {
     assert.equal(state.benefitTreatment.textDecorationLine,"none",vp.name + ": benefit line must not acquire a decorative underline");
     assert.equal(state.benefitTreatment.accentElements,0,vp.name + ": the benefit phrase must not contain an isolated accent span");
     assert.equal(state.benefitTreatment.underlineElements,0,vp.name + ": the benefit phrase must not contain a decorative SVG underline");
-    assert.equal(state.sectionMarkerChips.length,8,vp.name + ": all eight content section markers must retain the shared glass component");
+    assert.equal(state.sectionMarkerChips.length,9,vp.name + ": all nine content section markers must retain the shared glass component");
     assert.ok(state.sectionMarkerChips.every(chip=>chip.height>=42&&chip.height<=46&&chip.borderWidth==="1px"&&
       chip.borderRadius==="999px"&&chip.backgroundColor!=="rgba(0, 0, 0, 0)"&&chip.backdropFilter.includes("blur")),
-      vp.name + ": all eight section marker glass frames must share compact dimensions and translucency: " + JSON.stringify(state.sectionMarkerChips));
+      vp.name + ": all nine section marker glass frames must share compact dimensions and translucency:  + JSON.stringify(state.sectionMarkerChips));
     const expectedMarkers=[
       {number:"01",label:"دليل الابتسامة",context:"hero"},
       {number:"02",label:"خطوات التقييم",context:"paper"},
       {number:"03",label:"أسباب تغيّر اللون",context:"paper"},
       {number:"04",label:"الخيارات المتاحة",context:"canvas"},
-      {number:"05",label:"قبل اتخاذ القرار",context:"paper"},
-      {number:"06",label:"توقعات واقعية",context:"dark"},
-      {number:"07",label:"الفريق الطبي",context:"paper"},
-      {number:"08",label:"آراء المرضى",context:"canvas"},
-      {number:"09",label:"إجابات واضحة",context:"canvas"}
+      {number:"05",label:"رحلة التبييض",context:"canvas"},
+      {number:"06",label:"قبل اتخاذ القرار",context:"paper"},
+      {number:"07",label:"توقعات واقعية",context:"dark"},
+      {number:"08",label:"الفريق الطبي",context:"paper"},
+      {number:"09",label:"آراء المرضى",context:"canvas"},
+      {number:"10",label:"إجابات واضحة",context:"canvas"}
     ];
-    assert.equal(state.allSectionMarkers.length,9,vp.name + ": all nine numbered markers must be present");
+    assert.equal(state.allSectionMarkers.length,10,vp.name + ": all ten numbered markers must be present");
     assert.deepEqual(state.allSectionMarkers.map(({number,label,context})=>({number,label,context})),expectedMarkers,
-      vp.name + ": all nine numbers, Arabic labels, and contextual surfaces must match the approved sequence");
+      vp.name + ": all ten numbers, Arabic labels, and contextual surfaces must match the approved sequence");
     assert.ok(state.allSectionMarkers.every(marker=>{
       const approvedCapsule=marker.isHero
         ? marker.markerHeight>=38&&marker.markerHeight<=42&&marker.markerPadding==="4px 10px"&&marker.markerGap==="7px"
@@ -1501,11 +1502,12 @@ try {
 
       await page.keyboard.press("Escape");
 
-      // Validate full-width active indicators on all six navigation sections.
+      // Validate full-width active indicators on all seven navigation sections.
       const navTargets=[
         {href:"#approach",id:"approach"},
         {href:"#causes",id:"causes"},
         {href:"#options",id:"options"},
+        {href:"#journey",id:"journey"},
         {href:"#suitability",id:"suitability"},
         {href:"#reviews",id:"reviews"},
         {href:"#faq",id:"faq"}
