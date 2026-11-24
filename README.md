@@ -51,7 +51,7 @@ The shared header, navigation, announcement strip, and footer support these sect
 - Optimized RUWA WebP and AVIF assets.
 - Responsive layout, accessible navigation, keyboard support, reduced-motion handling, and browser QA.
 
-The retired Elite Dental Clinic page and its Tailwind-only build infrastructure are no longer part of the active project. No Tailwind build step is required to serve or test RUWA.
+The former demo page and its page-specific build infrastructure have been removed. No Tailwind build step is required to serve or test RUWA.
 
 ## Development and checks
 
