@@ -125,8 +125,26 @@ assert.match(html, /القسم العاشر: إجابات واضحة/);
 assert.match(html, /<span class="section-marker-number" aria-hidden="true">10<\/span>/);
 
 
-const faqCount = [...html.matchAll(/<details\b/gi)].length;
+const faqStart = html.indexOf('id="faq"');
+const faqEnd = html.indexOf("</section>", faqStart) + "</section>".length;
+const faqSection = html.slice(faqStart, faqEnd);
+const faqCount = [...faqSection.matchAll(/<details\b/gi)].length;
 assert.equal(faqCount, 4, "RUWA must contain exactly four focused native FAQ entries");
+assert.deepEqual(
+  [...faqSection.matchAll(/<summary>([^<]+)<\/summary>/g)].map(match => match[1]),
+  [
+    "ماذا يحدث خلال جلسة التبييض؟",
+    "هل معجون التبييض يعطي نتيجة التبييض نفسه؟",
+    "هل أحتاج إلى أكثر من جلسة؟",
+    "كم تدوم نتيجة التبييض؟"
+  ],
+  "FAQ questions must address distinct visitor concerns in the approved order"
+);
+assert.ok(faqSection.includes("سبب التصبغ وعمقه والطريقة المستخدمة واستجابة الأسنان"), "Session-count answer must explain why treatment plans vary");
+assert.ok(faqSection.includes("التصبغات السطحية"), "Toothpaste answer must distinguish surface stains from tooth colour");
+assert.ok(faqSection.includes("لا توجد مدة ثابتة للجميع"), "Result-longevity answer must avoid a universal promise");
+assert.doesNotMatch(faqSection, /ما العناية المطلوبة بعد التبييض/, "The FAQ must not repeat the dedicated aftercare section");
+assert.match(html, /:focus-visible\{outline:3px solid var\(--coral\);outline-offset:4px\}/, "A visible global keyboard focus indicator must remain available");
 
 const contactActions = [...html.matchAll(/data-contact-action=["'](whatsapp|phone)["']/gi)].map(match => match[1]);
 assert.equal(contactActions.filter(action => action === "whatsapp").length, 3, "RUWA must have three WhatsApp actions");

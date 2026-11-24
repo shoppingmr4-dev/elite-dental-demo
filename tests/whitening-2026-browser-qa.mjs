@@ -1593,10 +1593,23 @@ try {
     }
 
     const faqQuestion=page.locator(".faq-item summary").first();
+    await faqQuestion.focus();
+    const faqFocus=await faqQuestion.evaluate(element=>({
+      active:document.activeElement===element,
+      visible:element.matches(":focus-visible"),
+      outlineStyle:getComputedStyle(element).outlineStyle,
+      outlineWidth:Number.parseFloat(getComputedStyle(element).outlineWidth)
+    }));
+    assert.ok(faqFocus.active&&faqFocus.visible&&faqFocus.outlineStyle==="solid"&&faqFocus.outlineWidth>=2,
+      `${vp.name}: FAQ keyboard focus is not visibly indicated: ${JSON.stringify(faqFocus)}`);
+    await page.keyboard.press("Enter");
+    assert.equal(await faqQuestion.locator("xpath=..").getAttribute("open"), "", `${vp.name}: Enter did not open the first FAQ item`);
+    await page.keyboard.press("Space");
+    assert.equal(await faqQuestion.locator("xpath=..").getAttribute("open"), null, `${vp.name}: Space did not close the first FAQ item`);
     await faqQuestion.click();
-    assert.equal(await faqQuestion.locator("xpath=..").getAttribute("open"), "", `${vp.name}: first FAQ item did not open`);
+    assert.equal(await faqQuestion.locator("xpath=..").getAttribute("open"), "", `${vp.name}: pointer activation did not open the first FAQ item`);
     await faqQuestion.click();
-    assert.equal(await faqQuestion.locator("xpath=..").getAttribute("open"), null, `${vp.name}: first FAQ item did not close`);
+    assert.equal(await faqQuestion.locator("xpath=..").getAttribute("open"), null, `${vp.name}: pointer activation did not close the first FAQ item`);
 
     const finalPhone=page.locator('#consultation [data-contact-action="phone"]');
      await finalPhone.click();
