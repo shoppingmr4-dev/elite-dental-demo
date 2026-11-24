@@ -845,7 +845,7 @@ try {
     assert.equal(state.sectionMarkerChips.length,9,vp.name + ": all nine content section markers must retain the shared glass component");
     assert.ok(state.sectionMarkerChips.every(chip=>chip.height>=42&&chip.height<=46&&chip.borderWidth==="1px"&&
       chip.borderRadius==="999px"&&chip.backgroundColor!=="rgba(0, 0, 0, 0)"&&chip.backdropFilter.includes("blur")),
-      vp.name + ": all nine section marker glass frames must share compact dimensions and translucency:  + JSON.stringify(state.sectionMarkerChips));
+      vp.name + ": all nine section marker glass frames must share compact dimensions and translucency: " + JSON.stringify(state.sectionMarkerChips));
     const expectedMarkers=[
       {number:"01",label:"دليل الابتسامة",context:"hero"},
       {number:"02",label:"خطوات التقييم",context:"paper"},
