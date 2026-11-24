@@ -34,7 +34,7 @@ There are **3 WhatsApp actions and 2 phone actions**. The WhatsApp and phone con
 4. Whitening options — general educational descriptions, not a claim about a real clinic's services.
 5. Treatment journey — a concise four-step overview from initial assessment and option selection to procedure and aftercare.
 6. Suitability and safety — factors that may affect suitability or timing.
-7. Realistic expectations — sensitivity, individual variation, and restorations.
+7. Realistic expectations — individual result variation and realistic limits, possible temporary sensitivity or gum irritation, restorations that do not whiten, and general aftercare with professional advice before repeating treatment.
 8. Dentist/team — three illustrative portraits with explicit disclosure and no invented identities or credentials.
 9. Patient reviews — a transparent notice that no verified patient reviews are available in this fictional demo.
 10. FAQ — four native HTML details/summary entries.
@@ -65,7 +65,7 @@ npm run test:ruwa:consistency
 npx playwright install chromium
 ```
 
-The consistency gate verifies the eleven-section order, three disclosed team portraits, transparent reviews state, four FAQ entries, five contact controls, ARIA targets, protected Hero disclosure, root redirect, and both preview redirects.
+The consistency gate verifies the eleven-section order, four realistic-expectations cards and their medical/aftercare disclosures, three disclosed team portraits, transparent reviews state, four FAQ entries, five contact controls, ARIA targets, protected Hero disclosure, root redirect, and both preview redirects.
 
 The **RUWA Browser QA** GitHub Actions workflow runs the consistency gate, Playwright Chromium checks, full-page responsive captures, Hero fold checks, approved-Hero SHA validation, and immutable public-preview verification.
 

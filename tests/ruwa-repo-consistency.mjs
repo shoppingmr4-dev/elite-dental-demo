@@ -48,6 +48,29 @@ assert.match(journeySection, /<ol class="journey-grid" aria-label="مراحل ر
 assert.equal([...journeySection.matchAll(/<li class="journey-step">/g)].length, 4, "Treatment journey must contain exactly four ordered steps");
 assert.ok(journeySection.includes("تختلف تفاصيل الرحلة بحسب الخيار وحالتك"), "Treatment journey must disclose that details vary by method and case");
 
+const expectationsStart = html.indexOf('id="expectations"');
+const expectationsSection = html.slice(expectationsStart, html.indexOf("</section>", expectationsStart) + 10);
+assert.ok(expectationsStart > suitabilityStart, "Realistic expectations must follow suitability and safety");
+assert.ok(expectationsSection.includes("فحص الأسنان واللثة وتحديد سبب تغيّر اللون لدى طبيب الأسنان"), "Expectations must explain the role of individual dental assessment");
+assert.deepEqual(
+  [...expectationsSection.matchAll(/<h3>([^<]+)<\/h3>/g)].map(match => match[1]),
+  ["النتائج تختلف من شخص لآخر", "قد تحدث حساسية أو تهيّج مؤقت", "الحشوات والتيجان والقشور لا تتبيّض", "العناية بعد التبييض"],
+  "Expectations must contain four focused cards in the approved order"
+);
+assert.ok(expectationsSection.includes("لون الأسنان الأساسي وسبب التصبغ وعمقه"), "Factors influencing results are missing");
+assert.ok(expectationsSection.includes("لا توجد درجة نهائية واحدة يمكن ضمانها للجميع"), "No-guarantee disclosure is missing");
+assert.ok(expectationsSection.includes("حساسية مؤقتة في الأسنان أو تهيّج في اللثة"), "Temporary sensitivity and gum irritation must be disclosed");
+assert.ok(expectationsSection.includes("شديدة أو مستمرة"), "Significant or persistent symptoms must prompt professional advice");
+assert.ok(expectationsSection.includes("الحشوات والتيجان والقشور التجميلية"), "Restoration limits must be disclosed");
+assert.ok(expectationsSection.includes("تعليمات طبيب الأسنان الخاصة بحالتك"), "Individualized aftercare guidance is missing");
+assert.ok(expectationsSection.includes("روتين نظافة الفم المعتاد"), "Normal oral hygiene guidance is missing");
+assert.ok(expectationsSection.includes("قد يتغير اللون بمرور الوقت"), "Changing whitening results must be disclosed");
+assert.ok(expectationsSection.includes("قبل تكرار التبييض"), "Advice before repeating whitening is missing");
+assert.doesNotMatch(expectationsSection, /\b\d+\s*(?:دقائق?|ساعات?|أيام?|أسابيع?|أشهر?|سنوات?)\b/, "Do not invent numerical aftercare waiting periods or result longevity");
+assert.match(html, /\.expect-grid\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\);gap:14px\}/, "Expectations grid must use two columns on desktop/tablet");
+assert.match(html, /\.cause-grid,\.options-grid,\.expect-grid,\.journey-grid\{grid-template-columns:1fr\}/, "Expectations grid must collapse to one column on mobile");
+
+
 assert.match(html, /--display:"IBM Plex Sans Arabic","Alexandria",Tahoma,sans-serif;/, "Arabic display headings must use the approved IBM Plex Sans Arabic family throughout RUWA");
 assert.match(html, /--body:"IBM Plex Sans Arabic","Alexandria",Tahoma,sans-serif;/, "Arabic interface and body copy must use IBM Plex Sans Arabic");
 assert.match(html, /href="assets\/fonts\/Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys43PW5fslBEg0\.woff2"/, "IBM Plex Sans Arabic regular WOFF2 preload is missing");

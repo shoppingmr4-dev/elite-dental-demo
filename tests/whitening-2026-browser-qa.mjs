@@ -508,6 +508,21 @@ try {
         teamProfile:(()=>{const section=document.getElementById("team"),wrap=section?.querySelector(".team-wrap"),heading=section?.querySelector("h2"),cards=[...(section?.querySelectorAll(".team-card")||[])],images=[...(section?.querySelectorAll(".team-card img")||[])],rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width,centerX:r.left+r.width/2};},hr=heading?rect(heading):null,wr=wrap?rect(wrap):null;return {heading:heading?.innerText.trim()||"",imageSources:images.map(image=>image.getAttribute("src")||""),imageAlts:images.map(image=>image.getAttribute("alt")||""),imagesLoaded:images.length===3&&images.every(image=>image.complete&&image.naturalWidth>0),disclosure:section?.querySelector(".team-disclosure")?.innerText.trim()||"",cardCount:cards.length,cardWidths:cards.map(card=>rect(card).width),gridColumns:section?.querySelector(".team-cards")?getComputedStyle(section.querySelector(".team-cards")).gridTemplateColumns.trim().split(/\s+/).length:0,headingCenterDelta:hr&&wr?Math.abs(hr.centerX-(wr.left+wr.right)/2):999,thirdCardCenterDelta:cards.length===3&&wr?Math.abs(rect(cards[2]).centerX-(wr.left+wr.right)/2):999};})(),
         optionCards:document.querySelectorAll(".option-card").length,
         causeCards:document.querySelectorAll(".info-card").length,
+        expectationsSection:(()=>{
+          const section=document.querySelector("#expectations");
+          const grid=section?.querySelector(".expect-grid");
+          const cards=[...(section?.querySelectorAll(".expect-card")||[])];
+          const rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width};};
+          const sectionRect=section?rect(section):null;
+          const cardRects=cards.map(rect);
+          return {
+            cardCount:cards.length,
+            cardTitles:cards.map(card=>card.querySelector("h3")?.innerText.trim()||""),
+            gridColumnCount:grid?getComputedStyle(grid).gridTemplateColumns.trim().split(/\s+/).length:0,
+            horizontalOverflow:Boolean(section&&section.scrollWidth>section.clientWidth),
+            cardsWithinSection:Boolean(sectionRect&&cardRects.every(card=>card.width>0&&card.left>=sectionRect.left-1&&card.right<=sectionRect.right+1))
+          };
+        })(),
         reviewSection:(()=>{const section=document.getElementById("reviews"),panel=section?.querySelector(".reviews-panel"),title=section?.querySelector("#reviews-title"),status=section?.querySelector(".reviews-status-note"),disclosure=section?.querySelector(".reviews-rating-disclosure"),stars=section?.querySelector(".reviews-stars"),cards=[...(section?.querySelectorAll(".review-card")||[])],criteria=[...(section?.querySelectorAll(".reviews-criteria-list li")||[])],rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width};},pr=panel?rect(panel):null;return {present:Boolean(section&&panel),heading:title?.innerText.trim()||"",status:status?.innerText.trim()||"",disclosure:disclosure?.innerText.trim()||"",starsAccessibleLabel:stars?.getAttribute("aria-label")||"",criteriaCount:criteria.length,panelWidth:pr?.width||0,panelWithinViewport:Boolean(pr&&pr.left>=-1&&pr.right<=window.innerWidth+1),horizontalOverflow:section?section.scrollWidth>section.clientWidth:false,starCount:stars?.querySelectorAll('[aria-hidden="true"]').length||0,reviewCards:cards.length,demoCards:cards.filter(card=>card.querySelector(".review-card-label")?.innerText.trim()==="نموذج توضيحي"&&card.innerText.includes("لا يمثل رأيًا حقيقيًا")).length,placeholderCards:cards.filter(card=>card.querySelector(".review-card-copy")?.innerText.trim()==="مساحة مخصصة لعرض رأي مريض موثّق بعد الحصول على موافقته.").length};})(),
         faqItems:document.querySelectorAll(".faq-item").length,
         clinicalReferences:[...document.querySelectorAll(".reference-note a")].map(a=>a.href),
@@ -1233,6 +1248,12 @@ try {
     assert.equal(state.journeyListTag,"OL",`${vp.name}: treatment journey must use an ordered list`);
     assert.equal(state.journeyListLabel,"مراحل رحلة تبييض الأسنان",`${vp.name}: treatment journey list must have an accessible Arabic label`);
     assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);
+
+     assert.equal(state.expectationsSection.cardCount,4,"Four realistic-expectations cards must be present");
+     assert.deepEqual(state.expectationsSection.cardTitles,["النتائج تختلف من شخص لآخر","قد تحدث حساسية أو تهيّج مؤقت","الحشوات والتيجان والقشور لا تتبيّض","العناية بعد التبييض"],"Expectations card copy or order changed");
+     assert.equal(state.expectationsSection.gridColumnCount,vp.width<=600?1:2,"Expectations grid must use two columns except on mobile");
+     assert.equal(state.expectationsSection.horizontalOverflow,false,"Expectations section must not overflow horizontally");
+     assert.equal(state.expectationsSection.cardsWithinSection,true,"Expectations cards must remain within section bounds");
     assert.equal(state.reviewSection.present,true,`${vp.name}: patient reviews trust section is missing`);
     assert.equal(state.reviewSection.heading,"كل تجربة تستحق أن تُعرض كما هي.",`${vp.name}: patient reviews headline changed`);
     assert.equal(state.reviewSection.status,"لا تتوفر تقييمات مرضى موثّقة ضمن هذا النموذج التجريبي.",`${vp.name}: transparent demo review status is missing`);

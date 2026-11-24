@@ -79,7 +79,7 @@ Content sections in actual DOM order:
 | 04 | options | Whitening options | Explain general options without claiming they are RUWA clinic services |
 | 05 | journey | Treatment journey | Explain the general sequence from assessment and option selection to procedure and aftercare |
 | 06 | suitability | Suitability and safety | Explain factors that may affect suitability or timing |
-| 07 | expectations | Realistic expectations | Explain possible sensitivity, individual variation, and restorations |
+| 07 | expectations | Realistic expectations | Explain individual result variation, possible temporary sensitivity and gum irritation, natural-tooth-only whitening, and responsible aftercare and repeat-treatment guidance |
 | 08 | team | Dentist/team | Present three distinct AI-generated illustrative male portrait crops in equal cards; no real clinician identity or credentials are claimed |
 | 09 | reviews | Patient reviews | Present a transparent demo-only notice; no patient quotes, names, ratings, counts, or AggregateRating data are invented |
 | 10 | faq | Frequently asked questions | Answer four focused visitor questions |

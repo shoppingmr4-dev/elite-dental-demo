@@ -36,7 +36,7 @@ The actual current DOM order is:
 | 04 | options | Whitening options | IMPROVE only for a real clinic | General education is not proof that a real clinic offers all listed options. |
 | 05 | journey | Treatment journey | KEEP | Explains the general sequence from initial assessment and option selection to the procedure and aftercare, without claiming a clinic-specific protocol. |
 | 06 | suitability | Suitability and safety | KEEP / clinical review required | Explains factors that may affect suitability or timing. |
-| 07 | expectations | Realistic expectations | KEEP | Covers possible sensitivity, individual variation, and restorations. |
+| 07 | expectations | Realistic expectations | KEEP | Covers individual result variation, possible temporary sensitivity and gum irritation, restorations that do not whiten like natural teeth, and general aftercare without invented clinic-specific restrictions or timelines. |
 | 08 | team | Dentist/team | KEEP / demo-only | Three distinct AI-generated illustrative male portraits extracted from the existing RUWA concept image; no real clinician identity or credentials are claimed. |
 | 09 | reviews | Patient reviews | KEEP / transparency-only | States that no verified patient reviews are available in this fictional demo; includes publication criteria but no testimonials or scores. |
 | 10 | faq | Frequently asked questions | KEEP | Four native details/summary entries are present. |

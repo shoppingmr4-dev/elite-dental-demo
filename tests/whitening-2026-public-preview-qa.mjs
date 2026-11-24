@@ -45,7 +45,7 @@ try {
     await page.waitForSelector("#hero-title", { state: "visible", timeout: 30000 });
     await page.evaluate(async () => {
       await document.fonts.ready;
-      const images = [...document.images];
+      const images = [...document.images].filter(image => image.loading !== "lazy" || image.complete);
       await Promise.all(images.map(image => image.decode().catch(() => {})));
     });
 
@@ -63,6 +63,16 @@ try {
         titleVisible: Boolean(title && title.getBoundingClientRect().height > 0),
         titleText: title?.innerText?.trim() || "",
         bodyTextLength: document.body.innerText.trim().length,
+        expectations: (() => {
+          const section=document.querySelector("#expectations");
+          const grid=section?.querySelector(".expect-grid");
+          const cards=[...(section?.querySelectorAll(".expect-card")||[])];
+          return {
+            cardTitles:cards.map(card=>card.querySelector("h3")?.innerText.trim()||""),
+            gridColumnCount:grid?getComputedStyle(grid).gridTemplateColumns.trim().split(/\s+/).length:0,
+            horizontalOverflow:Boolean(section&&section.scrollWidth>section.clientWidth)
+          };
+        })(),
         bodyHeight: document.documentElement.scrollHeight,
         lang: document.documentElement.lang,
         dir: document.documentElement.dir,
@@ -160,15 +170,21 @@ try {
     assert.equal(initial.heroBottomItemCount, 3, `${viewport.name}: approved Hero principles are missing`);
     assert.equal(initial.heroCopyLayoutValid, true, `${viewport.name}: Hero copy is outside its approved responsive content column`);
     assert.equal(initial.horizontalOverflow, false, `${viewport.name}: horizontal overflow detected`);
+
+    assert.deepEqual(initial.expectations.cardTitles,["النتائج تختلف من شخص لآخر","قد تحدث حساسية أو تهيّج مؤقت","الحشوات والتيجان والقشور لا تتبيّض","العناية بعد التبييض"],"Published expectations cards are incomplete or out of order");
+    assert.equal(initial.expectations.gridColumnCount,2,"Desktop expectations must use two balanced columns");
+    assert.equal(initial.expectations.horizontalOverflow,false,"Published expectations section must not overflow horizontally");
     assert.deepEqual(initial.markerSystem.markers.map(({number,label,context})=>({number,label,context})),[
       {number:"01",label:"دليل الابتسامة",context:"hero"},
       {number:"02",label:"خطوات التقييم",context:"paper"},
       {number:"03",label:"أسباب تغيّر اللون",context:"paper"},
       {number:"04",label:"الخيارات المتاحة",context:"canvas"},
-      {number:"05",label:"قبل اتخاذ القرار",context:"paper"},
-      {number:"06",label:"توقعات واقعية",context:"dark"},
-      {number:"07",label:"الفريق الطبي",context:"paper"},
-      {number:"08",label:"إجابات واضحة",context:"canvas"}
+      {number:"05",label:"رحلة التبييض",context:"canvas"},
+      {number:"06",label:"قبل اتخاذ القرار",context:"paper"},
+      {number:"07",label:"توقعات واقعية",context:"dark"},
+      {number:"08",label:"الفريق الطبي",context:"paper"},
+      {number:"09",label:"آراء المرضى",context:"canvas"},
+      {number:"10",label:"إجابات واضحة",context:"canvas"}
     ], `${viewport.name}: immutable preview does not render the complete approved seven-marker system`);
     assert.ok(initial.markerSystem.markers.every(marker=>marker.numberWidth>=10&&marker.numberWidth<=22&&
       marker.numberHeight>=12&&marker.numberHeight<=18&&marker.numberBorder==="0px"&&
@@ -185,7 +201,7 @@ try {
       initial.markerSystem.benefit.underlineElements===0,
       `${viewport.name}: published Hero benefit line does not use the complete, unadorned RUWA Teal treatment`);
     assert.deepEqual(initial.navLabels,
-      ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","آراء المرضى","الأسئلة الشائعة"],
+      ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","رحلة التبييض","هل يناسبك؟","آراء المرضى","الأسئلة الشائعة"],
       `${viewport.name}: the six navigation labels or their order changed`);
     assert.ok(initial.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic")&&link.fontSize===14&&
@@ -227,7 +243,7 @@ try {
     });
 
     assert.equal(compact.progress, 1, `${viewport.name}: shared header progress did not reach compact state`);
-    assert.ok(compact.navLinkSizes.length===5&&compact.navLinkSizes.every(size=>size===14),
+    assert.ok(compact.navLinkSizes.length===7&&compact.navLinkSizes.every(size=>size===14),
       `${viewport.name}: navigation typography changed unexpectedly in the compact header`);
     assert.ok(compact.panelLeft > initial.panel.left && compact.panelRight > initial.panel.right,
       `${viewport.name}: both public preview frame edges did not move inward`);
