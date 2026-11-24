@@ -1445,9 +1445,31 @@ try {
       },null,{timeout:1500});
       const activeState=await activeLink.evaluate(link=>{
         const style=getComputedStyle(link);
-        return {current:link.getAttribute("aria-current"),color:style.color,fontWeight:style.fontWeight,underline:getComputedStyle(link,"::after").transform};
+        const nav=link.closest("nav");
+        const sectionId=(link.getAttribute("href")||"").slice(1);
+        const section=document.getElementById(sectionId);
+        const readingLine=Math.max(120,window.innerHeight*.32);
+        return {
+          current:link.getAttribute("aria-current"),
+          color:style.color,
+          fontWeight:style.fontWeight,
+          underline:getComputedStyle(link,"::after").transform,
+          scrollY:window.scrollY,
+          hash:window.location.hash,
+          readingLine,
+          targetTop:section?Number(section.getBoundingClientRect().top.toFixed(2)):null,
+          currentLinks:[...nav.querySelectorAll('a[aria-current="location"]')].map(item=>item.getAttribute("href")),
+          sectionPositions:[...nav.querySelectorAll('a[href^="#"]')].map(item=>{
+            const target=document.getElementById(item.getAttribute("href").slice(1));
+            return {href:item.getAttribute("href"),top:target?Number(target.getBoundingClientRect().top.toFixed(2)):null};
+          }),
+          menuExpanded:document.querySelector("#menu-toggle")?.getAttribute("aria-expanded"),
+          navOpen:nav.classList.contains("open"),
+          headerCompact:document.querySelector(".site-header")?.classList.contains("is-compact")
+        };
       });
-      assert.equal(activeState.current,"location",`${vp.name}: active link lost its aria-current state after opening the adaptive menu`);
+      assert.equal(activeState.current,"location",
+        `${vp.name}: active link lost its aria-current state after opening the adaptive menu: ${JSON.stringify(activeState)}`);
       assert.equal(activeState.color,"rgb(17, 90, 96)", `${vp.name}: active link color is incorrect`);
       assert.equal(activeState.fontWeight,"700", `${vp.name}: active link should be emphasized subtly`);
       assert.notEqual(activeState.underline,"matrix(0, 0, 0, 1, 0, 0)", `${vp.name}: active link underline is missing`);

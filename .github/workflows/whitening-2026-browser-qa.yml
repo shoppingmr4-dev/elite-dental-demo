@@ -3,9 +3,10 @@ name: RUWA Browser QA
 on:
   push:
     branches:
-      - feature/ruwa-world-class-2026
+      - feature/elite-whitening-world-class-2026
     paths:
       - "whitening-2026.html"
+      - "index.html"
       - "whitening-preview.html"
       - "preview/ruwa/index.html"
       - "README.md"
@@ -21,6 +22,7 @@ on:
       - main
     paths:
       - "whitening-2026.html"
+      - "index.html"
       - "whitening-preview.html"
       - "preview/ruwa/index.html"
       - "README.md"
