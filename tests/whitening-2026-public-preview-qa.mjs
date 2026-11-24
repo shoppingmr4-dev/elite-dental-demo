@@ -42,6 +42,32 @@ try {
 
     const response = await page.goto(previewUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
     assert.ok(response && response.ok(), `${viewport.name}: public preview did not return HTTP 2xx`);
+    if (viewport.name === "laptop-1024") {
+      const socialMeta = await page.evaluate(() => ({
+        title: document.querySelector('meta[property="og:title"]')?.content || "",
+        description: document.querySelector('meta[property="og:description"]')?.content || "",
+        type: document.querySelector('meta[property="og:type"]')?.content || "",
+        image: document.querySelector('meta[property="og:image"]')?.content || "",
+        imageAlt: document.querySelector('meta[property="og:image:alt"]')?.content || "",
+        twitterCard: document.querySelector('meta[name="twitter:card"]')?.content || "",
+        twitterImage: document.querySelector('meta[name="twitter:image"]')?.content || "",
+        pageDescription: document.querySelector('meta[name="description"]')?.content || ""
+      }));
+      assert.equal(socialMeta.type, "website", "Open Graph website type is missing");
+      assert.match(socialMeta.title, /نموذج تجريبي.*Apex Studio/, "Open Graph title must identify the fictional Apex Studio demo");
+      assert.match(socialMeta.description, /لا يمثّل عيادة حقيقية/, "Open Graph description must disclose that this is not a real clinic");
+      assert.match(socialMeta.pageDescription, /نموذج تجريبي.*لا يمثّل عيادة حقيقية/, "Search description must disclose the portfolio-demo status");
+      assert.ok(socialMeta.imageAlt.includes("مولّدة بالذكاء الاصطناعي"), "Open Graph image alt must disclose the AI illustration");
+      assert.equal(socialMeta.twitterCard, "summary_large_image", "Twitter large-image card type is missing");
+      assert.equal(socialMeta.twitterImage, socialMeta.image, "Twitter and Open Graph image URLs must match");
+      const imageResponse = await context.request.get(socialMeta.image, { timeout: 45000 });
+      assert.equal(imageResponse.status(), 200, `Open Graph image must resolve: ${socialMeta.image}`);
+      assert.match(imageResponse.headers()["content-type"] || "", /image\/webp/i, "Open Graph image must be served as WebP");
+      const imageBytes = await imageResponse.body();
+      assert.ok(imageBytes.length > 50000, `Open Graph image response is unexpectedly small: ${imageBytes.length} bytes`);
+      await imageResponse.dispose();
+      console.log("[PASS] public social metadata: truthful demo disclosure and immutable Open Graph/Twitter image resolve.");
+    }
     await page.waitForSelector("#hero-title", { state: "visible", timeout: 30000 });
     await page.evaluate(async () => {
       await document.fonts.ready;
