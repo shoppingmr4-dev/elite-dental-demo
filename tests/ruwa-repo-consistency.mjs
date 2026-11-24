@@ -48,7 +48,7 @@ assert.match(journeySection, /<ol class="journey-grid" aria-label="مراحل ر
 assert.equal([...journeySection.matchAll(/<li class="journey-step">/g)].length, 4, "Treatment journey must contain exactly four ordered steps");
 assert.ok(journeySection.includes("تختلف تفاصيل الرحلة بحسب الخيار وحالتك"), "Treatment journey must disclose that details vary by method and case");
 
-assert.match(html, /--display:"IBM Plex Sans Arabic","Alexandria",Tahoma,sans-serif;, "Arabic display headings must use the approved IBM Plex Sans Arabic family throughout RUWA");
+assert.match(html, /--display:"IBM Plex Sans Arabic","Alexandria",Tahoma,sans-serif;/, "Arabic display headings must use the approved IBM Plex Sans Arabic family throughout RUWA");
 assert.match(html, /--body:"IBM Plex Sans Arabic","Alexandria",Tahoma,sans-serif;/, "Arabic interface and body copy must use IBM Plex Sans Arabic");
 assert.match(html, /href="assets\/fonts\/Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys43PW5fslBEg0\.woff2"/, "IBM Plex Sans Arabic regular WOFF2 preload is missing");
 assert.match(html, /href="assets\/fonts\/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCRXMRrKATtYV0\.woff2"/, "IBM Plex Sans Arabic bold WOFF2 preload is missing");
