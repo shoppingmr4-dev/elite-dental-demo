@@ -16,6 +16,7 @@ on:
       - "assets/**"
       - "tests/**"
       - ".github/workflows/whitening-2026-browser-qa.yml"
+      - ".github/workflows/pages.yml"
   pull_request:
     types: [opened, synchronize, reopened, edited]
     branches:
@@ -32,6 +33,7 @@ on:
       - "assets/**"
       - "tests/**"
       - ".github/workflows/whitening-2026-browser-qa.yml"
+      - ".github/workflows/pages.yml"
 
 permissions:
   contents: read
@@ -71,7 +73,10 @@ jobs:
         run: npm run test:ruwa:consistency
 
       - name: Install the repository's existing test tools
-        run: npm install --no-audit --no-fund
+        run: npm install --no-fund
+
+      - name: Audit installed dependencies
+        run: npm audit --audit-level=high
 
       - name: Install Chromium for Playwright browser checks
         run: npx playwright install --with-deps chromium

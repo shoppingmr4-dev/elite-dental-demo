@@ -14,7 +14,8 @@ const [
   caseStudy,
   productionAudit,
   rootAlias,
-  publicAlias
+  publicAlias,
+  pagesWorkflow
 ] = await Promise.all([
   read("whitening-2026.html"),
   read("index.html"),
@@ -23,7 +24,8 @@ const [
   read("portfolio/ruwa-dental-whitening/CASE-STUDY.md"),
   read("portfolio/ruwa-dental-whitening/PRODUCTION-READINESS-AUDIT.md"),
   read("whitening-preview.html"),
-  read("preview/ruwa/index.html")
+  read("preview/ruwa/index.html"),
+  read(".github/workflows/pages.yml")
 ]);
 
 const sectionIds = [...html.matchAll(/<section\b[^>]*\bid=["']([^"']+)["']/gi)].map(match => match[1]);
@@ -142,6 +144,8 @@ assert.match(rootEntry, /window\.location\.replace\("\.\/whitening-2026\.html"\)
 assert.match(rootEntry, /rel="canonical" href="\.\/whitening-2026\.html"/, "Repository root canonical URL must point to RUWA");
 assert.doesNotMatch(rootEntry, /Elite Dental Clinic|Tailwind|site\.css|local-fonts\.css|unsplash/i, "Repository root must not contain the retired Elite site or its build assets");
 assert.doesNotMatch(rootAlias + publicAlias, /pexels|prepare-inquiry|clipboard|Elite Dental Clinic/i);
+assert.ok(html.includes(".site-header.is-compact .nav{") && html.includes("position:absolute;z-index:40;top:calc(100% + 10px)"), "Compact desktop dropdown must stay out of document flow in both states");
+assert.ok(pagesWorkflow.includes("if: github.ref == 'refs/heads/main'"), "GitHub Pages deployment must be restricted to the main ref");
 
 for (const [name, content] of [
   ["README", readme],

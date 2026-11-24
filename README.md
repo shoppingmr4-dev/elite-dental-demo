@@ -59,6 +59,7 @@ Use Node.js 22.
 
 ```sh
 npm install
+npm audit --audit-level=high
 npm run test:ruwa:consistency
 npx playwright install chromium
 ```
@@ -74,4 +75,4 @@ The workflow does not currently run Lighthouse. Do not quote a Lighthouse score 
 Current working branch: **`feature/elite-whitening-world-class-2026`**  
 Pull request: **#9** — keep it open and in Draft until explicitly approved.
 
-Keep RUWA work on that branch. Do not push to `main`, merge the draft PR, or trigger a production deployment without explicit authorization. Automatic GitHub Pages deployment is triggered by pushes to `main`. The workflow also exposes `workflow_dispatch`; when manually invoking it, select `main` only. Do not dispatch it from the feature branch because that workflow deploys the selected ref.
+Keep RUWA work on that branch. Do not push to `main`, merge the draft PR, or trigger a production deployment without explicit authorization. Automatic GitHub Pages deployment is triggered by pushes to `main`. The workflow also exposes `workflow_dispatch`, but the deployment job now enforces `refs/heads/main`; dispatches from other branches are skipped. Select `main` only for an intentionally authorized production deployment.
