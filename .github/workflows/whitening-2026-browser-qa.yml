@@ -64,19 +64,19 @@ jobs:
           done
           python3 - <<'PY'
           from pathlib import Path
-          import re
           path = Path("whitening-2026.html")
           html = path.read_text(encoding="utf-8")
-          dimensions = {
-              "ruwa-team-doctor-01.webp": (545, 681),
-              "ruwa-team-doctor-02.webp": (560, 700),
-              "ruwa-team-doctor-03.webp": (560, 700),
+          images = {
+              "ruwa-team-doctor-01.webp": ((400, 695), (545, 681)),
+              "ruwa-team-doctor-02.webp": ((400, 670), (560, 700)),
+              "ruwa-team-doctor-03.webp": ((400, 670), (560, 700)),
           }
-          for filename, (width, height) in dimensions.items():
-              pattern = re.compile(r'(<img\\b[^>]*src="assets/' + re.escape(filename) + r'"[^>]*?)\\s+width="\\d+"\\s+height="\\d+"')
-              html, count = pattern.subn(lambda match: f'{match.group(1)} width="{width}" height="{height}"', html)
-              if count != 1:
-                  raise SystemExit(f"Expected exactly one image tag for {filename}; found {count}")
+          for filename, (old_size, new_size) in images.items():
+              old = f'src="assets/{filename}" width="{old_size[0]}" height="{old_size[1]}"'
+              new = f'src="assets/{filename}" width="{new_size[0]}" height="{new_size[1]}"'
+              if html.count(old) != 1:
+                  raise SystemExit(f"Expected exactly one image tag for {filename}")
+              html = html.replace(old, new, 1)
           path.write_text(html, encoding="utf-8")
           PY
           git config user.name "github-actions[bot]"
