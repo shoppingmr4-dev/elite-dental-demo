@@ -133,7 +133,7 @@ The page has no canonical URL or LocalBusiness structured data. Those should onl
 
 ## 10. Final verification — 24 November 2026
 
-The latest successful RUWA Browser QA run is [GitHub Actions #45504768137](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45504768137), executed against application commit `dc0245447b73420031d8310546265d48f112e27f).
+The latest successful RUWA Browser QA run is [GitHub Actions #45506899194](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45506899194), executed against application commit `9a3b47ec9e321b8994bc5af27f07234046a38873`.
 
 Verified results:
 - Approved Hero asset SHA guard: passed.
@@ -143,9 +143,10 @@ Verified results:
 - Hero above-the-fold checks: nine viewports passed.
 - Playwright browser suite: all nine responsive checks passed, including navigation, sticky-header synchronisation, FAQ keyboard (Enter/Space) and pointer interaction, and contact-dialog focus handling.
 - Immutable public preview: Chromium checks passed at 1024px, 1280px, and 1440px; zero JavaScript errors were reported in those public-preview checks.
-- Screenshot and metrics evidence: [artifact 14972378293](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45504768137/artifacts/14972378293).
+- Social metadata: Open Graph and Twitter metadata accurately disclose that this is a fictional Apex Studio demo; the immutable WebP OG image responds with HTTP 200 and the expected image content type.
+- Screenshot and metrics evidence: [artifact 14971429866](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45506899194/artifacts/14971429866).
 
-The screenshots were also manually inspected at desktop 1440px and mobile 390px and 320px, including the full-page composition, Hero, expectations/suitability area, and footer. The page metadata includes a title, Arabic description, Open Graph title/description/image, theme colour, and favicon; the document declares `lang="ar-SA"` and `dir="rtl"`. The internal anchor audit found no missing targets, and all eight local asset references resolved in the repository. The approved Hero is 768 × 1152, 105,004 bytes, preloaded with high priority; team images are lazy-loaded with intrinsic dimensions.
+The screenshots were also manually inspected at desktop 1440px and mobile 390px and 320px, including the full-page composition, Hero, expectations/suitability area, and footer. The page metadata includes a clear fictional-demo disclosure, title, Arabic description, Open Graph and Twitter preview metadata, theme colour, and favicon; the document declares `lang="ar-SA"` and `dir="rtl"`. The internal anchor audit found no missing targets, and all eight local asset references resolved in the repository. The approved Hero is 768 × 1152, 105,004 bytes, preloaded with high priority; team images are lazy-loaded with intrinsic dimensions.
 
 Limitations:
 - This workflow does not run Lighthouse. No Lighthouse performance/accessibility/SEO score is claimed.
