@@ -202,12 +202,17 @@ try {
       `${viewport.name}: published Hero benefit line does not use the complete, unadorned RUWA Teal treatment`);
     assert.deepEqual(initial.navLabels,
       ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","رحلة التبييض","هل يناسبك؟","آراء المرضى","الأسئلة الشائعة"],
-      `${viewport.name}: the six navigation labels or their order changed`);
+      `${viewport.name}: the seven navigation labels or their order changed`);
     assert.ok(initial.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic")&&link.fontSize===14&&
       link.fontWeight===600&&Math.abs(link.lineHeight-22.4)<.2&&
-      link.color==="rgb(48, 74, 84)"&&link.whiteSpace==="nowrap"&&link.height>=36
-    ), `${viewport.name}: public navigation typography does not match the approved specification: ${JSON.stringify(initial.navLinkTypography)}`);
+      link.color==="rgb(48, 74, 84)"&&link.whiteSpace==="nowrap"&&
+      (link.height===0||link.height>=36)
+    ), `${viewport.name}: visible and collapsed navigation links must retain the approved typography: ${JSON.stringify(initial.navLinkTypography)}`);
+    assert.equal(initial.navLinkTypography.filter(link=>link.height>=36).length,3,
+      `${viewport.name}: expanded desktop navigation must show exactly its three primary links`);
+    assert.equal(initial.navLinkTypography.filter(link=>link.height===0).length,4,
+      `${viewport.name}: the four secondary links must remain collapsed until navigation opens`);
 
     await page.evaluate(() => window.scrollTo({ top: 600, behavior: "instant" }));
     await page.waitForFunction(() => {
