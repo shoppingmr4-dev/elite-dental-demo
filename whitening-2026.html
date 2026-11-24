@@ -1026,26 +1026,23 @@ body,button,input,select,textarea{font-family:var(--body)}
 .site-header .nav a[aria-current="location"]:hover,
 .site-header .nav a[aria-current="location"]:focus-visible{color:var(--blue-deep);font-weight:700}
 
-/* Compact desktop navigation: keep the dropdown out of document flow in both states.
-   Opening it must not resize the sticky header or shift the section reading line. */
+/* Compact desktop navigation: replace the visible link row with an accessible menu control. */
 @media(min-width:921px){
- .site-header.is-compact .nav{
+ .site-header.is-compact .nav:not(.open){
+  visibility:hidden;opacity:0;pointer-events:none;
+ }
+ .site-header.is-compact .menu-toggle{
+  display:grid;position:absolute;z-index:4;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+ }
+ .site-header.is-compact .nav.open{
   position:absolute;z-index:40;top:calc(100% + 10px);left:50%;right:auto;
   display:flex;flex-direction:column;align-items:stretch;gap:0;margin:0;
   width:min(420px,calc(100vw - 32px));max-height:min(70vh,560px);overflow-y:auto;
   padding:8px;border:1px solid var(--line);border-radius:16px;
   background:var(--paper);box-shadow:0 18px 34px rgba(20,45,56,.14);
-  transform:translateX(-50%);
- }
- .site-header.is-compact .nav:not(.open){
-  visibility:hidden;opacity:0;pointer-events:none;
- }
- .site-header.is-compact .nav.open{
   visibility:visible;opacity:1;pointer-events:auto;
- }
- .site-header.is-compact .menu-toggle{
-  display:grid;position:absolute;z-index:4;top:50%;left:50%;
-  transform:translate(-50%,-50%);
+  transform:translateX(-50%);
  }
  .site-header.is-compact .nav.open a{
   display:flex;align-items:center;min-height:46px;padding:11px 14px;
@@ -1978,6 +1975,9 @@ body,button,input,select,textarea{font-family:var(--body)}
  };
  const updateCurrent=()=>{
   pendingFrame=null;
+  // Keep the selected section stable while the compact dropdown is open.
+  // The dropdown is an overlay; opening it must not change the active item.
+  if(nav.classList.contains("open"))return;
   const readingLine=Math.max(120,window.innerHeight*.32);
   let active=null;
   for(const item of items){

@@ -144,7 +144,7 @@ assert.match(rootEntry, /window\.location\.replace\("\.\/whitening-2026\.html"\)
 assert.match(rootEntry, /rel="canonical" href="\.\/whitening-2026\.html"/, "Repository root canonical URL must point to RUWA");
 assert.doesNotMatch(rootEntry, /Elite Dental Clinic|Tailwind|site\.css|local-fonts\.css|unsplash/i, "Repository root must not contain the retired Elite site or its build assets");
 assert.doesNotMatch(rootAlias + publicAlias, /pexels|prepare-inquiry|clipboard|Elite Dental Clinic/i);
-assert.ok(html.includes(".site-header.is-compact .nav{") && html.includes("position:absolute;z-index:40;top:calc(100% + 10px)"), "Compact desktop dropdown must stay out of document flow in both states");
+assert.ok(html.includes("if(nav.classList.contains(\"open\"))return;"), "Active-section tracking must remain stable while the compact dropdown is open");
 assert.ok(pagesWorkflow.includes("if: github.ref == 'refs/heads/main'"), "GitHub Pages deployment must be restricted to the main ref");
 
 for (const [name, content] of [
