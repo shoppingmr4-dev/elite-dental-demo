@@ -501,7 +501,10 @@ try {
            phone:document.querySelectorAll('[data-contact-action="phone"]').length
          },
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
-        contentSections:["approach","causes","options","suitability","expectations","team","reviews","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
+        contentSections:["approach","causes","options","journey","suitability","expectations","team","reviews","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
+        journeyStepCount:document.querySelectorAll("#journey .journey-step").length,
+        journeyListTag:document.querySelector("#journey .journey-grid")?.tagName||"",
+        journeyListLabel:document.querySelector("#journey .journey-grid")?.getAttribute("aria-label")||"",
         teamProfile:(()=>{const section=document.getElementById("team"),wrap=section?.querySelector(".team-wrap"),heading=section?.querySelector("h2"),cards=[...(section?.querySelectorAll(".team-card")||[])],images=[...(section?.querySelectorAll(".team-card img")||[])],rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width,centerX:r.left+r.width/2};},hr=heading?rect(heading):null,wr=wrap?rect(wrap):null;return {heading:heading?.innerText.trim()||"",imageSources:images.map(image=>image.getAttribute("src")||""),imageAlts:images.map(image=>image.getAttribute("alt")||""),imagesLoaded:images.length===3&&images.every(image=>image.complete&&image.naturalWidth>0),disclosure:section?.querySelector(".team-disclosure")?.innerText.trim()||"",cardCount:cards.length,cardWidths:cards.map(card=>rect(card).width),gridColumns:section?.querySelector(".team-cards")?getComputedStyle(section.querySelector(".team-cards")).gridTemplateColumns.trim().split(/\s+/).length:0,headingCenterDelta:hr&&wr?Math.abs(hr.centerX-(wr.left+wr.right)/2):999,thirdCardCenterDelta:cards.length===3&&wr?Math.abs(rect(cards[2]).centerX-(wr.left+wr.right)/2):999};})(),
         optionCards:document.querySelectorAll(".option-card").length,
         causeCards:document.querySelectorAll(".info-card").length,
@@ -779,12 +782,12 @@ try {
     assert.equal(state.demoDialogInitialOpen, false, `${vp.name}: demo dialog should start closed`);
     assert.ok(state.demoDialogText.includes("قنوات التواصل ستعمل مباشرة عند إضافة بيانات الاتصال الرسمية"), `${vp.name}: contact dialog initial explanation is missing`);
     assert.ok(state.demoDialogText.includes("لن يتم فتح محادثة أو بدء اتصال قبل إعداد رقم صحيح"), `${vp.name}: unavailable contact destinations must be disclosed`);
-    assert.deepEqual(state.navLabels, ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","هل يناسبك؟","آراء المرضى","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
-    assert.deepEqual(state.navHrefs, ["#approach","#causes","#options","#suitability","#reviews","#faq"], `${vp.name}: navigation destinations are incorrect`);
-    assert.deepEqual(state.navSecondaryHrefs,["#approach","#causes","#reviews"],`${vp.name}: secondary navigation destinations changed`);
+    assert.deepEqual(state.navLabels, ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","رحلة التبييض","هل يناسبك؟","آراء المرضى","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
+    assert.deepEqual(state.navHrefs, ["#approach","#causes","#options","#journey","#suitability","#reviews","#faq"], `${vp.name}: navigation destinations are incorrect`);
+    assert.deepEqual(state.navSecondaryHrefs,["#approach","#causes","#journey","#reviews"],`${vp.name}: secondary navigation destinations changed`);
     assert.deepEqual(state.navVisibleHrefs,vp.width>920?["#options","#suitability","#faq"]:[],`${vp.name}: expanded desktop header must show only three priority links`);
     assert.equal(state.navInert,vp.width<=920,`${vp.name}: closed mobile/tablet navigation must be inert`);
-    assert.equal(state.navLinkTypography.length,6, `${vp.name}: all six navigation links must be present`);
+    assert.equal(state.navLinkTypography.length,7, `${vp.name}: all seven navigation links must be present`);
     assert.ok(state.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic") && link.fontSize===14 &&
       link.fontWeight===600 && Math.abs(link.lineHeight-22.4)<.2 &&
@@ -1068,7 +1071,7 @@ try {
       assert.equal(desktopMenuOpen.expanded,"true",`${vp.name}: compact desktop menu did not open`);
       assert.equal(desktopMenuOpen.inert,false,`${vp.name}: opened desktop navigation must be interactive`);
       assert.equal(desktopMenuOpen.visibility,"visible",`${vp.name}: compact desktop menu panel is not visible`);
-      assert.deepEqual(desktopMenuOpen.links,["#approach","#causes","#options","#suitability","#reviews","#faq"],`${vp.name}: compact desktop menu must expose every section destination`);
+      assert.deepEqual(desktopMenuOpen.links,["#approach","#causes","#options","#journey","#suitability","#reviews","#faq"],`${vp.name}: compact desktop menu must expose every section destination`);
       await page.keyboard.press("Escape");
       await page.waitForFunction(()=>document.querySelector("#menu-toggle").getAttribute("aria-expanded")==="false"&&document.querySelector("#main-nav").inert===true&&document.activeElement===document.querySelector("#menu-toggle"),null,{timeout:3000});
     }
@@ -1222,9 +1225,12 @@ try {
     }
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
-    assert.deepEqual(state.pageSectionOrder, ["top","approach","causes","options","suitability","expectations","team","reviews","faq","consultation"], `${vp.name}: page sections are missing or not in the approved patient-journey order`);
+    assert.deepEqual(state.pageSectionOrder, ["top","approach","causes","options","journey","suitability","expectations","team","reviews","faq","consultation"], `${vp.name}: page sections are missing or not in the approved patient-journey order`);
     assert.deepEqual(state.duplicateIds, [], `${vp.name}: duplicate HTML IDs detected`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
+    assert.equal(state.journeyStepCount,4,`${vp.name}: treatment journey must contain four clear steps`);
+    assert.equal(state.journeyListTag,"OL",`${vp.name}: treatment journey must use an ordered list`);
+    assert.equal(state.journeyListLabel,"مراحل رحلة تبييض الأسنان",`${vp.name}: treatment journey list must have an accessible Arabic label`);
     assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);
     assert.equal(state.reviewSection.present,true,`${vp.name}: patient reviews trust section is missing`);
     assert.equal(state.reviewSection.heading,"كل تجربة تستحق أن تُعرض كما هي.",`${vp.name}: patient reviews headline changed`);
@@ -1312,7 +1318,7 @@ try {
       assert.equal(opened.expanded, "true", `${vp.name}: mobile menu aria state did not open`);
       assert.notEqual(opened.display, "none", `${vp.name}: mobile menu did not open`);
       assert.equal(opened.inert,false,`${vp.name}: opened mobile navigation must not be inert`);
-      assert.deepEqual(opened.visibleLinks,["#approach","#causes","#options","#suitability","#reviews","#faq"],`${vp.name}: mobile menu must expose every section destination`);
+      assert.deepEqual(opened.visibleLinks,["#approach","#causes","#options","#journey","#suitability","#reviews","#faq"],`${vp.name}: mobile menu must expose every section destination`);
       await page.locator('#main-nav a[href="#approach"]').click();
       // The page restores focus on the next animation frame after native hash navigation.
       await page.waitForFunction(

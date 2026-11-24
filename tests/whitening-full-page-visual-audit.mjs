@@ -14,7 +14,7 @@ const viewports = [
   { name: "mobile-360", width: 360, height: 800, mobile: true },
   { name: "mobile-320", width: 320, height: 740, mobile: true }
 ];
-const sectionIds = ["approach", "causes", "options", "suitability", "expectations", "team", "reviews", "faq", "consultation"];
+const sectionIds = ["approach", "causes", "options", "journey", "suitability", "expectations", "team", "reviews", "faq", "consultation"];
 await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
 const results = [];
@@ -159,7 +159,7 @@ try {
         const wrap=el.querySelector(".wrap");
         const heading=el.querySelector("h2");
         const marker=el.querySelector(".section-marker");
-        const cards=[...el.querySelectorAll(".info-card,.option-card,.check-item,.expect-card,.team-card,.team-card-media,.team-card-body,.reviews-panel,.reviews-preview,.review-card,.reviews-criteria,.reviews-criteria-list li,.faq-item,.step,.contact-band")];
+        const cards=[...el.querySelectorAll(".info-card,.option-card,.journey-step,.check-item,.expect-card,.team-card,.team-card-media,.team-card-body,.reviews-panel,.reviews-preview,.review-card,.reviews-criteria,.reviews-criteria-list li,.faq-item,.step,.contact-band")];
         const cardStyles=cards.map(card=>({className:card.className||card.tagName,rect:rect(card),style:style(card)}));
         return {
           id,rect:rect(el),style:style(el),
@@ -315,6 +315,9 @@ try {
     await page.locator("#approach").screenshot({
       path:`${OUT}/${vp.name}-section-approach.png`,animations:"disabled",timeout:30000
     });
+    await page.locator("#journey").screenshot({
+      path:`${OUT}/${vp.name}-section-journey.png`,animations:"disabled",timeout:30000
+    });
      if(vp.width===1440||vp.width===390){
        await page.locator("#reviews").screenshot({
          path:`${OUT}/${vp.name}-section-reviews.png`,animations:"disabled",timeout:30000
@@ -406,7 +409,7 @@ try {
       const expectedStepColumns=vp.width>900?3:1;
       if(approachDetails.composition.stepListColumnCount!==expectedStepColumns)problems.push("Section 02 step layout does not match the responsive column rule");
     }
-    if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","approach","causes","options","suitability","expectations","team","reviews","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
+    if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","approach","causes","options","journey","suitability","expectations","team","reviews","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
     if(metrics.counts.teamCards!==3||metrics.counts.teamPortraits!==3)problems.push("team section must render exactly three portrait cards");
     if(metrics.counts.reviewCriteria!==3||metrics.counts.reviewCards!==3||metrics.counts.reviewStars!==5||!metrics.counts.reviewDisclosure.includes("لا تمثل تقييمًا فعليًا")||!metrics.counts.reviewStatus.includes("لا تتوفر تقييمات مرضى موثّقة"))problems.push("patient reviews preview, demo cards, or transparency copy is incomplete");
     if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");

@@ -11,7 +11,7 @@
 
 RUWA is a fictional portfolio concept, not a commissioned or operating dental clinic. It must not be presented as a real clinic, and it must not acquire invented doctors, qualifications, ratings, testimonials, prices, addresses, opening hours, patient statistics, clinical outcomes, or appointment inventory.
 
-The current page has a coherent service-specific education journey. It contains **10 main content sections** plus the shared header, announcement strip, and footer. Its educational structure does not need extra placeholder sections. The missing items are real-business evidence and an operational conversion destination, not decorative content.
+The current page has a coherent service-specific education journey. It contains **11 main content sections** plus the shared header, announcement strip, and footer. Its educational structure does not need extra placeholder sections. The missing items are real-business evidence and an operational conversion destination, not decorative content.
 
 ## 2. Repository source-of-truth and route audit
 
@@ -29,17 +29,18 @@ The actual current DOM order is:
 
 | Order | ID | Section | Decision | Evidence-based rationale |
 |---:|---|---|---|---|
-| Header | main-nav | Brand, six section links, WhatsApp-labelled CTA | KEEP | Directs visitors to the current patient-education journey, including the reviews-transparency note. |
+| Header | main-nav | Brand, seven section links, WhatsApp-labelled CTA | KEEP | Directs visitors to the current patient-education journey, including the treatment journey and reviews-transparency note. |
 | 01 | top | Hero | KEEP / protect | Explains the whitening subject and presents the approved illustrative portrait and first actions. |
 | 02 | approach | Assessment approach | KEEP | Explains why assessment precedes choosing an option. |
 | 03 | causes | Causes of discoloration | KEEP | Provides concise context about surface and deeper colour changes. |
 | 04 | options | Whitening options | IMPROVE only for a real clinic | General education is not proof that a real clinic offers all listed options. |
-| 05 | suitability | Suitability and safety | KEEP / clinical review required | Explains factors that may affect suitability or timing. |
-| 06 | expectations | Realistic expectations | KEEP | Covers possible sensitivity, individual variation, and restorations. |
-| 07 | team | Dentist/team | KEEP / demo-only | Three distinct AI-generated illustrative male portraits extracted from the existing RUWA concept image; no real clinician identity or credentials are claimed. |
-| 08 | reviews | Patient reviews | KEEP / transparency-only | States that no verified patient reviews are available in this fictional demo; includes publication criteria but no testimonials or scores. |
-| 09 | faq | Frequently asked questions | KEEP | Four native details/summary entries are present. |
-| 10 | consultation | Final contact | KEEP / activate only with verified details | The actions disclose that real channels are not configured. |
+| 05 | journey | Treatment journey | KEEP | Explains the general sequence from initial assessment and option selection to the procedure and aftercare, without claiming a clinic-specific protocol. |
+| 06 | suitability | Suitability and safety | KEEP / clinical review required | Explains factors that may affect suitability or timing. |
+| 07 | expectations | Realistic expectations | KEEP | Covers possible sensitivity, individual variation, and restorations. |
+| 08 | team | Dentist/team | KEEP / demo-only | Three distinct AI-generated illustrative male portraits extracted from the existing RUWA concept image; no real clinician identity or credentials are claimed. |
+| 09 | reviews | Patient reviews | KEEP / transparency-only | States that no verified patient reviews are available in this fictional demo; includes publication criteria but no testimonials or scores. |
+| 10 | faq | Frequently asked questions | KEEP | Four native details/summary entries are present. |
+| 11 | consultation | Final contact | KEEP / activate only with verified details | The actions disclose that real channels are not configured. |
 | Footer | — | Portfolio and image disclosures | KEEP | Prevents the sample from being mistaken for a real operating clinic. |
 
 The team section contains three equal demo-only profile cards with distinct AI-generated illustrative male portraits extracted from an existing RUWA concept image; these are not real doctor profiles or credentials. No authentic patient review/testimonial, review count, or rating score is supplied. The new patient-reviews panel is a transparency notice only, not social proof. No before-and-after gallery, clinic gallery, pricing section, map, or hours-of-operation section exists in this page.
@@ -140,6 +141,6 @@ Before the latest repository-consistency maintenance:
 
 ## 11. Final verdict
 
-The RUWA portfolio page has ten main sections, including a patient-reviews transparency notice. That notice is not social proof: no authentic patient review, rating, or review count has been supplied. Adding fabricated clinicians, patient reviews, ratings, clinic facts, or prices would be a regression. Keep the page honest and focused; publish patient reviews only after genuine material and authorization are verified.
+The RUWA portfolio page has eleven main sections, including the treatment-journey overview and patient-reviews transparency notice. That notice is not social proof: no authentic patient review, rating, or review count has been supplied. Adding fabricated clinicians, patient reviews, ratings, clinic facts, or prices would be a regression. Keep the page honest and focused; publish patient reviews only after genuine material and authorization are verified.
 
 The RUWA implementation remains staged on the feature branch. Do not merge the PR, publish a production site, or activate a contact channel without explicit approval and verified clinic information.

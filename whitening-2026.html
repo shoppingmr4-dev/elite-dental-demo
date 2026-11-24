@@ -262,6 +262,12 @@ body.dialog-open{overflow:hidden}
 .option-card h3{margin:0 0 10px;font-family:var(--display);font-size:16px;line-height:1.6}
 .option-card p{margin:0;color:var(--muted);font-size:13px;line-height:2}
 .option-card .option-note{margin-top:auto;padding-top:16px;color:var(--blue-deep);font-size:11px;font-weight:800}
+.journey-section{background:#EAF3F8}
+.journey-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:0;padding:0;list-style:none}
+.journey-step{display:grid;grid-template-columns:28px minmax(0,1fr);align-content:start;align-items:start;gap:11px;min-width:0;padding:19px 16px;border:1px solid #DCE5EA;border-radius:15px;background:#FFFFFF}
+.journey-step-number{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#E3F2E9;color:#115A60;font-family:var(--body);font-size:12px;font-weight:700;line-height:1;direction:ltr;font-variant-numeric:tabular-nums}
+.journey-step h3{margin:1px 0 7px;color:var(--ink);font-family:var(--display);font-size:14px;font-weight:800;line-height:1.7}
+.journey-step p{margin:0;color:var(--muted);font-size:12px;line-height:1.95}
 .suitability-section{background:var(--paper)}
 .suitability-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:start;gap:clamp(22px,4.5vw,60px)}
 .suitability-copy h2{margin:14px 0 12px;font-family:var(--display);font-size:clamp(26px,3.7vw,42px);line-height:1.45;letter-spacing:-.05em}
@@ -353,6 +359,7 @@ body.dialog-open{overflow:hidden}
 @media(max-width:850px){
  .options-grid{grid-template-columns:1fr 1fr}
  .options-grid .option-card:last-child{grid-column:1/-1;min-height:220px}
+ .journey-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .suitability-grid{grid-template-columns:1fr;gap:26px}
 }
 @media(max-width:520px){
@@ -362,7 +369,7 @@ body.dialog-open{overflow:hidden}
  .contact-dialog-dismiss{width:100%}
 }
 @media(max-width:600px){
- .cause-grid,.options-grid,.expect-grid{grid-template-columns:1fr}
+ .cause-grid,.options-grid,.expect-grid,.journey-grid{grid-template-columns:1fr}
  .options-grid .option-card:last-child{grid-column:auto}
  .info-card{min-height:0}
  .option-card{min-height:0}
@@ -1373,6 +1380,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    <a class="nav-secondary" href="#approach">خطوات التقييم</a>
    <a class="nav-secondary" href="#causes">أسباب تغيّر اللون</a>
    <a href="#options">خيارات التبييض</a>
+   <a class="nav-secondary" href="#journey">رحلة التبييض</a>
    <a href="#suitability">هل يناسبك؟</a>
    <a class="nav-secondary" href="#reviews">آراء المرضى</a>
    <a href="#faq">الأسئلة الشائعة</a>
@@ -1499,11 +1507,44 @@ body,button,input,select,textarea{font-family:var(--body)}
   </div>
  </section>
 
+
+ <section class="content-section journey-section" id="journey" aria-labelledby="journey-title">
+  <div class="wrap">
+   <div class="section-head journey-head">
+    <span class="eyebrow section-marker section-marker--canvas" role="group" aria-label="القسم الخامس: رحلة التبييض">
+     <span class="section-marker-number" aria-hidden="true">05</span>
+     <span class="section-marker-divider" aria-hidden="true"></span>
+     <span class="section-marker-label">رحلة التبييض</span>
+    </span>
+    <h2 id="journey-title">من التقييم إلى العناية اللاحقة.</h2>
+    <p>تختلف تفاصيل الرحلة بحسب الخيار وحالتك. يشرح لك طبيب الأسنان الخطوات والنتائج المتوقعة قبل البدء.</p>
+   </div>
+   <ol class="journey-grid" aria-label="مراحل رحلة تبييض الأسنان">
+    <li class="journey-step">
+     <span class="journey-step-number" aria-hidden="true">01</span>
+     <div><h3>التقييم الأولي</h3><p>يقيّم طبيب الأسنان صحة الأسنان واللثة، ويساعد على تحديد سبب تغيّر اللون والعوامل التي قد تؤثر في ملاءمة التبييض.</p></div>
+    </li>
+    <li class="journey-step">
+     <span class="journey-step-number" aria-hidden="true">02</span>
+     <div><h3>اختيار الطريقة المناسبة</h3><p>تُناقش الخيارات المتاحة وحدود كل منها، ثم يُختار النهج المناسب بعد الفحص.</p></div>
+    </li>
+    <li class="journey-step">
+     <span class="journey-step-number" aria-hidden="true">03</span>
+     <div><h3>تنفيذ الإجراء</h3><p>يُنفّذ الخيار المتفق عليه وفق تعليمات طبيب الأسنان واحتياطات السلامة المناسبة للحالة.</p></div>
+    </li>
+    <li class="journey-step">
+     <span class="journey-step-number" aria-hidden="true">04</span>
+     <div><h3>العناية والمتابعة</h3><p>اتبع إرشادات العناية التي يوضحها الطبيب، واطلب المشورة عند حدوث حساسية أو تهيّج شديد أو مستمر.</p></div>
+    </li>
+   </ol>
+  </div>
+ </section>
+
  <section class="content-section suitability-section" id="suitability" aria-labelledby="suitability-title">
   <div class="wrap suitability-grid">
    <div class="suitability-copy">
-    <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم الخامس: قبل اتخاذ القرار">
-      <span class="section-marker-number" aria-hidden="true">05</span>
+    <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم السادس: قبل اتخاذ القرار">
+      <span class="section-marker-number" aria-hidden="true">06</span>
       <span class="section-marker-divider" aria-hidden="true"></span>
       <span class="section-marker-label">قبل اتخاذ القرار</span>
      </span>
@@ -1531,8 +1572,8 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="content-section expect-section" id="expectations" aria-labelledby="expectations-title">
   <div class="wrap">
    <div class="section-head">
-    <span class="eyebrow section-marker section-marker--dark" role="group" aria-label="القسم السادس: توقعات واقعية">
-      <span class="section-marker-number" aria-hidden="true">06</span>
+    <span class="eyebrow section-marker section-marker--dark" role="group" aria-label="القسم السابع: توقعات واقعية">
+      <span class="section-marker-number" aria-hidden="true">07</span>
       <span class="section-marker-divider" aria-hidden="true"></span>
       <span class="section-marker-label">توقعات واقعية</span>
      </span>
@@ -1558,8 +1599,8 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="team-section" id="team" aria-labelledby="team-title">
   <div class="wrap team-wrap">
    <header class="team-intro">
-    <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم السابع: الفريق الطبي">
-     <span class="section-marker-number" aria-hidden="true">07</span>
+    <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم الثامن: الفريق الطبي">
+     <span class="section-marker-number" aria-hidden="true">08</span>
      <span class="section-marker-divider" aria-hidden="true"></span>
      <span class="section-marker-label">الفريق الطبي</span>
     </span>
@@ -1588,8 +1629,8 @@ body,button,input,select,textarea{font-family:var(--body)}
 <section class="content-section reviews-section" id="reviews" aria-labelledby="reviews-title">
  <div class="wrap">
   <header class="section-head reviews-head">
-   <span class="eyebrow section-marker section-marker--canvas" role="group" aria-label="القسم الثامن: آراء المرضى">
-    <span class="section-marker-number" aria-hidden="true">08</span><span class="section-marker-divider" aria-hidden="true"></span><span class="section-marker-label">آراء المرضى</span>
+   <span class="eyebrow section-marker section-marker--canvas" role="group" aria-label="القسم التاسع: آراء المرضى">
+    <span class="section-marker-number" aria-hidden="true">09</span><span class="section-marker-divider" aria-hidden="true"></span><span class="section-marker-label">آراء المرضى</span>
    </span>
    <h2 id="reviews-title">كل تجربة تستحق أن تُعرض كما هي.</h2>
    <p>عندما تتوفر آراء حقيقية ومصرّح بنشرها، نعرضها بأمانة دون مبالغة أو إعادة صياغة مضللة.</p>
@@ -1623,8 +1664,8 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="content-section faq-section" id="faq" aria-labelledby="faq-title">
   <div class="wrap">
    <div class="section-head">
-    <span class="eyebrow section-marker section-marker--canvas" role="group" aria-label="القسم التاسع: إجابات واضحة">
-      <span class="section-marker-number" aria-hidden="true">09</span>
+    <span class="eyebrow section-marker section-marker--canvas" role="group" aria-label="القسم العاشر: إجابات واضحة">
+      <span class="section-marker-number" aria-hidden="true">10</span>
       <span class="section-marker-divider" aria-hidden="true"></span>
       <span class="section-marker-label">إجابات واضحة</span>
      </span>
@@ -1719,6 +1760,7 @@ body,button,input,select,textarea{font-family:var(--body)}
      <li><a href="#approach">خطوات التقييم</a></li>
      <li><a href="#causes">أسباب تغيّر لون الأسنان</a></li>
      <li><a href="#options">خيارات تبييض الأسنان</a></li>
+     <li><a href="#journey">رحلة تبييض الأسنان</a></li>
      <li><a href="#suitability">مدى ملاءمة التبييض</a></li>
      <li><a href="#reviews">آراء المرضى</a></li>
      <li><a href="#faq">الأسئلة الشائعة</a></li>

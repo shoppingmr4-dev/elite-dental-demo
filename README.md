@@ -18,7 +18,7 @@ There is only one maintained RUWA page implementation. The root entry point and 
 
 RUWA is a fictional portfolio concept created by Apex Studio. It is not a commissioned or operating clinic and must not be presented as a real commercial clinic or client project.
 
-The page contains **10 content sections** (Hero, assessment, causes, options, suitability, expectations, dentist/team, a transparent patient-reviews section, FAQ, and contact) and **4 FAQ entries**.
+The page contains **11 content sections** (Hero, assessment, causes, options, treatment journey, suitability, expectations, dentist/team, a transparent patient-reviews section, FAQ, and contact) and **4 FAQ entries**.
 
 The Hero portrait at `assets/ruwa-hero-90-768.webp` is the approved AI-generated illustration. Its Arabic alt text and visible disclosure state that it is not a real dentist. Its approved Git blob is protected by a CI SHA guard. Do not replace, edit, crop, recolor, reposition, or present it as a real clinician.
 
@@ -32,12 +32,13 @@ There are **3 WhatsApp actions and 2 phone actions**. The WhatsApp and phone con
 2. Assessment approach — why evaluation precedes treatment selection.
 3. Causes of discoloration — surface stains and deeper colour changes.
 4. Whitening options — general educational descriptions, not a claim about a real clinic's services.
-5. Suitability and safety — factors that may affect suitability or timing.
-6. Realistic expectations — sensitivity, individual variation, and restorations.
-7. Dentist/team — three illustrative portraits with explicit disclosure and no invented identities or credentials.
-8. Patient reviews — a transparent notice that no verified patient reviews are available in this fictional demo.
-9. FAQ — four native HTML details/summary entries.
-10. Consultation/contact — WhatsApp and phone actions that disclose their inactive demo state.
+5. Treatment journey — a concise four-step overview from initial assessment and option selection to procedure and aftercare.
+6. Suitability and safety — factors that may affect suitability or timing.
+7. Realistic expectations — sensitivity, individual variation, and restorations.
+8. Dentist/team — three illustrative portraits with explicit disclosure and no invented identities or credentials.
+9. Patient reviews — a transparent notice that no verified patient reviews are available in this fictional demo.
+10. FAQ — four native HTML details/summary entries.
+11. Consultation/contact — WhatsApp and phone actions that disclose their inactive demo state.
 
 The shared header, navigation, announcement strip, and footer support these sections; they are not additional numbered content sections.
 
@@ -64,7 +65,7 @@ npm run test:ruwa:consistency
 npx playwright install chromium
 ```
 
-The consistency gate verifies the ten-section order, three disclosed team portraits, transparent reviews state, four FAQ entries, five contact controls, ARIA targets, protected Hero disclosure, root redirect, and both preview redirects.
+The consistency gate verifies the eleven-section order, three disclosed team portraits, transparent reviews state, four FAQ entries, five contact controls, ARIA targets, protected Hero disclosure, root redirect, and both preview redirects.
 
 The **RUWA Browser QA** GitHub Actions workflow runs the consistency gate, Playwright Chromium checks, full-page responsive captures, Hero fold checks, approved-Hero SHA validation, and immutable public-preview verification.
 
