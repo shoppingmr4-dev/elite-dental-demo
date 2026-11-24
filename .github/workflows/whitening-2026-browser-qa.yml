@@ -32,7 +32,7 @@ on:
       - ".github/workflows/whitening-2026-browser-qa.yml"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: elite-whitening-browser-qa
@@ -45,49 +45,6 @@ jobs:
     steps:
       - name: Check out the staged landing page
         uses: actions/checkout@v4
-
-      - name: Install recovered male dentist portraits from uploaded archive
-        shell: bash
-        run: |
-          set -euo pipefail
-          archive="assets/ruwa-three-male-dentist-portraits (3).zip"
-          test -s "$archive"
-          temp_dir="$(mktemp -d)"
-          trap 'rm -rf "$temp_dir"' EXIT
-          unzip -q "$archive" -d "$temp_dir"
-          for index in 01 02 03; do
-            source="$temp_dir/webp/ruwa-team-doctor-$index.webp"
-            target="assets/ruwa-team-doctor-$index.webp"
-            test -s "$source"
-            test "$(file --brief --mime-type "$source")" = "image/webp"
-            cp "$source" "$target"
-          done
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path("whitening-2026.html")
-          html = path.read_text(encoding="utf-8")
-          images = {
-              "ruwa-team-doctor-01.webp": ((400, 695), (545, 681)),
-              "ruwa-team-doctor-02.webp": ((400, 670), (560, 700)),
-              "ruwa-team-doctor-03.webp": ((400, 670), (560, 700)),
-          }
-          for filename, (old_size, new_size) in images.items():
-              old = f'src="assets/{filename}" width="{old_size[0]}" height="{old_size[1]}"'
-              new = f'src="assets/{filename}" width="{new_size[0]}" height="{new_size[1]}"'
-              if html.count(old) != 1:
-                  raise SystemExit(f"Expected exactly one image tag for {filename}")
-              html = html.replace(old, new, 1)
-          path.write_text(html, encoding="utf-8")
-          PY
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/ruwa-team-doctor-01.webp assets/ruwa-team-doctor-02.webp assets/ruwa-team-doctor-03.webp whitening-2026.html
-          if git diff --cached --quiet; then
-            echo "The recovered dentist portraits are already installed."
-          else
-            git commit -m "Install recovered RUWA male dentist portraits [skip ci]"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
-          fi
 
       - name: Verify the approved RUWA Hero image is unchanged
         shell: bash
