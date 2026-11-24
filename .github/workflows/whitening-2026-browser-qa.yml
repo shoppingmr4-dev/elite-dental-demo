@@ -39,7 +39,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ruwa-browser-qa-${{ github.ref }}
+  group: ruwa-browser-qa
   cancel-in-progress: true
 
 jobs:
