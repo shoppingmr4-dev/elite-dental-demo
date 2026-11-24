@@ -150,7 +150,7 @@ The dedicated workflow is .github/workflows/whitening-2026-browser-qa.yml. It ve
 - Internal navigation, mobile menu, floating header, FAQ open/close, contact actions, modal focus behavior, and no horizontal overflow.
 - The public immutable preview in Chromium.
 
-The last successful pre-maintenance browser run was GitHub Actions run 44848880255 on commit 62b69fd3c7f2008282b0d28443e1b827bcdba478. It passed all configured steps, including the protected-image check and public-preview verification. This run did not execute Lighthouse; no Lighthouse score is asserted here. Any later source change must be verified by a new run before claiming it passes.
+The latest successful browser QA run at this audit was [GitHub Actions run 45504768137](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45504768137) on application commit `dc0245447b73420031d8310546265d48f112e27f`. All configured steps passed: the protected Hero image check, repository consistency, dependency audit, full-page visual capture at nine viewport widths, Hero fold checks, Playwright interaction checks at nine widths, and public-preview Chromium checks at 1024px, 1280px, and 1440px. The browser suite verified native FAQ keyboard and pointer interaction, navigation, sticky-header behaviour, contact dialogs, and focus management. Evidence is preserved in [artifact 14972378293](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45504768137/artifacts/14972378293). The workflow does not execute Lighthouse; no Lighthouse score or Core Web Vitals result is asserted.
 
 ## 11. Redirect and deployment behavior
 

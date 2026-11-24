@@ -1,11 +1,12 @@
 # RUWA Dental Whitening — Repository and Production-Readiness Audit
 
-**Audit date:** 21 November 2026  
+**Audit date:** 24 November 2026  
 **Working branch:** feature/elite-whitening-world-class-2026  
 **Pull request:** #9 (draft; not merged)  
 **Canonical RUWA page:** whitening-2026.html  
 **Project type:** fictional Apex Studio portfolio demonstration  
-**Production verdict:** NOT READY for a real clinic; suitable as a staged portfolio preview after current QA passes.
+**Portfolio verdict:** Suitable for Apex Studio portfolio presentation as a clearly disclosed fictional demonstration.  
+**Production verdict:** NOT READY for a real clinic; verified clinic identity, clinical approval, authentic team/review evidence, contact channels, privacy handling, and operational booking remain unavailable.
 
 ## 1. Executive finding
 
@@ -130,14 +131,29 @@ Targets for future production:
 
 The page has no canonical URL or LocalBusiness structured data. Those should only be added when a real production domain and verified business details exist.
 
-## 10. Test and verification baseline
+## 10. Final verification — 24 November 2026
 
-Before the latest repository-consistency maintenance:
-- GitHub Actions run 44848880255 succeeded on commit 62b69fd3c7f2008282b0d28443e1b827bcdba478.
-- The run checked the approved Hero image SHA, all content sections across viewports, Hero above-the-fold visibility, the Playwright browser suite, and the immutable public preview in Chromium.
-- Browser coverage included nine widths from 320px through 1440px.
-- The workflow did not execute Lighthouse; no Lighthouse score is claimed.
-- The maintenance adds a static repository-consistency test and an explicit browser assertion that every aria-controls ID resolves. A new workflow run is required before claiming the updated revision passes.
+The latest successful RUWA Browser QA run is [GitHub Actions #45504768137](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45504768137), executed against application commit `dc0245447b73420031d8310546265d48f112e27f).
+
+Verified results:
+- Approved Hero asset SHA guard: passed.
+- Repository consistency and section/order checks: passed.
+- Dependency security audit (`npm audit --audit-level=high`): passed.
+- Full-page visual capture: nine viewport widths (320, 360, 390, 430, 768, 1024, 1280, 1366, 1440); no horizontal overflow and no duplicate IDs reported.
+- Hero above-the-fold checks: nine viewports passed.
+- Playwright browser suite: all nine responsive checks passed, including navigation, sticky-header synchronisation, FAQ keyboard (Enter/Space) and pointer interaction, and contact-dialog focus handling.
+- Immutable public preview: Chromium checks passed at 1024px, 1280px, and 1440px; zero JavaScript errors were reported in those public-preview checks.
+- Screenshot and metrics evidence: [artifact 14972378293](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45504768137/artifacts/14972378293).
+
+The screenshots were also manually inspected at desktop 1440px and mobile 390px and 320px, including the full-page composition, Hero, expectations/suitability area, and footer. The page metadata includes a title, Arabic description, Open Graph title/description/image, theme colour, and favicon; the document declares `lang="ar-SA"` and `dir="rtl"`. The internal anchor audit found no missing targets, and all eight local asset references resolved in the repository. The approved Hero is 768 × 1152, 105,004 bytes, preloaded with high priority; team images are lazy-loaded with intrinsic dimensions.
+
+Limitations:
+- This workflow does not run Lighthouse. No Lighthouse performance/accessibility/SEO score is claimed.
+- LCP, INP, and CLS have not been measured with field data or a Lighthouse lab run; do not describe Core Web Vitals as verified.
+- A canonical URL and LocalBusiness/medical-provider structured data remain intentionally absent because this is a staged fictional demo without a real production domain or verified business identity.
+- The GitHub Actions runner emitted deprecation warnings for some action/runtime dependencies; the workflow still completed successfully. These warnings are maintenance notes, not page-runtime failures.
+
+The public portfolio preview is technically and visually suitable for presentation as a disclosed concept. This is not a production-readiness approval for a real dental clinic.
 
 ## 11. Final verdict
 
