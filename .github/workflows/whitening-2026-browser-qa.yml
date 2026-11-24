@@ -1,9 +1,9 @@
-name: Elite Whitening Browser QA
+name: RUWA Browser QA
 
 on:
   push:
     branches:
-      - feature/elite-whitening-world-class-2026
+      - feature/ruwa-world-class-2026
     paths:
       - "whitening-2026.html"
       - "whitening-preview.html"
@@ -11,7 +11,7 @@ on:
       - "README.md"
       - "package.json"
       - "WHITENING-2026-DESIGN-SYSTEM.md"
-      - "portfolio/elite-dental-whitening/**"
+      - "portfolio/ruwa-dental-whitening/**"
       - "assets/**"
       - "tests/**"
       - ".github/workflows/whitening-2026-browser-qa.yml"
@@ -26,7 +26,7 @@ on:
       - "README.md"
       - "package.json"
       - "WHITENING-2026-DESIGN-SYSTEM.md"
-      - "portfolio/elite-dental-whitening/**"
+      - "portfolio/ruwa-dental-whitening/**"
       - "assets/**"
       - "tests/**"
       - ".github/workflows/whitening-2026-browser-qa.yml"
@@ -35,7 +35,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: elite-whitening-browser-qa
+  group: ruwa-browser-qa
   cancel-in-progress: false
 
 jobs:
@@ -102,7 +102,7 @@ jobs:
 
           ThreadingHTTPServer(("127.0.0.1", 4173), GzipStaticHandler).serve_forever()
           PY
-          python3 /tmp/ruwa-gzip-server.py > /tmp/elite-whitening-http.log 2>&1 &
+          python3 /tmp/ruwa-gzip-server.py > /tmp/ruwa-http.log 2>&1 &
           echo $! > /tmp/ruwa-gzip-server.pid
           ready=0
           for attempt in $(seq 1 30); do
@@ -113,14 +113,14 @@ jobs:
             sleep 1
           done
           if [ "$ready" -ne 1 ]; then
-            cat /tmp/elite-whitening-http.log
+            cat /tmp/ruwa-http.log
             exit 1
           fi
           headers="$(curl --fail --silent --head -H "Accept-Encoding: gzip" http://127.0.0.1:4173/whitening-2026.html)"
           printf '%s\n' "$headers"
           printf '%s\n' "$headers" | tr -d '\r' | grep -qi "Content-Encoding: gzip" || {
             echo "The local preview server did not return gzip-encoded HTML."
-            cat /tmp/elite-whitening-http.log
+            cat /tmp/ruwa-http.log
             exit 1
           }
 

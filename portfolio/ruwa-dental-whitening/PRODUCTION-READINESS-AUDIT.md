@@ -19,8 +19,8 @@ The current page has a coherent service-specific education journey. It contains 
 - Legacy path **whitening-preview.html** redirects to the canonical implementation.
 - Legacy public route **preview/ruwa/index.html** redirects to the canonical implementation.
 - These aliases must not contain a second landing-page implementation.
-- Root **index.html** is the repository's separate legacy Elite Dental Clinic demo. It is intentionally outside the RUWA workstream and remains unchanged.
-- The Tailwind build script and assets/css/site.css belong to that root-page workstream; they do not build or alter the standalone RUWA page.
+- Root **index.html** is a minimal redirect to **whitening-2026.html**; it is not a second website implementation.
+- The retired Elite Dental Clinic page, its Tailwind build files, and its legacy-only CI workflows have been removed from the active repository.
 - GitHub Pages deployment is configured on main only. The feature branch and draft PR are not themselves a production deployment.
 
 ## 3. Existing RUWA page inventory

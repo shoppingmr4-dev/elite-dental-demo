@@ -13,7 +13,7 @@ This document describes the current implementation, not a proposed or historical
 
 There is one maintained RUWA implementation: **whitening-2026.html**. The files **whitening-preview.html** and **preview/ruwa/index.html** are compatibility redirect pages and must not contain a second copy of the landing page.
 
-The root **index.html** is a separate legacy Elite Dental Clinic demo. The RUWA workstream must not silently replace it or modify its Tailwind stylesheet.
+The root **index.html** is a minimal redirect to **whitening-2026.html**. It contains no second website implementation, legacy branding, or build dependencies.
 
 RUWA is a fictional portfolio identity. No real clinic, dentist, employee, qualification, patient, review, rating, treatment result, price, address, opening time, phone number, or booking service is represented.
 

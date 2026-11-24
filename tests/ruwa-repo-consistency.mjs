@@ -8,6 +8,7 @@ const read = relativePath => readFile(path.join(root, relativePath), "utf8");
 
 const [
   html,
+  rootEntry,
   readme,
   designSystem,
   caseStudy,
@@ -16,10 +17,11 @@ const [
   publicAlias
 ] = await Promise.all([
   read("whitening-2026.html"),
+  read("index.html"),
   read("README.md"),
   read("WHITENING-2026-DESIGN-SYSTEM.md"),
-  read("portfolio/elite-dental-whitening/CASE-STUDY.md"),
-  read("portfolio/elite-dental-whitening/PRODUCTION-READINESS-AUDIT.md"),
+  read("portfolio/ruwa-dental-whitening/CASE-STUDY.md"),
+  read("portfolio/ruwa-dental-whitening/PRODUCTION-READINESS-AUDIT.md"),
   read("whitening-preview.html"),
   read("preview/ruwa/index.html")
 ]);
@@ -31,7 +33,7 @@ assert.deepEqual(
   "RUWA must keep the approved ten-section visitor journey in order"
 );
 
-assert.match(html, /--display:"IBM Plex Sans Arabic","Alexandria",Tahoma,sans-serif;/, "Arabic display headings must use the same IBM Plex Sans Arabic family as Elite Dental Clinic");
+assert.match(html, /--display:"IBM Plex Sans Arabic","Alexandria",Tahoma,sans-serif;/, "Arabic display headings must use the approved IBM Plex Sans Arabic family throughout RUWA");
 assert.match(html, /--body:"IBM Plex Sans Arabic","Alexandria",Tahoma,sans-serif;/, "Arabic interface and body copy must use IBM Plex Sans Arabic");
 assert.match(html, /href="assets\/fonts\/Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys43PW5fslBEg0\.woff2"/, "IBM Plex Sans Arabic regular WOFF2 preload is missing");
 assert.match(html, /href="assets\/fonts\/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCRXMRrKATtYV0\.woff2"/, "IBM Plex Sans Arabic bold WOFF2 preload is missing");
@@ -135,6 +137,10 @@ assert.match(rootAlias, /http-equiv="refresh" content="0;url=whitening-2026\.htm
 assert.match(publicAlias, /http-equiv="refresh" content="0;url=\.\.\/\.\.\/whitening-2026\.html"/);
 assert.match(rootAlias, /rel="canonical" href="whitening-2026\.html"/);
 assert.match(publicAlias, /rel="canonical" href="\.\.\/\.\.\/whitening-2026\.html"/);
+assert.match(rootEntry, /http-equiv="refresh" content="0;url=\.\/whitening-2026\.html"/, "Repository root must redirect to the canonical RUWA page");
+assert.match(rootEntry, /window\.location\.replace\("\.\/whitening-2026\.html"\)/, "Repository root must provide a JavaScript redirect fallback");
+assert.match(rootEntry, /rel="canonical" href="\.\/whitening-2026\.html"/, "Repository root canonical URL must point to RUWA");
+assert.doesNotMatch(rootEntry, /Elite Dental Clinic|Tailwind|site\.css|local-fonts\.css|unsplash/i, "Repository root must not contain the retired Elite site or its build assets");
 assert.doesNotMatch(rootAlias + publicAlias, /pexels|prepare-inquiry|clipboard|Elite Dental Clinic/i);
 
 for (const [name, content] of [
@@ -145,6 +151,7 @@ for (const [name, content] of [
 ]) {
   assert.match(content, /whitening-2026\.html/, name + " must point to the canonical RUWA page");
   assert.match(content, /RUWA/, name + " must identify the RUWA project");
+  assert.doesNotMatch(content, /Elite Dental Clinic|Tailwind CSS refresh|portfolio\/elite-dental-whitening/i, name + " must not describe the retired Elite project as active");
 }
 
 assert.match(readme, /10 content sections/);
@@ -163,4 +170,4 @@ assert.match(productionAudit, /3 WhatsApp actions and 2 phone actions/);
 console.log("RUWA repository consistency: PASS");
 console.log("Sections: 10 | Reviews: transparent demo-only state | FAQ: 4 | WhatsApp actions: 3 | Phone actions: 2");
 console.log("ARIA controls: all targets exist | Hero AI illustration disclosure: present");
-console.log("Legacy preview paths: both redirect to whitening-2026.html");
+console.log("Repository root and legacy preview paths: redirect to whitening-2026.html");

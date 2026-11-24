@@ -1,17 +1,12 @@
 {
-  "name": "elite-dental-clinic-landing-page",
+  "name": "ruwa-dental-whitening-landing-page",
   "private": true,
   "version": "2.0.0",
-  "description": "Arabic RTL landing page built with Tailwind CSS v4.",
+  "description": "Standalone Arabic RTL dental-whitening landing page for the RUWA portfolio demo.",
   "scripts": {
-    "build:css": "tailwindcss -i ./src/tailwind.css -o ./assets/css/site.css --minify",
-    "watch:css": "tailwindcss -i ./src/tailwind.css -o ./assets/css/site.css --watch",
-    "test:responsive": "node tests/responsive-smoke.mjs",
     "test:ruwa:consistency": "node tests/ruwa-repo-consistency.mjs"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "4.3.3",
-    "tailwindcss": "4.3.3",
     "playwright": "1.64.1",
     "lighthouse": "13.5.0"
   }
