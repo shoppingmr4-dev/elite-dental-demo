@@ -160,7 +160,7 @@ assert.match(html, /id=["']whatsapp-float["']/);
 assert.match(html, /class=["']whatsapp-float["']/);
 assert.match(html, /aria-label=["']تواصل عبر واتساب["']/);
 assert.match(html, /new IntersectionObserver/);
-assert.ok(html.includes("document.querySelector('.hero-actions [data-contact-action=\"whatsapp\"]')"), "Observer must watch the Hero WhatsApp CTA");
+assert.ok(html.includes("document.querySelector('.hero-actions .whatsapp-cta')"), "Observer must watch the Hero WhatsApp CTA");
 
 const ids = new Set([...html.matchAll(/\bid=["']([^"']+)["']/gi)].map(match => match[1]));
 const brokenControls = [...html.matchAll(/\baria-controls=["']([^"']+)["']/gi)]
