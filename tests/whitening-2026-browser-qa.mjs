@@ -1130,6 +1130,14 @@ try {
     },null,{timeout:4000});
     assert.equal(await floatingWhatsAppControl.getAttribute("tabindex"),"-1",`${vp.name}: floating WhatsApp control must leave the tab order when the Hero CTA returns`);
     await page.evaluate(()=>window.scrollTo({top:0,behavior:"instant"}));
+    // Wait for the scroll-linked header state to settle before recording the expanded baseline.
+    await page.waitForFunction(()=>{
+      const header=document.querySelector(".site-header");
+      return window.scrollY<=.5 &&
+        header &&
+        !header.classList.contains("is-compact") &&
+        Number.parseFloat(getComputedStyle(header).getPropertyValue("--header-progress"))<.001;
+    },null,{timeout:3000});
 
     const initialHeaderMetrics = await measureHeader(page);
     const verifyHeaderTouchTargets=(metrics,stateName)=>{
