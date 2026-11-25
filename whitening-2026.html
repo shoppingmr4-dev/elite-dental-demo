@@ -1605,7 +1605,7 @@ body,button,input,select,textarea{font-family:var(--body)}
 /* RUWA COMET BORDER — continuous tapered canvas trail on the measured rounded border path. */
 .ruwa-orbit-target{position:relative}
 .ruwa-orbit-light{display:none}
-.ruwa-orbit-geometry{position:fixed;left:-10000px;top:-10000px;visibility:hidden;opacity:0;pointer-events:none;overflow:hidden}
+.ruwa-orbit-geometry{position:absolute;left:0;top:0;width:0;height:0;visibility:hidden;opacity:0;pointer-events:none;overflow:hidden}
 @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
  .ruwa-orbit-light{
   position:absolute;display:block;z-index:4;overflow:visible;
@@ -2583,8 +2583,8 @@ body,button,input,select,textarea{font-family:var(--body)}
   path.setAttribute("fill","none");
   path.setAttribute("stroke","none");
   geometry.appendChild(path);
-  geometry.style.width=width+"px";
-  geometry.style.height=height+"px";
+  geometry.style.width="0px";
+  geometry.style.height="0px";
   target.appendChild(geometry);
 
   const pathLength=path.getTotalLength();
