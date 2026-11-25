@@ -72,6 +72,22 @@ async function prepareMenuPage(page, viewport) {
     viewport.name + ": menu should begin closed"
   );
 
+  // On fine-pointer desktop, the circular control must visibly darken on hover
+  // and return to its exact resting color after pointer exit.
+  if (viewport.width > 920) {
+    const restingColor = await button.evaluate(element => getComputedStyle(element).backgroundColor);
+    await button.hover();
+    await page.waitForTimeout(230);
+    const hoverColor = await button.evaluate(element => getComputedStyle(element).backgroundColor);
+    assert.notEqual(hoverColor, restingColor,
+      viewport.name + ": hamburger hover did not change the circular button color");
+    await page.mouse.move(8, 8);
+    await page.waitForTimeout(240);
+    const returnedColor = await button.evaluate(element => getComputedStyle(element).backgroundColor);
+    assert.equal(returnedColor, restingColor,
+      viewport.name + ": hamburger button did not return to its resting color after hover");
+  }
+
   const initial = await page.locator("#main-nav").evaluate(nav => ({
     inert: nav.inert,
     open: nav.classList.contains("open"),
@@ -111,17 +127,25 @@ try {
     if (mode === "gsap") {
       await page.waitForTimeout(110);
       const early = await nav.evaluate(element => {
-        const panel = element.getBoundingClientRect();
-        const toggle = document.querySelector("#menu-toggle").getBoundingClientRect();
         const style = getComputedStyle(element);
         const match = style.clipPath.match(/circle\(([-\d.]+)px at ([-\d.]+)px ([-\d.]+)px\)/);
+        const matrix = style.transform === "none" ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(style.transform);
+        const origin = style.transformOrigin.split(/\s+/).map(value => Number.parseFloat(value));
         return {
           clipPath: style.clipPath,
           radius: match ? Number(match[1]) : 0,
           x: match ? Number(match[2]) : NaN,
           y: match ? Number(match[3]) : NaN,
-          expectedX: toggle.left + toggle.width / 2 - panel.left,
-          expectedY: toggle.top + toggle.height / 2 - panel.top,
+          expectedX: Number(element.dataset.ruwaMenuOriginX),
+          expectedY: Number(element.dataset.ruwaMenuOriginY),
+          panelLeft: Number(element.dataset.ruwaMenuPanelLeft),
+          panelTop: Number(element.dataset.ruwaMenuPanelTop),
+          buttonCenterX: Number(element.dataset.ruwaMenuButtonCenterX),
+          buttonCenterY: Number(element.dataset.ruwaMenuButtonCenterY),
+          transformOriginX: origin[0],
+          transformOriginY: origin[1],
+          transformScale: Math.hypot(matrix.a, matrix.b),
+          rotation: Math.atan2(matrix.b, matrix.a) * 180 / Math.PI,
           maxRadius: Number(element.dataset.ruwaMenuRadius || 0),
           state: element.dataset.ruwaMenuState
         };
@@ -130,7 +154,16 @@ try {
         viewport.name + ": menu did not expose a growing circular reveal: " + JSON.stringify(early));
       assert.ok(Math.abs(early.x - early.expectedX) <= 1.25 &&
         Math.abs(early.y - early.expectedY) <= 1.25,
-        viewport.name + ": circular reveal did not originate at the actual hamburger center: " + JSON.stringify(early));
+        viewport.name + ": circular reveal did not use its measured button-relative origin: " + JSON.stringify(early));
+      assert.ok(Math.abs(early.panelLeft + early.expectedX - early.buttonCenterX) <= 1.25 &&
+        Math.abs(early.panelTop + early.expectedY - early.buttonCenterY) <= 1.25,
+        viewport.name + ": the menu's measured scale origin is not the actual hamburger center: " + JSON.stringify(early));
+      assert.ok(Math.abs(early.transformOriginX - early.expectedX) <= 1.25 &&
+        Math.abs(early.transformOriginY - early.expectedY) <= 1.25,
+        viewport.name + ": the panel transform is not anchored to the hamburger center: " + JSON.stringify(early));
+      assert.ok(early.transformScale > .018 && early.transformScale < .99 &&
+        Math.abs(early.rotation) > .1,
+        viewport.name + ": the panel itself did not scale and gently spiral outward from the button: " + JSON.stringify(early));
       assert.ok(early.clipPath.startsWith("circle("),
         viewport.name + ": the menu reveal did not use a circular clip-path");
 
@@ -350,7 +383,7 @@ try {
   await interactionPage.close();
   console.log("[PASS] Escape focus restoration, native anchor close, and rapid open/close reversal");
 
-  // The moving light must animate only its masked border layer; the card itself must not rotate.
+  // The meteor is a chain of SVG motion points sharing the exact measured border-centerline path.
   const orbitPage = await browser.newPage({
     viewport: { width: 1440, height: 900 },
     reducedMotion: "no-preference"
@@ -370,7 +403,12 @@ try {
   const orbitCount = await orbitPage.evaluate(() =>
     Number(document.documentElement.dataset.ruwaOrbitTargetCount || 0)
   );
-  assert.ok(orbitCount >= 20, "Expected selected card, panel and icon frames to receive orbit layers; found " + orbitCount);
+  const animatedOrbitCount = await orbitPage.evaluate(() =>
+    Number(document.documentElement.dataset.ruwaOrbitAnimatedCount || 0)
+  );
+  assert.ok(orbitCount >= 20, "Expected selected card, panel and icon frames to receive orbit targets; found " + orbitCount);
+  assert.ok(animatedOrbitCount >= 20,
+    "Expected selected desktop frames to receive the SVG meteor path; found " + animatedOrbitCount);
 
   const card = orbitPage.locator(".info-card").first();
   await card.scrollIntoViewIfNeeded();
@@ -386,93 +424,137 @@ try {
   await orbitPage.waitForFunction(
     element => {
       const light = element.querySelector(":scope > .ruwa-orbit-light");
-      return light && Number.parseFloat(getComputedStyle(light).opacity) > .7 &&
-        getComputedStyle(light).animationName === "ruwaMeteorOrbit";
+      return light && Number.parseFloat(getComputedStyle(light).opacity) > .7;
     },
     await card.elementHandle(),
     { timeout: 2500 }
   );
   await orbitPage.waitForTimeout(280);
-  const activeLight = await light.evaluate(element => {
-    const parent = element.parentElement;
-    const rect = element.getBoundingClientRect();
+  const activeLight = await light.evaluate(svg => {
+    const parent = svg.parentElement;
+    const rect = svg.getBoundingClientRect();
     const parentRect = parent.getBoundingClientRect();
-    const style = getComputedStyle(element);
+    const style = getComputedStyle(svg);
+    const path = svg.querySelector("path");
+    const circles = Array.from(svg.querySelectorAll("circle"));
+    const motions = Array.from(svg.querySelectorAll("animateMotion"));
+    const head = svg.querySelector(".ruwa-orbit-head");
     return {
       opacity: Number.parseFloat(style.opacity),
-      animationName: style.animationName,
-      animationPlayState: style.animationPlayState,
-      animationDuration: style.animationDuration,
-      animationTimingFunction: style.animationTimingFunction,
-      backgroundImage: style.backgroundImage,
-      angle: style.getPropertyValue("--ruwa-orbit-angle").trim(),
       pointerEvents: style.pointerEvents,
-      radius: style.borderRadius,
-      parentRadius: getComputedStyle(parent).borderRadius,
+      viewBox: svg.getAttribute("viewBox"),
+      pathData: path?.getAttribute("d") || "",
+      measuredPathLength: path?.getTotalLength() || 0,
+      declaredPathLength: Number(svg.dataset.pathLength || 0),
+      speed: Number(svg.dataset.speed || 0),
+      borderTop: Number.parseFloat(getComputedStyle(parent).borderTopWidth) || 0,
+      pathStart: (path?.getAttribute("d") || "").match(/^M\s*([-\d.]+)\s+([-\d.]+)/),
+      circles: circles.map(circle => ({
+        className: circle.getAttribute("class"),
+        radius: Number(circle.getAttribute("r")),
+        fill: circle.getAttribute("fill"),
+        opacity: Number(circle.getAttribute("opacity"))
+      })),
+      motion: motions.map(animation => ({
+        duration: animation.getAttribute("dur"),
+        begin: animation.getAttribute("begin"),
+        calcMode: animation.getAttribute("calcMode"),
+        rotate: animation.getAttribute("rotate"),
+        path: animation.getAttribute("path")
+      })),
       leftDelta: Math.abs(rect.left - parentRect.left),
       topDelta: Math.abs(rect.top - parentRect.top),
       rightDelta: Math.abs(rect.right - parentRect.right),
-      bottomDelta: Math.abs(rect.bottom - parentRect.bottom)
+      bottomDelta: Math.abs(rect.bottom - parentRect.bottom),
+      headBox: head?.getBoundingClientRect().toJSON() || null
     };
   });
-  const firstAngle = Number.parseFloat(activeLight.angle);
+  const firstHead = await light.locator(".ruwa-orbit-head").boundingBox();
   await orbitPage.waitForTimeout(260);
-  const secondAngle = await light.evaluate(element =>
-    Number.parseFloat(getComputedStyle(element).getPropertyValue("--ruwa-orbit-angle"))
-  );
-  assert.ok(activeLight.opacity > .7, "Meteor trail did not become visible on hover");
-  assert.equal(activeLight.animationName, "ruwaMeteorOrbit", "Meteor did not start its CSS conic-gradient animation");
-  assert.equal(activeLight.animationPlayState, "running", "Meteor trail should run only during hover");
-  assert.equal(activeLight.animationDuration, "4.2s",
-    "Meteor orbit speed must remain consistent across selected elements");
-  assert.equal(activeLight.animationTimingFunction, "linear",
-    "Meteor orbit must use constant-speed linear motion");
-  assert.ok(activeLight.backgroundImage.includes("255, 255, 255") &&
-    activeLight.backgroundImage.includes("116, 220, 213"),
-    "Meteor effect must contain a distinct white head and a fading teal trail");
-  assert.ok(Number.isFinite(firstAngle) && Number.isFinite(secondAngle) &&
-    Math.abs(firstAngle - secondAngle) > 2,
-    "The meteor trail did not advance around the perimeter");
-  assert.equal(activeLight.pointerEvents, "none", "Decorative orbit layer must not intercept interaction");
-  assert.equal(activeLight.radius, activeLight.parentRadius, "Meteor trail did not inherit the frame's exact corner radius");
+  const secondHead = await light.locator(".ruwa-orbit-head").boundingBox();
+  const firstDuration = Number.parseFloat(activeLight.motion[0]?.duration || "0");
+  const calculatedSpeed = activeLight.declaredPathLength / firstDuration;
+  assert.ok(activeLight.opacity > .7, "Meteor particles did not become visible on hover");
+  assert.ok(activeLight.pathData.endsWith(" Z") && activeLight.pathData.includes("A ") &&
+    activeLight.pathData.includes("H ") && activeLight.pathData.includes("V "),
+    "Meteor route must be a closed rounded-rectangle path with straight sides and corner arcs");
+  assert.ok(activeLight.measuredPathLength > 0 &&
+    Math.abs(activeLight.measuredPathLength - activeLight.declaredPathLength) <= 1.5,
+    "Meteor path length does not match the measured SVG border path");
+  assert.ok(activeLight.pathStart &&
+    Math.abs(Number(activeLight.pathStart[2]) - activeLight.borderTop / 2) <= .2,
+    "Meteor path does not begin on the border's vertical centerline");
+  assert.equal(activeLight.motion.length, 9,
+    "Expected one luminous head and eight trailing points following the same path");
+  assert.ok(activeLight.motion.every(item =>
+    item.calcMode === "paced" && item.path === activeLight.pathData &&
+    item.duration === activeLight.motion[0].duration
+  ), "All meteor particles must share the same paced perimeter path and cycle duration");
+  assert.ok(activeLight.motion[0].begin === "0s" &&
+    activeLight.motion.slice(1).every((item, index) =>
+      Number.parseFloat(item.begin) > Number.parseFloat(activeLight.motion[index].begin)
+    ), "The trail particles must follow behind the bright head in sequential phase offsets");
+  assert.ok(Math.abs(calculatedSpeed - activeLight.speed) <= .2,
+    "Meteor duration is not derived from one shared physical travel speed");
+  assert.ok(activeLight.circles[0].className === "ruwa-orbit-head" &&
+    activeLight.circles[0].fill === "#FFFFFF" &&
+    activeLight.circles.slice(1).every((point, index, all) =>
+      point.className === "ruwa-orbit-tail" &&
+      point.radius < (index === 0 ? activeLight.circles[0].radius : all[index - 1].radius)
+    ), "Meteor head must be bright white and its trail must taper progressively");
+  assert.equal(activeLight.pointerEvents, "none", "Decorative meteor SVG must not intercept pointer input");
   assert.ok(activeLight.leftDelta <= 1 && activeLight.topDelta <= 1 &&
     activeLight.rightDelta <= 1 && activeLight.bottomDelta <= 1,
-    "Meteor trail is not aligned to the actual frame perimeter");
+    "Meteor SVG overlay is not aligned to the frame's outer geometry");
+  assert.ok(firstHead && secondHead &&
+    Math.hypot(
+      secondHead.x + secondHead.width / 2 - firstHead.x - firstHead.width / 2,
+      secondHead.y + secondHead.height / 2 - firstHead.y - firstHead.height / 2
+    ) > 1,
+    "The luminous meteor head did not advance along the perimeter");
   await card.screenshot({ path: OUT + "/orbit-card-hover.png" });
   const after = await card.evaluate(element => ({
     width: element.offsetWidth,
     height: element.offsetHeight,
     translate: getComputedStyle(element).translate
   }));
-  assert.equal(after.width, before.width, "Meteor trail changed card width");
-  assert.equal(after.height, before.height, "Meteor trail changed card height");
+  assert.equal(after.width, before.width, "Meteor path changed card width");
+  assert.equal(after.height, before.height, "Meteor path changed card height");
   assert.ok(Number.parseFloat(after.translate.split(" ")[1]) < -2.5,
-    "Existing independent card elevation did not remain active beside the orbit light");
+    "Existing independent card elevation did not remain active beside the meteor");
 
   await orbitPage.mouse.move(8, 8);
   await orbitPage.waitForTimeout(320);
-  const exited = await light.evaluate(element => ({
-    opacity: Number.parseFloat(getComputedStyle(element).opacity),
-    animationName: getComputedStyle(element).animationName
-  }));
-  assert.ok(exited.opacity < .05, "Meteor trail did not fade away after pointer exit");
-  assert.equal(exited.animationName, "none", "Meteor animation continued after pointer exit");
+  const exitedOpacity = await light.evaluate(element => Number.parseFloat(getComputedStyle(element).opacity));
+  assert.ok(exitedOpacity < .05, "Meteor trail did not fade away after pointer exit");
 
   const teamCard = orbitPage.locator(".team-card").first();
   await teamCard.scrollIntoViewIfNeeded();
   await orbitPage.waitForTimeout(760);
   await teamCard.hover();
   await orbitPage.waitForTimeout(360);
-  const teamState = await teamCard.evaluate(element => ({
-    animationName: getComputedStyle(element.querySelector(":scope > .ruwa-orbit-light")).animationName,
-    imageScale: getComputedStyle(element.querySelector(".team-card-media img")).scale
-  }));
-  assert.equal(teamState.animationName, "ruwaMeteorOrbit", "Team frame did not receive the meteor trail");
+  const teamState = await teamCard.evaluate(element => {
+    const svg = element.querySelector(":scope > .ruwa-orbit-light");
+    const motion = svg?.querySelector("animateMotion");
+    const length = Number(svg?.dataset.pathLength || 0);
+    const duration = Number.parseFloat(motion?.getAttribute("dur") || "0");
+    return {
+      opacity: svg ? Number.parseFloat(getComputedStyle(svg).opacity) : 0,
+      pathLength: length,
+      speed: duration > 0 ? length / duration : 0,
+      motionCount: svg?.querySelectorAll("animateMotion").length || 0,
+      imageScale: getComputedStyle(element.querySelector(".team-card-media img")).scale
+    };
+  });
+  assert.ok(teamState.opacity > .7 && teamState.motionCount === 9,
+    "Team frame did not receive the complete meteor particle path");
+  assert.ok(Math.abs(teamState.speed - activeLight.speed) <= .2,
+    "A different frame size changed the meteor's physical travel speed");
   assert.ok(Number.parseFloat(teamState.imageScale) > 1.02,
     "Existing clipped team image zoom did not remain active");
-  assert.equal(orbitErrors.length, 0, "Meteor-light browser errors: " + orbitErrors.join(" | "));
+  assert.equal(orbitErrors.length, 0, "Meteor-motion browser errors: " + orbitErrors.join(" | "));
   await orbitPage.close();
-  console.log("[PASS] Meteor head and tapered tail follow the rounded border, fade on exit, and coexist with existing hover elevation/image zoom");
+  console.log("[PASS] SVG meteor head and tapered particle trail follow the exact rounded border centerline at shared constant physical speed");
 
   // Touch-only and reduced-motion visitors must not receive a persistent orbit effect.
   const touchPage = await browser.newPage({
@@ -494,15 +576,10 @@ try {
   );
   const touchCard = touchPage.locator(".info-card").first();
   await touchCard.scrollIntoViewIfNeeded();
-  const touchLight = touchCard.locator(":scope > .ruwa-orbit-light");
-  const touchDisplay = await touchLight.evaluate(element => getComputedStyle(element).display);
-  assert.equal(touchDisplay, "none", "Meteor trail must be disabled on touch-only devices");
+  const touchLayerCount = await touchPage.locator(".ruwa-orbit-light").count();
+  assert.equal(touchLayerCount, 0,
+    "Touch-only devices must not create continuously animated meteor SVG layers");
   await touchPage.locator(".info-card").first().tap();
-  assert.equal(
-    await touchLight.evaluate(element => getComputedStyle(element).animationName),
-    "none",
-    "Touch must not leave the meteor animation running"
-  );
   assert.equal(
     await touchPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
     true,
@@ -543,12 +620,9 @@ try {
     true,
     "Reduced-motion menu close should be immediate"
   );
-  const reducedLight = await reducedPage.locator(".info-card .ruwa-orbit-light").first().evaluate(element => ({
-    display: getComputedStyle(element).display,
-    animation: getComputedStyle(element).animationName
-  }));
-  assert.equal(reducedLight.display, "none", "Reduced-motion mode must hide the meteor trail");
-  assert.equal(reducedLight.animation, "none", "Reduced-motion mode must disable meteor animation");
+  const reducedLayers = await reducedPage.locator(".ruwa-orbit-light").count();
+  assert.equal(reducedLayers, 0,
+    "Reduced-motion mode must not create animated meteor SVG layers");
   await reducedPage.close();
 
   console.log(JSON.stringify({
@@ -561,8 +635,8 @@ try {
       "Escape closes and restores focus",
       "native anchor destination remains active",
       "reduced-motion menu is immediate and fully accessible",
-      "meteor head and tapered tail trace the rounded perimeter and fade on exit",
-      "meteor trail does not intercept pointer or change geometry",
+      "meteor head and tapered tail use paced SVG motion on the measured border centerline",
+      "meteor particles do not intercept pointer or change card geometry",
       "existing card elevation and image zoom remain active",
       "touch-only and reduced-motion modes disable orbit animation"
     ],
