@@ -2094,7 +2094,7 @@ body,button,input,select,textarea{font-family:var(--body)}
 
 // Smart floating WhatsApp control: show only while the Hero WhatsApp CTA is outside the viewport.
 (function(){
- const heroWhatsapp=document.querySelector('.hero-actions [data-contact-action="whatsapp"]');
+ const heroWhatsapp=document.querySelector('.hero-actions .whatsapp-cta');
  const floatingWhatsapp=document.getElementById("whatsapp-float");
  if(!heroWhatsapp||!floatingWhatsapp)return;
  const setFloatingVisibility=visible=>{
