@@ -226,7 +226,16 @@ try {
           width: element.getBoundingClientRect().width,
           height: element.getBoundingClientRect().height,
           centerX: element.getBoundingClientRect().left + element.getBoundingClientRect().width / 2,
-          viewportCenterX: window.innerWidth / 2
+          viewportCenterX: window.innerWidth / 2,
+          header: document.querySelector(".site-header").getBoundingClientRect().toJSON(),
+          style: {
+            left: getComputedStyle(element).left,
+            right: getComputedStyle(element).right,
+            width: getComputedStyle(element).width,
+            transform: getComputedStyle(element).transform,
+            translate: getComputedStyle(element).translate,
+            transformOrigin: getComputedStyle(element).transformOrigin
+          }
         }
       };
     });
@@ -237,7 +246,8 @@ try {
       viewport.name + ": expanded panel has no rendered dimensions");
     if (viewport.width > 920) {
       assert.ok(Math.abs(opened.rect.centerX - opened.rect.viewportCenterX) <= 1.5,
-        viewport.name + ": expanded desktop dropdown lost its intended horizontal centering");
+        viewport.name + ": expanded desktop dropdown lost its intended horizontal centering: " +
+        JSON.stringify(opened.rect));
     }
 
     const menuScrollStyle = await nav.evaluate(element => ({
