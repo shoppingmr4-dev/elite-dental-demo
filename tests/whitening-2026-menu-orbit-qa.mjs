@@ -204,8 +204,12 @@ try {
           opacity: Number.parseFloat(getComputedStyle(link).opacity)
         })),
         rect: {
+          left: element.getBoundingClientRect().left,
+          right: element.getBoundingClientRect().right,
           width: element.getBoundingClientRect().width,
-          height: element.getBoundingClientRect().height
+          height: element.getBoundingClientRect().height,
+          centerX: element.getBoundingClientRect().left + element.getBoundingClientRect().width / 2,
+          viewportCenterX: window.innerWidth / 2
         }
       };
     });
@@ -214,6 +218,10 @@ try {
     assert.equal(opened.open, true, viewport.name + ": open nav class was removed");
     assert.ok(opened.rect.width > 0 && opened.rect.height > 0,
       viewport.name + ": expanded panel has no rendered dimensions");
+    if (viewport.width > 920) {
+      assert.ok(Math.abs(opened.rect.centerX - opened.rect.viewportCenterX) <= 1.5,
+        viewport.name + ": expanded desktop dropdown lost its intended horizontal centering");
+    }
 
     const menuScrollStyle = await nav.evaluate(element => ({
       overflowY: getComputedStyle(element).overflowY,
