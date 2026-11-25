@@ -1091,7 +1091,7 @@ body,button,input,select,textarea{font-family:var(--body)}
 .site-header .nav a[aria-current="location"]:hover,
 .site-header .nav a[aria-current="location"]:focus-visible{color:var(--blue-deep);font-weight:700}
 
-/* Compact desktop navigation: replace the visible link row with an accessible menu control. */
+/* Compact desktop navigation: reveal the established horizontal row in place. */
 @media(min-width:921px){
  .site-header.is-compact .nav:not(.open){
   visibility:hidden;opacity:0;pointer-events:none;
@@ -1101,21 +1101,19 @@ body,button,input,select,textarea{font-family:var(--body)}
   transform:translate(-50%,-50%);
  }
  .site-header.is-compact .nav.open{
-  /* The desktop dropdown is viewport-anchored, not constrained by the inner grid column. */
-  position:fixed;z-index:40;top:96px;left:calc(50% - 210px);right:auto;
-  display:flex;flex-direction:column;align-items:stretch;gap:0;margin:0;
-  width:min(420px,calc(100vw - 32px));max-height:min(70vh,560px);overflow-y:auto;
-  padding:8px;border:1px solid var(--line);border-radius:16px;
-  background:var(--paper);box-shadow:0 18px 34px rgba(20,45,56,.14);
-  visibility:visible;opacity:1;pointer-events:auto;
-  /* The viewport supplies a stable center while GSAP owns the animated transform. */
-  transform:none;
+  /* Keep the exact grid slot and inline geometry measured before the header compacted. */
+  position:static;z-index:3;display:flex;flex-direction:row;align-items:center;
+  justify-self:center;gap:clamp(14px,1.7vw,24px);margin-inline:0;
+  width:auto;max-height:none;overflow:visible;overflow-x:visible;overflow-y:visible;
+  padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;
+  visibility:visible;opacity:1;pointer-events:auto;transform:none;
  }
+ /* Secondary links stay hidden on desktop, matching the original three-link header row. */
+ .site-header.is-compact .nav.open .nav-secondary{display:none}
  .site-header.is-compact .nav.open a{
-  display:flex;align-items:center;min-height:46px;padding:11px 14px;
-  border-bottom:1px solid var(--line);white-space:normal;
+  display:inline-flex;align-items:center;min-height:36px;padding:0;
+  border:0;white-space:nowrap;
  }
- .site-header.is-compact .nav.open a:last-child{border-bottom:0}
 }
 
 /* RUWA Hero CTA pair: clear primary and secondary actions. */
@@ -2099,11 +2097,43 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.style.removeProperty("clip-path");
   nav.style.removeProperty("transform");
   nav.style.removeProperty("transform-origin");
+  nav.style.removeProperty("pointer-events");
+  button.style.removeProperty("opacity");
+  button.style.removeProperty("pointer-events");
   links().forEach(link=>{
    link.style.removeProperty("opacity");
    link.style.removeProperty("visibility");
    link.style.removeProperty("transform");
   });
+ };
+
+ const funnelClipPath=(progress,width,height,originX,originY)=>{
+  const p=Math.max(0,Math.min(1,progress));
+  const points=[];
+  const steps=12;
+  const blend=Math.max(0,Math.min(1,(p-.66)/.34));
+  const smoothBlend=blend*blend*(3-2*blend);
+  const appendPoint=(q,side)=>{
+   const span=q<0?originX:width-originX;
+   const x=originX+q*span*p;
+   const extent=Math.pow(Math.abs(q),.72);
+   const baseHeight=.12+.88*extent;
+   const heightFactor=baseHeight+(1-baseHeight)*smoothBlend;
+   const sway=Math.sin(q*Math.PI*1.35)*Math.min(7,height*.18)*Math.sin(Math.PI*p);
+   const halfHeight=height*.5*p*heightFactor;
+   const y=originY+sway+(side==="top"?-halfHeight:halfHeight);
+   points.push((x/width*100).toFixed(3)+"% "+(y/height*100).toFixed(3)+"%");
+  };
+  for(let i=0;i<=steps;i++)appendPoint(-1+(2*i/steps),"top");
+  for(let i=steps;i>=0;i--)appendPoint(-1+(2*i/steps),"bottom");
+  return "polygon("+points.join(",")+")";
+ };
+
+ const settleDesktopMenuOpen=()=>{
+  if(!isDesktopCompact())return;
+  // The restored nav row takes the toggle's former center slot; keep the control keyboard-accessible.
+  button.style.opacity="0";
+  button.style.pointerEvents="none";
  };
 
  const finishClosed=(killTimeline=true)=>{
@@ -2122,26 +2152,44 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.removeAttribute("data-ruwa-menu-panel-top");
   nav.removeAttribute("data-ruwa-menu-button-center-x");
   nav.removeAttribute("data-ruwa-menu-button-center-y");
+  nav.removeAttribute("data-ruwa-menu-panel-width");
+  nav.removeAttribute("data-ruwa-menu-panel-height");
+  nav.removeAttribute("data-ruwa-menu-funnel-progress");
+  nav.removeAttribute("data-ruwa-menu-shape");
+  links().forEach(link=>{
+   link.removeAttribute("data-ruwa-funnel-start-x");
+   link.removeAttribute("data-ruwa-funnel-start-y");
+   link.removeAttribute("data-ruwa-funnel-arc-x");
+   link.removeAttribute("data-ruwa-funnel-arc-y");
+  });
   syncNavInert();
  };
 
  const createOpenTimeline=()=>{
   const gsap=window.gsap;
   const items=links();
+  const desktopFunnel=isDesktopCompact();
+  const animatedItems=desktopFunnel
+   ?items.filter(link=>getComputedStyle(link).display!=="none")
+   :items;
 
   if(reducedMotion.matches){
    root.dataset.ruwaMenuMotion="reduced";
    clearInlineMotion();
+   settleDesktopMenuOpen();
    nav.dataset.ruwaMenuState="open";
    nav.dataset.ruwaMenuAnimating="false";
+   if(desktopFunnel&&document.activeElement===button)animatedItems[0]?.focus({preventScroll:true});
    return;
   }
 
-  if(!gsap||typeof gsap.timeline!=="function"||!items.length){
+  if(!gsap||typeof gsap.timeline!=="function"||!animatedItems.length){
    root.dataset.ruwaMenuMotion="fallback";
    clearInlineMotion();
+   settleDesktopMenuOpen();
    nav.dataset.ruwaMenuState="open";
    nav.dataset.ruwaMenuAnimating="false";
+   if(desktopFunnel&&document.activeElement===button)animatedItems[0]?.focus({preventScroll:true});
    return;
   }
 
@@ -2149,54 +2197,121 @@ body,button,input,select,textarea{font-family:var(--body)}
   const toggle=button.getBoundingClientRect();
   if(panel.width<1||panel.height<1){
    root.dataset.ruwaMenuMotion="fallback";
+   clearInlineMotion();
+   settleDesktopMenuOpen();
    nav.dataset.ruwaMenuState="open";
    nav.dataset.ruwaMenuAnimating="false";
    return;
   }
 
-  // Capture untransformed panel geometry and the real button center before applying motion.
+  // Measure the actual hamburger circle center and the original navigation destination.
   const buttonCenterX=toggle.left+toggle.width/2;
   const buttonCenterY=toggle.top+toggle.height/2;
   const originX=buttonCenterX-panel.left;
   const originY=buttonCenterY-panel.top;
-  const corners=[
-   [0,0],
-   [panel.width,0],
-   [0,panel.height],
-   [panel.width,panel.height]
-  ];
-  const radius=Math.ceil(Math.max.apply(null,corners.map(point=>{
-   return Math.hypot(point[0]-originX,point[1]-originY);
-  }))+3);
+  const corners=[[0,0],[panel.width,0],[0,panel.height],[panel.width,panel.height]];
+  const radius=Math.ceil(Math.max.apply(null,corners.map(point=>
+   Math.hypot(point[0]-originX,point[1]-originY)
+  ))+3);
 
-  root.dataset.ruwaMenuMotion="gsap";
+  root.dataset.ruwaMenuMotion=desktopFunnel?"gsap-funnel":"gsap";
   nav.dataset.ruwaMenuOriginX=originX.toFixed(2);
   nav.dataset.ruwaMenuOriginY=originY.toFixed(2);
   nav.dataset.ruwaMenuRadius=String(radius);
   nav.dataset.ruwaMenuPanelLeft=panel.left.toFixed(2);
   nav.dataset.ruwaMenuPanelTop=panel.top.toFixed(2);
+  nav.dataset.ruwaMenuPanelWidth=panel.width.toFixed(2);
+  nav.dataset.ruwaMenuPanelHeight=panel.height.toFixed(2);
   nav.dataset.ruwaMenuButtonCenterX=buttonCenterX.toFixed(2);
   nav.dataset.ruwaMenuButtonCenterY=buttonCenterY.toFixed(2);
   nav.dataset.ruwaMenuState="opening";
   nav.dataset.ruwaMenuAnimating="true";
 
-  // Shrink the entire panel toward the hamburger center while its circular mask expands.
-  // This makes the panel visibly emerge from the button instead of merely revealing in place.
+  if(desktopFunnel){
+   nav.dataset.ruwaMenuShape="spiral-funnel";
+   const funnel={progress:0};
+   gsap.set(nav,{
+    clipPath:funnelClipPath(0,panel.width,panel.height,originX,originY),
+    scale:.965,
+    rotation:-2.6,
+    transformOrigin:originX+"px "+originY+"px",
+    force3D:false
+   });
+
+   animatedItems.forEach((link,index)=>{
+    const rect=link.getBoundingClientRect();
+    const localCenterX=rect.left-panel.left+rect.width/2;
+    const localCenterY=rect.top-panel.top+rect.height/2;
+    const startX=originX-localCenterX;
+    const startY=originY-localCenterY;
+    const side=Math.sign(localCenterX-originX)||(index%2===0?-1:1);
+    const arcX=side*Math.min(4.5,Math.abs(startX)*.025);
+    const arcY=-side*Math.min(7,Math.abs(startX)*.035);
+    gsap.set(link,{
+     autoAlpha:0,x:startX,y:startY,rotation:-side*4.5,scale:.92,
+     transformOrigin:"50% 50%"
+    });
+    link.dataset.ruwaFunnelStartX=startX.toFixed(2);
+    link.dataset.ruwaFunnelStartY=startY.toFixed(2);
+    link.dataset.ruwaFunnelArcX=arcX.toFixed(2);
+    link.dataset.ruwaFunnelArcY=arcY.toFixed(2);
+   });
+
+   menuTimeline=gsap.timeline({
+    paused:true,
+    onComplete(){
+     nav.dataset.ruwaMenuState="open";
+     nav.dataset.ruwaMenuAnimating="false";
+     settleDesktopMenuOpen();
+     if(document.activeElement===button)animatedItems[0]?.focus({preventScroll:true});
+    },
+    onReverseComplete(){
+     menuTimeline=null;
+     finishClosed(false);
+    }
+   });
+
+   menuTimeline.to(funnel,{
+    progress:1,duration:.88,ease:"power2.inOut",
+    onUpdate(){
+     const progress=Math.max(0,Math.min(1,funnel.progress));
+     nav.dataset.ruwaMenuFunnelProgress=progress.toFixed(4);
+     nav.style.clipPath=progress>=.9999
+      ?"none"
+      :funnelClipPath(progress,panel.width,panel.height,originX,originY);
+    }
+   },0);
+   menuTimeline.to(nav,{scale:1,rotation:0,duration:.88,ease:"power2.out"},0);
+
+   animatedItems.forEach((link,index)=>{
+    const startX=Number(link.dataset.ruwaFunnelStartX||0);
+    const startY=Number(link.dataset.ruwaFunnelStartY||0);
+    const arcX=Number(link.dataset.ruwaFunnelArcX||0);
+    const arcY=Number(link.dataset.ruwaFunnelArcY||0);
+    const side=Math.sign(startX)||(index%2===0?-1:1);
+    const delay=.10+index*.035;
+    menuTimeline.to(link,{
+     x:startX*.52+arcX,y:startY*.52+arcY,rotation:side*1.8,
+     scale:.98,autoAlpha:.78,duration:.31,ease:"power1.out"
+    },delay);
+    menuTimeline.to(link,{
+     x:0,y:0,rotation:0,scale:1,autoAlpha:1,duration:.42,ease:"power2.out"
+    },delay+.21);
+   });
+
+   menuTimeline.to(button,{opacity:0,duration:.18,ease:"power1.out"},.34);
+   menuTimeline.play(0);
+   return;
+  }
+
+  // Tablet and mobile keep their established dropdown geometry and circular-origin reveal.
+  nav.dataset.ruwaMenuShape="circle";
   gsap.set(nav,{
    clipPath:"circle(0px at "+originX+"px "+originY+"px)",
-   scale:.018,
-   rotation:-5.2,
-   transformOrigin:originX+"px "+originY+"px",
-   force3D:false
+   scale:.018,rotation:-5.2,transformOrigin:originX+"px "+originY+"px",force3D:false
   });
-  // Links unfold from the expanding circle with a restrained spiral-like tilt.
-  gsap.set(items,{
-   autoAlpha:0,
-   x:-9,
-   y:11,
-   rotation:-1.65,
-   scale:.985,
-   transformOrigin:"50% 50%"
+  gsap.set(animatedItems,{
+   autoAlpha:0,x:-9,y:11,rotation:-1.65,scale:.985,transformOrigin:"50% 50%"
   });
 
   menuTimeline=gsap.timeline({
@@ -2210,30 +2325,17 @@ body,button,input,select,textarea{font-family:var(--body)}
     finishClosed(false);
    }
   });
-
   menuTimeline.to(nav,{
    clipPath:"circle("+radius+"px at "+originX+"px "+originY+"px)",
-   scale:1,
-   rotation:0,
-   duration:.78,
-   ease:"power2.out"
+   scale:1,rotation:0,duration:.78,ease:"power2.out"
   },0);
-
-  items.forEach((link,index)=>{
+  animatedItems.forEach((link,index)=>{
    menuTimeline.to(link,{
-    autoAlpha:1,
-    x:0,
-    y:0,
-    rotation:0,
-    scale:1,
-    duration:.32,
-    ease:"power2.out"
+    autoAlpha:1,x:0,y:0,rotation:0,scale:1,duration:.32,ease:"power2.out"
    },.18+index*.075);
   });
-
   menuTimeline.play(0);
  };
-
  const close=({restoreFocus=false,immediate=false}={})=>{
   if(button.getAttribute("aria-expanded")==="true"){
    button.setAttribute("aria-expanded","false");
@@ -2243,6 +2345,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    if(!immediate&&!reducedMotion.matches&&menuTimeline){
     nav.dataset.ruwaMenuState="closing";
     nav.dataset.ruwaMenuAnimating="true";
+    if(isDesktopCompact())button.style.removeProperty("pointer-events");
     menuTimeline.reverse();
    }else{
     finishClosed(true);
@@ -2261,6 +2364,29 @@ body,button,input,select,textarea{font-family:var(--body)}
  });
 
  header.addEventListener("ruwa:header-state",syncNavInert);
+
+ // A click on unused space in the restored desktop row closes it without intercepting native links.
+ nav.addEventListener("click",event=>{
+  if(isDesktopCompact()&&button.getAttribute("aria-expanded")==="true"&&event.target===nav)close();
+ });
+ // Dismissing anywhere outside the header reverses the same spiral funnel.
+ document.addEventListener("pointerdown",event=>{
+  if(!isDesktopCompact()||button.getAttribute("aria-expanded")!=="true")return;
+  if(nav.contains(event.target)||button.contains(event.target))return;
+  close();
+ },true);
+ button.addEventListener("focus",()=>{
+  if(isDesktopCompact()&&button.getAttribute("aria-expanded")==="true"){
+   button.style.opacity="1";
+   button.style.pointerEvents="auto";
+  }
+ });
+ button.addEventListener("blur",()=>{
+  if(isDesktopCompact()&&button.getAttribute("aria-expanded")==="true"){
+   button.style.opacity="0";
+   button.style.pointerEvents="none";
+  }
+ });
 
  button.addEventListener("click",()=>{
   const open=button.getAttribute("aria-expanded")!=="true";
@@ -2327,6 +2453,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   if(button.getAttribute("aria-expanded")==="true"){
    nav.classList.add("open");
    nav.inert=false;
+   settleDesktopMenuOpen();
    nav.dataset.ruwaMenuState="open";
    nav.dataset.ruwaMenuAnimating="false";
   }else{
