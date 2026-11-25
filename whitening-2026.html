@@ -2075,6 +2075,15 @@ body,button,input,select,textarea{font-family:var(--body)}
  button.addEventListener("pointercancel",()=>{
   button.removeAttribute("data-pointer-hover");
  });
+ // Mouseenter is a compatibility fallback for automation and browsers where
+ // the mouse pointer event sequence is exposed differently.
+ button.addEventListener("mouseenter",event=>{
+  if(event.sourceCapabilities?.firesTouchEvents)return;
+  button.dataset.pointerHover="true";
+ });
+ button.addEventListener("mouseleave",()=>{
+  button.removeAttribute("data-pointer-hover");
+ });
  const links=()=>Array.from(nav.querySelectorAll("a"));
  const isDesktopCompact=()=>window.innerWidth>920&&header.classList.contains("is-compact");
  const shouldCollapseNav=()=>window.innerWidth<=920||isDesktopCompact();
