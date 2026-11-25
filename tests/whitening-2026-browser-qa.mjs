@@ -171,6 +171,7 @@ try {
         headerPanelTopInset:Number.parseFloat(getComputedStyle(document.querySelector(".site-header"),"::before").top),
         headerCompactInitially:document.querySelector(".site-header")?.classList.contains("is-compact") || false,
         headerActionHeight:rect(document.querySelector(".header-action")).height,
+         headerActionPaddingInlineStart:getComputedStyle(document.querySelector(".header-action")).paddingInlineStart,
         headerActionText:document.querySelector(".header-action")?.innerText?.trim() || "",
         headerActionHref:document.querySelector(".header-action")?.getAttribute("href") || "",
         headerActionTag:document.querySelector(".header-action")?.tagName || "",
@@ -180,6 +181,19 @@ try {
         contactTriggerCount:document.querySelectorAll("[data-contact-action]").length,
         heroDemoDisclosurePresent:Boolean(document.querySelector(".hero-demo-disclosure")),
         floatingWhatsAppPresent:Boolean(document.querySelector("#whatsapp-float")),
+         floatingWhatsAppMetrics:(()=>{
+           const button=document.querySelector("#whatsapp-float");
+           const icon=button?.querySelector("svg");
+           if(!button||!icon)return null;
+           const bounds=button.getBoundingClientRect(),iconBounds=icon.getBoundingClientRect();
+           const style=getComputedStyle(button),iconStyle=getComputedStyle(icon);
+           return {
+             position:style.position,display:style.display,background:style.backgroundColor,
+             color:style.color,right:style.right,iconDisplay:iconStyle.display,iconColor:iconStyle.color,
+             centerDeltaX:Math.abs((bounds.left+bounds.width/2)-(iconBounds.left+iconBounds.width/2)),
+             centerDeltaY:Math.abs((bounds.top+bounds.height/2)-(iconBounds.top+iconBounds.height/2))
+           };
+         })(),
         demoDialogTag:document.querySelector("#contact-unavailable-dialog")?.tagName || "",
         demoDialogText:document.querySelector("#contact-unavailable-dialog")?.innerText?.replace(/\\s+/g," ").trim() || "",
         demoDialogInitialOpen:document.querySelector("#contact-unavailable-dialog")?.open || false,
@@ -792,6 +806,9 @@ try {
     assert.equal(state.headerPanelTopInset, 0, `${vp.name}: header should start in its full-size state`);
     assert.equal(state.headerCompactInitially, false, `${vp.name}: header must not start in the compact state`);
     assert.equal(state.headerActionText, "اتصل بنا", `${vp.name}: header phone CTA copy is incorrect`);
+     const expectedHeaderPadding=vp.width<=390?9:vp.width<=720?12:vp.width<=920?15:18;
+     assert.equal(Number.parseFloat(state.headerActionPaddingInlineStart),expectedHeaderPadding,
+       `${vp.name}: header phone CTA horizontal padding should be slightly roomier without changing its height`);
     assert.equal(state.headerActionHref, "", `${vp.name}: demo header CTA must not contain a fake external destination`);
     assert.equal(state.headerActionTag, "BUTTON", `${vp.name}: header CTA must open the local demo dialog`);
     assert.equal(state.headerActionChannel, "phone", `${vp.name}: header CTA must use the phone contact channel`);
@@ -799,6 +816,16 @@ try {
     assert.equal(state.contactTriggerCount, 6, `${vp.name}: all six WhatsApp and phone actions must use the shared unavailable-contact dialog`);
     assert.equal(state.heroDemoDisclosurePresent, false, `${vp.name}: the separate demo sentence under the Hero buttons must be absent`);
     assert.equal(state.floatingWhatsAppPresent, true, `${vp.name}: smart floating WhatsApp button is missing`);
+     assert.ok(state.floatingWhatsAppMetrics, `${vp.name}: floating WhatsApp measurements are unavailable`);
+     assert.equal(state.floatingWhatsAppMetrics.position,"fixed", `${vp.name}: floating WhatsApp must remain fixed`);
+     assert.equal(state.floatingWhatsAppMetrics.display,"flex", `${vp.name}: floating WhatsApp icon must use reliable flex centering`);
+     assert.equal(state.floatingWhatsAppMetrics.background,"rgb(37, 211, 102)", `${vp.name}: floating WhatsApp green circle must remain unchanged`);
+     assert.equal(state.floatingWhatsAppMetrics.color,"rgb(255, 255, 255)", `${vp.name}: floating WhatsApp logo must be pure white`);
+     assert.equal(state.floatingWhatsAppMetrics.iconColor,"rgb(255, 255, 255)", `${vp.name}: floating WhatsApp SVG must inherit white`);
+     assert.equal(state.floatingWhatsAppMetrics.iconDisplay,"block", `${vp.name}: floating WhatsApp SVG must not use inline baseline alignment`);
+     assert.equal(Number.parseFloat(state.floatingWhatsAppMetrics.right),vp.width<=720?10:12, `${vp.name}: floating WhatsApp horizontal offset was not moved slightly right`);
+     assert.ok(state.floatingWhatsAppMetrics.centerDeltaX<=.5&&state.floatingWhatsAppMetrics.centerDeltaY<=.5,
+       `${vp.name}: WhatsApp logo is not geometrically centered in its green circle: ${JSON.stringify(state.floatingWhatsAppMetrics)}`);
     assert.equal(state.demoDialogTag, "DIALOG", `${vp.name}: accessible native dialog is missing`);
     assert.equal(state.demoDialogInitialOpen, false, `${vp.name}: demo dialog should start closed`);
     assert.ok(state.demoDialogText.includes("قنوات التواصل ستعمل مباشرة عند إضافة بيانات الاتصال الرسمية"), `${vp.name}: contact dialog initial explanation is missing`);
@@ -947,14 +974,14 @@ try {
     assert.equal(state.ctaHref, "", `${vp.name}: demo hero CTA must not navigate to an unrelated section`);
     assert.equal(state.heroCtaText, "تواصل عبر واتساب", vp.name + ": hero CTA copy is incorrect");
     assert.ok(state.heroSecondaryCta, vp.name + ": the secondary consultation link must remain visible");
-    assert.equal(state.heroSecondaryCta.text, "اتصل بالعيادة", vp.name + ": secondary phone CTA wording changed");
+    assert.equal(state.heroSecondaryCta.text, "اتصل بنا", vp.name + ": Hero phone CTA must say اتصل بنا");
     assert.equal(state.heroSecondaryCta.href, null, vp.name + ": phone CTA must not contain a fabricated number destination");
      assert.equal(state.heroSecondaryCta.tag, "BUTTON", vp.name + ": phone CTA must be a button until a number is configured");
      assert.equal(state.heroSecondaryCta.channel, "phone", vp.name + ": Hero secondary action should use the phone channel");
     assert.ok(state.heroSecondaryCta.minHeight>=44, vp.name + ": secondary CTA click target must be at least 44px tall");
     assert.ok(state.heroSecondaryCta.gap>=7&&state.heroSecondaryCta.gap<=18,
       vp.name + ": primary/secondary CTA spacing is not balanced: " + JSON.stringify(state.heroSecondaryCta));
-    assert.equal(state.heroSecondaryCta.stacked,vp.width<=920, vp.name + ": CTA should stack when the responsive Hero uses its compact layout");
+    assert.equal(state.heroSecondaryCta.stacked,false, vp.name + ": Hero WhatsApp and phone CTAs must remain side-by-side at every viewport");
     assert.equal(state.heroCtaHref, "", `${vp.name}: demo hero CTA must not contain a fake external destination`);
     assert.equal(state.heroCtaTag, "BUTTON", `${vp.name}: hero CTA must open the local demo dialog`);
     assert.ok(state.heroCtaWhatsAppIcon, `${vp.name}: WhatsApp brand icon is missing from hero CTA`);

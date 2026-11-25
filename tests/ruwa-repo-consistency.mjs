@@ -161,6 +161,12 @@ assert.match(html, /class=["']whatsapp-float["']/);
 assert.match(html, /aria-label=["']تواصل عبر واتساب["']/);
 assert.match(html, /new IntersectionObserver/);
 assert.ok(html.includes("document.querySelector('.hero-actions .whatsapp-cta')"), "Observer must watch the Hero WhatsApp CTA");
+assert.match(html, /right:max\(12px,env\(safe-area-inset-right\)\)/, "Desktop floating WhatsApp button must sit slightly closer to the right edge");
+assert.match(html, /right:max\(10px,env\(safe-area-inset-right\)\)/, "Mobile floating WhatsApp button must sit slightly closer to the right edge");
+assert.match(html, /background:var\(--wa\);color:#FFFFFF/, "Floating WhatsApp circle must stay green with a white icon");
+assert.match(html, /display:flex;align-items:center;justify-content:center/, "Floating WhatsApp logo must use explicit two-axis centering");
+assert.match(html, /padding-inline: calc\(18px - 2px \* var\(--header-progress\)\)/, "Desktop header CTA needs a subtle increase in horizontal padding");
+
 
 const ids = new Set([...html.matchAll(/\bid=["']([^"']+)["']/gi)].map(match => match[1]));
 const brokenControls = [...html.matchAll(/\baria-controls=["']([^"']+)["']/gi)]
@@ -182,6 +188,9 @@ const heroStart = html.indexOf('<section class="hero"');
 const heroEnd = html.indexOf("</section>", heroStart);
 const heroSection = heroStart >= 0 && heroEnd > heroStart ? html.slice(heroStart, heroEnd + 10) : "";
 assert.ok(heroSection, "The canonical Hero section must remain present");
+assert.match(heroSection, /class=["']text-link consultation-cta phone-cta["'][^>]*>اتصل بنا/, "Hero phone CTA must use the exact اتصل بنا label");
+assert.doesNotMatch(heroSection, /اتصل بالعيادة/, "Old Hero phone CTA label must not remain");
+
 assert.doesNotMatch(heroSection, /hero-demo-disclosure|نموذج تجريبي من Apex Studio/, "The separate demo sentence beneath the Hero buttons must be removed");
 assert.match(html, /مفهوم تجريبي أُعدّ ضمن معرض أعمال Apex Studio/, "The footer must retain the fictional portfolio disclosure");
 assert.match(html, /<meta name="description"[^>]*نموذج تجريبي/, "Page metadata must continue to identify the fictional demo");
