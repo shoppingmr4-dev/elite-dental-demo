@@ -45,7 +45,7 @@ async function prepareMenuPage(page, viewport) {
   assert.ok(response && response.ok(), viewport.name + ": RUWA page did not load");
 
   await page.waitForFunction(
-    () => document.documentElement.dataset.ruwaMeteorOrbitReady === "true",
+    () => document.documentElement.dataset.ruwaOrbitReady === "true",
     null,
     { timeout: 10000 }
   );
@@ -363,12 +363,12 @@ try {
   });
   assert.ok(orbitResponse && orbitResponse.ok(), "Meteor-orbit desktop page failed to load");
   await orbitPage.waitForFunction(
-    () => document.documentElement.dataset.ruwaMeteorOrbitReady === "true",
+    () => document.documentElement.dataset.ruwaOrbitReady === "true",
     null,
     { timeout: 10000 }
   );
   const orbitCount = await orbitPage.evaluate(() =>
-    Number(document.documentElement.dataset.ruwaMeteorOrbitTargetCount || 0)
+    Number(document.documentElement.dataset.ruwaOrbitTargetCount || 0)
   );
   assert.ok(orbitCount >= 20, "Expected selected card, panel and icon frames to receive orbit layers; found " + orbitCount);
 
@@ -483,7 +483,7 @@ try {
   });
   await touchPage.goto(BASE_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
   await touchPage.waitForFunction(
-    () => document.documentElement.dataset.ruwaMeteorOrbitReady === "true",
+    () => document.documentElement.dataset.ruwaOrbitReady === "true",
     null,
     { timeout: 10000 }
   );
