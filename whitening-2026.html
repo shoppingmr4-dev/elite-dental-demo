@@ -1432,6 +1432,10 @@ body,button,input,select,textarea{font-family:var(--body)}
  .whatsapp-float,.whatsapp-float.is-visible{transition:none}
 }
 </style>
+
+<!-- Pinned GSAP runtime: deferred so it never blocks the initial Hero render. -->
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.1/dist/gsap.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.1/dist/ScrollTrigger.min.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">تجاوز إلى المحتوى</a>
@@ -2197,6 +2201,110 @@ body,button,input,select,textarea{font-family:var(--body)}
  dismissButton.addEventListener("click",closeDialog);
  dialog.addEventListener("click",event=>{if(event.target===dialog)closeDialog();});
  dialog.addEventListener("close",restoreFocus);
+})();
+
+
+// RUWA content motion: restrained one-time reveals for below-Hero content only.
+// Native browser scrolling remains in control; Lenis is intentionally not introduced
+// because the approved header progress is mapped directly to native window.scrollY.
+(function(){
+ const root=document.documentElement;
+ const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
+
+ const initialize=()=>{
+  if(reducedMotion.matches){
+   root.dataset.ruwaScrollMotion="reduced";
+   return;
+  }
+
+  const gsap=window.gsap;
+  const ScrollTrigger=window.ScrollTrigger;
+  if(!gsap||!ScrollTrigger){
+   root.dataset.ruwaScrollMotion="unavailable";
+   return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Keep the first screen, header, interactive FAQ controls, and contact actions untouched.
+  const targets=[...new Set(document.querySelectorAll(
+   "main section:not(.hero) h2, .step, .info-card, .option-card, .journey-step, .check-item, .expect-card, .team-card, .review-card"
+  ))];
+
+  targets.forEach(element=>{element.dataset.ruwaMotionTarget="true";});
+
+  // Never hide content already visible when the animation system initializes.
+  // This also avoids a flash when a visitor reloads at a mid-page scroll position.
+  const pending=targets.filter(element=>{
+   const rect=element.getBoundingClientRect();
+   const style=getComputedStyle(element);
+   return rect.top>window.innerHeight*.92&&
+    style.display!=="none"&&style.visibility!=="hidden";
+  });
+
+  if(!pending.length){
+   root.dataset.ruwaScrollMotion="ready";
+   root.dataset.ruwaMotionTargetCount=String(targets.length);
+   root.dataset.ruwaMotionPreparedCount="0";
+   return;
+  }
+
+  pending.forEach(element=>{element.dataset.ruwaMotionPending="true";});
+  const mobile=window.matchMedia("(max-width: 720px)").matches;
+  gsap.set(pending,{opacity:0,y:mobile?12:16,force3D:false});
+
+  const triggers=ScrollTrigger.batch(pending,{
+   start:"top 88%",
+   once:true,
+   interval:.08,
+   batchMax:4,
+   onEnter(batch){
+    gsap.to(batch,{
+     opacity:1,
+     y:0,
+     duration:mobile?.56:.68,
+     ease:"power2.out",
+     stagger:.075,
+     overwrite:"auto",
+     clearProps:"opacity,transform"
+    });
+   }
+  });
+
+  root.dataset.ruwaScrollMotion="ready";
+  root.dataset.ruwaMotionTargetCount=String(targets.length);
+  root.dataset.ruwaMotionPreparedCount=String(pending.length);
+  root.dataset.ruwaMotionTriggerCount=String(triggers.length);
+
+  // If the visitor changes the system preference, reveal all content immediately
+  // and remove only the ScrollTriggers created by this motion module.
+  reducedMotion.addEventListener?.("change",event=>{
+   if(!event.matches)return;
+   triggers.forEach(trigger=>trigger.kill());
+   gsap.killTweensOf(pending);
+   gsap.set(pending,{clearProps:"opacity,transform"});
+   root.dataset.ruwaScrollMotion="reduced";
+  });
+
+  let refreshFrame=null;
+  const scheduleRefresh=()=>{
+   if(refreshFrame!==null)return;
+   refreshFrame=requestAnimationFrame(()=>{
+    refreshFrame=null;
+    ScrollTrigger.refresh();
+   });
+  };
+
+  window.addEventListener("load",scheduleRefresh,{once:true});
+  window.addEventListener("pageshow",scheduleRefresh);
+  if(document.fonts?.ready)document.fonts.ready.then(scheduleRefresh).catch(()=>{});
+ };
+
+ if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",initialize,{once:true});
+ }else{
+  initialize();
+ }
 })();
 </script>
 </body>
