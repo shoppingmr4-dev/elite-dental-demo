@@ -112,8 +112,18 @@ body.dialog-open{overflow:hidden}
 .contact-dialog-dismiss:hover{background:var(--blue-deep);transform:translateY(-1px)}
 .contact-dialog-dismiss:active{transform:translateY(0)}
 @keyframes contactDialogIn{from{opacity:0;transform:translateY(9px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
-.menu-toggle{display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--ink)}
+.menu-toggle{
+ display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;
+ background:var(--paper);color:var(--ink);cursor:pointer;
+ transition:background-color .2s cubic-bezier(.2,.7,.2,1),border-color .2s cubic-bezier(.2,.7,.2,1),color .2s cubic-bezier(.2,.7,.2,1)
+}
 .menu-toggle svg{width:19px;height:19px;margin:auto}
+@media (hover:hover) and (pointer:fine){
+ .menu-toggle:hover{background:#E5F0EE;border-color:rgba(24,122,128,.28);color:var(--blue-deep)}
+}
+.menu-toggle:focus-visible{background:#EAF3F8;border-color:rgba(24,122,128,.34);outline:2px solid var(--blue);outline-offset:3px}
+.menu-toggle:active{background:#DCEBE8}
+@media(prefers-reduced-motion:reduce){.menu-toggle{transition:none}}
 .hero{position:relative;overflow:hidden;isolation:isolate;padding-block:clamp(24px,3.2vw,44px) clamp(28px,4vw,52px);background:radial-gradient(ellipse at 84% 18%,rgba(24,122,128,.02) 0%,rgba(24,122,128,0) 42%),radial-gradient(ellipse at 10% 82%,rgba(24,122,128,.01) 0%,rgba(24,122,128,0) 36%),var(--canvas)}
 /* Keep the message and both actions anchored to the top of the first viewport; the taller portrait must not push copy downward. */
 .hero:before{content:none}
@@ -1576,56 +1586,22 @@ body,button,input,select,textarea{font-family:var(--body)}
 
 
 
-/* RUWA METEOR ORBIT — a tapered shooting-star trail clipped to each real frame. */
-@property --ruwa-orbit-angle {
- syntax:"<angle>";
- inherits:false;
- initial-value:0deg;
-}
-@keyframes ruwaMeteorOrbit {
- from { --ruwa-orbit-angle:0deg; }
- to { --ruwa-orbit-angle:360deg; }
-}
+/* RUWA METEOR ORBIT — arclength-paced luminous particles on the exact border centerline. */
 .ruwa-orbit-target{position:relative}
 .ruwa-orbit-light{display:none}
 @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
  .ruwa-orbit-light{
-  position:absolute;
-  inset:0;
-  z-index:3;
-  display:block;
-  box-sizing:border-box;
-  padding:1.35px;
-  border-radius:inherit;
-  pointer-events:none;
-  opacity:0;
-  background:conic-gradient(
-   from var(--ruwa-orbit-angle),
-   transparent 0deg 322deg,
-   rgba(116,220,213,0) 326deg,
-   rgba(116,220,213,.10) 333deg,
-   rgba(116,220,213,.34) 340deg,
-   rgba(116,220,213,.72) 346deg,
-   rgba(255,255,255,1) 350deg,
-   rgba(255,255,255,.48) 351deg,
-   rgba(116,220,213,.10) 354deg,
-   transparent 357deg 360deg
-  );
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  mask-composite:exclude;
-  transition:opacity .24s ease;
+  position:absolute;display:block;z-index:4;overflow:visible;
+  pointer-events:none;opacity:0;border:0;padding:0;margin:0;
+  background:none;transition:opacity .22s ease;
  }
  .ruwa-orbit-target:hover>.ruwa-orbit-light,
- .ruwa-orbit-target:focus-within>.ruwa-orbit-light{
-  opacity:.94;
-  animation:ruwaMeteorOrbit 4.2s linear infinite;
-  filter:drop-shadow(0 0 1px rgba(255,255,255,.62)) drop-shadow(0 0 3px rgba(83,204,195,.34));
- }
+ .ruwa-orbit-target:focus-within>.ruwa-orbit-light{opacity:1}
+ .ruwa-orbit-head{filter:drop-shadow(0 0 1.2px rgba(255,255,255,.95)) drop-shadow(0 0 3.5px rgba(83,204,195,.68))}
+ .ruwa-orbit-tail{filter:drop-shadow(0 0 1.5px rgba(83,204,195,.32))}
 }
 @media(prefers-reduced-motion:reduce){
- .ruwa-orbit-light{display:none!important;animation:none!important;transition:none!important}
+ .ruwa-orbit-light{display:none!important;transition:none!important}
 }
 
 </style>
@@ -2077,6 +2053,8 @@ body,button,input,select,textarea{font-family:var(--body)}
 
  const clearInlineMotion=()=>{
   nav.style.removeProperty("clip-path");
+  nav.style.removeProperty("transform");
+  nav.style.removeProperty("transform-origin");
   links().forEach(link=>{
    link.style.removeProperty("opacity");
    link.style.removeProperty("visibility");
@@ -2096,6 +2074,10 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.removeAttribute("data-ruwa-menu-origin-x");
   nav.removeAttribute("data-ruwa-menu-origin-y");
   nav.removeAttribute("data-ruwa-menu-radius");
+  nav.removeAttribute("data-ruwa-menu-panel-left");
+  nav.removeAttribute("data-ruwa-menu-panel-top");
+  nav.removeAttribute("data-ruwa-menu-button-center-x");
+  nav.removeAttribute("data-ruwa-menu-button-center-y");
   syncNavInert();
  };
 
@@ -2128,8 +2110,11 @@ body,button,input,select,textarea{font-family:var(--body)}
    return;
   }
 
-  const originX=toggle.left+toggle.width/2-panel.left;
-  const originY=toggle.top+toggle.height/2-panel.top;
+  // Capture untransformed panel geometry and the real button center before applying motion.
+  const buttonCenterX=toggle.left+toggle.width/2;
+  const buttonCenterY=toggle.top+toggle.height/2;
+  const originX=buttonCenterX-panel.left;
+  const originY=buttonCenterY-panel.top;
   const corners=[
    [0,0],
    [panel.width,0],
@@ -2144,10 +2129,22 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.dataset.ruwaMenuOriginX=originX.toFixed(2);
   nav.dataset.ruwaMenuOriginY=originY.toFixed(2);
   nav.dataset.ruwaMenuRadius=String(radius);
+  nav.dataset.ruwaMenuPanelLeft=panel.left.toFixed(2);
+  nav.dataset.ruwaMenuPanelTop=panel.top.toFixed(2);
+  nav.dataset.ruwaMenuButtonCenterX=buttonCenterX.toFixed(2);
+  nav.dataset.ruwaMenuButtonCenterY=buttonCenterY.toFixed(2);
   nav.dataset.ruwaMenuState="opening";
   nav.dataset.ruwaMenuAnimating="true";
 
-  gsap.set(nav,{clipPath:"circle(0px at "+originX+"px "+originY+"px)"});
+  // Shrink the entire panel toward the hamburger center while its circular mask expands.
+  // This makes the panel visibly emerge from the button instead of merely revealing in place.
+  gsap.set(nav,{
+   clipPath:"circle(0px at "+originX+"px "+originY+"px)",
+   scale:.018,
+   rotation:-5.2,
+   transformOrigin:originX+"px "+originY+"px",
+   force3D:false
+  });
   // Links unfold from the expanding circle with a restrained spiral-like tilt.
   gsap.set(items,{
    autoAlpha:0,
@@ -2172,8 +2169,10 @@ body,button,input,select,textarea{font-family:var(--body)}
 
   menuTimeline.to(nav,{
    clipPath:"circle("+radius+"px at "+originX+"px "+originY+"px)",
-   duration:.62,
-   ease:"power3.out"
+   scale:1,
+   rotation:0,
+   duration:.78,
+   ease:"power2.out"
   },0);
 
   items.forEach((link,index)=>{
@@ -2301,8 +2300,9 @@ body,button,input,select,textarea{font-family:var(--body)}
  syncNavInert();
 })();
 
-// RUWA orbiting perimeter light: decorative layers are isolated from content,
-// card transforms, pseudo-elements, pointer input and the existing scroll engine.
+// RUWA meteor orbit: every luminous point follows the measured border-centerline path.
+// SVG animateMotion uses paced path distance, so straight edges and rounded corners share one
+// physical speed. The trailing particles are phase-delayed points on that same closed path.
 (function(){
  const selectors=[
   ".info-card",
@@ -2321,17 +2321,169 @@ body,button,input,select,textarea{font-family:var(--body)}
   ".review-card-label"
  ];
  const targets=Array.from(new Set(document.querySelectorAll(selectors.join(","))));
- targets.forEach(target=>{
+ const svgNS="http://www.w3.org/2000/svg";
+ const canHover=window.matchMedia("(hover:hover) and (pointer:fine)").matches;
+ const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ const travelSpeed=92; // CSS pixels per second, shared by every target size.
+ const tailParticles=[
+  {lag:2.6,r:1.72,fill:"#E9FFFC",opacity:.96},
+  {lag:5.2,r:1.53,fill:"#D2FBF5",opacity:.88},
+  {lag:7.8,r:1.38,fill:"#BDF3EC",opacity:.78},
+  {lag:10.4,r:1.22,fill:"#A8E9E1",opacity:.66},
+  {lag:13.0,r:1.06,fill:"#90DDD4",opacity:.54},
+  {lag:15.6,r:.91,fill:"#7BD1C8",opacity:.42},
+  {lag:18.2,r:.77,fill:"#69C7BD",opacity:.31},
+  {lag:20.8,r:.64,fill:"#58BDB4",opacity:.21}
+ ];
+
+ const number=value=>{
+  const parsed=parseFloat(value);
+  return Number.isFinite(parsed)?parsed:0;
+ };
+ const resolveRadius=(value,width,height)=>{
+  const values=String(value||"0").trim().split(/\s+/);
+  const resolve=(part,basis)=>{
+   const token=part||"0";
+   const parsed=number(token);
+   return token.includes("%")?parsed*basis/100:parsed;
+  };
+  return {
+   x:Math.max(0,resolve(values[0],width)),
+   y:Math.max(0,resolve(values[1]||values[0],height))
+  };
+ };
+ const fmt=value=>Number(value.toFixed(3)).toString();
+ const arc=(rx,ry,x,y)=>{
+  if(rx<.25||ry<.25)return "L "+fmt(x)+" "+fmt(y);
+  return "A "+fmt(rx)+" "+fmt(ry)+" 0 0 1 "+fmt(x)+" "+fmt(y);
+ };
+ const buildCenterlinePath=(width,height,border,style)=>{
+  const left=border.left/2;
+  const right=width-border.right/2;
+  const top=border.top/2;
+  const bottom=height-border.bottom/2;
+  const tl=resolveRadius(style.borderTopLeftRadius,width,height);
+  const tr=resolveRadius(style.borderTopRightRadius,width,height);
+  const br=resolveRadius(style.borderBottomRightRadius,width,height);
+  const bl=resolveRadius(style.borderBottomLeftRadius,width,height);
+  tl.x=Math.max(0,tl.x-border.left/2); tl.y=Math.max(0,tl.y-border.top/2);
+  tr.x=Math.max(0,tr.x-border.right/2); tr.y=Math.max(0,tr.y-border.top/2);
+  br.x=Math.max(0,br.x-border.right/2); br.y=Math.max(0,br.y-border.bottom/2);
+  bl.x=Math.max(0,bl.x-border.left/2); bl.y=Math.max(0,bl.y-border.bottom/2);
+  const maxRx=(right-left)/2;
+  const maxRy=(bottom-top)/2;
+  [tl,tr,br,bl].forEach(radius=>{
+   radius.x=Math.min(radius.x,maxRx);
+   radius.y=Math.min(radius.y,maxRy);
+  });
+  return [
+   "M "+fmt(left+tl.x)+" "+fmt(top),
+   "H "+fmt(right-tr.x),
+   arc(tr.x,tr.y,right,top+tr.y),
+   "V "+fmt(bottom-br.y),
+   arc(br.x,br.y,right-br.x,bottom),
+   "H "+fmt(left+bl.x),
+   arc(bl.x,bl.y,left,bottom-bl.y),
+   "V "+fmt(top+tl.y),
+   arc(tl.x,tl.y,left+tl.x,top),
+   "Z"
+  ].join(" ");
+ };
+ const animatePoint=(svg,pathData,duration,point)=>{
+  const circle=document.createElementNS(svgNS,"circle");
+  circle.setAttribute("class",point.head?"ruwa-orbit-head":"ruwa-orbit-tail");
+  circle.setAttribute("cx","0");
+  circle.setAttribute("cy","0");
+  circle.setAttribute("r",String(point.r));
+  circle.setAttribute("fill",point.fill);
+  circle.setAttribute("opacity",String(point.opacity));
+  if(point.head)circle.setAttribute("filter","url(#"+svg.dataset.glowId+")");
+  const motion=document.createElementNS(svgNS,"animateMotion");
+  motion.setAttribute("dur",duration.toFixed(4)+"s");
+  motion.setAttribute("begin",point.lag===0?"0s":(point.lag/travelSpeed).toFixed(4)+"s");
+  motion.setAttribute("repeatCount","indefinite");
+  motion.setAttribute("calcMode","paced");
+  motion.setAttribute("rotate","auto");
+  motion.setAttribute("path",pathData);
+  circle.appendChild(motion);
+  svg.appendChild(circle);
+ };
+ targets.forEach((target,index)=>{
   target.classList.add("ruwa-orbit-target");
-  if(target.querySelector(":scope > .ruwa-orbit-light"))return;
-  const light=document.createElement("span");
-  light.className="ruwa-orbit-light";
-  light.setAttribute("aria-hidden","true");
-  light.setAttribute("role","presentation");
-  target.appendChild(light);
+  if(!canHover||reducedMotion||target.querySelector(":scope > .ruwa-orbit-light"))return;
+  const width=target.offsetWidth;
+  const height=target.offsetHeight;
+  if(width<2||height<2)return;
+  const style=getComputedStyle(target);
+  const border={
+   top:number(style.borderTopWidth),
+   right:number(style.borderRightWidth),
+   bottom:number(style.borderBottomWidth),
+   left:number(style.borderLeftWidth)
+  };
+  const pathData=buildCenterlinePath(width,height,border,style);
+  const svg=document.createElementNS(svgNS,"svg");
+  svg.setAttribute("class","ruwa-orbit-light");
+  svg.setAttribute("viewBox","0 0 "+fmt(width)+" "+fmt(height));
+  svg.setAttribute("width",String(width));
+  svg.setAttribute("height",String(height));
+  svg.setAttribute("preserveAspectRatio","none");
+  svg.setAttribute("aria-hidden","true");
+  svg.setAttribute("focusable","false");
+  svg.setAttribute("role","presentation");
+  svg.style.left=(-border.left)+"px";
+  svg.style.top=(-border.top)+"px";
+  svg.style.width=width+"px";
+  svg.style.height=height+"px";
+  svg.dataset.pathLength="0";
+  svg.dataset.speed=String(travelSpeed);
+  svg.dataset.glowId="ruwa-meteor-glow-"+index;
+
+  const defs=document.createElementNS(svgNS,"defs");
+  const filter=document.createElementNS(svgNS,"filter");
+  filter.setAttribute("id",svg.dataset.glowId);
+  filter.setAttribute("x","-200%");
+  filter.setAttribute("y","-200%");
+  filter.setAttribute("width","500%");
+  filter.setAttribute("height","500%");
+  const blur=document.createElementNS(svgNS,"feGaussianBlur");
+  blur.setAttribute("in","SourceGraphic");
+  blur.setAttribute("stdDeviation","1.0");
+  blur.setAttribute("result","blur");
+  const merge=document.createElementNS(svgNS,"feMerge");
+  const blurred=document.createElementNS(svgNS,"feMergeNode");
+  blurred.setAttribute("in","blur");
+  const sharp=document.createElementNS(svgNS,"feMergeNode");
+  sharp.setAttribute("in","SourceGraphic");
+  merge.appendChild(blurred);
+  merge.appendChild(sharp);
+  filter.appendChild(blur);
+  filter.appendChild(merge);
+  defs.appendChild(filter);
+  svg.appendChild(defs);
+
+  const measure=document.createElementNS(svgNS,"path");
+  measure.setAttribute("d",pathData);
+  measure.setAttribute("fill","none");
+  measure.setAttribute("stroke","none");
+  svg.appendChild(measure);
+  target.appendChild(svg);
+  const pathLength=measure.getTotalLength();
+  if(!Number.isFinite(pathLength)||pathLength<12){
+   svg.remove();
+   return;
+  }
+  svg.dataset.pathLength=pathLength.toFixed(3);
+  const duration=pathLength/travelSpeed;
+  animatePoint(svg,pathData,duration,{head:true,lag:0,r:2.05,fill:"#FFFFFF",opacity:1});
+  tailParticles.forEach(point=>animatePoint(svg,pathData,duration,point));
+  target.dataset.ruwaOrbitPathLength=pathLength.toFixed(3);
  });
  document.documentElement.dataset.ruwaOrbitReady="true";
  document.documentElement.dataset.ruwaOrbitTargetCount=String(targets.length);
+ document.documentElement.dataset.ruwaOrbitAnimatedCount=String(
+  targets.filter(target=>target.querySelector(":scope > .ruwa-orbit-light")).length
+ );
 })();
 
 
