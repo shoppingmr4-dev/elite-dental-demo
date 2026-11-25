@@ -2194,15 +2194,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   navHadFocus=nav.contains(event.target);
  });
 
- header.addEventListener("ruwa:header-state",()=>{
-  // A compact desktop menu must not remain clipped after the header returns
-  // to its expanded, full-navigation layout.
-  if(!shouldCollapseNav()&&button.getAttribute("aria-expanded")==="true"){
-   close({immediate:true});
-  }else{
-   syncNavInert();
-  }
- });
+ header.addEventListener("ruwa:header-state",syncNavInert);
 
  button.addEventListener("click",()=>{
   const open=button.getAttribute("aria-expanded")!=="true";
