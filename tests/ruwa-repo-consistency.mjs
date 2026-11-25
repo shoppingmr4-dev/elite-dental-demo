@@ -150,11 +150,11 @@ const contactActions = [...html.matchAll(/data-contact-action=["'](whatsapp|phon
 assert.equal(contactActions.filter(action => action === "whatsapp").length, 3, "RUWA must have the Hero, floating, and final WhatsApp actions");
 assert.equal(contactActions.filter(action => action === "phone").length, 3, "RUWA must have header, Hero secondary, and final phone actions");
 
-const headerStart = html.indexOf('<header class="site-header"');
-const headerEnd = html.indexOf("</header>", headerStart) + "</header>".length;
-const headerMarkup = html.slice(headerStart, headerEnd);
-assert.ok(headerMarkup.includes('data-contact-action="phone"') && headerMarkup.includes("اتصل بنا"), "Header must use the phone contact action");
-assert.ok(!headerMarkup.includes('data-contact-action="whatsapp"') && !headerMarkup.includes("whatsapp-brand-icon"), "Header must no longer show a WhatsApp action");
+const contactHeaderScanStart = html.indexOf('<header class="site-header"');
+const contactHeaderScanEnd = html.indexOf("</header>", contactHeaderScanStart) + "</header>".length;
+const contactHeaderMarkup = html.slice(contactHeaderScanStart, contactHeaderScanEnd);
+assert.ok(contactHeaderMarkup.includes('data-contact-action="phone"') && contactHeaderMarkup.includes("اتصل بنا"), "Header must use the phone contact action");
+assert.ok(!contactHeaderMarkup.includes('data-contact-action="whatsapp"') && !contactHeaderMarkup.includes("whatsapp-brand-icon"), "Header must no longer show a WhatsApp action");
 
 assert.match(html, /id=["']whatsapp-float["']/);
 assert.match(html, /class=["']whatsapp-float["']/);
