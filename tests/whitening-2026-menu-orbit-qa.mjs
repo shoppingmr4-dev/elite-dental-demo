@@ -76,7 +76,15 @@ async function prepareMenuPage(page, viewport) {
   // and return to its exact resting color after pointer exit.
   if (viewport.width > 920) {
     const restingColor = await button.evaluate(element => getComputedStyle(element, "::before").backgroundColor);
-    await button.hover();
+    const hoverBox = await button.boundingBox();
+    assert.ok(hoverBox && hoverBox.width > 0 && hoverBox.height > 0,
+      viewport.name + ": hamburger circle has no visible hover target");
+    // Move to the already-visible compact header button directly. Locator.hover()
+    // auto-scrolls and can move the sticky header out of its compact state.
+    await page.mouse.move(
+      hoverBox.x + hoverBox.width / 2,
+      hoverBox.y + hoverBox.height / 2
+    );
     await page.waitForTimeout(230);
     const hoverState = await button.evaluate(element => ({
       color: getComputedStyle(element, "::before").backgroundColor,
