@@ -180,7 +180,7 @@ try {
       const early = await nav.evaluate(element => {
         const style = getComputedStyle(element);
         const matrix = style.transform === "none" ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(style.transform);
-        const origin = style.transformOrigin.split(/\\s+/).map(value => Number.parseFloat(value));
+        const origin = style.transformOrigin.split(/\s+/).map(value => Number.parseFloat(value));
         const clipPath = style.clipPath;
         return {
           shape: element.dataset.ruwaMenuShape,
@@ -189,8 +189,6 @@ try {
           pointCount: (clipPath.match(/,/g) || []).length + 1,
           expectedX: Number(element.dataset.ruwaMenuOriginX),
           expectedY: Number(element.dataset.ruwaMenuOriginY),
-          transformOriginX: origin[0],
-          transformOriginY: origin[1],
           panelLeft: Number(element.dataset.ruwaMenuPanelLeft),
           panelTop: Number(element.dataset.ruwaMenuPanelTop),
           buttonCenterX: Number(element.dataset.ruwaMenuButtonCenterX),
