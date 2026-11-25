@@ -1602,19 +1602,18 @@ body,button,input,select,textarea{font-family:var(--body)}
 
 
 
-/* RUWA METEOR ORBIT — arclength-paced luminous particles on the exact border centerline. */
+/* RUWA COMET BORDER — continuous tapered canvas trail on the measured rounded border path. */
 .ruwa-orbit-target{position:relative}
 .ruwa-orbit-light{display:none}
+.ruwa-orbit-geometry{position:fixed;left:-10000px;top:-10000px;visibility:hidden;opacity:0;pointer-events:none;overflow:hidden}
 @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
  .ruwa-orbit-light{
   position:absolute;display:block;z-index:4;overflow:visible;
   pointer-events:none;opacity:0;border:0;padding:0;margin:0;
-  background:none;transition:opacity .22s ease;
+  background:none;transition:opacity .18s ease;
  }
  .ruwa-orbit-target:hover>.ruwa-orbit-light,
  .ruwa-orbit-target:focus-within>.ruwa-orbit-light{opacity:1}
- .ruwa-orbit-head{filter:drop-shadow(0 0 1.2px rgba(255,255,255,.95)) drop-shadow(0 0 3.5px rgba(83,204,195,.68))}
- .ruwa-orbit-tail{filter:drop-shadow(0 0 1.5px rgba(83,204,195,.32))}
 }
 @media(prefers-reduced-motion:reduce){
  .ruwa-orbit-light{display:none!important;transition:none!important}
@@ -2250,7 +2249,7 @@ body,button,input,select,textarea{font-family:var(--body)}
     const destination=originalLinkCenters[index];
     const startX=originX-destination.x;
     const startY=originY-destination.y;
-    const side=Math.sign(localCenterX-originX)||(index%2===0?-1:1);
+    const side=Math.sign(destination.x-originX)||(index%2===0?-1:1);
     const arcX=side*Math.min(4.5,Math.abs(startX)*.025);
     const arcY=-side*Math.min(7,Math.abs(startX)*.035);
     gsap.set(link,{
@@ -2477,9 +2476,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  syncNavInert();
 })();
 
-// RUWA meteor orbit: every luminous point follows the measured border-centerline path.
-// SVG animateMotion uses paced path distance, so straight edges and rounded corners share one
-// physical speed. The trailing particles are phase-delayed points on that same closed path.
+// RUWA comet border: one fast, continuous, tapered light trail follows the measured border path.
 (function(){
  const selectors=[
   ".info-card",
@@ -2501,17 +2498,11 @@ body,button,input,select,textarea{font-family:var(--body)}
  const svgNS="http://www.w3.org/2000/svg";
  const canHover=window.matchMedia("(hover:hover) and (pointer:fine)").matches;
  const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
- const travelSpeed=92; // CSS pixels per second, shared by every target size.
- const tailParticles=[
-  {lag:2.6,r:1.72,fill:"#E9FFFC",opacity:.96},
-  {lag:5.2,r:1.53,fill:"#D2FBF5",opacity:.88},
-  {lag:7.8,r:1.38,fill:"#BDF3EC",opacity:.78},
-  {lag:10.4,r:1.22,fill:"#A8E9E1",opacity:.66},
-  {lag:13.0,r:1.06,fill:"#90DDD4",opacity:.54},
-  {lag:15.6,r:.91,fill:"#7BD1C8",opacity:.42},
-  {lag:18.2,r:.77,fill:"#69C7BD",opacity:.31},
-  {lag:20.8,r:.64,fill:"#58BDB4",opacity:.21}
- ];
+ const travelSpeed=240; // CSS pixels per second, measured by distance along the border path.
+ const tailCoverage=.86; // Long trailing sweep covers 86% of each complete perimeter.
+ const records=new Map();
+ const active=new Set();
+ let animationFrame=0;
 
  const number=value=>{
   const parsed=parseFloat(value);
@@ -2566,31 +2557,12 @@ body,button,input,select,textarea{font-family:var(--body)}
    "Z"
   ].join(" ");
  };
- const animatePoint=(svg,pathData,duration,point)=>{
-  const circle=document.createElementNS(svgNS,"circle");
-  circle.setAttribute("class",point.head?"ruwa-orbit-head":"ruwa-orbit-tail");
-  circle.setAttribute("cx","0");
-  circle.setAttribute("cy","0");
-  circle.setAttribute("r",String(point.r));
-  circle.setAttribute("fill",point.fill);
-  circle.setAttribute("opacity",String(point.opacity));
-  if(point.head)circle.setAttribute("filter","url(#"+svg.dataset.glowId+")");
-  const motion=document.createElementNS(svgNS,"animateMotion");
-  motion.setAttribute("dur",duration.toFixed(4)+"s");
-  motion.setAttribute("begin",point.lag===0?"0s":(point.lag/travelSpeed).toFixed(4)+"s");
-  motion.setAttribute("repeatCount","indefinite");
-  motion.setAttribute("calcMode","paced");
-  motion.setAttribute("rotate","auto");
-  motion.setAttribute("path",pathData);
-  circle.appendChild(motion);
-  svg.appendChild(circle);
- };
- targets.forEach((target,index)=>{
-  target.classList.add("ruwa-orbit-target");
-  if(!canHover||reducedMotion||target.querySelector(":scope > .ruwa-orbit-light"))return;
+ const modulo=(value,length)=>((value%length)+length)%length;
+
+ const makeRecord=target=>{
   const width=target.offsetWidth;
   const height=target.offsetHeight;
-  if(width<2||height<2)return;
+  if(width<4||height<4)return null;
   const style=getComputedStyle(target);
   const border={
    top:number(style.borderTopWidth),
@@ -2599,70 +2571,254 @@ body,button,input,select,textarea{font-family:var(--body)}
    left:number(style.borderLeftWidth)
   };
   const pathData=buildCenterlinePath(width,height,border,style);
-  const svg=document.createElementNS(svgNS,"svg");
-  svg.setAttribute("class","ruwa-orbit-light");
-  svg.setAttribute("viewBox","0 0 "+fmt(width)+" "+fmt(height));
-  svg.setAttribute("width",String(width));
-  svg.setAttribute("height",String(height));
-  svg.setAttribute("preserveAspectRatio","none");
-  svg.setAttribute("aria-hidden","true");
-  svg.setAttribute("focusable","false");
-  svg.setAttribute("role","presentation");
-  svg.style.left=(-border.left)+"px";
-  svg.style.top=(-border.top)+"px";
-  svg.style.width=width+"px";
-  svg.style.height=height+"px";
-  svg.dataset.pathLength="0";
-  svg.dataset.speed=String(travelSpeed);
-  svg.dataset.glowId="ruwa-meteor-glow-"+index;
 
-  const defs=document.createElementNS(svgNS,"defs");
-  const filter=document.createElementNS(svgNS,"filter");
-  filter.setAttribute("id",svg.dataset.glowId);
-  filter.setAttribute("x","-200%");
-  filter.setAttribute("y","-200%");
-  filter.setAttribute("width","500%");
-  filter.setAttribute("height","500%");
-  const blur=document.createElementNS(svgNS,"feGaussianBlur");
-  blur.setAttribute("in","SourceGraphic");
-  blur.setAttribute("stdDeviation","1.0");
-  blur.setAttribute("result","blur");
-  const merge=document.createElementNS(svgNS,"feMerge");
-  const blurred=document.createElementNS(svgNS,"feMergeNode");
-  blurred.setAttribute("in","blur");
-  const sharp=document.createElementNS(svgNS,"feMergeNode");
-  sharp.setAttribute("in","SourceGraphic");
-  merge.appendChild(blurred);
-  merge.appendChild(sharp);
-  filter.appendChild(blur);
-  filter.appendChild(merge);
-  defs.appendChild(filter);
-  svg.appendChild(defs);
+  const geometry=document.createElementNS(svgNS,"svg");
+  geometry.setAttribute("class","ruwa-orbit-geometry");
+  geometry.setAttribute("viewBox","0 0 "+fmt(width)+" "+fmt(height));
+  geometry.setAttribute("width",String(width));
+  geometry.setAttribute("height",String(height));
+  geometry.setAttribute("aria-hidden","true");
+  const path=document.createElementNS(svgNS,"path");
+  path.setAttribute("d",pathData);
+  path.setAttribute("fill","none");
+  path.setAttribute("stroke","none");
+  geometry.appendChild(path);
+  geometry.style.width=width+"px";
+  geometry.style.height=height+"px";
+  target.appendChild(geometry);
 
-  const measure=document.createElementNS(svgNS,"path");
-  measure.setAttribute("d",pathData);
-  measure.setAttribute("fill","none");
-  measure.setAttribute("stroke","none");
-  svg.appendChild(measure);
-  target.appendChild(svg);
-  const pathLength=measure.getTotalLength();
-  if(!Number.isFinite(pathLength)||pathLength<12){
-   svg.remove();
-   return;
+  const pathLength=path.getTotalLength();
+  if(!Number.isFinite(pathLength)||pathLength<16){
+   geometry.remove();
+   return null;
   }
-  svg.dataset.pathLength=pathLength.toFixed(3);
-  const duration=pathLength/travelSpeed;
-  animatePoint(svg,pathData,duration,{head:true,lag:0,r:2.05,fill:"#FFFFFF",opacity:1});
-  tailParticles.forEach(point=>animatePoint(svg,pathData,duration,point));
+
+  const canvas=document.createElement("canvas");
+  canvas.className="ruwa-orbit-light";
+  canvas.setAttribute("aria-hidden","true");
+  canvas.setAttribute("role","presentation");
+  canvas.style.left=(-border.left)+"px";
+  canvas.style.top=(-border.top)+"px";
+  canvas.style.width=width+"px";
+  canvas.style.height=height+"px";
+  canvas.style.pointerEvents="none";
+  const dpr=Math.max(1,Math.min(2,window.devicePixelRatio||1));
+  canvas.width=Math.ceil(width*dpr);
+  canvas.height=Math.ceil(height*dpr);
+  const context=canvas.getContext("2d",{alpha:true});
+  if(!context){
+   geometry.remove();
+   return null;
+  }
+  context.setTransform(dpr,0,0,dpr,0,0);
+  target.appendChild(canvas);
+
+  const tailLength=pathLength*tailCoverage;
+  canvas.dataset.pathLength=pathLength.toFixed(3);
+  canvas.dataset.speed=String(travelSpeed);
+  canvas.dataset.tailLength=tailLength.toFixed(3);
+  canvas.dataset.tailCoverage=String(tailCoverage);
+  canvas.dataset.headRadius="4.2";
+  canvas.dataset.pixelRatio=String(dpr);
+  canvas.dataset.pointerEvents="none";
+  const record={
+   target,canvas,context,geometry,path,pathLength,width,height,border,
+   tailLength,startedAt:0,dpr
+  };
   target.dataset.ruwaOrbitPathLength=pathLength.toFixed(3);
+  target.dataset.ruwaOrbitSpeed=String(travelSpeed);
+  target.dataset.ruwaOrbitTailCoverage=String(tailCoverage);
+  return record;
+ };
+
+ const drawQuad=(ctx,a,b,alpha,halfWidth)=>{
+  const ax=a.x+a.nx*halfWidth;
+  const ay=a.y+a.ny*halfWidth;
+  const bx=b.x+b.nx*halfWidth;
+  const by=b.y+b.ny*halfWidth;
+  const cx=b.x-b.nx*halfWidth;
+  const cy=b.y-b.ny*halfWidth;
+  const dx=a.x-a.nx*halfWidth;
+  const dy=a.y-a.ny*halfWidth;
+  ctx.globalAlpha=alpha;
+  ctx.beginPath();
+  ctx.moveTo(ax,ay);
+  ctx.lineTo(bx,by);
+  ctx.lineTo(cx,cy);
+  ctx.lineTo(dx,dy);
+  ctx.closePath();
+  ctx.fill();
+ };
+
+ const drawComet=(record,time)=>{
+  const {context:ctx,path,pathLength,tailLength,width,height,startedAt,canvas}=record;
+  ctx.clearRect(0,0,width,height);
+  const headDistance=modulo((time-startedAt)*travelSpeed/1000,pathLength);
+  const segmentCount=Math.max(90,Math.min(260,Math.ceil(tailLength/2.6)));
+  const samples=[];
+  const epsilon=Math.min(1.4,Math.max(.6,pathLength/1500));
+
+  for(let i=0;i<=segmentCount;i++){
+   const t=i/segmentCount;
+   const distance=modulo(headDistance-tailLength+t*tailLength,pathLength);
+   const point=path.getPointAtLength(distance);
+   const before=path.getPointAtLength(modulo(distance-epsilon,pathLength));
+   const after=path.getPointAtLength(modulo(distance+epsilon,pathLength));
+   let tx=after.x-before.x;
+   let ty=after.y-before.y;
+   const length=Math.hypot(tx,ty)||1;
+   tx/=length; ty/=length;
+   const nx=-ty;
+   const ny=tx;
+   samples.push({
+    x:point.x,y:point.y,nx,ny,t,
+    width:.24+2.55*Math.pow(t,1.28),
+    innerWidth:.12+1.12*Math.pow(t,1.2),
+    alpha:.09+.46*Math.pow(t,1.7)
+   });
+  }
+
+  // Broad cool-teal glow: adjacent tapered quads share their exact edges to form one continuous trail.
+  ctx.save();
+  ctx.shadowColor="rgba(74,218,207,.72)";
+  ctx.shadowBlur=8;
+  ctx.fillStyle="rgba(104,235,224,1)";
+  for(let i=0;i<segmentCount;i++){
+   const a=samples[i],b=samples[i+1];
+   drawQuad(ctx,a,b,(a.alpha+b.alpha)*.5,a.width>b.width?a.width:b.width);
+  }
+  ctx.restore();
+
+  // A narrower icy-white core keeps the long tail luminous without competing with the head.
+  ctx.save();
+  ctx.shadowColor="rgba(194,255,250,.45)";
+  ctx.shadowBlur=3;
+  ctx.fillStyle="rgba(226,255,251,1)";
+  for(let i=0;i<segmentCount;i++){
+   const a=samples[i],b=samples[i+1];
+   drawQuad(ctx,a,b,Math.min(.78,(a.alpha+b.alpha)*.42),
+    Math.max(a.innerWidth,b.innerWidth));
+  }
+  ctx.restore();
+
+  const head=path.getPointAtLength(headDistance);
+  const next=path.getPointAtLength(modulo(headDistance+1.2,pathLength));
+  const angle=Math.atan2(next.y-head.y,next.x-head.x);
+  ctx.save();
+  ctx.translate(head.x,head.y);
+  ctx.rotate(angle);
+  const halo=ctx.createRadialGradient(0,0,.2,0,0,9.5);
+  halo.addColorStop(0,"rgba(255,255,255,1)");
+  halo.addColorStop(.22,"rgba(235,255,253,.98)");
+  halo.addColorStop(.48,"rgba(136,239,230,.56)");
+  halo.addColorStop(1,"rgba(64,198,190,0)");
+  ctx.fillStyle=halo;
+  ctx.beginPath();
+  ctx.arc(0,0,9.5,0,Math.PI*2);
+  ctx.fill();
+  ctx.shadowColor="rgba(255,255,255,.98)";
+  ctx.shadowBlur=11;
+  ctx.fillStyle="#FFFFFF";
+  ctx.beginPath();
+  ctx.ellipse(0,0,4.4,2.8,0,0,Math.PI*2);
+  ctx.fill();
+  ctx.shadowBlur=0;
+  ctx.fillStyle="#FFFFFF";
+  ctx.beginPath();
+  ctx.arc(0,0,2.35,0,Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+
+  canvas.dataset.headDistance=headDistance.toFixed(2);
+  canvas.dataset.renderedAt=String(Math.round(time));
+ };
+
+ const requestRender=()=>{
+  if(animationFrame===0&&!document.hidden){
+   animationFrame=requestAnimationFrame(renderFrame);
+  }
+ };
+ const renderFrame=time=>{
+  animationFrame=0;
+  for(const record of Array.from(active)){
+   const stillActive=record.target.isConnected&&(
+    record.target.matches(":hover")||record.target.contains(document.activeElement)
+   );
+   if(!stillActive){
+    active.delete(record);
+    record.context.clearRect(0,0,record.width,record.height);
+    continue;
+   }
+   drawComet(record,time);
+  }
+  if(active.size)requestRender();
+ };
+ const activate=record=>{
+  if(!record)return;
+  record.startedAt=performance.now();
+  active.add(record);
+  drawComet(record,record.startedAt);
+  requestRender();
+ };
+ const deactivate=record=>{
+  if(!record)return;
+  if(record.target.matches(":hover")||record.target.contains(document.activeElement))return;
+  active.delete(record);
+  record.context.clearRect(0,0,record.width,record.height);
+ };
+
+ targets.forEach(target=>{
+  target.classList.add("ruwa-orbit-target");
+  if(!canHover||reducedMotion||target.querySelector(":scope > .ruwa-orbit-light"))return;
+  const record=makeRecord(target);
+  if(!record)return;
+  records.set(target,record);
+  target.addEventListener("pointerenter",()=>activate(records.get(target)));
+  target.addEventListener("pointerleave",()=>deactivate(records.get(target)));
+  target.addEventListener("focusin",()=>activate(records.get(target)));
+  target.addEventListener("focusout",()=>requestAnimationFrame(()=>deactivate(records.get(target))));
  });
+
+ const rebuildChangedTargets=()=>{
+  if(!canHover||reducedMotion)return;
+  for(const target of targets){
+   const old=records.get(target);
+   if(!old)continue;
+   if(old.width===target.offsetWidth&&old.height===target.offsetHeight)continue;
+   active.delete(old);
+   old.canvas.remove();
+   old.geometry.remove();
+   const next=makeRecord(target);
+   if(next){
+    records.set(target,next);
+    if(target.matches(":hover")||target.contains(document.activeElement))activate(next);
+   }else{
+    records.delete(target);
+   }
+  }
+ };
+ window.addEventListener("resize",rebuildChangedTargets,{passive:true});
+ document.addEventListener("visibilitychange",()=>{
+  if(document.hidden){
+   if(animationFrame)cancelAnimationFrame(animationFrame);
+   animationFrame=0;
+  }else if(active.size){
+   requestRender();
+  }
+ });
+ window.addEventListener("pagehide",()=>{
+  if(animationFrame)cancelAnimationFrame(animationFrame);
+  animationFrame=0;
+  active.clear();
+  records.forEach(record=>record.context.clearRect(0,0,record.width,record.height));
+ });
+
  document.documentElement.dataset.ruwaOrbitReady="true";
  document.documentElement.dataset.ruwaOrbitTargetCount=String(targets.length);
- document.documentElement.dataset.ruwaOrbitAnimatedCount=String(
-  targets.filter(target=>target.querySelector(":scope > .ruwa-orbit-light")).length
- );
+ document.documentElement.dataset.ruwaOrbitAnimatedCount=String(records.size);
+ document.documentElement.dataset.ruwaOrbitSpeed=String(travelSpeed);
+ document.documentElement.dataset.ruwaOrbitTailCoverage=String(tailCoverage);
 })();
-
 
 // Floating RUWA header: one shared progress value and content-derived frame geometry.
 (function(){
