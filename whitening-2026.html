@@ -2229,6 +2229,14 @@ body,button,input,select,textarea{font-family:var(--body)}
 
   if(desktopFunnel){
    nav.dataset.ruwaMenuShape="spiral-funnel";
+   // Measure every destination before the parent nav receives its rotation or scale.
+   const originalLinkCenters=animatedItems.map(link=>{
+    const rect=link.getBoundingClientRect();
+    return {
+     x:rect.left-panel.left+rect.width/2,
+     y:rect.top-panel.top+rect.height/2
+    };
+   });
    const funnel={progress:0};
    gsap.set(nav,{
     clipPath:funnelClipPath(0,panel.width,panel.height,originX,originY),
@@ -2239,11 +2247,9 @@ body,button,input,select,textarea{font-family:var(--body)}
    });
 
    animatedItems.forEach((link,index)=>{
-    const rect=link.getBoundingClientRect();
-    const localCenterX=rect.left-panel.left+rect.width/2;
-    const localCenterY=rect.top-panel.top+rect.height/2;
-    const startX=originX-localCenterX;
-    const startY=originY-localCenterY;
+    const destination=originalLinkCenters[index];
+    const startX=originX-destination.x;
+    const startY=originY-destination.y;
     const side=Math.sign(localCenterX-originX)||(index%2===0?-1:1);
     const arcX=side*Math.min(4.5,Math.abs(startX)*.025);
     const arcY=-side*Math.min(7,Math.abs(startX)*.035);
