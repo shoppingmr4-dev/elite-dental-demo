@@ -2598,11 +2598,9 @@ body,button,input,select,textarea{font-family:var(--body)}
   canvas.setAttribute("aria-hidden","true");
   canvas.setAttribute("role","presentation");
   canvas.style.left=(-border.left)+"px";
-  canvas.style.right=(-border.right)+"px";
   canvas.style.top=(-border.top)+"px";
-  canvas.style.bottom=(-border.bottom)+"px";
-  canvas.style.width="auto";
-  canvas.style.height="auto";
+  canvas.style.width=width+"px";
+  canvas.style.height=height+"px";
   canvas.style.pointerEvents="none";
   const dpr=Math.max(1,Math.min(2,window.devicePixelRatio||1));
   canvas.width=Math.ceil(width*dpr);
