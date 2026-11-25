@@ -235,18 +235,18 @@ for (const [name, content] of [
 
 assert.match(readme, /11 content sections/);
 assert.match(readme, /4 FAQ entries/);
-assert.match(readme, /3 WhatsApp actions and 2 phone actions/);
+assert.match(readme, /3 WhatsApp actions and 3 phone actions/);
 assert.match(designSystem, /11 content sections/);
 assert.match(designSystem, /4 native HTML details\/summary FAQ entries/);
-assert.match(designSystem, /3 WhatsApp actions and 2 phone actions/);
+assert.match(designSystem, /3 WhatsApp actions and 3 phone actions/);
 assert.match(caseStudy, /11 قسمًا رئيسيًا/);
 assert.match(caseStudy, /4 أسئلة/);
-assert.match(caseStudy, /3 أزرار واتساب وزري اتصال/);
+assert.match(caseStudy, /3 أزرار واتساب و3 أزرار اتصال هاتفي/);
 assert.match(productionAudit, /11 main content sections/);
 assert.match(productionAudit, /4 native details entries/);
-assert.match(productionAudit, /3 WhatsApp actions and 2 phone actions/);
+assert.match(productionAudit, /3 WhatsApp actions and 3 phone actions/);
 
 console.log("RUWA repository consistency: PASS");
-console.log("Sections: 11 | Reviews: transparent demo-only state | FAQ: 4 | WhatsApp actions: 3 | Phone actions: 2");
+console.log("Sections: 11 | Reviews: transparent demo-only state | FAQ: 4 | WhatsApp actions: 3 | Phone actions: 3");
 console.log("ARIA controls: all targets exist | Hero AI illustration disclosure: present");
 console.log("Repository root and legacy preview paths: redirect to whitening-2026.html");

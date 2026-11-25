@@ -30,7 +30,7 @@ The actual current DOM order is:
 
 | Order | ID | Section | Decision | Evidence-based rationale |
 |---:|---|---|---|---|
-| Header | main-nav | Brand, seven section links, WhatsApp-labelled CTA | KEEP | Directs visitors to the current patient-education journey, including the treatment journey and reviews-transparency note. |
+| Header | main-nav | Brand, seven section links, phone CTA labelled «اتصل بنا» | KEEP | Directs visitors to the current patient-education journey, including the treatment journey and reviews-transparency note. |
 | 01 | top | Hero | KEEP / protect | Explains the whitening subject and presents the approved illustrative portrait and first actions. |
 | 02 | approach | Assessment approach | KEEP | Explains why assessment precedes choosing an option. |
 | 03 | causes | Causes of discoloration | KEEP | Provides concise context about surface and deeper colour changes. |
