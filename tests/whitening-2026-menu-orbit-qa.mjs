@@ -184,6 +184,8 @@ try {
           pointCount: (clipPath.match(/,/g) || []).length + 1,
           expectedX: Number(element.dataset.ruwaMenuOriginX),
           expectedY: Number(element.dataset.ruwaMenuOriginY),
+          transformOriginX: origin[0],
+          transformOriginY: origin[1],
           panelLeft: Number(element.dataset.ruwaMenuPanelLeft),
           panelTop: Number(element.dataset.ruwaMenuPanelTop),
           buttonCenterX: Number(element.dataset.ruwaMenuButtonCenterX),
