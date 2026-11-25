@@ -1045,6 +1045,10 @@ body,button,input,select,textarea{font-family:var(--body)}
  border-color:rgba(24,122,128,.34);
 }
 .site-header .menu-toggle:active::before{background:#DCEBE8}
+.site-header .menu-toggle[data-pointer-hover="true"]::before{
+ background:#E5F0EE;
+ border-color:rgba(24,122,128,.28);
+}
 .site-header .menu-toggle svg {
  position:relative;
  z-index:1;
@@ -2054,6 +2058,23 @@ body,button,input,select,textarea{font-family:var(--body)}
  const header=button.closest(".site-header");
  const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
  const root=document.documentElement;
+
+ // Explicitly distinguish real hover-capable pointers from touch input.
+ // This keeps the visible circular frame responsive on desktop and prevents
+ // sticky hover coloration after a tap on touch-only devices.
+ button.addEventListener("pointerenter",event=>{
+  if(event.pointerType==="mouse"||event.pointerType==="pen"){
+   button.dataset.pointerHover="true";
+  }
+ });
+ button.addEventListener("pointerleave",event=>{
+  if(event.pointerType==="mouse"||event.pointerType==="pen"){
+   button.removeAttribute("data-pointer-hover");
+  }
+ });
+ button.addEventListener("pointercancel",()=>{
+  button.removeAttribute("data-pointer-hover");
+ });
  const links=()=>Array.from(nav.querySelectorAll("a"));
  const isDesktopCompact=()=>window.innerWidth>920&&header.classList.contains("is-compact");
  const shouldCollapseNav=()=>window.innerWidth<=920||isDesktopCompact();
