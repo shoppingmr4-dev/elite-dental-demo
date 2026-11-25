@@ -173,6 +173,28 @@ try {
         headerActionHeight:rect(document.querySelector(".header-action")).height,
          headerActionPaddingInlineStart:getComputedStyle(document.querySelector(".header-action")).paddingInlineStart,
         headerActionText:document.querySelector(".header-action")?.innerText?.trim() || "",
+        headerActionAlignment:(()=>{
+          const button=document.querySelector(".header-action");
+          const icon=button?.querySelector("svg");
+          const labelNode=[...(button?.childNodes||[])].find(node=>node.nodeType===Node.TEXT_NODE&&node.textContent.trim());
+          if(!button||!icon||!labelNode)return null;
+          const range=document.createRange();
+          range.selectNodeContents(labelNode);
+          const labelRect=range.getBoundingClientRect();
+          const iconRect=icon.getBoundingClientRect();
+          const buttonRect=button.getBoundingClientRect();
+          const style=getComputedStyle(button);
+          const iconStyle=getComputedStyle(icon);
+          const groupLeft=Math.min(labelRect.left,iconRect.left);
+          const groupRight=Math.max(labelRect.right,iconRect.right);
+          return {
+            display:style.display,alignItems:style.alignItems,justifyContent:style.justifyContent,
+            lineHeight:style.lineHeight,fontSize:style.fontSize,buttonHeight:buttonRect.height,
+            iconDisplay:iconStyle.display,iconFlexShrink:iconStyle.flexShrink,
+            centerDeltaY:Math.abs((iconRect.top+iconRect.height/2)-(labelRect.top+labelRect.height/2)),
+            centerDeltaX:Math.abs((groupLeft+groupRight)/2-(buttonRect.left+buttonRect.width/2))
+          };
+        })(),
         headerActionHref:document.querySelector(".header-action")?.getAttribute("href") || "",
         headerActionTag:document.querySelector(".header-action")?.tagName || "",
         headerActionHasPhoneIcon:Boolean(document.querySelector('.header-action svg path[d^="M22 16.92"]')),
@@ -806,7 +828,17 @@ try {
     assert.equal(state.headerPanelTopInset, 0, `${vp.name}: header should start in its full-size state`);
     assert.equal(state.headerCompactInitially, false, `${vp.name}: header must not start in the compact state`);
     assert.equal(state.headerActionText, "اتصل بنا", `${vp.name}: header phone CTA copy is incorrect`);
-     const expectedHeaderPadding=vp.width<=390?9:vp.width<=720?12:vp.width<=920?15:18;
+     assert.ok(state.headerActionAlignment, `${vp.name}: header phone CTA alignment metrics are unavailable`);
+     assert.equal(state.headerActionAlignment.display, "inline-flex", `${vp.name}: header phone CTA must use inline-flex`);
+     assert.equal(state.headerActionAlignment.alignItems, "center", `${vp.name}: header phone CTA contents must be vertically centered`);
+     assert.equal(state.headerActionAlignment.justifyContent, "center", `${vp.name}: header phone CTA content group must be horizontally centered`);
+     assert.equal(state.headerActionAlignment.lineHeight, `${Number.parseFloat(state.headerActionAlignment.fontSize)}px`, `${vp.name}: header phone CTA label line-height must stay compact and centered`);
+     assert.equal(state.headerActionAlignment.buttonHeight, 44, `${vp.name}: header phone CTA hit-area height must remain unchanged`);
+     assert.equal(state.headerActionAlignment.iconDisplay, "block", `${vp.name}: header phone SVG must not use inline baseline alignment`);
+     assert.equal(state.headerActionAlignment.iconFlexShrink, "0", `${vp.name}: header phone icon must retain its fixed box`);
+     assert.ok(state.headerActionAlignment.centerDeltaY<=1.5, `${vp.name}: phone icon and Arabic label do not share a vertical centerline: ${JSON.stringify(state.headerActionAlignment)}`);
+     assert.ok(state.headerActionAlignment.centerDeltaX<=1.5, `${vp.name}: phone icon and label are not centered together inside the button: ${JSON.stringify(state.headerActionAlignment)}`);
+     const expectedHeaderPadding=vp.width<=390?10:vp.width<=720?13:vp.width<=920?16:19;
      assert.equal(Number.parseFloat(state.headerActionPaddingInlineStart),expectedHeaderPadding,
        `${vp.name}: header phone CTA horizontal padding should be slightly roomier without changing its height`);
     assert.equal(state.headerActionHref, "", `${vp.name}: demo header CTA must not contain a fake external destination`);

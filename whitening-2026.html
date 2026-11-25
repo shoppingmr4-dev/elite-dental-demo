@@ -836,7 +836,7 @@ body,button,input,select,textarea{font-family:var(--body)}
 }
 .site-header .header-action {
  min-height: calc(42px - 5px * var(--header-progress));
- padding-inline: calc(18px - 2px * var(--header-progress));
+ padding-inline: calc(19px - 2px * var(--header-progress));
  border-radius: calc(12px - 1px * var(--header-progress));
  font-size: calc(14px - 2px * var(--header-progress));
  translate: calc(var(--action-converge-x,0px) * var(--header-progress)) 0;
@@ -863,7 +863,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  .site-header .header-action { translate: 0 0; }
  .site-header .header-action {
   min-height: calc(42px - 4px * var(--header-progress));
-  padding-inline: calc(15px - 2px * var(--header-progress));
+  padding-inline: calc(16px - 2px * var(--header-progress));
   font-size: calc(14px - 2px * var(--header-progress));
  }
 }
@@ -897,7 +897,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  }
  .site-header .header-action {
   min-height: calc(38px - 2px * var(--header-progress));
-  padding-inline: calc(12px - 2px * var(--header-progress));
+  padding-inline: calc(13px - 2px * var(--header-progress));
   border-radius: calc(11px - 1px * var(--header-progress));
   font-size: calc(11px - 1px * var(--header-progress));
   gap: calc(6px - 1px * var(--header-progress));
@@ -919,7 +919,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  }
  .site-header .header-action {
   min-height: calc(36px - 1px * var(--header-progress));
-  padding-inline: calc(9px - 1px * var(--header-progress));
+  padding-inline: calc(10px - 1px * var(--header-progress));
   font-size: calc(10.5px - .5px * var(--header-progress));
  }
  .site-header .menu-toggle {
@@ -950,9 +950,19 @@ body,button,input,select,textarea{font-family:var(--body)}
 .site-header .header-action {
  position:relative;
  isolation:isolate;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
  min-height:44px;
+ line-height:1;
+ white-space:nowrap;
  background:transparent;
  box-shadow:none;
+}
+.site-header .header-action > svg {
+ display:block;
+ flex:0 0 auto;
+ align-self:center;
 }
 .site-header .header-action::before {
  content:"";
