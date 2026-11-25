@@ -829,7 +829,7 @@ try {
     assert.equal(state.headerCompactInitially, false, `${vp.name}: header must not start in the compact state`);
     assert.equal(state.headerActionText, "اتصل بنا", `${vp.name}: header phone CTA copy is incorrect`);
      assert.ok(state.headerActionAlignment, `${vp.name}: header phone CTA alignment metrics are unavailable`);
-     assert.equal(state.headerActionAlignment.display, "inline-flex", `${vp.name}: header phone CTA must use inline-flex`);
+     assert.ok(["flex","inline-flex"].includes(state.headerActionAlignment.display), `${vp.name}: header phone CTA must use a flex formatting context (grid/flex items may compute inline-flex to flex)`);
      assert.equal(state.headerActionAlignment.alignItems, "center", `${vp.name}: header phone CTA contents must be vertically centered`);
      assert.equal(state.headerActionAlignment.justifyContent, "center", `${vp.name}: header phone CTA content group must be horizontally centered`);
      assert.equal(state.headerActionAlignment.lineHeight, `${Number.parseFloat(state.headerActionAlignment.fontSize)}px`, `${vp.name}: header phone CTA label line-height must stay compact and centered`);
