@@ -75,17 +75,17 @@ async function prepareMenuPage(page, viewport) {
   // On fine-pointer desktop, the circular control must visibly darken on hover
   // and return to its exact resting color after pointer exit.
   if (viewport.width > 920) {
-    const restingColor = await button.evaluate(element => getComputedStyle(element).backgroundColor);
+    const restingColor = await button.evaluate(element => getComputedStyle(element, "::before").backgroundColor);
     await button.hover();
     await page.waitForTimeout(230);
-    const hoverColor = await button.evaluate(element => getComputedStyle(element).backgroundColor);
+    const hoverColor = await button.evaluate(element => getComputedStyle(element, "::before").backgroundColor);
     assert.notEqual(hoverColor, restingColor,
-      viewport.name + ": hamburger hover did not change the circular button color");
+      viewport.name + ": visible hamburger circle did not darken on hover");
     await page.mouse.move(8, 8);
     await page.waitForTimeout(240);
-    const returnedColor = await button.evaluate(element => getComputedStyle(element).backgroundColor);
+    const returnedColor = await button.evaluate(element => getComputedStyle(element, "::before").backgroundColor);
     assert.equal(returnedColor, restingColor,
-      viewport.name + ": hamburger button did not return to its resting color after hover");
+      viewport.name + ": visible hamburger circle did not return to its resting color after hover");
   }
 
   const initial = await page.locator("#main-nav").evaluate(nav => ({
