@@ -26,6 +26,17 @@ const browser = await chromium.launch({
 const failures = [];
 const viewportResults = [];
 
+async function clickHamburger(page, button, viewportName) {
+  const box = await button.boundingBox();
+  assert.ok(box && box.width > 0 && box.height > 0,
+    viewportName + ": hamburger button has no clickable rendered box");
+  assert.ok(box.x >= 0 && box.y >= 0 &&
+    box.x + box.width <= page.viewportSize().width + 1 &&
+    box.y + box.height <= page.viewportSize().height + 1,
+    viewportName + ": hamburger button is not inside the visible viewport");
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+}
+
 async function prepareMenuPage(page, viewport) {
   const response = await page.goto(BASE_URL, {
     waitUntil: "domcontentloaded",
@@ -88,7 +99,7 @@ try {
     const overflowBefore = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1);
     assert.equal(overflowBefore, true, viewport.name + ": page already overflows horizontally before opening");
 
-    await button.click();
+    await clickHamburger(page, button, viewport.name);
     await page.waitForFunction(
       () => document.querySelector("#menu-toggle")?.getAttribute("aria-expanded") === "true" &&
         document.querySelector("#main-nav")?.classList.contains("open"),
@@ -171,7 +182,7 @@ try {
       });
     }
 
-    await button.click();
+    await clickHamburger(page, button, viewport.name);
     await page.waitForFunction(
       () => document.querySelector("#main-nav")?.dataset.ruwaMenuState === "closed",
       null,
@@ -212,7 +223,7 @@ try {
   const interactionErrors = [];
   interactionPage.on("pageerror", error => interactionErrors.push(error.message));
   const interaction = await prepareMenuPage(interactionPage, { name: "mobile-390-interactions", width: 390, height: 844 });
-  await interaction.button.click();
+  await clickHamburger(interactionPage, interaction.button, "mobile-390-interactions");
   await interactionPage.waitForFunction(
     () => document.querySelector("#main-nav")?.dataset.ruwaMenuState === "open",
     null,
@@ -231,7 +242,7 @@ try {
     "Escape must restore focus to the circular menu button"
   );
 
-  await interaction.button.click();
+  await clickHamburger(interactionPage, interaction.button, "mobile-390-interactions");
   await interactionPage.waitForFunction(
     () => document.querySelector("#main-nav")?.dataset.ruwaMenuState === "open",
     null,
@@ -248,29 +259,34 @@ try {
     "#options",
     "Selecting a native navigation anchor must preserve its destination"
   );
+  assert.equal(
+    await interactionPage.evaluate(() => document.activeElement?.id),
+    "menu-toggle",
+    "Selecting a menu destination must restore focus to the menu button while the panel reverses"
+  );
 
   await interactionPage.evaluate(() => window.scrollTo(0, 0));
-  await interaction.button.click();
+  await clickHamburger(interactionPage, interaction.button, "mobile-390-interactions");
   await interactionPage.waitForFunction(
     () => document.querySelector("#main-nav")?.dataset.ruwaMenuState === "opening",
     null,
     { timeout: 3000 }
   );
   await interactionPage.waitForTimeout(140);
-  await interaction.button.click();
+  await clickHamburger(interactionPage, interaction.button, "mobile-390-interactions");
   await interactionPage.waitForFunction(
     () => document.querySelector("#main-nav")?.dataset.ruwaMenuState === "closing",
     null,
     { timeout: 3000 }
   );
   await interactionPage.waitForTimeout(90);
-  await interaction.button.click();
+  await clickHamburger(interactionPage, interaction.button, "mobile-390-interactions");
   await interactionPage.waitForFunction(
     () => document.querySelector("#main-nav")?.dataset.ruwaMenuState === "open",
     null,
     { timeout: 6000 }
   );
-  await interaction.button.click();
+  await clickHamburger(interactionPage, interaction.button, "mobile-390-interactions");
   await interactionPage.waitForFunction(
     () => document.querySelector("#main-nav")?.dataset.ruwaMenuState === "closed",
     null,

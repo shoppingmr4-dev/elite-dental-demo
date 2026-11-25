@@ -2219,13 +2219,10 @@ body,button,input,select,textarea{font-family:var(--body)}
  nav.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>{
   const restoreMenuFocus=shouldCollapseNav();
   close();
-  if(restoreMenuFocus){
-   requestAnimationFrame(()=>{
-    if(shouldCollapseNav()&&button.getAttribute("aria-expanded")==="false"&&
-       !nav.classList.contains("open")&&button.getClientRects().length){
-     button.focus({preventScroll:true});
-    }
-   });
+  // The menu remains visually open during its reverse animation, but focus
+  // must leave the now-inert navigation immediately after destination choice.
+  if(restoreMenuFocus&&button.getClientRects().length){
+   button.focus({preventScroll:true});
   }
  }));
 
