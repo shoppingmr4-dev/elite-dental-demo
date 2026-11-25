@@ -1431,6 +1431,134 @@ body,button,input,select,textarea{font-family:var(--body)}
 @media(prefers-reduced-motion:reduce){
  .whatsapp-float,.whatsapp-float.is-visible{transition:none}
 }
+
+
+/* RUWA INTERACTIVE HOVER SYSTEM
+   CSS-only micro-interactions. Individual translate/scale properties keep
+   these effects independent from GSAP's transform-based scroll reveals. */
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+ .info-card,
+ .option-card,
+ .journey-step,
+ .team-card,
+ .review-card {
+  translate:0 0;
+  transition:
+   translate .26s cubic-bezier(.2,.7,.2,1),
+   border-color .24s ease,
+   box-shadow .26s ease,
+   background-color .24s ease;
+ }
+
+ .info-card:hover,
+ .option-card:hover,
+ .journey-step:hover,
+ .team-card:hover,
+ .review-card:hover {
+  translate:0 -4px;
+  border-color:rgba(24,122,128,.28);
+  box-shadow:0 14px 32px rgba(20,45,56,.09);
+ }
+
+ .expect-card {
+  translate:0 0;
+  transition:
+   translate .26s cubic-bezier(.2,.7,.2,1),
+   border-color .24s ease,
+   box-shadow .26s ease,
+   background-color .24s ease;
+ }
+ .expect-card:hover {
+  translate:0 -3px;
+  border-color:rgba(255,255,255,.28);
+  background-color:rgba(255,255,255,.075);
+  box-shadow:0 12px 28px rgba(7,25,31,.13);
+ }
+
+ .step {
+  transition:border-color .22s ease;
+ }
+ .step:hover {
+  border-top-color:rgba(24,122,128,.32);
+ }
+
+ .info-card .card-index,
+ .step-no,
+ .journey-step-number,
+ .check-item .check-mark,
+ .review-card-label {
+  scale:1;
+  transition:
+   scale .22s cubic-bezier(.2,.7,.2,1),
+   background-color .22s ease,
+   border-color .22s ease,
+   color .22s ease;
+ }
+
+ .info-card:hover .card-index,
+ .step:hover .step-no,
+ .journey-step:hover .journey-step-number,
+ .check-item:hover .check-mark {
+  scale:1.06;
+  background-color:#D9EEE7;
+ }
+
+ .review-card:hover .review-card-label {
+  scale:1.035;
+  border-color:rgba(24,122,128,.22);
+  background-color:#EAF3F8;
+ }
+
+ .team-card-media img {
+  scale:1;
+  transition:scale .34s cubic-bezier(.2,.7,.2,1);
+ }
+ .team-card:hover .team-card-media img {
+  scale:1.035;
+ }
+
+ .faq-item summary::after {
+  scale:1;
+  transition:
+   scale .2s cubic-bezier(.2,.7,.2,1),
+   background-color .2s ease,
+   color .2s ease;
+ }
+ .faq-item summary:hover::after,
+ .faq-item summary:focus-visible::after {
+  scale:1.06;
+  background-color:var(--blue);
+  color:#FFFFFF;
+ }
+}
+
+/* Keyboard users receive the same clear state feedback without requiring a pointer. */
+.faq-item summary:focus-visible::after {
+ background-color:var(--blue);
+ color:#FFFFFF;
+}
+
+/* Respect reduced-motion preferences and keep every content element at rest. */
+@media(prefers-reduced-motion:reduce) {
+ .info-card,
+ .option-card,
+ .journey-step,
+ .team-card,
+ .review-card,
+ .expect-card,
+ .info-card .card-index,
+ .step-no,
+ .journey-step-number,
+ .check-item .check-mark,
+ .review-card-label,
+ .team-card-media img,
+ .faq-item summary::after {
+  transition:none!important;
+  translate:none!important;
+  scale:none!important;
+ }
+}
+
 </style>
 
 <!-- Pinned GSAP runtime: deferred so it never blocks the initial Hero render. -->

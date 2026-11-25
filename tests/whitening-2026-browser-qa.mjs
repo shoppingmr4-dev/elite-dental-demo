@@ -1233,7 +1233,7 @@ try {
     assert.ok(compactHeaderMetrics.brandMarkImage.width<initialHeaderMetrics.brandMarkImage.width, `${vp.name}: RUWA logo artwork did not shrink proportionally`);
     assert.ok(compactHeaderMetrics.arabicBrandSize<initialHeaderMetrics.arabicBrandSize, `${vp.name}: Arabic clinic name did not become more compact`);
     assert.ok(compactHeaderMetrics.actionFontSize<initialHeaderMetrics.actionFontSize, `${vp.name}: WhatsApp CTA wording did not become more compact`);
-    assert.ok(compactHeaderMetrics.actionIcon.width<initialHeaderMetrics.actionIcon.width, `${vp.name}: WhatsApp icon did not become more compact`);
+    assert.equal(compactHeaderMetrics.actionIcon.width,initialHeaderMetrics.actionIcon.width, `${vp.name}: approved phone icon size must remain stable during header compaction`);
     assert.equal(compactHeaderMetrics.layoutHeight, initialHeaderMetrics.layoutHeight, `${vp.name}: compacting the header must not shift page layout`);
     assert.equal(compactHeaderMetrics.innerHeight, initialHeaderMetrics.innerHeight, `${vp.name}: header's reserved inner height must remain stable`);
     assert.ok(compactHeaderMetrics.panelTop > initialHeaderMetrics.panelTop, `${vp.name}: floating shell did not visually shrink on scroll`);
