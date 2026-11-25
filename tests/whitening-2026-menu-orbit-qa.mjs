@@ -492,8 +492,9 @@ try {
     false,
     "Touch viewport unexpectedly advertises a fine hover pointer"
   );
-  const touchLight = touchPage.locator(".info-card .ruwa-orbit-light").first();
-  await touchLight.scrollIntoViewIfNeeded();
+  const touchCard = touchPage.locator(".info-card").first();
+  await touchCard.scrollIntoViewIfNeeded();
+  const touchLight = touchCard.locator(":scope > .ruwa-orbit-light");
   const touchDisplay = await touchLight.evaluate(element => getComputedStyle(element).display);
   assert.equal(touchDisplay, "none", "Meteor trail must be disabled on touch-only devices");
   await touchPage.locator(".info-card").first().tap();
