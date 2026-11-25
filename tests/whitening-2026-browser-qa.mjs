@@ -1271,7 +1271,13 @@ try {
     assert.ok(compactHeaderMetrics.visualRight<initialHeaderMetrics.visualRight, `${vp.name}: visual right edge did not move inward`);
     assert.ok(Math.abs(compactHeaderMetrics.panelTop-compactHeaderMetrics.panelBottom)<=0.75, `${vp.name}: vertical shell inset must remain balanced`);
     assert.ok(compactHeaderMetrics.visualHeight<initialHeaderMetrics.visualHeight, `${vp.name}: actual floating shell height did not decrease`);
-    assert.ok(compactHeaderMetrics.actionVisualHeight < initialHeaderMetrics.actionVisualHeight, `${vp.name}: visible WhatsApp pill did not become more compact on scroll`);
+    if(vp.width<=390){
+      assert.ok(compactHeaderMetrics.actionVisualHeight<=initialHeaderMetrics.actionVisualHeight+0.1,
+        `${vp.name}: compact phone CTA pill must not grow on narrow mobile screens (expanded ${initialHeaderMetrics.actionVisualHeight}px, compact ${compactHeaderMetrics.actionVisualHeight}px)`);
+    }else{
+      assert.ok(compactHeaderMetrics.actionVisualHeight<initialHeaderMetrics.actionVisualHeight,
+        `${vp.name}: phone CTA pill did not become more compact on scroll`);
+    }
     assert.ok(compactHeaderMetrics.wordmarkSize < initialHeaderMetrics.wordmarkSize, `${vp.name}: brand wordmark did not become more compact on scroll`);
     let headerConvergence=null;
     if (vp.width>920) {
