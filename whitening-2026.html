@@ -1097,14 +1097,13 @@ body,button,input,select,textarea{font-family:var(--body)}
   transform:translate(-50%,-50%);
  }
  .site-header.is-compact .nav.open{
-  position:absolute;z-index:40;top:calc(100% + 10px);left:50%;right:auto;
+  position:absolute;z-index:40;top:calc(100% + 10px);left:calc(50% - 210px);right:auto;
   display:flex;flex-direction:column;align-items:stretch;gap:0;margin:0;
   width:min(420px,calc(100vw - 32px));max-height:min(70vh,560px);overflow-y:auto;
   padding:8px;border:1px solid var(--line);border-radius:16px;
   background:var(--paper);box-shadow:0 18px 34px rgba(20,45,56,.14);
   visibility:visible;opacity:1;pointer-events:auto;
-  /* Keep horizontal centering independent from GSAP's animated transform. */
-  translate:-50% 0;
+  /* The position itself is centered; GSAP owns transform without a hidden offset. */
   transform:none;
  }
  .site-header.is-compact .nav.open a{
