@@ -103,7 +103,7 @@ try {
         const panel = element.getBoundingClientRect();
         const toggle = document.querySelector("#menu-toggle").getBoundingClientRect();
         const style = getComputedStyle(element);
-        const match = style.clipPath.match(/circle\\(([-\\d.]+)px at ([-\\d.]+)px ([-\\d.]+)px\\)/);
+        const match = style.clipPath.match(/circle\(([-\d.]+)px at ([-\d.]+)px ([-\d.]+)px\)/);
         return {
           clipPath: style.clipPath,
           radius: match ? Number(match[1]) : 0,
@@ -434,7 +434,6 @@ try {
     viewport: { width: 390, height: 844 },
     reducedMotion: "reduce"
   });
-  await reducedPage.goto(BASE_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
   const reducedMenu = await prepareMenuPage(reducedPage, {
     name: "reduced-motion-390",
     width: 390,
