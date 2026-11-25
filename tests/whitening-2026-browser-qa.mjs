@@ -42,7 +42,7 @@ async function measureHeader(page) {
     const menu=rect(menuElement);
     const menuStyle=getComputedStyle(menuElement);
     const menuVisible=menuStyle.display!=="none" && menuStyle.visibility!=="hidden" && menu.width>0 && menu.height>0;
-    const actionIcon=rect(document.querySelector(".header-action .whatsapp-brand-icon"));
+    const actionIcon=rect(document.querySelector(".header-action svg"));
     const actionFontSize=Number.parseFloat(getComputedStyle(document.querySelector(".header-action")).fontSize);
     const headerProgress=Number.parseFloat(getComputedStyle(header).getPropertyValue("--header-progress"));
     const linkRects=[...document.querySelectorAll("#main-nav a")].filter(link=>getComputedStyle(link).display!=="none").map(rect).sort((a,b)=>a.left-b.left);
@@ -174,9 +174,12 @@ try {
         headerActionText:document.querySelector(".header-action")?.innerText?.trim() || "",
         headerActionHref:document.querySelector(".header-action")?.getAttribute("href") || "",
         headerActionTag:document.querySelector(".header-action")?.tagName || "",
-        headerActionHasChatIcon:Boolean(document.querySelector(".header-action svg")),
+        headerActionHasPhoneIcon:Boolean(document.querySelector('.header-action svg path[d^="M22 16.92"]')),
         headerActionWhatsAppIcon:Boolean(document.querySelector(".header-action .whatsapp-brand-icon")),
+        headerActionChannel:document.querySelector(".header-action")?.dataset.contactAction || "",
         contactTriggerCount:document.querySelectorAll("[data-contact-action]").length,
+        heroDemoDisclosurePresent:Boolean(document.querySelector(".hero-demo-disclosure")),
+        floatingWhatsAppPresent:Boolean(document.querySelector("#whatsapp-float")),
         demoDialogTag:document.querySelector("#contact-unavailable-dialog")?.tagName || "",
         demoDialogText:document.querySelector("#contact-unavailable-dialog")?.innerText?.replace(/\\s+/g," ").trim() || "",
         demoDialogInitialOpen:document.querySelector("#contact-unavailable-dialog")?.open || false,
@@ -788,11 +791,14 @@ try {
     assert.ok(Number.parseFloat(state.headerPanelRadius) >= 18, `${vp.name}: floating header needs rounded outer corners`);
     assert.equal(state.headerPanelTopInset, 0, `${vp.name}: header should start in its full-size state`);
     assert.equal(state.headerCompactInitially, false, `${vp.name}: header must not start in the compact state`);
-    assert.equal(state.headerActionText, "تواصل عبر واتساب", `${vp.name}: header CTA copy is incorrect`);
+    assert.equal(state.headerActionText, "اتصل بنا", `${vp.name}: header phone CTA copy is incorrect`);
     assert.equal(state.headerActionHref, "", `${vp.name}: demo header CTA must not contain a fake external destination`);
     assert.equal(state.headerActionTag, "BUTTON", `${vp.name}: header CTA must open the local demo dialog`);
-    assert.ok(state.headerActionHasChatIcon && state.headerActionWhatsAppIcon, `${vp.name}: WhatsApp brand icon is missing from header CTA`);
-    assert.equal(state.contactTriggerCount, 5, `${vp.name}: all five WhatsApp and phone actions must use the shared unavailable-contact dialog`);
+    assert.equal(state.headerActionChannel, "phone", `${vp.name}: header CTA must use the phone contact channel`);
+    assert.ok(state.headerActionHasPhoneIcon && !state.headerActionWhatsAppIcon, `${vp.name}: header must show a phone icon, not a WhatsApp icon`);
+    assert.equal(state.contactTriggerCount, 6, `${vp.name}: all six WhatsApp and phone actions must use the shared unavailable-contact dialog`);
+    assert.equal(state.heroDemoDisclosurePresent, false, `${vp.name}: the separate demo sentence under the Hero buttons must be absent`);
+    assert.equal(state.floatingWhatsAppPresent, true, `${vp.name}: smart floating WhatsApp button is missing`);
     assert.equal(state.demoDialogTag, "DIALOG", `${vp.name}: accessible native dialog is missing`);
     assert.equal(state.demoDialogInitialOpen, false, `${vp.name}: demo dialog should start closed`);
     assert.ok(state.demoDialogText.includes("قنوات التواصل ستعمل مباشرة عند إضافة بيانات الاتصال الرسمية"), `${vp.name}: contact dialog initial explanation is missing`);
@@ -980,7 +986,7 @@ try {
     assert.ok(Number.parseFloat(audit.contactFooter.contactToFooter)>=52, vp.name + ": contact-to-footer separation is too tight");
     assert.equal(state.liveContactChannelPresent, false, `${vp.name}: demo must not contain a live WhatsApp or phone destination`);
     assert.ok(state.finalWhatsAppButton && state.finalPhoneButton, `${vp.name}: final WhatsApp and phone contact controls are missing`);
-     assert.deepEqual(state.contactChannelCounts,{whatsapp:3,phone:2},`${vp.name}: page must have exactly three WhatsApp and two phone actions`);
+     assert.deepEqual(state.contactChannelCounts,{whatsapp:3,phone:3},`${vp.name}: page must have three WhatsApp and three phone actions`);
     const dialog=page.locator("#contact-unavailable-dialog");
     const heroTrigger=page.locator(".primary-cta");
     const headerTrigger=page.locator(".header-action");
@@ -1034,7 +1040,70 @@ try {
     }, null, { timeout: 3000 });
     assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("primary-cta")), true, `${vp.name}: dialog action must restore focus to the hero trigger`);
     assert.equal(new URL(page.url()).hash, "", `${vp.name}: demo CTA must not create an unrelated anchor navigation`);
-    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.evaluate(()=>window.scrollTo({top:0,behavior:"instant"}));
+    const heroWhatsAppControl=page.locator('.hero-actions [data-contact-action="whatsapp"]');
+    const floatingWhatsAppControl=page.locator("#whatsapp-float");
+    const heroVisibleScrollY=await heroWhatsAppControl.evaluate(el=>{
+      const rect=el.getBoundingClientRect();
+      return Math.max(0,window.scrollY+rect.top-window.innerHeight/2);
+    });
+    await page.evaluate(y=>window.scrollTo({top:y,behavior:"instant"}),heroVisibleScrollY);
+    await page.waitForFunction(()=>{
+      const hero=document.querySelector('.hero-actions [data-contact-action="whatsapp"]');
+      const floating=document.querySelector("#whatsapp-float");
+      if(!hero||!floating)return false;
+      const rect=hero.getBoundingClientRect();
+      return rect.bottom>0&&rect.top<innerHeight&&floating.getAttribute("aria-hidden")==="true"&&!floating.classList.contains("is-visible");
+    },null,{timeout:4000});
+    const floatingHiddenMetrics=await floatingWhatsAppControl.evaluate(el=>{
+      const style=getComputedStyle(el),rect=el.getBoundingClientRect();
+      return {position:style.position,visibility:style.visibility,opacity:Number.parseFloat(style.opacity)};
+    });
+    assert.equal(floatingHiddenMetrics.position,"fixed",`${vp.name}: floating WhatsApp control must use fixed positioning`);
+    assert.equal(floatingHiddenMetrics.visibility,"hidden",`${vp.name}: floating WhatsApp control must remain hidden while the Hero CTA is visible`);
+    assert.equal(floatingHiddenMetrics.opacity,0,`${vp.name}: hidden floating WhatsApp control must be transparent`);
+
+    const heroOutsideScrollY=await heroWhatsAppControl.evaluate(el=>window.scrollY+el.getBoundingClientRect().bottom+4);
+    await page.evaluate(y=>window.scrollTo({top:y,behavior:"instant"}),heroOutsideScrollY);
+    await page.waitForFunction(()=>{
+      const hero=document.querySelector('.hero-actions [data-contact-action="whatsapp"]');
+      const floating=document.querySelector("#whatsapp-float");
+      if(!hero||!floating)return false;
+      const rect=hero.getBoundingClientRect();
+      return (rect.bottom<=0||rect.top>=innerHeight)&&floating.classList.contains("is-visible")&&floating.getAttribute("aria-hidden")==="false";
+    },null,{timeout:4000});
+    const floatingVisibleMetrics=await floatingWhatsAppControl.evaluate(el=>{
+      const style=getComputedStyle(el),rect=el.getBoundingClientRect();
+      return {position:style.position,visibility:style.visibility,opacity:Number.parseFloat(style.opacity),
+        rightGap:innerWidth-rect.right,width:rect.width,height:rect.height,tabIndex:el.tabIndex};
+    });
+    assert.equal(floatingVisibleMetrics.position,"fixed",`${vp.name}: visible floating WhatsApp control must remain fixed while scrolling`);
+    assert.equal(floatingVisibleMetrics.visibility,"visible",`${vp.name}: floating WhatsApp control did not become visible after the Hero CTA left the viewport`);
+    assert.ok(floatingVisibleMetrics.opacity>=0.99,`${vp.name}: floating WhatsApp control did not complete its entrance transition`);
+    assert.ok(floatingVisibleMetrics.rightGap>=0&&floatingVisibleMetrics.rightGap<=24,`${vp.name}: floating WhatsApp control is not aligned to the far right edge: ${floatingVisibleMetrics.rightGap}`);
+    assert.ok(floatingVisibleMetrics.width>=48&&floatingVisibleMetrics.height>=48,`${vp.name}: floating WhatsApp touch target is too small`);
+    assert.equal(floatingVisibleMetrics.tabIndex,0,`${vp.name}: visible floating WhatsApp control must become keyboard-focusable`);
+
+    await floatingWhatsAppControl.click();
+    await page.waitForFunction(()=>document.querySelector("#contact-unavailable-dialog")?.open===true,null,{timeout:3000});
+    assert.equal(await page.locator("#contact-dialog-title").innerText(),"التواصل عبر واتساب غير مفعّل بعد",`${vp.name}: floating WhatsApp control must use the shared WhatsApp fallback`);
+    await page.locator("#contact-dialog-close").click();
+    await page.waitForFunction(()=>{
+      const dialog=document.querySelector("#contact-unavailable-dialog");
+      return dialog?.open===false&&document.activeElement?.id==="whatsapp-float";
+    },null,{timeout:3000});
+
+    await page.evaluate(y=>window.scrollTo({top:y,behavior:"instant"}),heroVisibleScrollY);
+    await page.waitForFunction(()=>{
+      const hero=document.querySelector('.hero-actions [data-contact-action="whatsapp"]');
+      const floating=document.querySelector("#whatsapp-float");
+      if(!hero||!floating)return false;
+      const rect=hero.getBoundingClientRect();
+      return rect.bottom>0&&rect.top<innerHeight&&floating.getAttribute("aria-hidden")==="true"&&!floating.classList.contains("is-visible");
+    },null,{timeout:4000});
+    assert.equal(await floatingWhatsAppControl.getAttribute("tabindex"),"-1",`${vp.name}: floating WhatsApp control must leave the tab order when the Hero CTA returns`);
+    await page.evaluate(()=>window.scrollTo({top:0,behavior:"instant"}));
+
     const initialHeaderMetrics = await measureHeader(page);
     const verifyHeaderTouchTargets=(metrics,stateName)=>{
       assert.ok(metrics.action.width>=44 && metrics.action.height>=44,

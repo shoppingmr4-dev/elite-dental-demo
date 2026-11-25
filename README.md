@@ -20,13 +20,13 @@ RUWA is a fictional portfolio concept created by Apex Studio. It is not a commis
 
 The page contains **11 content sections** (Hero, assessment, causes, options, treatment journey, suitability, expectations, dentist/team, a transparent patient-reviews section, FAQ, and contact) and **4 FAQ entries**.
 
-A concise, visible Hero notice identifies RUWA as a fictional Apex Studio demonstration and states that it is not an operating clinic or medical service. This disclosure appears in the first screen rather than relying only on metadata or the footer.
+The separate demo sentence beneath the Hero contact buttons has been removed as requested. The footer and page metadata continue to identify RUWA as a fictional Apex Studio portfolio demonstration; the Hero portrait caption independently identifies the dentist image as AI-generated.
 
 The Hero portrait at `assets/ruwa-hero-90-768.webp` is the approved AI-generated illustration. Its Arabic alt text and visible disclosure state that it is not a real dentist. Its approved Git blob is protected by a CI SHA guard. Do not replace, edit, crop, recolor, reposition, or present it as a real clinician.
 
 The team contains three distinct AI-generated male dentist illustrations with a visible disclosure. They do not represent real doctors or clinic employees. No doctor identities, degrees, licences, experience, verified reviews, ratings, treatment outcomes, clinic addresses, opening hours, fees, phone numbers, or operational booking services are supplied.
 
-There are **3 WhatsApp actions and 2 phone actions**. The WhatsApp and phone configuration values are intentionally empty. Each action opens an accessible local dialog explaining that the channel is not activated in this fictional demo. No patient data is collected and no appointment is confirmed.
+There are **3 WhatsApp actions and 3 phone actions**. The Hero WhatsApp action and final-section WhatsApp action share the existing contact handler; a third circular floating WhatsApp control appears only while the Hero WhatsApp action is outside the viewport. The header action is now **اتصل بنا** and uses the phone channel. The WhatsApp and phone configuration values remain intentionally empty, so each action opens the accessible local unavailable-contact dialog. No patient data is collected and no appointment is confirmed.
 
 ## Page architecture
 
@@ -67,7 +67,7 @@ npm run test:ruwa:consistency
 npx playwright install chromium
 ```
 
-The consistency gate verifies the eleven-section order, four realistic-expectations cards and their medical/aftercare disclosures, three disclosed team portraits, transparent reviews state, four FAQ entries, five contact controls, ARIA targets, protected Hero disclosure, root redirect, and both preview redirects.
+The consistency gate verifies the eleven-section order, four realistic-expectations cards and their medical/aftercare disclosures, three disclosed team portraits, transparent reviews state, four FAQ entries, six contact controls, smart floating WhatsApp visibility, header phone action, ARIA targets, retained footer and metadata demo disclosures, root redirect, and both preview redirects.
 
 The **RUWA Browser QA** GitHub Actions workflow runs the consistency gate, Playwright Chromium checks, full-page responsive captures, Hero fold checks, approved-Hero SHA validation, and immutable public-preview verification.
 

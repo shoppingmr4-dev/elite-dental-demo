@@ -53,14 +53,14 @@ The team section contains three equal demo-only profile cards with distinct AI-g
 - The current Hero image is assets/ruwa-hero-90-768.webp.
 - The current Hero image alt text and visible caption explicitly identify it as AI-generated and not a real dentist.
 - FAQ count: **4 native details entries**.
-- Contact controls: **3 WhatsApp actions and 2 phone actions**.
+- Contact controls: **3 WhatsApp actions and 3 phone actions**, including a context-aware floating WhatsApp control and a header phone action labelled «اتصل بنا».
 - WHATSAPP_NUMBER and PHONE_NUMBER are intentionally empty.
 - When clicked with those values empty, the actions open the local contact-unavailable dialog. They do not open WhatsApp or begin a phone call.
 - Contact dialog ID: contact-unavailable-dialog.
 - The page has no HTML form, no lead endpoint, no appointment availability, no booking confirmation, no data collection, and no analytics/ad pixels.
 - It does not transmit or store visitor details.
 
-All aria-controls references must resolve to real IDs. The header and Hero contact controls must reference contact-unavailable-dialog; the mobile menu toggle must reference main-nav. The consistency and browser tests enforce this relationship.
+All aria-controls references must resolve to real IDs. The header phone action, Hero actions, and floating WhatsApp control must reference contact-unavailable-dialog; the mobile menu toggle must reference main-nav. The consistency and browser tests enforce this relationship.
 
 ## 5. Protected Hero image
 

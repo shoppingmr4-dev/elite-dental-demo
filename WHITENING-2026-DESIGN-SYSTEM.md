@@ -57,7 +57,7 @@ Do not add decorative trust badges, ratings, clinic logos, or medical credential
 - HTML class: hero-portrait
 - Current presentation: contained image, bottom-centered focal position, eager loading, and high fetch priority.
 
-A separate, concise Hero-level disclosure identifies the entire RUWA page as an Apex Studio demonstration and states that it is not an operating clinic or medical service. Keep this notice visible after the Hero contact actions so visitors do not have to reach the footer to understand the page's status.
+Do not add a separate demo sentence beneath the Hero contact buttons. Preserve the fictional-portfolio disclosure in the footer and page metadata. The Hero portrait caption must continue to identify the dentist portrait as an AI-generated illustration, not a real dentist.
 
 The current page alt text and visible disclosure state that this is an AI-generated illustrative dentist portrait, not a real dentist. Keep that disclosure. Never assign a real name, credential, clinic affiliation, patient identity, or testimonial to this image.
 
@@ -68,7 +68,7 @@ The approved file, its HTML element, figure placement, dimensions, focal positio
 Header and announcement strip:
 - RUWA wordmark and Arabic descriptor.
 - Seven navigation links to the visitor journey, including the treatment journey and patient-reviews transparency note.
-- One WhatsApp-labelled header action.
+- One phone-labelled header action: «اتصل بنا».
 - Mobile menu with aria-expanded state and keyboard behavior.
 
 Content sections in actual DOM order:
@@ -97,10 +97,11 @@ Do not describe the current page as having six FAQs. Do not add duplicate questi
 
 ## 7. Contact behavior — exact current state
 
-There are **3 WhatsApp actions and 2 phone actions**:
+There are **3 WhatsApp actions and 3 phone actions**:
 
-- Header: WhatsApp.
-- Hero: WhatsApp.
+- Header: phone action labelled «اتصل بنا».
+- Hero: primary WhatsApp action.
+- Floating control: circular WhatsApp button, shown only while the Hero WhatsApp action is outside the viewport.
 - Hero secondary action: phone.
 - Final contact area: WhatsApp and phone.
 
@@ -109,7 +110,7 @@ The central JavaScript configuration contains empty values for WHATSAPP_NUMBER a
 - No WhatsApp chat opens.
 - No tel: call begins.
 - No external number or live destination is fabricated.
-- The click opens the native contact-unavailable dialog.
+- Each control uses the shared central contact handler and opens the native contact-unavailable dialog while its number is empty. The floating button is controlled by IntersectionObserver and leaves the keyboard tab order while hidden.
 - The dialog identifies which channel is not activated.
 - The dialog supports its close controls, Escape, backdrop click, focus placement, focus restoration, and temporary background scroll lock.
 - The page does not collect or transmit visitor data.

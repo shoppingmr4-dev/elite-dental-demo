@@ -147,8 +147,20 @@ assert.doesNotMatch(faqAuditMarkup, /ما العناية المطلوبة بعد
 assert.match(html, /:focus-visible\{outline:3px solid var\(--coral\);outline-offset:4px\}/, "A visible global keyboard focus indicator must remain available");
 
 const contactActions = [...html.matchAll(/data-contact-action=["'](whatsapp|phone)["']/gi)].map(match => match[1]);
-assert.equal(contactActions.filter(action => action === "whatsapp").length, 3, "RUWA must have three WhatsApp actions");
-assert.equal(contactActions.filter(action => action === "phone").length, 2, "RUWA must have two phone actions");
+assert.equal(contactActions.filter(action => action === "whatsapp").length, 3, "RUWA must have the Hero, floating, and final WhatsApp actions");
+assert.equal(contactActions.filter(action => action === "phone").length, 3, "RUWA must have header, Hero secondary, and final phone actions");
+
+const headerStart = html.indexOf('<header class="site-header"');
+const headerEnd = html.indexOf("</header>", headerStart) + "</header>".length;
+const headerMarkup = html.slice(headerStart, headerEnd);
+assert.ok(headerMarkup.includes('data-contact-action="phone"') && headerMarkup.includes("اتصل بنا"), "Header must use the phone contact action");
+assert.ok(!headerMarkup.includes('data-contact-action="whatsapp"') && !headerMarkup.includes("whatsapp-brand-icon"), "Header must no longer show a WhatsApp action");
+
+assert.match(html, /id=["']whatsapp-float["']/);
+assert.match(html, /class=["']whatsapp-float["']/);
+assert.match(html, /aria-label=["']تواصل عبر واتساب["']/);
+assert.match(html, /new IntersectionObserver/);
+assert.ok(html.includes("document.querySelector('.hero-actions [data-contact-action=\"whatsapp\"]')"), "Observer must watch the Hero WhatsApp CTA");
 
 const ids = new Set([...html.matchAll(/\bid=["']([^"']+)["']/gi)].map(match => match[1]));
 const brokenControls = [...html.matchAll(/\baria-controls=["']([^"']+)["']/gi)]
@@ -169,9 +181,10 @@ assert.equal(
 const heroStart = html.indexOf('<section class="hero"');
 const heroEnd = html.indexOf("</section>", heroStart);
 const heroSection = heroStart >= 0 && heroEnd > heroStart ? html.slice(heroStart, heroEnd + 10) : "";
-assert.ok(heroSection.includes('class="hero-demo-disclosure"'), "A visible first-screen disclosure must identify RUWA as a fictional demo");
-assert.ok(heroSection.includes("نموذج تجريبي من Apex Studio؛ لا يمثّل عيادة قائمة أو خدمة طبية فعلية."), "Hero demo disclosure must clearly state that RUWA is not a real clinic or service");
-assert.ok(heroSection.indexOf('class="hero-demo-disclosure"') > heroSection.indexOf('class="hero-actions"'), "The disclosure must appear after the Hero contact actions without pushing them down");
+assert.ok(heroSection, "The canonical Hero section must remain present");
+assert.doesNotMatch(heroSection, /hero-demo-disclosure|نموذج تجريبي من Apex Studio/, "The separate demo sentence beneath the Hero buttons must be removed");
+assert.match(html, /مفهوم تجريبي أُعدّ ضمن معرض أعمال Apex Studio/, "The footer must retain the fictional portfolio disclosure");
+assert.match(html, /<meta name="description"[^>]*نموذج تجريبي/, "Page metadata must continue to identify the fictional demo");
 
 const heroImage = html.match(/<img class="hero-portrait"[^>]*>/i)?.[0] || "";
 assert.match(heroImage, /src="assets\/ruwa-hero-90-768\.webp"/);
