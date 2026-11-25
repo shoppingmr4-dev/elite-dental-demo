@@ -1559,6 +1559,57 @@ body,button,input,select,textarea{font-family:var(--body)}
  }
 }
 
+
+
+/* RUWA ORBITING PERIMETER LIGHT — a masked conic highlight, not a rotating card. */
+@property --ruwa-orbit-angle {
+ syntax:"<angle>";
+ inherits:false;
+ initial-value:0deg;
+}
+@keyframes ruwaOrbit {
+ from { --ruwa-orbit-angle:0deg; }
+ to { --ruwa-orbit-angle:360deg; }
+}
+.ruwa-orbit-target{position:relative}
+.ruwa-orbit-light{display:none}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+ .ruwa-orbit-light{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  display:block;
+  box-sizing:border-box;
+  padding:1.35px;
+  border-radius:inherit;
+  pointer-events:none;
+  opacity:0;
+  background:conic-gradient(
+   from var(--ruwa-orbit-angle),
+   transparent 0deg 314deg,
+   rgba(166,229,222,.12) 324deg,
+   rgba(116,220,213,.76) 339deg,
+   rgba(255,255,255,.96) 346deg,
+   rgba(116,220,213,.58) 352deg,
+   transparent 360deg
+  );
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  transition:opacity .24s ease;
+ }
+ .ruwa-orbit-target:hover>.ruwa-orbit-light,
+ .ruwa-orbit-target:focus-within>.ruwa-orbit-light{
+  opacity:.92;
+  animation:ruwaOrbit 3.2s linear infinite;
+  filter:drop-shadow(0 0 2px rgba(125,220,213,.38));
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ .ruwa-orbit-light{display:none!important;animation:none!important;transition:none!important}
+}
+
 </style>
 
 <!-- Pinned GSAP runtime: deferred so it never blocks the initial Hero render. -->
@@ -1992,23 +2043,166 @@ body,button,input,select,textarea{font-family:var(--body)}
  const button=document.getElementById("menu-toggle");
  const nav=document.getElementById("main-nav");
  if(!button||!nav)return;
+
  const header=button.closest(".site-header");
+ const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
+ const root=document.documentElement;
+ const links=()=>Array.from(nav.querySelectorAll("a"));
  const isDesktopCompact=()=>window.innerWidth>920&&header.classList.contains("is-compact");
  const shouldCollapseNav=()=>window.innerWidth<=920||isDesktopCompact();
  let navHadFocus=false;
- const syncNavInert=()=>{nav.inert=shouldCollapseNav()&&button.getAttribute("aria-expanded")!=="true";};
- document.addEventListener("focusin",event=>{navHadFocus=nav.contains(event.target);});
- header.addEventListener("ruwa:header-state",syncNavInert);
+ let menuTimeline=null;
 
- const close=({restoreFocus=false}={})=>{
+ const syncNavInert=()=>{
+  nav.inert=shouldCollapseNav()&&button.getAttribute("aria-expanded")!=="true";
+ };
+
+ const clearInlineMotion=()=>{
+  nav.style.removeProperty("clip-path");
+  links().forEach(link=>{
+   link.style.removeProperty("opacity");
+   link.style.removeProperty("visibility");
+   link.style.removeProperty("transform");
+  });
+ };
+
+ const finishClosed=(killTimeline=true)=>{
+  if(killTimeline&&menuTimeline){
+   menuTimeline.kill();
+   menuTimeline=null;
+  }
+  nav.classList.remove("open");
+  clearInlineMotion();
+  nav.dataset.ruwaMenuState="closed";
+  nav.dataset.ruwaMenuAnimating="false";
+  nav.removeAttribute("data-ruwa-menu-origin-x");
+  nav.removeAttribute("data-ruwa-menu-origin-y");
+  nav.removeAttribute("data-ruwa-menu-radius");
+  syncNavInert();
+ };
+
+ const createOpenTimeline=()=>{
+  const gsap=window.gsap;
+  const items=links();
+
+  if(reducedMotion.matches){
+   root.dataset.ruwaMenuMotion="reduced";
+   clearInlineMotion();
+   nav.dataset.ruwaMenuState="open";
+   nav.dataset.ruwaMenuAnimating="false";
+   return;
+  }
+
+  if(!gsap||typeof gsap.timeline!=="function"||!items.length){
+   root.dataset.ruwaMenuMotion="fallback";
+   clearInlineMotion();
+   nav.dataset.ruwaMenuState="open";
+   nav.dataset.ruwaMenuAnimating="false";
+   return;
+  }
+
+  const panel=nav.getBoundingClientRect();
+  const toggle=button.getBoundingClientRect();
+  if(panel.width<1||panel.height<1){
+   root.dataset.ruwaMenuMotion="fallback";
+   nav.dataset.ruwaMenuState="open";
+   nav.dataset.ruwaMenuAnimating="false";
+   return;
+  }
+
+  const originX=toggle.left+toggle.width/2-panel.left;
+  const originY=toggle.top+toggle.height/2-panel.top;
+  const corners=[
+   [0,0],
+   [panel.width,0],
+   [0,panel.height],
+   [panel.width,panel.height]
+  ];
+  const radius=Math.ceil(Math.max.apply(null,corners.map(point=>{
+   return Math.hypot(point[0]-originX,point[1]-originY);
+  }))+3);
+
+  root.dataset.ruwaMenuMotion="gsap";
+  nav.dataset.ruwaMenuOriginX=originX.toFixed(2);
+  nav.dataset.ruwaMenuOriginY=originY.toFixed(2);
+  nav.dataset.ruwaMenuRadius=String(radius);
+  nav.dataset.ruwaMenuState="opening";
+  nav.dataset.ruwaMenuAnimating="true";
+
+  gsap.set(nav,{clipPath:"circle(0px at "+originX+"px "+originY+"px)"});
+  gsap.set(items,{
+   autoAlpha:0,
+   y:10,
+   scale:.975,
+   transformOrigin:"50% 50%"
+  });
+
+  menuTimeline=gsap.timeline({
+   paused:true,
+   onComplete(){
+    nav.dataset.ruwaMenuState="open";
+    nav.dataset.ruwaMenuAnimating="false";
+   },
+   onReverseComplete(){
+    menuTimeline=null;
+    finishClosed(false);
+   }
+  });
+
+  menuTimeline.to(nav,{
+   clipPath:"circle("+radius+"px at "+originX+"px "+originY+"px)",
+   duration:.62,
+   ease:"power3.out"
+  },0);
+
+  items.forEach((link,index)=>{
+   menuTimeline.to(link,{
+    autoAlpha:1,
+    y:0,
+    scale:1,
+    duration:.28,
+    ease:"power2.out"
+   },.18+index*.075);
+  });
+
+  menuTimeline.play(0);
+ };
+
+ const close=({restoreFocus=false,immediate=false}={})=>{
   if(button.getAttribute("aria-expanded")==="true"){
-   nav.classList.remove("open");
    button.setAttribute("aria-expanded","false");
    button.setAttribute("aria-label","فتح القائمة");
+   nav.inert=true;
+
+   if(!immediate&&!reducedMotion.matches&&menuTimeline){
+    nav.dataset.ruwaMenuState="closing";
+    nav.dataset.ruwaMenuAnimating="true";
+    menuTimeline.reverse();
+   }else{
+    finishClosed(true);
+   }
+  }else{
+   syncNavInert();
   }
-  syncNavInert();
-  if(restoreFocus&&button.getClientRects().length)button.focus({preventScroll:true});
+
+  if(restoreFocus&&button.getClientRects().length){
+   button.focus({preventScroll:true});
+  }
  };
+
+ document.addEventListener("focusin",event=>{
+  navHadFocus=nav.contains(event.target);
+ });
+
+ header.addEventListener("ruwa:header-state",()=>{
+  // A compact desktop menu must not remain clipped after the header returns
+  // to its expanded, full-navigation layout.
+  if(!shouldCollapseNav()&&button.getAttribute("aria-expanded")==="true"){
+   close({immediate:true});
+  }else{
+   syncNavInert();
+  }
+ });
 
  button.addEventListener("click",()=>{
   const open=button.getAttribute("aria-expanded")!=="true";
@@ -2017,7 +2211,17 @@ body,button,input,select,textarea{font-family:var(--body)}
    button.setAttribute("aria-label","إغلاق القائمة");
    nav.classList.add("open");
    syncNavInert();
-  }else close();
+
+   if(menuTimeline){
+    nav.dataset.ruwaMenuState="opening";
+    nav.dataset.ruwaMenuAnimating="true";
+    menuTimeline.play();
+   }else{
+    createOpenTimeline();
+   }
+  }else{
+   close();
+  }
  });
 
  nav.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>{
@@ -2044,7 +2248,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   if(window.innerWidth>920&&button.getAttribute("aria-expanded")==="true"){
    const focusWasOnToggle=document.activeElement===button;
    const focusWasInsideNav=nav.contains(document.activeElement);
-   close();
+   close({immediate:true});
    if(isDesktopCompact()&&focusWasInsideNav)button.focus({preventScroll:true});
    else if(focusWasOnToggle){
     (nav.querySelector('a[aria-current="location"]')||nav.querySelector('a[href="#options"]'))?.focus();
@@ -2055,9 +2259,67 @@ body,button,input,select,textarea{font-family:var(--body)}
   }
   syncNavInert();
  });
+
+ const onReducedMotionChange=event=>{
+  if(!event.matches)return;
+  if(menuTimeline){
+   menuTimeline.kill();
+   menuTimeline=null;
+  }
+  clearInlineMotion();
+  root.dataset.ruwaMenuMotion="reduced";
+  if(button.getAttribute("aria-expanded")==="true"){
+   nav.classList.add("open");
+   nav.inert=false;
+   nav.dataset.ruwaMenuState="open";
+   nav.dataset.ruwaMenuAnimating="false";
+  }else{
+   finishClosed(false);
+  }
+ };
+ if(typeof reducedMotion.addEventListener==="function"){
+  reducedMotion.addEventListener("change",onReducedMotionChange);
+ }else if(typeof reducedMotion.addListener==="function"){
+  reducedMotion.addListener(onReducedMotionChange);
+ }
+
+ nav.dataset.ruwaMenuState="closed";
+ nav.dataset.ruwaMenuAnimating="false";
  syncNavInert();
 })();
 
+// RUWA orbiting perimeter light: decorative layers are isolated from content,
+// card transforms, pseudo-elements, pointer input and the existing scroll engine.
+(function(){
+ const selectors=[
+  ".info-card",
+  ".option-card",
+  ".journey-step",
+  ".team-card",
+  ".review-card",
+  ".expect-card",
+  ".reviews-preview",
+  ".reviews-criteria",
+  ".clinical-note",
+  ".info-card .card-index",
+  ".step .step-no",
+  ".journey-step .journey-step-number",
+  ".check-item .check-mark",
+  ".review-card-label"
+ ];
+ const targets=Array.from(new Set(document.querySelectorAll(selectors.join(","))));
+ targets.forEach(target=>{
+  target.classList.add("ruwa-orbit-target");
+  if(target.querySelector(":scope > .ruwa-orbit-light"))return;
+  const light=document.createElement("span");
+  light.className="ruwa-orbit-light";
+  light.setAttribute("aria-hidden","true");
+  light.setAttribute("role","presentation");
+  target.appendChild(light);
+ });
+ document.documentElement.dataset.ruwaOrbitReady="true";
+ document.documentElement.dataset.ruwaOrbitTargetCount=String(targets.length);
+})();
 
 
 // Floating RUWA header: one shared progress value and content-derived frame geometry.

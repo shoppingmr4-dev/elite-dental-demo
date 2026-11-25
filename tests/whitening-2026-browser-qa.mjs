@@ -1271,9 +1271,9 @@ try {
     assert.ok(compactHeaderMetrics.visualRight<initialHeaderMetrics.visualRight, `${vp.name}: visual right edge did not move inward`);
     assert.ok(Math.abs(compactHeaderMetrics.panelTop-compactHeaderMetrics.panelBottom)<=0.75, `${vp.name}: vertical shell inset must remain balanced`);
     assert.ok(compactHeaderMetrics.visualHeight<initialHeaderMetrics.visualHeight, `${vp.name}: actual floating shell height did not decrease`);
-    if(vp.width<=720){
+    if(vp.width<=920){
       assert.ok(compactHeaderMetrics.actionVisualHeight<=initialHeaderMetrics.actionVisualHeight+0.1,
-        `${vp.name}: compact phone CTA pill must not grow on mobile/tablet screens (expanded ${initialHeaderMetrics.actionVisualHeight}px, compact ${compactHeaderMetrics.actionVisualHeight}px)`);
+        `${vp.name}: compact phone CTA pill must not grow while the responsive navigation is collapsed (expanded ${initialHeaderMetrics.actionVisualHeight}px, compact ${compactHeaderMetrics.actionVisualHeight}px)`);
     }else{
       assert.ok(compactHeaderMetrics.actionVisualHeight<initialHeaderMetrics.actionVisualHeight,
         `${vp.name}: phone CTA pill did not become more compact on scroll`);
