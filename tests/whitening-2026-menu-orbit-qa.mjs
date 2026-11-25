@@ -44,6 +44,35 @@ async function prepareMenuPage(page, viewport) {
   });
   assert.ok(response && response.ok(), viewport.name + ": RUWA page did not load");
 
+  await page.evaluate(() => document.fonts.ready.then(() => true));
+  const baselineNav = await page.evaluate(() => {
+    if (window.innerWidth <= 920) return null;
+    const nav = document.querySelector("#main-nav");
+    const box = element => {
+      const rect = element.getBoundingClientRect();
+      return {
+        left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom,
+        width: rect.width, height: rect.height
+      };
+    };
+    const visibleLinks = Array.from(nav.querySelectorAll("a"))
+      .filter(link => getComputedStyle(link).display !== "none");
+    const style = getComputedStyle(nav);
+    return {
+      rect: box(nav),
+      style: {
+        display: style.display,
+        position: style.position,
+        flexDirection: style.flexDirection,
+        gap: style.gap,
+        fontSize: getComputedStyle(visibleLinks[0]).fontSize,
+        lineHeight: getComputedStyle(visibleLinks[0]).lineHeight,
+        fontWeight: getComputedStyle(visibleLinks[0]).fontWeight
+      },
+      links: visibleLinks.map(link => ({ href: link.getAttribute("href"), rect: box(link) }))
+    };
+  });
+
   await page.waitForFunction(
     () => document.documentElement.dataset.ruwaOrbitReady === "true",
     null,
@@ -112,7 +141,7 @@ async function prepareMenuPage(page, viewport) {
   }));
   assert.equal(initial.open, false, viewport.name + ": nav unexpectedly starts open");
   assert.equal(initial.inert, true, viewport.name + ": hidden collapsed nav must be inert");
-  return { button, nav: page.locator("#main-nav") };
+  return { button, nav: page.locator("#main-nav"), baselineNav };
 }
 
 try {
@@ -128,7 +157,7 @@ try {
     const pageErrors = [];
     page.on("pageerror", error => pageErrors.push(error.message));
 
-    const { button, nav } = await prepareMenuPage(page, viewport);
+    const { button, nav, baselineNav } = await prepareMenuPage(page, viewport);
     const overflowBefore = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1);
     assert.equal(overflowBefore, true, viewport.name + ": page already overflows horizontally before opening");
 
@@ -141,7 +170,60 @@ try {
     );
 
     const mode = await page.evaluate(() => document.documentElement.dataset.ruwaMenuMotion || "unset");
-    if (mode === "gsap") {
+    if (mode === "gsap-funnel") {
+      await page.waitForTimeout(110);
+      const early = await nav.evaluate(element => {
+        const style = getComputedStyle(element);
+        const matrix = style.transform === "none" ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(style.transform);
+        const origin = style.transformOrigin.split(/\\s+/).map(value => Number.parseFloat(value));
+        const clipPath = style.clipPath;
+        return {
+          shape: element.dataset.ruwaMenuShape,
+          progress: Number(element.dataset.ruwaMenuFunnelProgress || 0),
+          clipPath,
+          pointCount: (clipPath.match(/,/g) || []).length + 1,
+          expectedX: Number(element.dataset.ruwaMenuOriginX),
+          expectedY: Number(element.dataset.ruwaMenuOriginY),
+          panelLeft: Number(element.dataset.ruwaMenuPanelLeft),
+          panelTop: Number(element.dataset.ruwaMenuPanelTop),
+          buttonCenterX: Number(element.dataset.ruwaMenuButtonCenterX),
+          buttonCenterY: Number(element.dataset.ruwaMenuButtonCenterY),
+          transformOriginX: origin[0],
+          transformOriginY: origin[1],
+          transformScale: Math.hypot(matrix.a, matrix.b),
+          rotation: Math.atan2(matrix.b, matrix.a) * 180 / Math.PI,
+          state: element.dataset.ruwaMenuState
+        };
+      });
+      assert.equal(early.shape, "spiral-funnel",
+        viewport.name + ": desktop menu did not activate the spiral-funnel reveal");
+      assert.ok(early.progress > 0 && early.progress < .9,
+        viewport.name + ": funnel did not begin as a narrow growing reveal: " + JSON.stringify(early));
+      assert.ok(early.clipPath.startsWith("polygon(") && early.pointCount >= 24,
+        viewport.name + ": funnel reveal is not a multi-point tapered curved shape: " + JSON.stringify(early));
+      assert.ok(Math.abs(early.panelLeft + early.expectedX - early.buttonCenterX) <= 1.25 &&
+        Math.abs(early.panelTop + early.expectedY - early.buttonCenterY) <= 1.25,
+        viewport.name + ": funnel origin does not match the true hamburger center: " + JSON.stringify(early));
+      assert.ok(Math.abs(early.transformOriginX - early.expectedX) <= 1.25 &&
+        Math.abs(early.transformOriginY - early.expectedY) <= 1.25,
+        viewport.name + ": nav transform is not anchored to the hamburger center: " + JSON.stringify(early));
+      assert.ok(early.transformScale > .94 && early.transformScale < 1 &&
+        Math.abs(early.rotation) > .3 && Math.abs(early.rotation) < 3.5,
+        viewport.name + ": funnel did not expand with subtle spiral motion: " + JSON.stringify(early));
+
+      if (viewport.width === 1440) {
+        await page.screenshot({ path: OUT + "/menu-funnel-early-1440.png", fullPage: false });
+      }
+      await page.waitForTimeout(150);
+      const middleProgress = await nav.evaluate(element =>
+        Number(element.dataset.ruwaMenuFunnelProgress || 0)
+      );
+      assert.ok(middleProgress > early.progress + .04 && middleProgress < 1,
+        viewport.name + ": funnel did not widen progressively during its outward travel");
+      if (viewport.width === 1440) {
+        await page.screenshot({ path: OUT + "/menu-funnel-middle-1440.png", fullPage: false });
+      }
+    } else if (mode === "gsap") {
       await page.waitForTimeout(110);
       const early = await nav.evaluate(element => {
         const style = getComputedStyle(element);
@@ -217,9 +299,30 @@ try {
         inert: element.inert,
         open: element.classList.contains("open"),
         links: links.map(link => ({
+          href: link.getAttribute("href"),
+          display: getComputedStyle(link).display,
           visibility: getComputedStyle(link).visibility,
           opacity: Number.parseFloat(getComputedStyle(link).opacity)
         })),
+        visibleLinks: links.filter(link => getComputedStyle(link).display !== "none").map(link => {
+          const rect = link.getBoundingClientRect();
+          return {
+            href: link.getAttribute("href"),
+            rect: {
+              left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom,
+              width: rect.width, height: rect.height
+            }
+          };
+        }),
+        navStyle: {
+          display: getComputedStyle(element).display,
+          position: getComputedStyle(element).position,
+          flexDirection: getComputedStyle(element).flexDirection,
+          gap: getComputedStyle(element).gap,
+          overflowY: getComputedStyle(element).overflowY,
+          backgroundColor: getComputedStyle(element).backgroundColor,
+          borderTopWidth: getComputedStyle(element).borderTopWidth
+        },
         rect: {
           left: element.getBoundingClientRect().left,
           right: element.getBoundingClientRect().right,
@@ -245,9 +348,37 @@ try {
     assert.ok(opened.rect.width > 0 && opened.rect.height > 0,
       viewport.name + ": expanded panel has no rendered dimensions");
     if (viewport.width > 920) {
-      assert.ok(Math.abs(opened.rect.centerX - opened.rect.viewportCenterX) <= 1.5,
-        viewport.name + ": expanded desktop dropdown lost its intended horizontal centering: " +
-        JSON.stringify(opened.rect));
+      assert.ok(baselineNav, viewport.name + ": original desktop navigation geometry was not captured");
+      for (const edge of ["left", "right", "top", "bottom", "width", "height"]) {
+        assert.ok(Math.abs(opened.rect[edge] - baselineNav.rect[edge]) <= 1.5,
+          viewport.name + ": navigation did not return to its original " + edge + " position: " +
+          JSON.stringify({ before: baselineNav.rect, after: opened.rect }));
+      }
+      assert.equal(opened.navStyle.display, baselineNav.style.display,
+        viewport.name + ": original navigation display mode changed");
+      assert.equal(opened.navStyle.position, baselineNav.style.position,
+        viewport.name + ": navigation was moved into a positioned dropdown");
+      assert.equal(opened.navStyle.flexDirection, "row",
+        viewport.name + ": original horizontal navigation arrangement was not restored");
+      assert.equal(opened.navStyle.gap, baselineNav.style.gap,
+        viewport.name + ": original navigation spacing changed");
+      assert.equal(opened.navStyle.overflowY, "visible",
+        viewport.name + ": desktop nav still behaves as a scrollable dropdown");
+      assert.equal(opened.navStyle.backgroundColor, "rgba(0, 0, 0, 0)",
+        viewport.name + ": desktop nav acquired a new panel background");
+      assert.equal(opened.navStyle.borderTopWidth, "0px",
+        viewport.name + ": desktop nav acquired a new panel border");
+      assert.equal(opened.visibleLinks.length, baselineNav.links.length,
+        viewport.name + ": original number of visible desktop links changed");
+      for (const before of baselineNav.links) {
+        const after = opened.visibleLinks.find(link => link.href === before.href);
+        assert.ok(after, viewport.name + ": original navigation link disappeared: " + before.href);
+        for (const edge of ["left", "right", "top", "bottom", "width", "height"]) {
+          assert.ok(Math.abs(after.rect[edge] - before.rect[edge]) <= 1.5,
+            viewport.name + ": link " + before.href + " did not return to its exact original geometry: " +
+            JSON.stringify({ before: before.rect, after: after.rect }));
+        }
+      }
     }
 
     const menuScrollStyle = await nav.evaluate(element => ({
@@ -255,55 +386,76 @@ try {
       scrollbarWidth: getComputedStyle(element).scrollbarWidth,
       webkitScrollbarDisplay: getComputedStyle(element, "::-webkit-scrollbar").display
     }));
-    assert.ok(["auto", "scroll"].includes(menuScrollStyle.overflowY),
-      viewport.name + ": expanded menu must remain scrollable");
-    assert.equal(menuScrollStyle.scrollbarWidth, "none",
-      viewport.name + ": visible standards scrollbar was not hidden");
-    assert.equal(menuScrollStyle.webkitScrollbarDisplay, "none",
-      viewport.name + ": visible WebKit scrollbar was not hidden");
+    if (viewport.width <= 920) {
+      assert.ok(["auto", "scroll"].includes(menuScrollStyle.overflowY),
+        viewport.name + ": expanded responsive menu must remain scrollable");
+      assert.equal(menuScrollStyle.scrollbarWidth, "none",
+        viewport.name + ": visible standards scrollbar was not hidden");
+      assert.equal(menuScrollStyle.webkitScrollbarDisplay, "none",
+        viewport.name + ": visible WebKit scrollbar was not hidden");
 
-    const scrollAccess = await nav.evaluate(element => {
-      const originalMaxHeight = element.style.maxHeight;
-      const filler = document.createElement("a");
-      filler.href = "#";
-      filler.textContent = "scrollability test";
-      filler.setAttribute("aria-hidden", "true");
-      filler.tabIndex = -1;
-      filler.style.cssText = "display:block;flex:0 0 180px;height:180px;min-height:180px";
-      element.appendChild(filler);
-      element.style.maxHeight = "100px";
-      element.scrollTop = 0;
-      const canScroll = element.scrollHeight > element.clientHeight;
-      element.scrollTop = element.scrollHeight;
-      const advanced = element.scrollTop > 0;
-      filler.remove();
-      element.style.maxHeight = originalMaxHeight;
-      element.scrollTop = 0;
-      return { canScroll, advanced };
-    });
-    assert.equal(scrollAccess.canScroll, true,
-      viewport.name + ": test content did not overflow the menu scroll container");
-    assert.equal(scrollAccess.advanced, true,
-      viewport.name + ": hiding the scrollbar also disabled menu scrolling");
+      const scrollAccess = await nav.evaluate(element => {
+        const originalMaxHeight = element.style.maxHeight;
+        const filler = document.createElement("a");
+        filler.href = "#";
+        filler.textContent = "scrollability test";
+        filler.setAttribute("aria-hidden", "true");
+        filler.tabIndex = -1;
+        filler.style.cssText = "display:block;flex:0 0 180px;height:180px;min-height:180px";
+        element.appendChild(filler);
+        element.style.maxHeight = "100px";
+        element.scrollTop = 0;
+        const canScroll = element.scrollHeight > element.clientHeight;
+        element.scrollTop = element.scrollHeight;
+        const advanced = element.scrollTop > 0;
+        filler.remove();
+        element.style.maxHeight = originalMaxHeight;
+        element.scrollTop = 0;
+        return { canScroll, advanced };
+      });
+      assert.equal(scrollAccess.canScroll, true,
+        viewport.name + ": test content did not overflow the menu scroll container");
+      assert.equal(scrollAccess.advanced, true,
+        viewport.name + ": hiding the scrollbar also disabled menu scrolling");
+    }
 
-    assert.ok(opened.links.every(link => link.visibility !== "hidden" && link.opacity >= .99),
-      viewport.name + ": one or more navigation links did not finish their sequential reveal");
+    const visibleLinks = opened.links.filter(link => link.display !== "none");
+    assert.ok(visibleLinks.every(link => link.visibility !== "hidden" && link.opacity >= .99),
+      viewport.name + ": one or more navigation links did not finish their reveal");
 
-    // Each link must become normally focusable once its visual reveal is complete.
-    const focusable = await nav.locator("a").first().evaluate(link => {
+    // Each original visible link must remain normally focusable after the reveal completes.
+    const focusable = await nav.locator("a:visible").first().evaluate(link => {
       link.focus();
       return document.activeElement === link;
     });
     assert.equal(focusable, true, viewport.name + ": navigation link cannot receive keyboard focus");
 
-    if (viewport.width === 1440 || viewport.width === 390) {
+    if (viewport.width === 1440 || viewport.width === 768 || viewport.width === 390) {
       await page.screenshot({
         path: OUT + "/menu-open-" + viewport.width + ".png",
         fullPage: false
       });
     }
 
-    await clickHamburger(page, button, viewport.name);
+    if (viewport.width > 920) {
+      await page.keyboard.press("Escape");
+      await page.waitForFunction(
+        () => document.querySelector("#main-nav")?.dataset.ruwaMenuState === "closing",
+        null,
+        { timeout: 3000 }
+      );
+      await page.waitForTimeout(110);
+      const reverseProgress = await nav.evaluate(element =>
+        Number(element.dataset.ruwaMenuFunnelProgress || 1)
+      );
+      assert.ok(reverseProgress > 0 && reverseProgress < 1,
+        viewport.name + ": closing did not reverse the funnel toward the hamburger circle");
+      if (viewport.width === 1440) {
+        await page.screenshot({ path: OUT + "/menu-funnel-reverse-1440.png", fullPage: false });
+      }
+    } else {
+      await clickHamburger(page, button, viewport.name);
+    }
     await page.waitForFunction(
       () => document.querySelector("#main-nav")?.dataset.ruwaMenuState === "closed",
       null,
@@ -325,8 +477,9 @@ try {
     viewportResults.push({
       viewport: viewport.name,
       menuMotion: mode,
-      originVerified: mode === "gsap",
-      sequentialLinksVisible: opened.links.length,
+      originVerified: mode === "gsap" || mode === "gsap-funnel",
+      funnelVerified: mode === "gsap-funnel",
+      sequentialLinksVisible: opened.links.filter(link => link.display !== "none").length,
       closeRestored: true,
       noHorizontalOverflow: true
     });
