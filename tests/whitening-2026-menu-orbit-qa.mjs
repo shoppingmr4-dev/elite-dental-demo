@@ -78,9 +78,18 @@ async function prepareMenuPage(page, viewport) {
     const restingColor = await button.evaluate(element => getComputedStyle(element, "::before").backgroundColor);
     await button.hover();
     await page.waitForTimeout(230);
-    const hoverColor = await button.evaluate(element => getComputedStyle(element, "::before").backgroundColor);
+    const hoverState = await button.evaluate(element => ({
+      color: getComputedStyle(element, "::before").backgroundColor,
+      pointerHover: element.dataset.pointerHover || null,
+      matchesHover: element.matches(":hover"),
+      primaryHover: matchMedia("(hover:hover)").matches,
+      anyHover: matchMedia("(any-hover:hover)").matches,
+      finePointer: matchMedia("(pointer:fine)").matches,
+      rect: element.getBoundingClientRect().toJSON()
+    }));
+    const hoverColor = hoverState.color;
     assert.notEqual(hoverColor, restingColor,
-      viewport.name + ": visible hamburger circle did not darken on hover");
+      viewport.name + ": visible hamburger circle did not darken on hover: " + JSON.stringify(hoverState));
     await page.mouse.move(8, 8);
     await page.waitForTimeout(240);
     const returnedColor = await button.evaluate(element => getComputedStyle(element, "::before").backgroundColor);
