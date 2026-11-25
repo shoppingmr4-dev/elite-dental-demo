@@ -1032,7 +1032,19 @@ body,button,input,select,textarea{font-family:var(--body)}
  border-radius:50%;
  background:var(--paper);
  pointer-events:none;
+ transition:background-color .2s cubic-bezier(.2,.7,.2,1),border-color .2s cubic-bezier(.2,.7,.2,1);
 }
+@media (hover:hover) and (pointer:fine){
+ .site-header .menu-toggle:hover::before{
+  background:#E5F0EE;
+  border-color:rgba(24,122,128,.28);
+ }
+}
+.site-header .menu-toggle:focus-visible::before{
+ background:#EAF3F8;
+ border-color:rgba(24,122,128,.34);
+}
+.site-header .menu-toggle:active::before{background:#DCEBE8}
 .site-header .menu-toggle svg {
  position:relative;
  z-index:1;
