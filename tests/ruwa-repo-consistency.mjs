@@ -165,7 +165,7 @@ assert.match(html, /right:max\(12px,env\(safe-area-inset-right\)\)/, "Desktop fl
 assert.match(html, /right:max\(10px,env\(safe-area-inset-right\)\)/, "Mobile floating WhatsApp button must sit slightly closer to the right edge");
 assert.match(html, /background:var\(--wa\);color:#FFFFFF/, "Floating WhatsApp circle must stay green with a white icon");
 assert.match(html, /display:flex;align-items:center;justify-content:center/, "Floating WhatsApp logo must use explicit two-axis centering");
-assert.match(html, /padding-inline: calc\(18px - 2px \* var\(--header-progress\)\)/, "Desktop header CTA needs a subtle increase in horizontal padding");
+assert.match(html, /padding-inline: calc\(19px - 2px \* var\(--header-progress\)\)/, "Desktop header CTA needs a subtle increase in horizontal padding");
 
 
 const ids = new Set([...html.matchAll(/\bid=["']([^"']+)["']/gi)].map(match => match[1]));
