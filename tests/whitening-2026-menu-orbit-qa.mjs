@@ -578,7 +578,7 @@ try {
   await interactionPage.close();
   console.log("[PASS] Escape focus restoration, native anchor close, and rapid open/close reversal");
 
-  // The meteor is a chain of SVG motion points sharing the exact measured border-centerline path.
+  // The comet is a single continuous tapered canvas trail following the measured border path.
   const orbitPage = await browser.newPage({
     viewport: { width: 1440, height: 900 },
     reducedMotion: "no-preference"
@@ -589,7 +589,7 @@ try {
     waitUntil: "domcontentloaded",
     timeout: 45000
   });
-  assert.ok(orbitResponse && orbitResponse.ok(), "Meteor-orbit desktop page failed to load");
+  assert.ok(orbitResponse && orbitResponse.ok(), "Comet desktop page failed to load");
   await orbitPage.waitForFunction(
     () => document.documentElement.dataset.ruwaOrbitReady === "true",
     null,
@@ -601,14 +601,25 @@ try {
   const animatedOrbitCount = await orbitPage.evaluate(() =>
     Number(document.documentElement.dataset.ruwaOrbitAnimatedCount || 0)
   );
-  assert.ok(orbitCount >= 20, "Expected selected card, panel and icon frames to receive orbit targets; found " + orbitCount);
+  assert.ok(orbitCount >= 20, "Expected selected card, panel and icon frames to receive comet targets; found " + orbitCount);
   assert.ok(animatedOrbitCount >= 20,
-    "Expected selected desktop frames to receive the SVG meteor path; found " + animatedOrbitCount);
+    "Expected selected desktop frames to receive the continuous comet canvas; found " + animatedOrbitCount);
+  assert.equal(
+    await orbitPage.evaluate(() => Number(document.documentElement.dataset.ruwaOrbitSpeed || 0)),
+    240,
+    "Comet travel speed must use the requested 240 CSS px/s target"
+  );
+  assert.ok(
+    Math.abs(Number(await orbitPage.evaluate(() =>
+      document.documentElement.dataset.ruwaOrbitTailCoverage || 0
+    )) - .86) < .001,
+    "Comet tail must cover 86% of the complete perimeter"
+  );
 
   const card = orbitPage.locator(".info-card").first();
   await card.scrollIntoViewIfNeeded();
   await orbitPage.waitForTimeout(760);
-  const light = card.locator(":scope > .ruwa-orbit-light");
+  const light = card.locator(":scope > canvas.ruwa-orbit-light");
   const before = await card.evaluate(element => ({
     width: element.offsetWidth,
     height: element.offsetHeight,
@@ -618,139 +629,128 @@ try {
   await card.hover();
   await orbitPage.waitForFunction(
     element => {
-      const light = element.querySelector(":scope > .ruwa-orbit-light");
-      return light && Number.parseFloat(getComputedStyle(light).opacity) > .7;
+      const canvas = element.querySelector(":scope > canvas.ruwa-orbit-light");
+      return canvas && Number.parseFloat(getComputedStyle(canvas).opacity) > .7;
     },
     await card.elementHandle(),
     { timeout: 2500 }
   );
-  await orbitPage.waitForTimeout(280);
-  const activeLight = await light.evaluate(svg => {
-    const parent = svg.parentElement;
-    const rect = svg.getBoundingClientRect();
+  await orbitPage.waitForTimeout(90);
+  await card.screenshot({ path: OUT + "/comet-head-on-border.png" });
+  const activeComet = await light.evaluate(canvas => {
+    const parent = canvas.parentElement;
+    const rect = canvas.getBoundingClientRect();
     const parentRect = parent.getBoundingClientRect();
-    const style = getComputedStyle(svg);
-    const path = svg.querySelector("path");
-    const circles = Array.from(svg.querySelectorAll("circle"));
-    const motions = Array.from(svg.querySelectorAll("animateMotion"));
-    const head = svg.querySelector(".ruwa-orbit-head");
+    const geometry = parent.querySelector(":scope > svg.ruwa-orbit-geometry path");
+    const style = getComputedStyle(canvas);
     return {
       opacity: Number.parseFloat(style.opacity),
       pointerEvents: style.pointerEvents,
-      viewBox: svg.getAttribute("viewBox"),
-      pathData: path?.getAttribute("d") || "",
-      measuredPathLength: path?.getTotalLength() || 0,
-      declaredPathLength: Number(svg.dataset.pathLength || 0),
-      speed: Number(svg.dataset.speed || 0),
-      borderTop: Number.parseFloat(getComputedStyle(parent).borderTopWidth) || 0,
-      pathStart: (path?.getAttribute("d") || "").match(/^M\s*([-\d.]+)\s+([-\d.]+)/),
-      circles: circles.map(circle => ({
-        className: circle.getAttribute("class"),
-        radius: Number(circle.getAttribute("r")),
-        fill: circle.getAttribute("fill"),
-        opacity: Number(circle.getAttribute("opacity"))
-      })),
-      motion: motions.map(animation => ({
-        duration: animation.getAttribute("dur"),
-        begin: animation.getAttribute("begin"),
-        calcMode: animation.getAttribute("calcMode"),
-        rotate: animation.getAttribute("rotate"),
-        path: animation.getAttribute("path")
-      })),
+      width: canvas.width,
+      height: canvas.height,
+      cssWidth: style.width,
+      cssHeight: style.height,
+      pathData: geometry?.getAttribute("d") || "",
+      measuredPathLength: geometry?.getTotalLength() || 0,
+      declaredPathLength: Number(canvas.dataset.pathLength || 0),
+      speed: Number(canvas.dataset.speed || 0),
+      tailLength: Number(canvas.dataset.tailLength || 0),
+      tailCoverage: Number(canvas.dataset.tailCoverage || 0),
+      headRadius: Number(canvas.dataset.headRadius || 0),
+      pixelRatio: Number(canvas.dataset.pixelRatio || 0),
+      headDistance: Number(canvas.dataset.headDistance || 0),
+      canvasRect: rect.toJSON(),
+      parentRect: parentRect.toJSON(),
       leftDelta: Math.abs(rect.left - parentRect.left),
       topDelta: Math.abs(rect.top - parentRect.top),
       rightDelta: Math.abs(rect.right - parentRect.right),
-      bottomDelta: Math.abs(rect.bottom - parentRect.bottom),
-      headBox: head?.getBoundingClientRect().toJSON() || null
+      bottomDelta: Math.abs(rect.bottom - parentRect.bottom)
     };
   });
-  const firstHead = await light.locator(".ruwa-orbit-head").boundingBox();
-  await orbitPage.waitForTimeout(260);
-  const secondHead = await light.locator(".ruwa-orbit-head").boundingBox();
-  const firstDuration = Number.parseFloat(activeLight.motion[0]?.duration || "0");
-  const calculatedSpeed = activeLight.declaredPathLength / firstDuration;
-  assert.ok(activeLight.opacity > .7, "Meteor particles did not become visible on hover");
-  assert.ok(activeLight.pathData.endsWith(" Z") && activeLight.pathData.includes("A ") &&
-    activeLight.pathData.includes("H ") && activeLight.pathData.includes("V "),
-    "Meteor route must be a closed rounded-rectangle path with straight sides and corner arcs");
-  assert.ok(activeLight.measuredPathLength > 0 &&
-    Math.abs(activeLight.measuredPathLength - activeLight.declaredPathLength) <= 1.5,
-    "Meteor path length does not match the measured SVG border path");
-  assert.ok(activeLight.pathStart &&
-    Math.abs(Number(activeLight.pathStart[2]) - activeLight.borderTop / 2) <= .2,
-    "Meteor path does not begin on the border's vertical centerline");
-  assert.equal(activeLight.motion.length, 9,
-    "Expected one luminous head and eight trailing points following the same path");
-  assert.ok(activeLight.motion.every(item =>
-    item.calcMode === "paced" && item.path === activeLight.pathData &&
-    item.duration === activeLight.motion[0].duration
-  ), "All meteor particles must share the same paced perimeter path and cycle duration");
-  assert.ok(activeLight.motion[0].begin === "0s" &&
-    activeLight.motion.slice(1).every((item, index) =>
-      Number.parseFloat(item.begin) > Number.parseFloat(activeLight.motion[index].begin)
-    ), "The trail particles must follow behind the bright head in sequential phase offsets");
-  assert.ok(Math.abs(calculatedSpeed - activeLight.speed) <= .2,
-    "Meteor duration is not derived from one shared physical travel speed");
-  assert.ok(activeLight.circles[0].className === "ruwa-orbit-head" &&
-    activeLight.circles[0].fill === "#FFFFFF" &&
-    activeLight.circles.slice(1).every((point, index, all) =>
-      point.className === "ruwa-orbit-tail" &&
-      point.radius < (index === 0 ? activeLight.circles[0].radius : all[index - 1].radius)
-    ), "Meteor head must be bright white and its trail must taper progressively");
-  assert.equal(activeLight.pointerEvents, "none", "Decorative meteor SVG must not intercept pointer input");
-  assert.ok(activeLight.leftDelta <= 1 && activeLight.topDelta <= 1 &&
-    activeLight.rightDelta <= 1 && activeLight.bottomDelta <= 1,
-    "Meteor SVG overlay is not aligned to the frame's outer geometry");
-  assert.ok(firstHead && secondHead &&
-    Math.hypot(
-      secondHead.x + secondHead.width / 2 - firstHead.x - firstHead.width / 2,
-      secondHead.y + secondHead.height / 2 - firstHead.y - firstHead.height / 2
-    ) > 1,
-    "The luminous meteor head did not advance along the perimeter");
-  await card.screenshot({ path: OUT + "/orbit-card-hover.png" });
+  const firstHeadDistance = activeComet.headDistance;
+  const firstHeadTime = Date.now();
+  await orbitPage.waitForTimeout(240);
+  const secondComet = await light.evaluate(canvas => ({
+    headDistance: Number(canvas.dataset.headDistance || 0),
+    renderedAt: Number(canvas.dataset.renderedAt || 0)
+  }));
+  const secondHeadTime = Date.now();
+  const headDistanceDelta = (
+    secondComet.headDistance - firstHeadDistance + activeComet.declaredPathLength
+  ) % activeComet.declaredPathLength;
+  const measuredSpeed = headDistanceDelta / ((secondHeadTime - firstHeadTime) / 1000);
+
+  assert.ok(activeComet.opacity > .7, "Comet canvas did not become visible on hover");
+  assert.ok(activeComet.pathData.endsWith(" Z") && activeComet.pathData.includes("A ") &&
+    activeComet.pathData.includes("H ") && activeComet.pathData.includes("V "),
+    "Comet route must be a closed rounded-rectangle path with straight sides and corner arcs");
+  assert.ok(activeComet.measuredPathLength > 0 &&
+    Math.abs(activeComet.measuredPathLength - activeComet.declaredPathLength) <= 1.5,
+    "Comet path length does not match the measured SVG border centerline");
+  assert.ok(activeComet.tailCoverage >= .8 && activeComet.tailCoverage <= .9 &&
+    Math.abs(activeComet.tailLength / activeComet.declaredPathLength - activeComet.tailCoverage) < .01,
+    "Comet tail must cover approximately 80–90% of the complete measured perimeter");
+  assert.ok(activeComet.headRadius >= 4 && activeComet.headRadius > 2.05,
+    "Comet head must be visibly larger than the previous small particle head");
+  assert.ok(Math.abs(activeComet.speed - 240) < .01 &&
+    measuredSpeed >= 185 && measuredSpeed <= 295,
+    "Comet head did not maintain the requested faster constant physical speed: " + measuredSpeed);
+  assert.equal(activeComet.pointerEvents, "none", "Decorative comet canvas must not intercept pointer input");
+  assert.ok(activeComet.leftDelta <= 1.5 && activeComet.topDelta <= 1.5 &&
+    activeComet.rightDelta <= 1.5 && activeComet.bottomDelta <= 1.5,
+    "Comet canvas is not aligned to the complete outer border geometry: " +
+    JSON.stringify({
+      left:activeComet.leftDelta,top:activeComet.topDelta,
+      right:activeComet.rightDelta,bottom:activeComet.bottomDelta,
+      canvas:activeComet.canvasRect,parent:activeComet.parentRect
+    }));
+  assert.ok(secondComet.headDistance !== firstHeadDistance,
+    "Comet head did not advance along its measured perimeter path");
+  await card.screenshot({ path: OUT + "/comet-long-tail-full-perimeter.png" });
+
   const after = await card.evaluate(element => ({
     width: element.offsetWidth,
     height: element.offsetHeight,
     translate: getComputedStyle(element).translate
   }));
-  assert.equal(after.width, before.width, "Meteor path changed card width");
-  assert.equal(after.height, before.height, "Meteor path changed card height");
+  assert.equal(after.width, before.width, "Comet path changed card width");
+  assert.equal(after.height, before.height, "Comet path changed card height");
   assert.ok(Number.parseFloat(after.translate.split(" ")[1]) < -2.5,
-    "Existing independent card elevation did not remain active beside the meteor");
+    "Existing independent card elevation did not remain active beside the comet");
 
   await orbitPage.mouse.move(8, 8);
-  await orbitPage.waitForTimeout(320);
+  await orbitPage.waitForTimeout(260);
+  await card.screenshot({ path: OUT + "/comet-after-pointer-exit.png" });
   const exitedOpacity = await light.evaluate(element => Number.parseFloat(getComputedStyle(element).opacity));
-  assert.ok(exitedOpacity < .05, "Meteor trail did not fade away after pointer exit");
+  assert.ok(exitedOpacity < .05, "Comet trail did not fade away after pointer exit");
 
   const teamCard = orbitPage.locator(".team-card").first();
   await teamCard.scrollIntoViewIfNeeded();
   await orbitPage.waitForTimeout(760);
   await teamCard.hover();
-  await orbitPage.waitForTimeout(360);
+  await orbitPage.waitForTimeout(220);
   const teamState = await teamCard.evaluate(element => {
-    const svg = element.querySelector(":scope > .ruwa-orbit-light");
-    const motion = svg?.querySelector("animateMotion");
-    const length = Number(svg?.dataset.pathLength || 0);
-    const duration = Number.parseFloat(motion?.getAttribute("dur") || "0");
+    const canvas = element.querySelector(":scope > canvas.ruwa-orbit-light");
     return {
-      opacity: svg ? Number.parseFloat(getComputedStyle(svg).opacity) : 0,
-      pathLength: length,
-      speed: duration > 0 ? length / duration : 0,
-      motionCount: svg?.querySelectorAll("animateMotion").length || 0,
+      opacity: canvas ? Number.parseFloat(getComputedStyle(canvas).opacity) : 0,
+      pathLength: Number(canvas?.dataset.pathLength || 0),
+      speed: Number(canvas?.dataset.speed || 0),
+      tailCoverage: Number(canvas?.dataset.tailCoverage || 0),
+      headDistance: Number(canvas?.dataset.headDistance || 0),
       imageScale: getComputedStyle(element.querySelector(".team-card-media img")).scale
     };
   });
-  assert.ok(teamState.opacity > .7 && teamState.motionCount === 9,
-    "Team frame did not receive the complete meteor particle path");
-  assert.ok(Math.abs(teamState.speed - activeLight.speed) <= .2,
-    "A different frame size changed the meteor's physical travel speed");
+  assert.ok(teamState.opacity > .7 && teamState.pathLength > 0,
+    "Team frame did not receive the active continuous comet trail");
+  assert.equal(teamState.speed, activeComet.speed,
+    "A different frame size changed the comet's physical travel speed");
+  assert.ok(Math.abs(teamState.tailCoverage - activeComet.tailCoverage) < .001,
+    "A different frame size changed the comet's perimeter coverage ratio");
   assert.ok(Number.parseFloat(teamState.imageScale) > 1.02,
     "Existing clipped team image zoom did not remain active");
-  assert.equal(orbitErrors.length, 0, "Meteor-motion browser errors: " + orbitErrors.join(" | "));
+  assert.equal(orbitErrors.length, 0, "Comet-motion browser errors: " + orbitErrors.join(" | "));
   await orbitPage.close();
-  console.log("[PASS] SVG meteor head and tapered particle trail follow the exact rounded border centerline at shared constant physical speed");
-
+  console.log("[PASS] Long continuous tapered comet covers 86% of the rounded border at 240 CSS px/s with a bright enlarged head");
   // Touch-only and reduced-motion visitors must not receive a persistent orbit effect.
   const touchPage = await browser.newPage({
     viewport: { width: 430, height: 900 },
@@ -773,7 +773,7 @@ try {
   await touchCard.scrollIntoViewIfNeeded();
   const touchLayerCount = await touchPage.locator(".ruwa-orbit-light").count();
   assert.equal(touchLayerCount, 0,
-    "Touch-only devices must not create continuously animated meteor SVG layers");
+    "Touch-only devices must not create animated comet canvas layers");
   await touchPage.locator(".info-card").first().tap();
   assert.equal(
     await touchPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
@@ -817,7 +817,7 @@ try {
   );
   const reducedLayers = await reducedPage.locator(".ruwa-orbit-light").count();
   assert.equal(reducedLayers, 0,
-    "Reduced-motion mode must not create animated meteor SVG layers");
+    "Reduced-motion mode must not create animated comet canvas layers");
   await reducedPage.close();
 
   console.log(JSON.stringify({
@@ -830,10 +830,10 @@ try {
       "Escape closes and restores focus",
       "native anchor destination remains active",
       "reduced-motion menu is immediate and fully accessible",
-      "meteor head and tapered tail use paced SVG motion on the measured border centerline",
-      "meteor particles do not intercept pointer or change card geometry",
+      "comet uses one continuous 86% tapered trail and a 240 px/s enlarged luminous head on the measured border centerline",
+      "comet overlay does not intercept pointer or change card geometry",
       "existing card elevation and image zoom remain active",
-      "touch-only and reduced-motion modes disable orbit animation"
+      "touch-only and reduced-motion modes disable comet animation"
     ],
     orbitTargetCount: orbitCount,
     screenshots: [
