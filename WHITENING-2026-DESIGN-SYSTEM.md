@@ -57,6 +57,8 @@ Do not add decorative trust badges, ratings, clinic logos, or medical credential
 - HTML class: hero-portrait
 - Current presentation: contained image, bottom-centered focal position, eager loading, and high fetch priority.
 
+A separate, concise Hero-level disclosure identifies the entire RUWA page as an Apex Studio demonstration and states that it is not an operating clinic or medical service. Keep this notice visible after the Hero contact actions so visitors do not have to reach the footer to understand the page's status.
+
 The current page alt text and visible disclosure state that this is an AI-generated illustrative dentist portrait, not a real dentist. Keep that disclosure. Never assign a real name, credential, clinic affiliation, patient identity, or testimonial to this image.
 
 The approved file, its HTML element, figure placement, dimensions, focal position, framing, transform, and loading priority are protected. The source image's earlier documentation was inconsistent; the old Pexels-based preview has been retired. Do not add an external stock-photo credit to this image.

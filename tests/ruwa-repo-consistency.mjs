@@ -166,6 +166,13 @@ assert.equal(
   "No live phone or WhatsApp anchor may be present while contact settings are empty"
 );
 
+const heroStart = html.indexOf('<section class="hero"');
+const heroEnd = html.indexOf("</section>", heroStart);
+const heroSection = heroStart >= 0 && heroEnd > heroStart ? html.slice(heroStart, heroEnd + 10) : "";
+assert.ok(heroSection.includes('class="hero-demo-disclosure"'), "A visible first-screen disclosure must identify RUWA as a fictional demo");
+assert.ok(heroSection.includes("نموذج تجريبي من Apex Studio؛ لا يمثّل عيادة قائمة أو خدمة طبية فعلية."), "Hero demo disclosure must clearly state that RUWA is not a real clinic or service");
+assert.ok(heroSection.indexOf('class="hero-demo-disclosure"') > heroSection.indexOf('class="hero-actions"'), "The disclosure must appear after the Hero contact actions without pushing them down");
+
 const heroImage = html.match(/<img class="hero-portrait"[^>]*>/i)?.[0] || "";
 assert.match(heroImage, /src="assets\/ruwa-hero-90-768\.webp"/);
 assert.match(heroImage, /width="768"/);

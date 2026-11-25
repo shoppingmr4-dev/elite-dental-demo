@@ -20,6 +20,8 @@ RUWA is a fictional portfolio concept created by Apex Studio. It is not a commis
 
 The page contains **11 content sections** (Hero, assessment, causes, options, treatment journey, suitability, expectations, dentist/team, a transparent patient-reviews section, FAQ, and contact) and **4 FAQ entries**.
 
+A concise, visible Hero notice identifies RUWA as a fictional Apex Studio demonstration and states that it is not an operating clinic or medical service. This disclosure appears in the first screen rather than relying only on metadata or the footer.
+
 The Hero portrait at `assets/ruwa-hero-90-768.webp` is the approved AI-generated illustration. Its Arabic alt text and visible disclosure state that it is not a real dentist. Its approved Git blob is protected by a CI SHA guard. Do not replace, edit, crop, recolor, reposition, or present it as a real clinician.
 
 The team contains three distinct AI-generated male dentist illustrations with a visible disclosure. They do not represent real doctors or clinic employees. No doctor identities, degrees, licences, experience, verified reviews, ratings, treatment outcomes, clinic addresses, opening hours, fees, phone numbers, or operational booking services are supplied.
