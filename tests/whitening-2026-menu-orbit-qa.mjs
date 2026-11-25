@@ -171,7 +171,12 @@ try {
 
     const mode = await page.evaluate(() => document.documentElement.dataset.ruwaMenuMotion || "unset");
     if (mode === "gsap-funnel") {
-      await page.waitForTimeout(110);
+      // Wait for the first actual GSAP tick rather than assuming a fixed timer aligns with RAF.
+      await page.waitForFunction(
+        () => Number(document.querySelector("#main-nav")?.dataset.ruwaMenuFunnelProgress || 0) > .002,
+        null,
+        { timeout: 3000 }
+      );
       const early = await nav.evaluate(element => {
         const style = getComputedStyle(element);
         const matrix = style.transform === "none" ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(style.transform);
