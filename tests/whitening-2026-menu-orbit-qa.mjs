@@ -45,7 +45,7 @@ async function prepareMenuPage(page, viewport) {
   assert.ok(response && response.ok(), viewport.name + ": RUWA page did not load");
 
   await page.waitForFunction(
-    () => document.documentElement.dataset.ruwaOrbitReady === "true",
+    () => document.documentElement.dataset.ruwaMeteorOrbitReady === "true",
     null,
     { timeout: 10000 }
   );
@@ -133,6 +133,22 @@ try {
         viewport.name + ": circular reveal did not originate at the actual hamburger center: " + JSON.stringify(early));
       assert.ok(early.clipPath.startsWith("circle("),
         viewport.name + ": the menu reveal did not use a circular clip-path");
+
+      await page.waitForTimeout(120);
+      const spiralMotion = await nav.locator("a").first().evaluate(link => {
+        const transform = getComputedStyle(link).transform;
+        if (!transform || transform === "none") return { rotation: 0, x: 0, y: 0 };
+        const matrix = new DOMMatrixReadOnly(transform);
+        return {
+          rotation: Math.atan2(matrix.b, matrix.a) * 180 / Math.PI,
+          x: matrix.e,
+          y: matrix.f
+        };
+      });
+      assert.ok(Math.abs(spiralMotion.rotation) > .15 &&
+        Math.hypot(spiralMotion.x, spiralMotion.y) > .5,
+        viewport.name + ": navigation links did not unfold with a subtle spiral-like motion: " +
+        JSON.stringify(spiralMotion));
     } else {
       assert.ok(mode === "fallback" || mode === "reduced",
         viewport.name + ": unexpected menu motion mode " + mode);
@@ -165,6 +181,43 @@ try {
     assert.equal(opened.open, true, viewport.name + ": open nav class was removed");
     assert.ok(opened.rect.width > 0 && opened.rect.height > 0,
       viewport.name + ": expanded panel has no rendered dimensions");
+
+    const menuScrollStyle = await nav.evaluate(element => ({
+      overflowY: getComputedStyle(element).overflowY,
+      scrollbarWidth: getComputedStyle(element).scrollbarWidth,
+      webkitScrollbarDisplay: getComputedStyle(element, "::-webkit-scrollbar").display
+    }));
+    assert.ok(["auto", "scroll"].includes(menuScrollStyle.overflowY),
+      viewport.name + ": expanded menu must remain scrollable");
+    assert.equal(menuScrollStyle.scrollbarWidth, "none",
+      viewport.name + ": visible standards scrollbar was not hidden");
+    assert.equal(menuScrollStyle.webkitScrollbarDisplay, "none",
+      viewport.name + ": visible WebKit scrollbar was not hidden");
+
+    const scrollAccess = await nav.evaluate(element => {
+      const originalMaxHeight = element.style.maxHeight;
+      const filler = document.createElement("a");
+      filler.href = "#";
+      filler.textContent = "scrollability test";
+      filler.setAttribute("aria-hidden", "true");
+      filler.tabIndex = -1;
+      filler.style.cssText = "display:block;flex:0 0 180px;height:180px;min-height:180px";
+      element.appendChild(filler);
+      element.style.maxHeight = "100px";
+      element.scrollTop = 0;
+      const canScroll = element.scrollHeight > element.clientHeight;
+      element.scrollTop = element.scrollHeight;
+      const advanced = element.scrollTop > 0;
+      filler.remove();
+      element.style.maxHeight = originalMaxHeight;
+      element.scrollTop = 0;
+      return { canScroll, advanced };
+    });
+    assert.equal(scrollAccess.canScroll, true,
+      viewport.name + ": test content did not overflow the menu scroll container");
+    assert.equal(scrollAccess.advanced, true,
+      viewport.name + ": hiding the scrollbar also disabled menu scrolling");
+
     assert.ok(opened.links.every(link => link.visibility !== "hidden" && link.opacity >= .99),
       viewport.name + ": one or more navigation links did not finish their sequential reveal");
 
@@ -308,14 +361,14 @@ try {
     waitUntil: "domcontentloaded",
     timeout: 45000
   });
-  assert.ok(orbitResponse && orbitResponse.ok(), "Orbit-light desktop page failed to load");
+  assert.ok(orbitResponse && orbitResponse.ok(), "Meteor-orbit desktop page failed to load");
   await orbitPage.waitForFunction(
-    () => document.documentElement.dataset.ruwaOrbitReady === "true",
+    () => document.documentElement.dataset.ruwaMeteorOrbitReady === "true",
     null,
     { timeout: 10000 }
   );
   const orbitCount = await orbitPage.evaluate(() =>
-    Number(document.documentElement.dataset.ruwaOrbitTargetCount || 0)
+    Number(document.documentElement.dataset.ruwaMeteorOrbitTargetCount || 0)
   );
   assert.ok(orbitCount >= 20, "Expected selected card, panel and icon frames to receive orbit layers; found " + orbitCount);
 
@@ -334,7 +387,7 @@ try {
     element => {
       const light = element.querySelector(":scope > .ruwa-orbit-light");
       return light && Number.parseFloat(getComputedStyle(light).opacity) > .7 &&
-        getComputedStyle(light).animationName === "ruwaOrbit";
+        getComputedStyle(light).animationName === "ruwaMeteorOrbit";
     },
     await card.elementHandle(),
     { timeout: 2500 }
@@ -349,6 +402,9 @@ try {
       opacity: Number.parseFloat(style.opacity),
       animationName: style.animationName,
       animationPlayState: style.animationPlayState,
+      animationDuration: style.animationDuration,
+      animationTimingFunction: style.animationTimingFunction,
+      backgroundImage: style.backgroundImage,
       angle: style.getPropertyValue("--ruwa-orbit-angle").trim(),
       pointerEvents: style.pointerEvents,
       radius: style.borderRadius,
@@ -364,25 +420,32 @@ try {
   const secondAngle = await light.evaluate(element =>
     Number.parseFloat(getComputedStyle(element).getPropertyValue("--ruwa-orbit-angle"))
   );
-  assert.ok(activeLight.opacity > .7, "Orbit border light did not become visible on hover");
-  assert.equal(activeLight.animationName, "ruwaOrbit", "Orbit light did not start its CSS conic-gradient animation");
-  assert.equal(activeLight.animationPlayState, "running", "Orbit light should run only during hover");
+  assert.ok(activeLight.opacity > .7, "Meteor trail did not become visible on hover");
+  assert.equal(activeLight.animationName, "ruwaMeteorOrbit", "Meteor did not start its CSS conic-gradient animation");
+  assert.equal(activeLight.animationPlayState, "running", "Meteor trail should run only during hover");
+  assert.equal(activeLight.animationDuration, "4.2s",
+    "Meteor orbit speed must remain consistent across selected elements");
+  assert.equal(activeLight.animationTimingFunction, "linear",
+    "Meteor orbit must use constant-speed linear motion");
+  assert.ok(activeLight.backgroundImage.includes("255, 255, 255") &&
+    activeLight.backgroundImage.includes("116, 220, 213"),
+    "Meteor effect must contain a distinct white head and a fading teal trail");
   assert.ok(Number.isFinite(firstAngle) && Number.isFinite(secondAngle) &&
     Math.abs(firstAngle - secondAngle) > 2,
-    "The conic highlight angle did not advance around the perimeter");
+    "The meteor trail did not advance around the perimeter");
   assert.equal(activeLight.pointerEvents, "none", "Decorative orbit layer must not intercept interaction");
-  assert.equal(activeLight.radius, activeLight.parentRadius, "Orbit layer did not inherit the frame's exact corner radius");
+  assert.equal(activeLight.radius, activeLight.parentRadius, "Meteor trail did not inherit the frame's exact corner radius");
   assert.ok(activeLight.leftDelta <= 1 && activeLight.topDelta <= 1 &&
     activeLight.rightDelta <= 1 && activeLight.bottomDelta <= 1,
-    "Orbit layer is not aligned to the actual frame perimeter");
+    "Meteor trail is not aligned to the actual frame perimeter");
   await card.screenshot({ path: OUT + "/orbit-card-hover.png" });
   const after = await card.evaluate(element => ({
     width: element.offsetWidth,
     height: element.offsetHeight,
     translate: getComputedStyle(element).translate
   }));
-  assert.equal(after.width, before.width, "Orbit light changed card width");
-  assert.equal(after.height, before.height, "Orbit light changed card height");
+  assert.equal(after.width, before.width, "Meteor trail changed card width");
+  assert.equal(after.height, before.height, "Meteor trail changed card height");
   assert.ok(Number.parseFloat(after.translate.split(" ")[1]) < -2.5,
     "Existing independent card elevation did not remain active beside the orbit light");
 
@@ -392,8 +455,8 @@ try {
     opacity: Number.parseFloat(getComputedStyle(element).opacity),
     animationName: getComputedStyle(element).animationName
   }));
-  assert.ok(exited.opacity < .05, "Orbit light did not fade away after pointer exit");
-  assert.equal(exited.animationName, "none", "Orbit animation continued after pointer exit");
+  assert.ok(exited.opacity < .05, "Meteor trail did not fade away after pointer exit");
+  assert.equal(exited.animationName, "none", "Meteor animation continued after pointer exit");
 
   const teamCard = orbitPage.locator(".team-card").first();
   await teamCard.scrollIntoViewIfNeeded();
@@ -404,12 +467,12 @@ try {
     animationName: getComputedStyle(element.querySelector(":scope > .ruwa-orbit-light")).animationName,
     imageScale: getComputedStyle(element.querySelector(".team-card-media img")).scale
   }));
-  assert.equal(teamState.animationName, "ruwaOrbit", "Team frame did not receive the orbiting light");
+  assert.equal(teamState.animationName, "ruwaMeteorOrbit", "Team frame did not receive the meteor trail");
   assert.ok(Number.parseFloat(teamState.imageScale) > 1.02,
     "Existing clipped team image zoom did not remain active");
-  assert.equal(orbitErrors.length, 0, "Orbit-light browser errors: " + orbitErrors.join(" | "));
+  assert.equal(orbitErrors.length, 0, "Meteor-light browser errors: " + orbitErrors.join(" | "));
   await orbitPage.close();
-  console.log("[PASS] Orbit follows rounded border, fades on exit, and coexists with existing hover elevation/image zoom");
+  console.log("[PASS] Meteor head and tapered tail follow the rounded border, fade on exit, and coexist with existing hover elevation/image zoom");
 
   // Touch-only and reduced-motion visitors must not receive a persistent orbit effect.
   const touchPage = await browser.newPage({
@@ -420,7 +483,7 @@ try {
   });
   await touchPage.goto(BASE_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
   await touchPage.waitForFunction(
-    () => document.documentElement.dataset.ruwaOrbitReady === "true",
+    () => document.documentElement.dataset.ruwaMeteorOrbitReady === "true",
     null,
     { timeout: 10000 }
   );
@@ -432,17 +495,17 @@ try {
   const touchLight = touchPage.locator(".info-card .ruwa-orbit-light").first();
   await touchLight.scrollIntoViewIfNeeded();
   const touchDisplay = await touchLight.evaluate(element => getComputedStyle(element).display);
-  assert.equal(touchDisplay, "none", "Orbit light must be disabled on touch-only devices");
+  assert.equal(touchDisplay, "none", "Meteor trail must be disabled on touch-only devices");
   await touchPage.locator(".info-card").first().tap();
   assert.equal(
     await touchLight.evaluate(element => getComputedStyle(element).animationName),
     "none",
-    "Touch must not leave the border animation running"
+    "Touch must not leave the meteor animation running"
   );
   assert.equal(
     await touchPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
     true,
-    "Orbit interaction introduced touch-layout overflow"
+    "Meteor interaction introduced touch-layout overflow"
   );
   await touchPage.close();
 
@@ -483,8 +546,8 @@ try {
     display: getComputedStyle(element).display,
     animation: getComputedStyle(element).animationName
   }));
-  assert.equal(reducedLight.display, "none", "Reduced-motion mode must hide the orbit light");
-  assert.equal(reducedLight.animation, "none", "Reduced-motion mode must disable orbit animation");
+  assert.equal(reducedLight.display, "none", "Reduced-motion mode must hide the meteor trail");
+  assert.equal(reducedLight.animation, "none", "Reduced-motion mode must disable meteor animation");
   await reducedPage.close();
 
   console.log(JSON.stringify({
@@ -497,8 +560,8 @@ try {
       "Escape closes and restores focus",
       "native anchor destination remains active",
       "reduced-motion menu is immediate and fully accessible",
-      "orbit light traces the rounded perimeter and fades on exit",
-      "orbit light does not intercept pointer or change geometry",
+      "meteor head and tapered tail trace the rounded perimeter and fade on exit",
+      "meteor trail does not intercept pointer or change geometry",
       "existing card elevation and image zoom remain active",
       "touch-only and reduced-motion modes disable orbit animation"
     ],

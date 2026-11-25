@@ -1041,6 +1041,21 @@ body,button,input,select,textarea{font-family:var(--body)}
 }
 
 
+/* Expanded menus remain scrollable while their native scrollbar stays visually hidden. */
+.site-header .nav.open{
+ max-height:min(70vh,560px);
+ overflow-x:hidden;
+ overflow-y:auto;
+ overscroll-behavior:contain;
+ scrollbar-width:none;
+ -ms-overflow-style:none;
+}
+.site-header .nav.open::-webkit-scrollbar{
+ display:none;
+ width:0;
+ height:0;
+}
+
 /* Expanded desktop navigation: show only the three highest-intent section links. */
 .nav .nav-secondary{display:none}
 .nav.open .nav-secondary{display:flex}
@@ -1561,13 +1576,13 @@ body,button,input,select,textarea{font-family:var(--body)}
 
 
 
-/* RUWA ORBITING PERIMETER LIGHT — a masked conic highlight, not a rotating card. */
+/* RUWA METEOR ORBIT — a tapered shooting-star trail clipped to each real frame. */
 @property --ruwa-orbit-angle {
  syntax:"<angle>";
  inherits:false;
  initial-value:0deg;
 }
-@keyframes ruwaOrbit {
+@keyframes ruwaMeteorOrbit {
  from { --ruwa-orbit-angle:0deg; }
  to { --ruwa-orbit-angle:360deg; }
 }
@@ -1586,12 +1601,15 @@ body,button,input,select,textarea{font-family:var(--body)}
   opacity:0;
   background:conic-gradient(
    from var(--ruwa-orbit-angle),
-   transparent 0deg 314deg,
-   rgba(166,229,222,.12) 324deg,
-   rgba(116,220,213,.76) 339deg,
-   rgba(255,255,255,.96) 346deg,
-   rgba(116,220,213,.58) 352deg,
-   transparent 360deg
+   transparent 0deg 322deg,
+   rgba(116,220,213,0) 326deg,
+   rgba(116,220,213,.10) 333deg,
+   rgba(116,220,213,.34) 340deg,
+   rgba(116,220,213,.72) 346deg,
+   rgba(255,255,255,1) 350deg,
+   rgba(255,255,255,.48) 351deg,
+   rgba(116,220,213,.10) 354deg,
+   transparent 357deg 360deg
   );
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
@@ -1601,9 +1619,9 @@ body,button,input,select,textarea{font-family:var(--body)}
  }
  .ruwa-orbit-target:hover>.ruwa-orbit-light,
  .ruwa-orbit-target:focus-within>.ruwa-orbit-light{
-  opacity:.92;
-  animation:ruwaOrbit 3.2s linear infinite;
-  filter:drop-shadow(0 0 2px rgba(125,220,213,.38));
+  opacity:.94;
+  animation:ruwaMeteorOrbit 4.2s linear infinite;
+  filter:drop-shadow(0 0 1px rgba(255,255,255,.62)) drop-shadow(0 0 3px rgba(83,204,195,.34));
  }
 }
 @media(prefers-reduced-motion:reduce){
@@ -2130,10 +2148,13 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.dataset.ruwaMenuAnimating="true";
 
   gsap.set(nav,{clipPath:"circle(0px at "+originX+"px "+originY+"px)"});
+  // Links unfold from the expanding circle with a restrained spiral-like tilt.
   gsap.set(items,{
    autoAlpha:0,
-   y:10,
-   scale:.975,
+   x:-9,
+   y:11,
+   rotation:-1.65,
+   scale:.985,
    transformOrigin:"50% 50%"
   });
 
@@ -2158,9 +2179,11 @@ body,button,input,select,textarea{font-family:var(--body)}
   items.forEach((link,index)=>{
    menuTimeline.to(link,{
     autoAlpha:1,
+    x:0,
     y:0,
+    rotation:0,
     scale:1,
-    duration:.28,
+    duration:.32,
     ease:"power2.out"
    },.18+index*.075);
   });
@@ -2219,10 +2242,11 @@ body,button,input,select,textarea{font-family:var(--body)}
  nav.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>{
   const restoreMenuFocus=shouldCollapseNav();
   close();
-  // The menu remains visually open during its reverse animation, but focus
-  // must leave the now-inert navigation immediately after destination choice.
+  // Allow native same-page navigation to finish before restoring control focus.
   if(restoreMenuFocus&&button.getClientRects().length){
-   button.focus({preventScroll:true});
+   window.setTimeout(()=>{
+    if(button.getClientRects().length)button.focus({preventScroll:true});
+   },0);
   }
  }));
 
