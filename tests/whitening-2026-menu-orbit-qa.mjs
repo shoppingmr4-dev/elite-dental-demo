@@ -177,8 +177,8 @@ try {
           .filter(link => getComputedStyle(link).display !== "none")
           .map(link => Number.parseFloat(getComputedStyle(link).opacity))
       }));
-      assert.equal(frameOpening.frameState, "drawing",
-        viewport.name + ": the complete panel frame must enter before its navigation text");
+      assert.ok(frameOpening.frameState.startsWith("drawing"),
+        viewport.name + ": the panel frame must begin its staged draw before navigation text");
       assert.ok(frameOpening.clipPath.includes("inset"),
         viewport.name + ": the frame must reveal as a rectangle, never from a circular mask");
       assert.ok(frameOpening.opacity > .1,
@@ -187,7 +187,7 @@ try {
         viewport.name + ": navigation text appeared before the outer frame finished");
     }
 
-    await page.waitForTimeout(viewport.width > 920 ? 550 : 450);
+    await page.waitForTimeout(viewport.width > 920 ? 1050 : 450);
     const staggerState = await nav.evaluate(element => {
       const style = getComputedStyle(element);
       const links = Array.from(element.querySelectorAll("a"))
@@ -204,7 +204,10 @@ try {
         panelRect:panelRect.toJSON(),
         contactRect:contactRect.toJSON(),
         belowContact:panelRect.top>=contactRect.bottom+8,
-        alignedWithContact:Math.abs(panelRect.left-contactRect.left)<=2,
+        panelCenterX:panelRect.left+panelRect.width/2,
+        contactCenterX:contactRect.left+contactRect.width/2,
+        centeredAndNudgedLeft:Math.abs((contactRect.left+contactRect.width/2)-
+          (panelRect.left+panelRect.width/2)-14)<=2,
         progress: Number(element.dataset.ruwaMenuProgress || 0),
         linkOpacity: links.map(link => Number.parseFloat(getComputedStyle(link).opacity)),
         linkRects: links.map(link => {
@@ -224,8 +227,8 @@ try {
         viewport.name + ": panel must retain its rectangular frame, not a circular reveal");
       assert.equal(staggerState.belowContact,true,
         viewport.name + ": animated panel must appear below the Contact CTA");
-      assert.equal(staggerState.alignedWithContact,true,
-        viewport.name + ": panel must align with the Contact CTA's left edge");
+      assert.equal(staggerState.centeredAndNudgedLeft,true,
+        viewport.name + ": panel must be centered below Contact with a slight 14px left offset");
     }
     assert.equal(staggerState.flexDirection, "column",
       viewport.name + ": dropdown links must be vertically aligned");
@@ -314,9 +317,9 @@ try {
       viewport.name + ": expanded panel has no rendered dimensions");
     if (viewport.width > 920) {
       assert.equal(opened.navStyle.position, "absolute",
-        viewport.name + ": desktop navigation did not open as a left-side panel");
+        viewport.name + ": desktop Contact panel lost its independent positioning");
       assert.equal(opened.navStyle.flexDirection, "column",
-        viewport.name + ": desktop left-side panel links are not arranged vertically");
+        viewport.name + ": Contact panel links are not arranged vertically");
       assert.ok(["auto", "scroll"].includes(opened.navStyle.overflowY),
         viewport.name + ": desktop side panel must retain vertical overflow support");
       assert.notEqual(opened.navStyle.backgroundColor, "rgba(0, 0, 0, 0)",
@@ -325,15 +328,20 @@ try {
         viewport.name + ": desktop side panel border is missing");
       assert.equal(opened.visibleLinks.length, 7,
         viewport.name + ": desktop left-side panel must expose all seven navigation links");
-      assert.ok(opened.rect.width >= 300 && opened.rect.width <= 380 &&
+      assert.ok(opened.rect.width >= 300 && opened.rect.width <= 340 &&
         opened.rect.height >= 300,
         viewport.name + ": Contact panel dimensions are not consistent with its full vertical link list");
-      assert.ok(Math.abs(opened.rect.left-opened.rect.contactRect.left)<=2,
-        viewport.name + ": panel must align with the Contact CTA's left edge: " +
-        JSON.stringify({panelLeft:opened.rect.left,contactLeft:opened.rect.contactRect.left}));
-      assert.ok(Math.abs(opened.rect.top-(opened.rect.contactRect.bottom+10))<=3,
-        viewport.name + ": panel must start 10px below the Contact CTA: " +
-        JSON.stringify({panelTop:opened.rect.top,contactBottom:opened.rect.contactRect.bottom}));
+      const contactCenterX=opened.rect.contactRect.left+opened.rect.contactRect.width/2;
+      const panelCenterX=opened.rect.left+opened.rect.width/2;
+      assert.ok(Math.abs((contactCenterX-panelCenterX)-14)<=2,
+        viewport.name + ": panel must sit centered beneath Contact with a slight 14px left shift: " +
+        JSON.stringify({panelCenterX,contactCenterX,offset:contactCenterX-panelCenterX}));
+      assert.ok(Math.abs(opened.rect.top-(opened.rect.header.bottom+12))<=3,
+        viewport.name + ": panel must begin 12px below the header edge: " +
+        JSON.stringify({panelTop:opened.rect.top,headerBottom:opened.rect.header.bottom}));
+      assert.ok(opened.rect.buttonRect.left-opened.rect.right>=24,
+        viewport.name + ": Contact panel is too close to the separate hamburger circle: " +
+        JSON.stringify({panelRight:opened.rect.right,hamburgerLeft:opened.rect.buttonRect.left}));
       assert.ok(opened.rect.right <= viewport.width - 8,
         viewport.name + ": Contact panel must remain inside the viewport");
       for (let index = 0; index < opened.visibleLinks.length; index++) {
@@ -425,8 +433,19 @@ try {
         JSON.stringify(reverseState));
       assert.ok(reverseState.clipPath.includes("inset"),
         viewport.name + ": closing must preserve the rectangular frame animation, never a circular reveal");
+      await page.waitForTimeout(650);
+      const reversingFrame=await nav.evaluate(element=>({
+        state:element.dataset.ruwaMenuFrameState,
+        clipPath:getComputedStyle(element).clipPath
+      }));
+      assert.ok(["collapsing-height","retracting-width"].includes(reversingFrame.state),
+        viewport.name + ": the menu frame must collapse in its own staged sequence after links disappear: "+
+        JSON.stringify(reversingFrame));
+      assert.ok(reversingFrame.clipPath.includes("inset")&&
+        !reversingFrame.clipPath.includes("inset(0px 0px 0px 0px"),
+        viewport.name + ": the menu frame did not visibly retract after the links");
       if (viewport.width === 1440) {
-        await page.screenshot({path:OUT+"/menu-contact-panel-frame-first-reverse-1440.png",fullPage:false});
+        await page.screenshot({path:OUT+"/menu-contact-panel-frame-staged-exit-1440.png",fullPage:false});
       }
     } else {
       await clickHamburger(page, button, viewport.name);
@@ -582,7 +601,7 @@ try {
     return Number.parseFloat(style.opacity)>.45&&style.backgroundImage.includes("linear-gradient");
   },await card.elementHandle(),{timeout:2500});
   await glowPage.waitForTimeout(180);
-  await card.screenshot({path:OUT+"/perimeter-glow-card-hover.png"});
+  await card.screenshot({path:OUT+"/perimeter-orbit-card-hover.png"});
 
   const activeGlow=await card.evaluate(element=>{
     const style=getComputedStyle(element,"::after");
@@ -602,6 +621,7 @@ try {
       pointerEvents:style.pointerEvents,
       animationName:style.animationName,
       animationIterationCount:style.animationIterationCount,
+      animationAngle:style.getPropertyValue("--ruwa-perimeter-angle").trim(),
       filter:style.filter,
       elementRadius:getComputedStyle(element).borderRadius,
       width:element.offsetWidth,
@@ -609,8 +629,8 @@ try {
     };
   });
   assert.ok(activeGlow.opacity>.45,"The complete perimeter glow did not become visible on hover");
-  assert.ok(activeGlow.backgroundImage.includes("linear-gradient"),
-    "The perimeter must use a continuous gradient, not a traveling point");
+  assert.ok(activeGlow.backgroundImage.includes("conic-gradient"),
+    "The perimeter must use a rotating conic light segment, not a stationary glow");
   const hasTwoMaskLayers=[activeGlow.maskImage,activeGlow.webkitMaskImage].some(value=>
     (String(value||"").match(/linear-gradient/gi)||[]).length>=2
   );
@@ -628,10 +648,18 @@ try {
   assert.equal(activeGlow.borderRadius,activeGlow.elementRadius,
     "The luminous ring must inherit the exact rounded card corners");
   assert.equal(activeGlow.pointerEvents,"none","Glow must not intercept pointer input");
-  assert.equal(activeGlow.animationName,"ruwa-full-perimeter-breathe",
-    "The whole perimeter must breathe as one stationary light");
+  assert.equal(activeGlow.animationName,"ruwa-perimeter-orbit",
+    "The luminous segment must travel around the perimeter on hover");
   assert.equal(activeGlow.animationIterationCount,"infinite",
-    "The perimeter breathing animation must remain active during hover");
+    "The perimeter orbit must continue while the pointer remains over the card");
+  assert.ok(activeGlow.animationAngle.endsWith("deg"),
+    "The registered perimeter angle must be animatable in degrees");
+  await glowPage.waitForTimeout(260);
+  const angleAfter=await card.evaluate(element=>
+    getComputedStyle(element,"::after").getPropertyValue("--ruwa-perimeter-angle").trim()
+  );
+  assert.notEqual(angleAfter,activeGlow.animationAngle,
+    "The luminous arc did not physically advance around the outline");
   assert.ok(activeGlow.filter.includes("drop-shadow"),
     "The luminous border must include a soft restrained halo");
   assert.equal(activeGlow.width,before.width,"Glow changed the card width");
@@ -672,14 +700,14 @@ try {
     animationName:getComputedStyle(element,"::after").animationName,
     imageScale:getComputedStyle(element.querySelector(".team-card-media img")).scale
   }));
-  assert.ok(teamGlow.opacity>.45&&teamGlow.animationName==="ruwa-full-perimeter-breathe",
-    "Doctor/team cards did not receive the same complete perimeter glow");
+  assert.ok(teamGlow.opacity>.45&&teamGlow.animationName==="ruwa-perimeter-orbit",
+    "Doctor/team cards did not receive the same moving perimeter light");
   assert.ok(Number.parseFloat(teamGlow.imageScale)>1.02,
     "Existing doctor image zoom did not remain active");
-  await teamCard.screenshot({path:OUT+"/perimeter-glow-doctor-card-hover.png"});
+  await teamCard.screenshot({path:OUT+"/perimeter-orbit-doctor-card-hover.png"});
   assert.equal(glowErrors.length,0,"Glow browser errors: "+glowErrors.join(" | "));
   await glowPage.close();
-  console.log("[PASS] CSS full-perimeter glow is continuous, rounded, non-traveling, pointer-safe and keyboard-visible");
+  console.log("[PASS] CSS full-perimeter light is a moving, masked border arc, pointer-safe and keyboard-visible");
 
   // Touch-only devices must not receive a sticky hover effect or animated layer.
   const touchPage=await browser.newPage({
@@ -780,9 +808,9 @@ try {
       OUT + "/menu-stagger-mid-1440.png",
       OUT + "/menu-open-390.png",
       OUT + "/perimeter-glow-card-before.png",
-      OUT + "/perimeter-glow-card-hover.png",
+      OUT + "/perimeter-orbit-card-hover.png",
       OUT + "/perimeter-glow-card-keyboard-focus.png",
-      OUT + "/perimeter-glow-doctor-card-hover.png"
+      OUT + "/perimeter-orbit-doctor-card-hover.png"
     ],
     failures
   }, null, 2));
