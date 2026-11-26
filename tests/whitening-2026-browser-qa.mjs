@@ -37,7 +37,10 @@ async function measureHeader(page) {
     const nav=rect(document.querySelector("#main-nav"));
     const actionElement=document.querySelector(".header-action");
     const action=rect(actionElement);
-    const actionVisualHeight=Number.parseFloat(getComputedStyle(actionElement,"::before").height);
+    const actionPseudoStyle=getComputedStyle(actionElement,"::before");
+    const actionVisualHeight=Number.parseFloat(actionPseudoStyle.height);
+    const actionPseudoProgress=actionPseudoStyle.getPropertyValue("--header-progress").trim();
+    const actionPseudoBackground=actionPseudoStyle.backgroundColor;
     const menuElement=document.querySelector("#menu-toggle");
     const menu=rect(menuElement);
     const menuStyle=getComputedStyle(menuElement);
@@ -60,6 +63,8 @@ async function measureHeader(page) {
     return {
       layoutHeight:headerRect.height,
       innerHeight:rect(header.querySelector(".header-inner")).height,
+      actionPseudoProgress,
+      actionPseudoBackground,
       headerWidth:headerRect.width,
       headerCenter:headerRect.left+headerRect.width/2,
       actionHeight:action.height,
@@ -1276,7 +1281,7 @@ try {
         `${vp.name}: compact phone CTA pill must not grow while the responsive navigation is collapsed (expanded ${initialHeaderMetrics.actionVisualHeight}px, compact ${compactHeaderMetrics.actionVisualHeight}px)`);
     }else{
       assert.ok(compactHeaderMetrics.actionVisualHeight<initialHeaderMetrics.actionVisualHeight,
-        `${vp.name}: phone CTA pill did not become more compact on scroll (expanded ${initialHeaderMetrics.actionVisualHeight}px, compact ${compactHeaderMetrics.actionVisualHeight}px, header progress ${compactHeaderMetrics.headerProgress}, CTA font ${initialHeaderMetrics.actionFontSize}px→${compactHeaderMetrics.actionFontSize}px)`);
+        `${vp.name}: phone CTA pill did not become more compact on scroll (expanded ${initialHeaderMetrics.actionVisualHeight}px/pseudo progress ${initialHeaderMetrics.actionPseudoProgress}, compact ${compactHeaderMetrics.actionVisualHeight}px/pseudo progress ${compactHeaderMetrics.actionPseudoProgress}, header progress ${compactHeaderMetrics.headerProgress}, CTA font ${initialHeaderMetrics.actionFontSize}px→${compactHeaderMetrics.actionFontSize}px)`);
     }
     assert.ok(compactHeaderMetrics.wordmarkSize < initialHeaderMetrics.wordmarkSize, `${vp.name}: brand wordmark did not become more compact on scroll`);
     let headerConvergence=null;
