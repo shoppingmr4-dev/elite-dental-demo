@@ -2352,6 +2352,8 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.dataset.ruwaMenuState="opening";
   nav.dataset.ruwaMenuAnimating="true";
   nav.dataset.ruwaMenuProgress="0";
+  nav.removeAttribute("data-ruwa-menu-exit-motion");
+  nav.removeAttribute("data-ruwa-menu-exit-progress");
 
   // A refined, unified reveal: the full framed panel lifts into place,
   // sharpens from a light blur, and settles without a center-out frame wipe.
@@ -2375,8 +2377,8 @@ body,button,input,select,textarea{font-family:var(--body)}
 
   const panelDuration=contactAnchoredPanel?.44:.36;
   const linkStart=contactAnchoredPanel?.10:.08;
-  const linkStagger=.045;
-  const linkDuration=contactAnchoredPanel?.19:.18;
+  const linkStagger=.065;
+  const linkDuration=.16;
   nav.dataset.ruwaPanelRevealDuration=String(panelDuration);
   nav.dataset.ruwaLinkStagger=String(linkStagger);
   nav.dataset.ruwaLinkDuration=String(linkDuration);
