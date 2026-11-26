@@ -676,8 +676,8 @@ try {
   const activeAnimations=activeGlow.animationName.split(",").map(name=>name.trim());
   assert.ok(activeAnimations.includes("ruwa-perimeter-orbit")&&activeAnimations.includes("ruwa-perimeter-breathe"),
     "The complete perimeter light must flow around the border and gently pulse on hover: "+activeGlow.animationName);
-  assert.equal(activeGlow.animationIterationCount,"infinite",
-    "The perimeter orbit must continue while the pointer remains over the card");
+  assert.ok(activeGlow.animationIterationCount.split(",").every(value=>value.trim()==="infinite"),
+    "Both full-frame motion layers must continue while the pointer remains over the card");
   assert.ok(Number.parseFloat(activeGlow.animationDuration)<=1.0&&Number.parseFloat(activeGlow.animationDuration)>.5,
     "The perimeter light must orbit much faster than the old 2.6-second cycle: "+activeGlow.animationDuration);
   assert.ok(activeGlow.animationAngle.endsWith("deg"),
