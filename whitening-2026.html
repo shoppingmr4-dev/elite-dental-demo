@@ -1101,18 +1101,16 @@ body,button,input,select,textarea{font-family:var(--body)}
   transform:translate(-50%,-50%);
  }
  .site-header.is-compact .nav.open{
-  /* Span all three header grid tracks so the dropdown centers on the hamburger,
-     not on the narrower middle navigation track. */
-  position:absolute;z-index:5;grid-column:1 / -1;align-self:start;
-  top:calc(100% + 10px);left:50%;right:auto;
-  translate:-50% 0;display:flex;flex-direction:column;align-items:stretch;
+  /* A vertical side panel opens to the physical left of the separate hamburger. */
+  position:absolute;z-index:5;top:0;right:calc(50% + 34px);left:auto;
+  translate:0 0;display:flex;flex-direction:column;align-items:stretch;
   justify-self:auto;gap:0;margin:0;
-  width:min(360px,calc(100vw - 32px));max-height:min(70vh,560px);
+  width:min(360px,calc(50% - 64px));max-height:min(70vh,560px);
   overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
   padding:8px;border:1px solid var(--line);border-radius:16px;
   background:var(--paper);box-shadow:0 18px 34px rgba(20,45,56,.14);
   visibility:visible;opacity:1;pointer-events:auto;
-  transform-origin:top center;
+  transform-origin:right center;
  }
  /* All seven destinations are restored in their original order. */
  .site-header.is-compact .nav.open .nav-secondary{display:flex}
@@ -2244,12 +2242,14 @@ body,button,input,select,textarea{font-family:var(--body)}
  const createOpenTimeline=()=>{
   const gsap=window.gsap;
   const animatedItems=links().filter(link=>getComputedStyle(link).display!=="none");
+  const leftSidePanel=isDesktopCompact();
+  const presentation=leftSidePanel?"left-side-panel":"dropdown";
 
   if(reducedMotion.matches){
    root.dataset.ruwaMenuMotion="reduced";
    clearInlineMotion();
    settleDesktopMenuOpen();
-   nav.dataset.ruwaMenuShape="dropdown";
+   nav.dataset.ruwaMenuShape=presentation;
    nav.dataset.ruwaMenuState="open";
    nav.dataset.ruwaMenuAnimating="false";
    if(document.activeElement===button)animatedItems[0]?.focus({preventScroll:true});
@@ -2260,7 +2260,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    root.dataset.ruwaMenuMotion="fallback";
    clearInlineMotion();
    settleDesktopMenuOpen();
-   nav.dataset.ruwaMenuShape="dropdown";
+   nav.dataset.ruwaMenuShape=presentation;
    nav.dataset.ruwaMenuState="open";
    nav.dataset.ruwaMenuAnimating="false";
    if(document.activeElement===button)animatedItems[0]?.focus({preventScroll:true});
@@ -2272,31 +2272,33 @@ body,button,input,select,textarea{font-family:var(--body)}
    root.dataset.ruwaMenuMotion="fallback";
    clearInlineMotion();
    settleDesktopMenuOpen();
-   nav.dataset.ruwaMenuShape="dropdown";
+   nav.dataset.ruwaMenuShape=presentation;
    nav.dataset.ruwaMenuState="open";
    nav.dataset.ruwaMenuAnimating="false";
    return;
   }
 
   root.dataset.ruwaMenuMotion="gsap-staggered";
-  nav.dataset.ruwaMenuShape="dropdown";
+  nav.dataset.ruwaMenuShape=presentation;
   nav.dataset.ruwaMenuState="opening";
   nav.dataset.ruwaMenuAnimating="true";
   nav.dataset.ruwaMenuProgress="0";
 
-  // The panel fades and settles in its own position; its links then enter in DOM order.
+  // Desktop: the menu glides out from beside the hamburger toward the left.
+  // Its seven links then fade and settle sequentially in their original DOM order.
   gsap.set(nav,{
    autoAlpha:0,
-   y:-8,
+   x:leftSidePanel?16:0,
+   y:leftSidePanel?0:-8,
    scale:.985,
    rotation:0,
-   transformOrigin:"top center",
+   transformOrigin:leftSidePanel?"right center":"top center",
    force3D:false
   });
   gsap.set(animatedItems,{
    autoAlpha:0,
-   x:0,
-   y:10,
+   x:leftSidePanel?12:0,
+   y:leftSidePanel?0:10,
    rotation:0,
    scale:1,
    transformOrigin:"50% 50%"
@@ -2322,10 +2324,11 @@ body,button,input,select,textarea{font-family:var(--body)}
 
   menuTimeline.to(nav,{
    autoAlpha:1,
+   x:0,
    y:0,
    scale:1,
-   duration:.28,
-   ease:"power2.out"
+   duration:.4,
+   ease:"expo.out"
   },0);
 
   animatedItems.forEach((link,index)=>{
@@ -2335,9 +2338,9 @@ body,button,input,select,textarea{font-family:var(--body)}
     y:0,
     rotation:0,
     scale:1,
-    duration:.32,
-    ease:"power2.out"
-   },.18+index*.075);
+    duration:.38,
+    ease:"power3.out"
+   },.16+index*.105);
   });
 
   menuTimeline.play(0);
