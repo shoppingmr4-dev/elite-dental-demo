@@ -1091,7 +1091,7 @@ body,button,input,select,textarea{font-family:var(--body)}
 .site-header .nav a[aria-current="location"]:hover,
 .site-header .nav a[aria-current="location"]:focus-visible{color:var(--blue-deep);font-weight:700}
 
-/* Compact desktop navigation: unfold the full panel directly beneath the Contact button. */
+/* Compact desktop navigation: centered below Contact, shifted slightly away from the hamburger. */
 @media(min-width:921px){
  .site-header.is-compact .nav:not(.open){
   visibility:hidden;opacity:0;pointer-events:none;
@@ -1101,13 +1101,13 @@ body,button,input,select,textarea{font-family:var(--body)}
   transform:translate(-50%,-50%);
  }
  .site-header.is-compact .nav.open{
-  /* The panel aligns with the Contact CTA and begins 10px below its lower edge. */
+  /* Small, deliberate gap beneath the header; JS centers the panel below Contact. */
   position:absolute;z-index:5;
-  top:var(--ruwa-contact-menu-top,66px);
+  top:var(--ruwa-contact-menu-top,92px);
   left:var(--ruwa-contact-menu-left,18px);right:auto;
   translate:0 0;display:flex;flex-direction:column;align-items:stretch;
   justify-self:auto;gap:0;margin:0;
-  width:min(360px,calc(100vw - 32px));max-height:min(70vh,560px);
+  width:min(320px,calc(100vw - 32px));max-height:min(70vh,560px);
   overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
   padding:8px;border:1px solid var(--line);border-radius:16px;
   background:var(--paper);box-shadow:0 18px 34px rgba(20,45,56,.14);
@@ -1614,7 +1614,12 @@ body,button,input,select,textarea{font-family:var(--body)}
 
 
 
-/* RUWA PREMIUM FULL-PERIMETER GLOW — complete stationary luminous frames. */
+/* RUWA PREMIUM PERIMETER LIGHT — a single moving luminous arc, masked to the border only. */
+@property --ruwa-perimeter-angle{
+ syntax:"<angle>";
+ inherits:false;
+ initial-value:0deg;
+}
 :where(
  .info-card,
  .option-card,
@@ -1645,34 +1650,29 @@ body,button,input,select,textarea{font-family:var(--body)}
  inset:0;
  z-index:3;
  border-radius:inherit;
- padding:1.25px;
+ padding:1.35px;
  pointer-events:none;
  opacity:0;
- background:linear-gradient(
-  118deg,
-  rgba(97,214,204,.78) 0%,
-  rgba(228,255,250,.92) 24%,
-  rgba(105,205,203,.66) 48%,
-  rgba(245,255,253,.9) 72%,
-  rgba(88,197,193,.72) 100%
+ --ruwa-perimeter-angle:0deg;
+ background:conic-gradient(
+  from var(--ruwa-perimeter-angle),
+  transparent 0deg 292deg,
+  rgba(67,190,184,.12) 300deg,
+  rgba(91,222,213,.58) 310deg,
+  rgba(226,255,251,1) 321deg,
+  rgba(104,229,218,.96) 331deg,
+  rgba(62,177,171,.2) 344deg,
+  transparent 352deg 360deg
  );
  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
  -webkit-mask-composite:xor;
  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
  mask-composite:exclude;
- box-shadow:inset 0 0 12px rgba(111,225,215,.11);
- filter:drop-shadow(0 0 4px rgba(72,190,185,.18)) drop-shadow(0 0 11px rgba(72,190,185,.1));
- transition:opacity .34s ease;
+ filter:drop-shadow(0 0 2px rgba(86,218,209,.62)) drop-shadow(0 0 6px rgba(66,187,181,.34));
+ transition:opacity .22s ease;
 }
-@keyframes ruwa-full-perimeter-breathe{
- 0%,100%{
-  opacity:.58;
-  filter:drop-shadow(0 0 4px rgba(72,190,185,.17)) drop-shadow(0 0 10px rgba(72,190,185,.09));
- }
- 50%{
-  opacity:.96;
-  filter:drop-shadow(0 0 7px rgba(91,218,207,.25)) drop-shadow(0 0 17px rgba(72,190,185,.14));
- }
+@keyframes ruwa-perimeter-orbit{
+ to{--ruwa-perimeter-angle:360deg}
 }
 @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
  :where(
@@ -1686,7 +1686,8 @@ body,button,input,select,textarea{font-family:var(--body)}
   .reviews-criteria,
   .clinical-note
  ):hover::after{
-  animation:ruwa-full-perimeter-breathe 3.4s ease-in-out infinite;
+  opacity:1;
+  animation:ruwa-perimeter-orbit 2.6s linear infinite;
  }
 }
 @media (prefers-reduced-motion:no-preference){
@@ -1701,7 +1702,8 @@ body,button,input,select,textarea{font-family:var(--body)}
   .reviews-criteria,
   .clinical-note
  ):focus-within::after{
-  animation:ruwa-full-perimeter-breathe 3.4s ease-in-out infinite;
+  opacity:1;
+  animation:ruwa-perimeter-orbit 2.6s linear infinite;
  }
 }
 @media(prefers-reduced-motion:reduce){
@@ -2203,17 +2205,20 @@ body,button,input,select,textarea{font-family:var(--body)}
  let navHadFocus=false;
  let menuTimeline=null;
 
- // Measure the live Contact CTA so the menu remains anchored beneath it as the header compacts.
+ // Center beneath the Contact CTA, then nudge the panel 14px to the left
+ // so it stays clearly separated from the independent hamburger circle.
  const syncContactMenuAnchor=()=>{
   if(!isDesktopCompact()||!contactAction)return;
   const headerRect=header.getBoundingClientRect();
   const contactRect=contactAction.getBoundingClientRect();
-  const panelWidth=Math.min(360,Math.max(0,headerRect.width-32));
+  const panelWidth=Math.min(320,Math.max(0,headerRect.width-32));
+  const contactCenter=contactRect.left+contactRect.width/2-headerRect.left;
+  const desiredCenter=contactCenter-14;
   const left=Math.max(16,Math.min(
-   contactRect.left-headerRect.left,
+   desiredCenter-panelWidth/2,
    headerRect.width-panelWidth-16
   ));
-  const top=contactRect.bottom-headerRect.top+10;
+  const top=headerRect.height+12;
   nav.style.setProperty("--ruwa-contact-menu-left",left.toFixed(2)+"px");
   nav.style.setProperty("--ruwa-contact-menu-top",top.toFixed(2)+"px");
  };
@@ -2276,7 +2281,6 @@ body,button,input,select,textarea{font-family:var(--body)}
    if(document.activeElement===button)animatedItems[0]?.focus({preventScroll:true});
    return;
   }
-
   if(!gsap||typeof gsap.timeline!=="function"||!animatedItems.length){
    root.dataset.ruwaMenuMotion="fallback";
    clearInlineMotion();
@@ -2288,7 +2292,6 @@ body,button,input,select,textarea{font-family:var(--body)}
    if(document.activeElement===button)animatedItems[0]?.focus({preventScroll:true});
    return;
   }
-
   const panel=nav.getBoundingClientRect();
   if(panel.width<1||panel.height<1){
    root.dataset.ruwaMenuMotion="fallback";
@@ -2301,25 +2304,26 @@ body,button,input,select,textarea{font-family:var(--body)}
    return;
   }
 
-  root.dataset.ruwaMenuMotion="gsap-staggered";
+  nav.dataset.ruwaMenuMotion="gsap-staggered";
   nav.dataset.ruwaMenuShape=presentation;
-  nav.dataset.ruwaMenuFrameState=contactAnchoredPanel?"drawing":"revealed";
+  nav.dataset.ruwaMenuFrameState=contactAnchoredPanel?"drawing-width":"revealed";
   nav.dataset.ruwaMenuState="opening";
   nav.dataset.ruwaMenuAnimating="true";
   nav.dataset.ruwaMenuProgress="0";
 
-  // Desktop: draw the complete rectangular frame first, from top to bottom.
-  // Only after the frame finishes do the seven links appear in a deliberate sequence.
+  // The frame unfolds in two distinct phases: its top edge extends horizontally,
+  // then the complete rectangle opens downward. Reversing plays the same stages
+  // in reverse order so the border itself has a deliberate exit sequence.
   gsap.set(nav,{
    autoAlpha:0,
    x:0,
-   y:contactAnchoredPanel?-6:-8,
-   scale:contactAnchoredPanel ? .99 : .985,
+   y:contactAnchoredPanel?-5:-8,
+   scale:contactAnchoredPanel ? .995 : .985,
    rotation:0,
    clipPath:contactAnchoredPanel
-    ?"inset(0% 0% 96% 0% round 16px)"
+    ?"inset(0% 49% 96% 49% round 16px)"
     :"inset(0% 0% 0% 0% round 14px)",
-   transformOrigin:contactAnchoredPanel?"top left":"top center",
+   transformOrigin:"top center",
    force3D:false
   });
   gsap.set(animatedItems,{
@@ -2334,7 +2338,20 @@ body,button,input,select,textarea{font-family:var(--body)}
   menuTimeline=gsap.timeline({
    paused:true,
    onUpdate(){
-    nav.dataset.ruwaMenuProgress=menuTimeline.progress().toFixed(4);
+    const progress=menuTimeline.progress();
+    const time=menuTimeline.time();
+    nav.dataset.ruwaMenuProgress=progress.toFixed(4);
+    if(contactAnchoredPanel){
+     if(menuTimeline.reversed()){
+      nav.dataset.ruwaMenuFrameState=time>=.78
+       ?"closing-links"
+       :time>=.34?"collapsing-height":"retracting-width";
+     }else{
+      nav.dataset.ruwaMenuFrameState=time>=.78
+       ?"revealed"
+       :time>=.34?"drawing-height":"drawing-width";
+     }
+    }
    },
    onComplete(){
     nav.dataset.ruwaMenuProgress="1";
@@ -2350,24 +2367,36 @@ body,button,input,select,textarea{font-family:var(--body)}
    }
   });
 
-  menuTimeline.to(nav,{
-   autoAlpha:1,
-   clipPath:contactAnchoredPanel
-    ?"inset(0% 0% 0% 0% round 16px)"
-    :"inset(0% 0% 0% 0% round 14px)",
-   x:0,
-   y:0,
-   scale:1,
-   duration:.4,
-   ease:"expo.out"
-  },0);
-
   if(contactAnchoredPanel){
-   menuTimeline.add(()=>{nav.dataset.ruwaMenuFrameState="revealed";},.4);
+   menuTimeline.to(nav,{
+    autoAlpha:1,
+    clipPath:"inset(0% 0% 96% 0% round 16px)",
+    y:-2,
+    scale:1,
+    duration:.34,
+    ease:"expo.out"
+   },0);
+   menuTimeline.to(nav,{
+    clipPath:"inset(0% 0% 0% 0% round 16px)",
+    y:0,
+    duration:.44,
+    ease:"power3.out"
+   },.34);
+   menuTimeline.add(()=>{nav.dataset.ruwaMenuFrameState="revealed";},.78);
+  }else{
+   menuTimeline.to(nav,{
+    autoAlpha:1,
+    clipPath:"inset(0% 0% 0% 0% round 14px)",
+    x:0,
+    y:0,
+    scale:1,
+    duration:.4,
+    ease:"expo.out"
+   },0);
   }
 
-  const linkStart=contactAnchoredPanel ? .44 : .16;
-  const linkStagger=contactAnchoredPanel ? .095 : .105;
+  const linkStart=contactAnchoredPanel ? .82 : .16;
+  const linkStagger=contactAnchoredPanel ? .09 : .105;
   const linkDuration=contactAnchoredPanel ? .30 : .38;
   animatedItems.forEach((link,index)=>{
    menuTimeline.to(link,{
@@ -2380,7 +2409,6 @@ body,button,input,select,textarea{font-family:var(--body)}
     ease:"power3.out"
    },linkStart+index*linkStagger);
   });
-
   menuTimeline.play(0);
  };
  const close=({restoreFocus=false,immediate=false}={})=>{
