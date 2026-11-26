@@ -254,6 +254,9 @@ try {
           height: element.getBoundingClientRect().height,
           centerX: element.getBoundingClientRect().left + element.getBoundingClientRect().width / 2,
           viewportCenterX: window.innerWidth / 2,
+          buttonRect: document.querySelector("#menu-toggle").getBoundingClientRect().toJSON(),
+          buttonCenterX: document.querySelector("#menu-toggle").getBoundingClientRect().left +
+            document.querySelector("#menu-toggle").getBoundingClientRect().width / 2,
           header: document.querySelector(".site-header").getBoundingClientRect().toJSON(),
           style: {
             left: getComputedStyle(element).left,
@@ -287,8 +290,14 @@ try {
       assert.ok(opened.rect.width >= 300 && opened.rect.width <= 380 &&
         opened.rect.height >= 300,
         viewport.name + ": desktop dropdown dimensions are not consistent with a full vertical link list");
-      assert.ok(Math.abs(opened.rect.centerX - opened.rect.viewportCenterX) <= 1.5,
-        viewport.name + ": desktop dropdown is not centered under the compact hamburger");
+      assert.ok(Math.abs(opened.rect.centerX - opened.rect.buttonCenterX) <= 1.5,
+        viewport.name + ": desktop dropdown is not centered under its hamburger: " +
+        JSON.stringify({
+          panelCenter:opened.rect.centerX,
+          buttonCenter:opened.rect.buttonCenterX,
+          panel:opened.rect,
+          navStyle:opened.rect.style
+        }));
       assert.ok(opened.rect.top > opened.rect.header.bottom,
         viewport.name + ": desktop dropdown does not sit below the header");
       for (let index = 0; index < opened.visibleLinks.length; index++) {
@@ -407,8 +416,8 @@ try {
     viewportResults.push({
       viewport: viewport.name,
       menuMotion: mode,
-      originVerified: mode === "gsap" || mode === "gsap-funnel",
-      funnelVerified: mode === "gsap-funnel",
+      staggeredVerified: mode === "gsap-staggered",
+      funnelVerified: false,
       sequentialLinksVisible: opened.links.filter(link => link.display !== "none").length,
       closeRestored: true,
       noHorizontalOverflow: true
