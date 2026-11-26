@@ -1276,7 +1276,7 @@ try {
         `${vp.name}: compact phone CTA pill must not grow while the responsive navigation is collapsed (expanded ${initialHeaderMetrics.actionVisualHeight}px, compact ${compactHeaderMetrics.actionVisualHeight}px)`);
     }else{
       assert.ok(compactHeaderMetrics.actionVisualHeight<initialHeaderMetrics.actionVisualHeight,
-        `${vp.name}: phone CTA pill did not become more compact on scroll`);
+        `${vp.name}: phone CTA pill did not become more compact on scroll (expanded ${initialHeaderMetrics.actionVisualHeight}px, compact ${compactHeaderMetrics.actionVisualHeight}px, header progress ${compactHeaderMetrics.headerProgress}, CTA font ${initialHeaderMetrics.actionFontSize}px→${compactHeaderMetrics.actionFontSize}px)`);
     }
     assert.ok(compactHeaderMetrics.wordmarkSize < initialHeaderMetrics.wordmarkSize, `${vp.name}: brand wordmark did not become more compact on scroll`);
     let headerConvergence=null;
