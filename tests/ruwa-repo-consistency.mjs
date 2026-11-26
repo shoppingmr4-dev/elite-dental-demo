@@ -43,9 +43,9 @@ assert.ok(reviewsPosition < visitPosition && visitPosition < faqPosition, "Riyad
 const visitSection = html.slice(visitPosition, html.indexOf("</section>", visitPosition) + 10);
 assert.ok(visitSection.includes("الرياض") && visitSection.includes("المملكة العربية السعودية"), "Riyadh city and country must be visible");
 assert.ok(visitSection.includes("نلتقي بك في الرياض") && visitSection.includes("رُواء لطب الأسنان"), "Location identity must be visible");
-assert.ok(visitSection.includes("دون تحديد حي أو عنوان شارع"), "Location must remain city-level without an invented street address");
-assert.ok(visitSection.includes("يُضاف بعد اعتماد موقع العيادة"), "Exact address remains pending until approval");
-assert.ok(visitSection.includes("لا يعرض دبوسًا على الخريطة قبل اعتماد العنوان الرسمي"), "No unverified map pin");
+assert.ok(visitSection.includes("تُعرض المدينة هنا كنطاق جغرافي عام فقط"), "Location must remain city-level without an invented street address");
+assert.ok(visitSection.includes("عنوان الفرع") && visitSection.includes("لم يُحدّد بعد"), "Exact address must remain pending until approval");
+assert.ok(!visitSection.includes("دبوس العيادة") && !visitSection.includes("عنوان شارع"), "Do not invent a clinic pin or street address");
 const cityMapLink = visitSection.match(/<a class="visit-map-action"[^>]*href="([^"]+)"/)?.[1] || "";
 assert.ok(cityMapLink.startsWith("https://www.google.com/maps/@?api=1&amp;map_action=map"), "Use official Google Maps map view URL");
 assert.ok(cityMapLink.includes("basemap=satellite") && cityMapLink.includes("zoom=10"), "Use satellite basemap at city scale");
