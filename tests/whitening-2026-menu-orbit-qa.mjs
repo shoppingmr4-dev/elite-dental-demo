@@ -73,12 +73,6 @@ async function prepareMenuPage(page, viewport) {
     };
   });
 
-  await page.waitForFunction(
-    () => document.documentElement.dataset.ruwaOrbitReady === "true",
-    null,
-    { timeout: 10000 }
-  );
-
   await page.evaluate(() => {
     document.documentElement.style.scrollBehavior = "auto";
     if (window.innerWidth > 920) window.scrollTo(0, 720);
@@ -170,127 +164,52 @@ try {
     );
 
     const mode = await page.evaluate(() => document.documentElement.dataset.ruwaMenuMotion || "unset");
-    if (mode === "gsap-funnel") {
-      // Wait for the first actual GSAP tick rather than assuming a fixed timer aligns with RAF.
-      await page.waitForFunction(
-        () => Number(document.querySelector("#main-nav")?.dataset.ruwaMenuFunnelProgress || 0) > .002,
-        null,
-        { timeout: 3000 }
-      );
-      const early = await nav.evaluate(element => {
-        const style = getComputedStyle(element);
-        const matrix = style.transform === "none" ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(style.transform);
-        const origin = style.transformOrigin.split(/\s+/).map(value => Number.parseFloat(value));
-        const clipPath = style.clipPath;
-        return {
-          shape: element.dataset.ruwaMenuShape,
-          progress: Number(element.dataset.ruwaMenuFunnelProgress || 0),
-          clipPath,
-          pointCount: (clipPath.match(/,/g) || []).length + 1,
-          expectedX: Number(element.dataset.ruwaMenuOriginX),
-          expectedY: Number(element.dataset.ruwaMenuOriginY),
-          panelLeft: Number(element.dataset.ruwaMenuPanelLeft),
-          panelTop: Number(element.dataset.ruwaMenuPanelTop),
-          buttonCenterX: Number(element.dataset.ruwaMenuButtonCenterX),
-          buttonCenterY: Number(element.dataset.ruwaMenuButtonCenterY),
-          transformOriginX: origin[0],
-          transformOriginY: origin[1],
-          transformScale: Math.hypot(matrix.a, matrix.b),
-          rotation: Math.atan2(matrix.b, matrix.a) * 180 / Math.PI,
-          state: element.dataset.ruwaMenuState
-        };
-      });
-      assert.equal(early.shape, "spiral-funnel",
-        viewport.name + ": desktop menu did not activate the spiral-funnel reveal");
-      assert.ok(early.progress > 0 && early.progress < .9,
-        viewport.name + ": funnel did not begin as a narrow growing reveal: " + JSON.stringify(early));
-      assert.ok(early.clipPath.startsWith("polygon(") && early.pointCount >= 24,
-        viewport.name + ": funnel reveal is not a multi-point tapered curved shape: " + JSON.stringify(early));
-      assert.ok(Math.abs(early.panelLeft + early.expectedX - early.buttonCenterX) <= 1.25 &&
-        Math.abs(early.panelTop + early.expectedY - early.buttonCenterY) <= 1.25,
-        viewport.name + ": funnel origin does not match the true hamburger center: " + JSON.stringify(early));
-      assert.ok(Math.abs(early.transformOriginX - early.expectedX) <= 1.25 &&
-        Math.abs(early.transformOriginY - early.expectedY) <= 1.25,
-        viewport.name + ": nav transform is not anchored to the hamburger center: " + JSON.stringify(early));
-      assert.ok(early.transformScale > .94 && early.transformScale < 1 &&
-        Math.abs(early.rotation) > .3 && Math.abs(early.rotation) < 3.5,
-        viewport.name + ": funnel did not expand with subtle spiral motion: " + JSON.stringify(early));
+    assert.equal(mode, "gsap-staggered",
+      viewport.name + ": expected the normal dropdown and staggered links, not a circle/funnel reveal");
 
-      if (viewport.width === 1440) {
-        await page.screenshot({ path: OUT + "/menu-dropdown-early-1440.png", fullPage: false });
-      }
-      await page.waitForTimeout(150);
-      const middleProgress = await nav.evaluate(element =>
-        Number(element.dataset.ruwaMenuFunnelProgress || 0)
-      );
-      assert.ok(middleProgress > early.progress + .04 && middleProgress < 1,
-        viewport.name + ": funnel did not widen progressively during its outward travel");
-      if (viewport.width === 1440) {
-        await page.screenshot({ path: OUT + "/menu-dropdown-middle-1440.png", fullPage: false });
-      }
-    } else if (mode === "gsap") {
-      await page.waitForTimeout(110);
-      const early = await nav.evaluate(element => {
-        const style = getComputedStyle(element);
-        const match = style.clipPath.match(/circle\(([-\d.]+)px at ([-\d.]+)px ([-\d.]+)px\)/);
-        const matrix = style.transform === "none" ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(style.transform);
-        const origin = style.transformOrigin.split(/\s+/).map(value => Number.parseFloat(value));
-        return {
-          clipPath: style.clipPath,
-          radius: match ? Number(match[1]) : 0,
-          x: match ? Number(match[2]) : NaN,
-          y: match ? Number(match[3]) : NaN,
-          expectedX: Number(element.dataset.ruwaMenuOriginX),
-          expectedY: Number(element.dataset.ruwaMenuOriginY),
-          panelLeft: Number(element.dataset.ruwaMenuPanelLeft),
-          panelTop: Number(element.dataset.ruwaMenuPanelTop),
-          buttonCenterX: Number(element.dataset.ruwaMenuButtonCenterX),
-          buttonCenterY: Number(element.dataset.ruwaMenuButtonCenterY),
-          transformOriginX: origin[0],
-          transformOriginY: origin[1],
-          transformScale: Math.hypot(matrix.a, matrix.b),
-          rotation: Math.atan2(matrix.b, matrix.a) * 180 / Math.PI,
-          maxRadius: Number(element.dataset.ruwaMenuRadius || 0),
-          state: element.dataset.ruwaMenuState
-        };
-      });
-      assert.ok(early.radius > 0 && early.radius < early.maxRadius,
-        viewport.name + ": menu did not expose a growing circular reveal: " + JSON.stringify(early));
-      assert.ok(Math.abs(early.x - early.expectedX) <= 1.25 &&
-        Math.abs(early.y - early.expectedY) <= 1.25,
-        viewport.name + ": circular reveal did not use its measured button-relative origin: " + JSON.stringify(early));
-      assert.ok(Math.abs(early.panelLeft + early.expectedX - early.buttonCenterX) <= 1.25 &&
-        Math.abs(early.panelTop + early.expectedY - early.buttonCenterY) <= 1.25,
-        viewport.name + ": the menu's measured scale origin is not the actual hamburger center: " + JSON.stringify(early));
-      assert.ok(Math.abs(early.transformOriginX - early.expectedX) <= 1.25 &&
-        Math.abs(early.transformOriginY - early.expectedY) <= 1.25,
-        viewport.name + ": the panel transform is not anchored to the hamburger center: " + JSON.stringify(early));
-      assert.ok(early.transformScale > .018 && early.transformScale < .99 &&
-        Math.abs(early.rotation) > .1,
-        viewport.name + ": the panel itself did not scale and gently spiral outward from the button: " + JSON.stringify(early));
-      assert.ok(early.clipPath.startsWith("circle("),
-        viewport.name + ": the menu reveal did not use a circular clip-path");
+    await page.waitForTimeout(450);
+    const staggerState = await nav.evaluate(element => {
+      const style = getComputedStyle(element);
+      const links = Array.from(element.querySelectorAll("a"))
+        .filter(link => getComputedStyle(link).display !== "none");
+      return {
+        shape: element.dataset.ruwaMenuShape,
+        clipPath: style.clipPath,
+        position: style.position,
+        flexDirection: style.flexDirection,
+        panelOpacity: Number.parseFloat(style.opacity),
+        progress: Number(element.dataset.ruwaMenuProgress || 0),
+        linkOpacity: links.map(link => Number.parseFloat(getComputedStyle(link).opacity)),
+        linkRects: links.map(link => {
+          const rect = link.getBoundingClientRect();
+          return {top:rect.top,bottom:rect.bottom,height:rect.height};
+        })
+      };
+    });
+    assert.equal(staggerState.shape, "dropdown",
+      viewport.name + ": menu panel must remain a normal dropdown");
+    assert.equal(staggerState.clipPath, "none",
+      viewport.name + ": dropdown must not reveal from the hamburger circle");
+    assert.equal(staggerState.position, "absolute",
+      viewport.name + ": dropdown must remain independently positioned");
+    assert.equal(staggerState.flexDirection, "column",
+      viewport.name + ": dropdown links must be vertically aligned");
+    assert.ok(staggerState.panelOpacity > .8,
+      viewport.name + ": dropdown panel did not fade into place");
+    assert.equal(staggerState.linkOpacity.length, 7,
+      viewport.name + ": the stagger must include all seven navigation links");
+    assert.ok(staggerState.linkOpacity[0] > .95 &&
+      staggerState.linkOpacity[1] > staggerState.linkOpacity[2] &&
+      staggerState.linkOpacity[2] > staggerState.linkOpacity[3],
+      viewport.name + ": links did not reveal sequentially in DOM order: " +
+      JSON.stringify(staggerState.linkOpacity));
+    assert.ok(staggerState.linkRects.every((rect,index,array) =>
+      rect.height >= 44 && (index===0 || rect.top >= array[index-1].bottom-1.5)
+    ), viewport.name + ": sequential links lost their consistent vertical row layout");
 
-      await page.waitForTimeout(120);
-      const spiralMotion = await nav.locator("a").first().evaluate(link => {
-        const transform = getComputedStyle(link).transform;
-        if (!transform || transform === "none") return { rotation: 0, x: 0, y: 0 };
-        const matrix = new DOMMatrixReadOnly(transform);
-        return {
-          rotation: Math.atan2(matrix.b, matrix.a) * 180 / Math.PI,
-          x: matrix.e,
-          y: matrix.f
-        };
-      });
-      assert.ok(Math.abs(spiralMotion.rotation) > .15 &&
-        Math.hypot(spiralMotion.x, spiralMotion.y) > .5,
-        viewport.name + ": navigation links did not unfold with a subtle spiral-like motion: " +
-        JSON.stringify(spiralMotion));
-    } else {
-      assert.ok(mode === "fallback" || mode === "reduced",
-        viewport.name + ": unexpected menu motion mode " + mode);
+    if (viewport.width === 1440) {
+      await page.screenshot({path:OUT+"/menu-stagger-mid-1440.png",fullPage:false});
     }
-
     await page.waitForFunction(
       () => document.querySelector("#main-nav")?.dataset.ruwaMenuState === "open",
       null,
@@ -447,17 +366,22 @@ try {
         { timeout: 3000 }
       );
       await page.waitForTimeout(110);
-      const reverseProgress = await nav.evaluate(element => {
-        const clip = getComputedStyle(element).clipPath;
-        const match = clip.match(/circle\(([-\d.]+)px at/);
-        const radius = match ? Number(match[1]) : 0;
-        const maximum = Number(element.dataset.ruwaMenuRadius || 1);
-        return radius / maximum;
+      const reverseState = await nav.evaluate(element => {
+        const links = Array.from(element.querySelectorAll("a"))
+          .filter(link => getComputedStyle(link).display !== "none");
+        return {
+          first:Number.parseFloat(getComputedStyle(links[0]).opacity),
+          last:Number.parseFloat(getComputedStyle(links[links.length-1]).opacity),
+          clipPath:getComputedStyle(element).clipPath
+        };
       });
-      assert.ok(reverseProgress > 0 && reverseProgress < 1,
-        viewport.name + ": closing did not reverse the dropdown reveal back toward its trigger");
+      assert.ok(reverseState.first>.95 && reverseState.last<reverseState.first-.1,
+        viewport.name + ": closing must reverse the link sequence from last to first: " +
+        JSON.stringify(reverseState));
+      assert.equal(reverseState.clipPath,"none",
+        viewport.name + ": closing must not reintroduce a circular reveal");
       if (viewport.width === 1440) {
-        await page.screenshot({ path: OUT + "/menu-dropdown-reverse-1440.png", fullPage: false });
+        await page.screenshot({path:OUT+"/menu-stagger-reverse-1440.png",fullPage:false});
       }
     } else {
       await clickHamburger(page, button, viewport.name);
@@ -577,207 +501,141 @@ try {
   await interactionPage.close();
   console.log("[PASS] Escape focus restoration, native anchor close, and rapid open/close reversal");
 
-  // The comet is a single continuous tapered canvas trail following the measured border path.
-  const orbitPage = await browser.newPage({
-    viewport: { width: 1440, height: 900 },
-    reducedMotion: "no-preference"
+  // Full-perimeter CSS glow: all sides and rounded corners illuminate together.
+  const glowPage = await browser.newPage({
+    viewport:{width:1440,height:900},
+    reducedMotion:"no-preference"
   });
-  const orbitErrors = [];
-  orbitPage.on("pageerror", error => orbitErrors.push(error.message));
-  const orbitResponse = await orbitPage.goto(BASE_URL, {
-    waitUntil: "domcontentloaded",
-    timeout: 45000
-  });
-  assert.ok(orbitResponse && orbitResponse.ok(), "Comet desktop page failed to load");
-  await orbitPage.waitForFunction(
-    () => document.documentElement.dataset.ruwaOrbitReady === "true",
-    null,
-    { timeout: 10000 }
-  );
-  const orbitCount = await orbitPage.evaluate(() =>
-    Number(document.documentElement.dataset.ruwaOrbitTargetCount || 0)
-  );
-  const animatedOrbitCount = await orbitPage.evaluate(() =>
-    Number(document.documentElement.dataset.ruwaOrbitAnimatedCount || 0)
-  );
-  assert.ok(orbitCount >= 20, "Expected selected card, panel and icon frames to receive comet targets; found " + orbitCount);
-  assert.ok(animatedOrbitCount >= 20,
-    "Expected selected desktop frames to receive the continuous comet canvas; found " + animatedOrbitCount);
-  assert.equal(
-    await orbitPage.evaluate(() => Number(document.documentElement.dataset.ruwaOrbitSpeed || 0)),
-    240,
-    "Comet travel speed must use the requested 240 CSS px/s target"
-  );
-  assert.ok(
-    Math.abs(Number(await orbitPage.evaluate(() =>
-      document.documentElement.dataset.ruwaOrbitTailCoverage || 0
-    )) - .86) < .001,
-    "Comet tail must cover 86% of the complete perimeter"
-  );
+  const glowErrors=[];
+  glowPage.on("pageerror",error=>glowErrors.push(error.message));
+  const glowResponse=await glowPage.goto(BASE_URL,{waitUntil:"domcontentloaded",timeout:45000});
+  assert.ok(glowResponse&&glowResponse.ok(),"Glow desktop page failed to load");
 
-  const card = orbitPage.locator(".info-card").first();
+  const glowSelector=".info-card,.option-card,.journey-step,.team-card,.review-card,.expect-card,.reviews-preview,.reviews-criteria,.clinical-note";
+  const glowTargetCount=await glowPage.locator(glowSelector).count();
+  assert.ok(glowTargetCount>=18,
+    "Expected the full-perimeter glow on relevant cards and panels; found "+glowTargetCount);
+  assert.equal(await glowPage.locator("canvas.ruwa-orbit-light").count(),0,
+    "The obsolete comet canvas must be removed completely");
+  assert.equal(await glowPage.locator("svg.ruwa-orbit-geometry").count(),0,
+    "The obsolete hidden SVG path geometry must be removed completely");
+
+  const card=glowPage.locator(".info-card").first();
   await card.scrollIntoViewIfNeeded();
-  await orbitPage.waitForTimeout(760);
-  const light = card.locator(":scope > canvas.ruwa-orbit-light");
-  const before = await card.evaluate(element => ({
-    width: element.offsetWidth,
-    height: element.offsetHeight,
-    translate: getComputedStyle(element).translate
+  await glowPage.waitForTimeout(420);
+  const before=await card.evaluate(element=>({
+    width:element.offsetWidth,
+    height:element.offsetHeight,
+    radius:getComputedStyle(element).borderRadius
   }));
-  await card.screenshot({ path: OUT + "/orbit-card-before.png" });
+  await card.screenshot({path:OUT+"/perimeter-glow-card-before.png"});
   await card.hover();
-  await orbitPage.waitForFunction(
-    element => {
-      const canvas = element.querySelector(":scope > canvas.ruwa-orbit-light");
-      return canvas && Number.parseFloat(getComputedStyle(canvas).opacity) > .7;
-    },
-    await card.elementHandle(),
-    { timeout: 2500 }
-  );
-  await orbitPage.waitForTimeout(90);
-  await card.screenshot({ path: OUT + "/comet-head-on-border.png" });
-  const activeComet = await light.evaluate(canvas => {
-    const parent = canvas.parentElement;
-    const rect = canvas.getBoundingClientRect();
-    const parentRect = parent.getBoundingClientRect();
-    const geometry = parent.querySelector(":scope > svg.ruwa-orbit-geometry path");
-    const style = getComputedStyle(canvas);
+  await glowPage.waitForFunction(element=>{
+    const style=getComputedStyle(element,"::after");
+    return Number.parseFloat(style.opacity)>.45&&style.backgroundImage.includes("linear-gradient");
+  },await card.elementHandle(),{timeout:2500});
+  await glowPage.waitForTimeout(180);
+  await card.screenshot({path:OUT+"/perimeter-glow-card-hover.png"});
+
+  const activeGlow=await card.evaluate(element=>{
+    const style=getComputedStyle(element,"::after");
     return {
-      opacity: Number.parseFloat(style.opacity),
-      pointerEvents: style.pointerEvents,
-      width: canvas.width,
-      height: canvas.height,
-      cssWidth: style.width,
-      cssHeight: style.height,
-      pathData: geometry?.getAttribute("d") || "",
-      measuredPathLength: geometry?.getTotalLength() || 0,
-      declaredPathLength: Number(canvas.dataset.pathLength || 0),
-      speed: Number(canvas.dataset.speed || 0),
-      tailLength: Number(canvas.dataset.tailLength || 0),
-      tailCoverage: Number(canvas.dataset.tailCoverage || 0),
-      headRadius: Number(canvas.dataset.headRadius || 0),
-      pixelRatio: Number(canvas.dataset.pixelRatio || 0),
-      headDistance: Number(canvas.dataset.headDistance || 0),
-      canvasRect: rect.toJSON(),
-      parentRect: parentRect.toJSON(),
-      leftDelta: Math.abs(rect.left - parentRect.left),
-      topDelta: Math.abs(rect.top - parentRect.top),
-      rightDelta: Math.abs(rect.right - parentRect.right),
-      bottomDelta: Math.abs(rect.bottom - parentRect.bottom)
+      opacity:Number.parseFloat(style.opacity),
+      backgroundImage:style.backgroundImage,
+      borderRadius:style.borderRadius,
+      maskComposite:style.maskComposite,
+      webkitMaskComposite:style.webkitMaskComposite,
+      pointerEvents:style.pointerEvents,
+      animationName:style.animationName,
+      animationIterationCount:style.animationIterationCount,
+      filter:style.filter,
+      elementRadius:getComputedStyle(element).borderRadius,
+      width:element.offsetWidth,
+      height:element.offsetHeight
     };
   });
-  const firstHeadDistance = activeComet.headDistance;
-  const firstHeadTime = Date.now();
-  await orbitPage.waitForTimeout(240);
-  const secondComet = await light.evaluate(canvas => ({
-    headDistance: Number(canvas.dataset.headDistance || 0),
-    renderedAt: Number(canvas.dataset.renderedAt || 0)
-  }));
-  const secondHeadTime = Date.now();
-  const headDistanceDelta = (
-    secondComet.headDistance - firstHeadDistance + activeComet.declaredPathLength
-  ) % activeComet.declaredPathLength;
-  const measuredSpeed = headDistanceDelta / ((secondHeadTime - firstHeadTime) / 1000);
+  assert.ok(activeGlow.opacity>.45,"The complete perimeter glow did not become visible on hover");
+  assert.ok(activeGlow.backgroundImage.includes("linear-gradient"),
+    "The perimeter must use a continuous gradient, not a traveling point");
+  assert.ok(activeGlow.maskComposite==="exclude"||activeGlow.webkitMaskComposite==="xor",
+    "The gradient must be masked into a complete border ring");
+  assert.equal(activeGlow.borderRadius,activeGlow.elementRadius,
+    "The luminous ring must inherit the exact rounded card corners");
+  assert.equal(activeGlow.pointerEvents,"none","Glow must not intercept pointer input");
+  assert.equal(activeGlow.animationName,"ruwa-full-perimeter-breathe",
+    "The whole perimeter must breathe as one stationary light");
+  assert.equal(activeGlow.animationIterationCount,"infinite",
+    "The perimeter breathing animation must remain active during hover");
+  assert.ok(activeGlow.filter.includes("drop-shadow"),
+    "The luminous border must include a soft restrained halo");
+  assert.equal(activeGlow.width,before.width,"Glow changed the card width");
+  assert.equal(activeGlow.height,before.height,"Glow changed the card height");
 
-  assert.ok(activeComet.opacity > .7, "Comet canvas did not become visible on hover");
-  assert.ok(activeComet.pathData.endsWith(" Z") && activeComet.pathData.includes("A ") &&
-    activeComet.pathData.includes("H ") && activeComet.pathData.includes("V "),
-    "Comet route must be a closed rounded-rectangle path with straight sides and corner arcs");
-  assert.ok(activeComet.measuredPathLength > 0 &&
-    Math.abs(activeComet.measuredPathLength - activeComet.declaredPathLength) <= 1.5,
-    "Comet path length does not match the measured SVG border centerline");
-  assert.ok(activeComet.tailCoverage >= .8 && activeComet.tailCoverage <= .9 &&
-    Math.abs(activeComet.tailLength / activeComet.declaredPathLength - activeComet.tailCoverage) < .01,
-    "Comet tail must cover approximately 80–90% of the complete measured perimeter");
-  assert.ok(activeComet.headRadius >= 4 && activeComet.headRadius > 2.05,
-    "Comet head must be visibly larger than the previous small particle head");
-  assert.ok(Math.abs(activeComet.speed - 240) < .01 &&
-    measuredSpeed >= 185 && measuredSpeed <= 295,
-    "Comet head did not maintain the requested faster constant physical speed: " + measuredSpeed);
-  assert.equal(activeComet.pointerEvents, "none", "Decorative comet canvas must not intercept pointer input");
-  assert.ok(activeComet.leftDelta <= 1.5 && activeComet.topDelta <= 1.5 &&
-    activeComet.rightDelta <= 1.5 && activeComet.bottomDelta <= 1.5,
-    "Comet canvas is not aligned to the complete outer border geometry: " +
-    JSON.stringify({
-      left:activeComet.leftDelta,top:activeComet.topDelta,
-      right:activeComet.rightDelta,bottom:activeComet.bottomDelta,
-      canvas:activeComet.canvasRect,parent:activeComet.parentRect
-    }));
-  assert.ok(secondComet.headDistance !== firstHeadDistance,
-    "Comet head did not advance along its measured perimeter path");
-  await card.screenshot({ path: OUT + "/comet-long-tail-full-perimeter.png" });
+  await glowPage.mouse.move(8,8);
+  await glowPage.waitForTimeout(430);
+  const exitedOpacity=await card.evaluate(element=>
+    Number.parseFloat(getComputedStyle(element,"::after").opacity)
+  );
+  assert.ok(exitedOpacity<.05,"Perimeter glow did not fade after pointer exit");
 
-  const after = await card.evaluate(element => ({
-    width: element.offsetWidth,
-    height: element.offsetHeight,
-    translate: getComputedStyle(element).translate
-  }));
-  assert.equal(after.width, before.width, "Comet path changed card width");
-  assert.equal(after.height, before.height, "Comet path changed card height");
-  assert.ok(Number.parseFloat(after.translate.split(" ")[1]) < -2.5,
-    "Existing independent card elevation did not remain active beside the comet");
+  await card.evaluate(element=>{element.tabIndex=0;element.focus();});
+  await glowPage.waitForFunction(element=>
+    Number.parseFloat(getComputedStyle(element,"::after").opacity)>.45,
+    await card.elementHandle(),{timeout:2000}
+  );
+  await glowPage.screenshot({path:OUT+"/perimeter-glow-card-keyboard-focus.png"});
+  await card.evaluate(element=>{element.blur();element.removeAttribute("tabindex");});
 
-  await orbitPage.mouse.move(8, 8);
-  await orbitPage.waitForTimeout(260);
-  await card.screenshot({ path: OUT + "/comet-after-pointer-exit.png" });
-  const exitedOpacity = await light.evaluate(element => Number.parseFloat(getComputedStyle(element).opacity));
-  assert.ok(exitedOpacity < .05, "Comet trail did not fade away after pointer exit");
-
-  const teamCard = orbitPage.locator(".team-card").first();
+  const teamCard=glowPage.locator(".team-card").first();
   await teamCard.scrollIntoViewIfNeeded();
-  await orbitPage.waitForTimeout(760);
+  await glowPage.waitForTimeout(420);
   await teamCard.hover();
-  await orbitPage.waitForTimeout(220);
-  const teamState = await teamCard.evaluate(element => {
-    const canvas = element.querySelector(":scope > canvas.ruwa-orbit-light");
-    return {
-      opacity: canvas ? Number.parseFloat(getComputedStyle(canvas).opacity) : 0,
-      pathLength: Number(canvas?.dataset.pathLength || 0),
-      speed: Number(canvas?.dataset.speed || 0),
-      tailCoverage: Number(canvas?.dataset.tailCoverage || 0),
-      headDistance: Number(canvas?.dataset.headDistance || 0),
-      imageScale: getComputedStyle(element.querySelector(".team-card-media img")).scale
-    };
-  });
-  assert.ok(teamState.opacity > .7 && teamState.pathLength > 0,
-    "Team frame did not receive the active continuous comet trail");
-  assert.equal(teamState.speed, activeComet.speed,
-    "A different frame size changed the comet's physical travel speed");
-  assert.ok(Math.abs(teamState.tailCoverage - activeComet.tailCoverage) < .001,
-    "A different frame size changed the comet's perimeter coverage ratio");
-  assert.ok(Number.parseFloat(teamState.imageScale) > 1.02,
-    "Existing clipped team image zoom did not remain active");
-  assert.equal(orbitErrors.length, 0, "Comet-motion browser errors: " + orbitErrors.join(" | "));
-  await orbitPage.close();
-  console.log("[PASS] Long continuous tapered comet covers 86% of the rounded border at 240 CSS px/s with a bright enlarged head");
-  // Touch-only and reduced-motion visitors must not receive a persistent orbit effect.
-  const touchPage = await browser.newPage({
-    viewport: { width: 430, height: 900 },
-    isMobile: true,
-    hasTouch: true,
-    reducedMotion: "no-preference"
-  });
-  await touchPage.goto(BASE_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
-  await touchPage.waitForFunction(
-    () => document.documentElement.dataset.ruwaOrbitReady === "true",
-    null,
-    { timeout: 10000 }
+  await glowPage.waitForFunction(element=>
+    Number.parseFloat(getComputedStyle(element,"::after").opacity)>.45,
+    await teamCard.elementHandle(),{timeout:2000}
   );
+  const teamGlow=await teamCard.evaluate(element=>({
+    opacity:Number.parseFloat(getComputedStyle(element,"::after").opacity),
+    animationName:getComputedStyle(element,"::after").animationName,
+    imageScale:getComputedStyle(element.querySelector(".team-card-media img")).scale
+  }));
+  assert.ok(teamGlow.opacity>.45&&teamGlow.animationName==="ruwa-full-perimeter-breathe",
+    "Doctor/team cards did not receive the same complete perimeter glow");
+  assert.ok(Number.parseFloat(teamGlow.imageScale)>1.02,
+    "Existing doctor image zoom did not remain active");
+  await teamCard.screenshot({path:OUT+"/perimeter-glow-doctor-card-hover.png"});
+  assert.equal(glowErrors.length,0,"Glow browser errors: "+glowErrors.join(" | "));
+  await glowPage.close();
+  console.log("[PASS] CSS full-perimeter glow is continuous, rounded, non-traveling, pointer-safe and keyboard-visible");
+
+  // Touch-only devices must not receive a sticky hover effect or animated layer.
+  const touchPage=await browser.newPage({
+    viewport:{width:430,height:900},
+    isMobile:true,
+    hasTouch:true,
+    reducedMotion:"no-preference"
+  });
+  await touchPage.goto(BASE_URL,{waitUntil:"domcontentloaded",timeout:45000});
   assert.equal(
-    await touchPage.evaluate(() => matchMedia("(hover:hover) and (pointer:fine)").matches),
+    await touchPage.evaluate(()=>matchMedia("(hover:hover) and (pointer:fine)").matches),
     false,
     "Touch viewport unexpectedly advertises a fine hover pointer"
   );
-  const touchCard = touchPage.locator(".info-card").first();
+  const touchCard=touchPage.locator(".info-card").first();
   await touchCard.scrollIntoViewIfNeeded();
-  const touchLayerCount = await touchPage.locator(".ruwa-orbit-light").count();
-  assert.equal(touchLayerCount, 0,
-    "Touch-only devices must not create animated comet canvas layers");
-  await touchPage.locator(".info-card").first().tap();
+  await touchCard.tap();
+  const touchGlow=await touchCard.evaluate(element=>({
+    opacity:Number.parseFloat(getComputedStyle(element,"::after").opacity),
+    animationName:getComputedStyle(element,"::after").animationName
+  }));
+  assert.equal(touchGlow.opacity,0,"Touch tap left a sticky hover glow");
+  assert.equal(touchGlow.animationName,"none","Touch-only devices must not animate the hover glow");
+  assert.equal(await touchPage.locator("canvas.ruwa-orbit-light,svg.ruwa-orbit-geometry").count(),0,
+    "Touch devices must not contain old comet-rendering layers");
   assert.equal(
-    await touchPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
+    await touchPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),
     true,
-    "Meteor interaction introduced touch-layout overflow"
+    "The glow interaction introduced touch-layout overflow"
   );
   await touchPage.close();
 
@@ -814,32 +672,44 @@ try {
     true,
     "Reduced-motion menu close should be immediate"
   );
-  const reducedLayers = await reducedPage.locator(".ruwa-orbit-light").count();
-  assert.equal(reducedLayers, 0,
-    "Reduced-motion mode must not create animated comet canvas layers");
+  const reducedCard=reducedPage.locator(".info-card").first();
+  await reducedCard.evaluate(element=>{element.tabIndex=0;element.focus();});
+  const reducedGlow=await reducedCard.evaluate(element=>({
+    opacity:Number.parseFloat(getComputedStyle(element,"::after").opacity),
+    animationName:getComputedStyle(element,"::after").animationName
+  }));
+  assert.ok(reducedGlow.opacity>=.7,
+    "Keyboard focus must retain a visible static outline for reduced-motion users");
+  assert.ok(reducedGlow.animationName==="none"||reducedGlow.animationName==="",
+    "Reduced-motion preference must disable perimeter breathing");
+  assert.equal(await reducedPage.locator("canvas.ruwa-orbit-light,svg.ruwa-orbit-geometry").count(),0,
+    "Reduced-motion page must contain no particle rendering layers");
   await reducedPage.close();
 
   console.log(JSON.stringify({
     result: "passed",
     viewports: viewportResults,
     interactions: [
-      "circular reveal begins at measured hamburger center",
-      "navigation links reveal in DOM order",
-      "reverse close and repeated direction changes",
+      "dropdown panel remains separate from the hamburger circle",
+      "all seven dropdown links reveal sequentially in DOM order",
+      "reverse stagger close and repeated direction changes",
       "Escape closes and restores focus",
       "native anchor destination remains active",
       "reduced-motion menu is immediate and fully accessible",
-      "comet uses one continuous 86% tapered trail and a 240 px/s enlarged luminous head on the measured border centerline",
-      "comet overlay does not intercept pointer or change card geometry",
+      "CSS-only full-perimeter teal/cyan glow breathes evenly without a traveling point or trail",
+      "luminous perimeter does not intercept pointer or change card geometry",
       "existing card elevation and image zoom remain active",
-      "touch-only and reduced-motion modes disable comet animation"
+      "touch avoids sticky hover glow and reduced motion keeps a static focus border"
     ],
-    orbitTargetCount: orbitCount,
+    glowTargetCount,
     screenshots: [
       OUT + "/menu-open-1440.png",
+      OUT + "/menu-stagger-mid-1440.png",
       OUT + "/menu-open-390.png",
-      OUT + "/orbit-card-before.png",
-      OUT + "/orbit-card-hover.png"
+      OUT + "/perimeter-glow-card-before.png",
+      OUT + "/perimeter-glow-card-hover.png",
+      OUT + "/perimeter-glow-card-keyboard-focus.png",
+      OUT + "/perimeter-glow-doctor-card-hover.png"
     ],
     failures
   }, null, 2));
