@@ -2122,6 +2122,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.style.removeProperty("transform");
   nav.style.removeProperty("transform-origin");
   nav.style.removeProperty("filter");
+  nav.style.removeProperty("box-shadow");
   nav.style.removeProperty("pointer-events");
   button.style.removeProperty("opacity");
   button.style.removeProperty("pointer-events");
@@ -2206,29 +2207,32 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.removeAttribute("data-ruwa-menu-exit-motion");
   nav.removeAttribute("data-ruwa-menu-exit-progress");
 
-  // A refined, unified reveal: the full framed panel lifts into place,
-  // sharpens from a light blur, and settles without a center-out frame wipe.
+  // Reveal the complete surface as one calm plane: no scale, blur, or center-out
+  // expansion. Its background, border, and shadow settle together with a tiny lift.
+  const settledPanelShadow=getComputedStyle(nav).boxShadow;
+  const softPanelShadow="0 10px 24px rgba(20,45,56,0),0 22px 42px rgba(20,45,56,0),0 3px 10px rgba(20,45,56,0),inset 0 1px 0 rgba(255,255,255,0)";
   gsap.set(nav,{
    autoAlpha:0,
    x:0,
-   y:-9,
-   scale:.972,
-   filter:"blur(5px)",
+   y:-4,
+   scale:1,
+   filter:"none",
+   boxShadow:softPanelShadow,
    transformOrigin:"top center",
    force3D:false
   });
   gsap.set(animatedItems,{
    autoAlpha:0,
    x:0,
-   y:7,
+   y:4,
    rotation:0,
-   scale:.99,
+   scale:1,
    transformOrigin:"50% 50%"
   });
 
-  const panelDuration=contactAnchoredPanel?.44:.36;
+  const panelDuration=contactAnchoredPanel?.56:.45;
   const linkStart=contactAnchoredPanel?.10:.08;
-  const linkStagger=.075;
+  const linkStagger=.065;
   const linkDuration=.17;
   nav.dataset.ruwaPanelRevealDuration=String(panelDuration);
   nav.dataset.ruwaLinkStagger=String(linkStagger);
@@ -2241,6 +2245,7 @@ body,button,input,select,textarea{font-family:var(--body)}
     nav.dataset.ruwaMenuFrameState="soft-reveal";
    },
    onComplete(){
+    clearInlineMotion();
     nav.dataset.ruwaMenuProgress="1";
     nav.dataset.ruwaMenuFrameState="revealed";
     nav.dataset.ruwaMenuState="open";
@@ -2255,9 +2260,10 @@ body,button,input,select,textarea{font-family:var(--body)}
    x:0,
    y:0,
    scale:1,
-   filter:"blur(0px)",
+   filter:"none",
+   boxShadow:settledPanelShadow,
    duration:panelDuration,
-   ease:"power2.out"
+   ease:"power3.out"
   },0);
 
   animatedItems.forEach((link,index)=>{
@@ -2312,19 +2318,19 @@ body,button,input,select,textarea{font-family:var(--body)}
     });
     menuExitTimeline.to(visibleItems.slice().reverse(),{
      autoAlpha:0,
-     y:-4,
-     scale:.985,
-     duration:.12,
+     y:-3,
+     scale:1,
+     duration:.14,
      ease:"power2.in",
      stagger:.018
     },0).to(nav,{
      autoAlpha:0,
-     y:-8,
-     scale:.985,
-     filter:"blur(4px)",
-     duration:.25,
+     y:-4,
+     scale:1,
+     filter:"none",
+     duration:.26,
      ease:"power2.in"
-    },.06).play(0);
+    },.05).play(0);
    }else{
     finishClosed(true);
    }
