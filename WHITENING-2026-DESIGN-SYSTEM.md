@@ -63,7 +63,7 @@ The current page alt text and visible disclosure state that this is an AI-genera
 
 The approved file, its HTML element, figure placement, dimensions, focal position, framing, transform, and loading priority are protected. The source image's earlier documentation was inconsistent; the old Pexels-based preview has been retired. Do not add an external stock-photo credit to this image.
 
-## 5. Current page architecture — exactly 11 content sections
+## 5. Current page architecture — exactly 9 content sections
 
 Header and announcement strip:
 - RUWA wordmark and Arabic descriptor.
@@ -73,25 +73,23 @@ Header and announcement strip:
 
 Content sections in actual DOM order:
 
-| Order | ID | Section | Current role |
+| DOM order | ID | Section | Current role |
 |---:|---|---|---|
 | 01 | top | Hero | Explain the whitening subject and give the first contact action |
-| 02 | approach | Assessment approach | Explain why oral-health assessment comes first |
-| 03 | causes | Causes of discoloration | Explain surface staining and deeper colour changes |
-| 04 | options | Whitening options | Explain general options without claiming they are RUWA clinic services |
-| 05 | journey | Treatment journey | Explain the general sequence from assessment and option selection to procedure and aftercare |
-| 06 | suitability | Suitability and safety | Explain factors that may affect suitability or timing |
-| 07 | expectations | Realistic expectations | Explain individual result variation, possible temporary sensitivity and gum irritation, natural-tooth-only whitening, and responsible aftercare and repeat-treatment guidance |
-| 08 | team | Dentist/team | Present three distinct AI-generated illustrative male portrait crops in equal cards; no real clinician identity or credentials are claimed |
-| 09 | reviews | Patient reviews | Present a transparent demo-only notice; no patient quotes, names, ratings, counts, or AggregateRating data are invented |
-| 10 | faq | Frequently asked questions | Answer four focused visitor questions |
-| 11 | consultation | Final contact | Offer WhatsApp and phone actions with an explicit inactive state |
+| 02 | causes | Causes of discoloration | Explain surface staining and deeper colour changes |
+| 03 | options | Whitening options | Explain general options without claiming they are RUWA clinic services |
+| 04 | journey | Assessment and treatment journey | Combine oral-health assessment, option discussion, agreed procedure, and aftercare into four ordered steps |
+| 05 | suitability | Suitability, safety, and realistic expectations | Combine health/timing factors with result variation, potential effects, restoration limits, and aftercare |
+| 06 | team | Dentist/team | Preserve the three distinct AI-generated illustrative male portrait cards exactly as approved; no real clinician identity or credentials are claimed |
+| 07 | reviews | Patient reviews | Preserve the transparent demo-only notice exactly as approved; no patient quotes, names, ratings, counts, or AggregateRating data are invented |
+| 08 | faq | Frequently asked questions | Answer two focused, non-redundant visitor questions |
+| 09 | consultation | Final contact | Offer WhatsApp and phone actions with an explicit inactive state |
 
-The treatment-journey section follows whitening options and precedes suitability and safety. The patient-reviews section appears after the dentist/team section and before FAQ. It is an editorial transparency panel, not a testimonial feed: it states that no verified patient reviews are available in this fictional demo and lists three publication principles (verifiable source, explicit permission, and faithful presentation). It includes no patient names, photos, quotes, star ratings, review counts, or Review/AggregateRating structured data. The footer preserves the fictional portfolio disclosure and AI-image disclosure. The team section contains three equal demonstration cards using distinct portraits extracted from an existing AI-generated RUWA concept image; it contains no real doctor identity or professional credentials.
+The assessment content now lives inside the first two steps of the four-step treatment journey. Suitability and safety remain together with a nested realistic-expectations panel, preserving its four existing patient-information cards. The patient-reviews section remains after the dentist/team section and before FAQ, and is unchanged: it is an editorial transparency panel, not a testimonial feed. It states that no verified patient reviews are available in this fictional demo and lists three publication principles (verifiable source, explicit permission, and faithful presentation). It includes no patient names, photos, quotes, star ratings, review counts, or Review/AggregateRating structured data. The footer preserves the fictional portfolio disclosure and AI-image disclosure. The team section remains unchanged and contains three equal demonstration cards using distinct portraits extracted from an existing AI-generated RUWA concept image; it contains no real doctor identity or professional credentials.
 
 ## 6. FAQ source of truth
 
-There are **4 native HTML details/summary FAQ entries** in the current page. The tests assert this exact count.
+There are **2 native HTML details/summary FAQ entries** in the current page. They cover session count and result longevity without repeating the main sections. The tests assert this exact count.
 
 Do not describe the current page as having six FAQs. Do not add duplicate questions simply to increase page length. Add a question only when it answers a real, relevant visitor concern and the answer has been clinically reviewed.
 
