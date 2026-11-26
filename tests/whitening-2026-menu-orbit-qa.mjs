@@ -238,7 +238,7 @@ try {
     assert.ok(staggerState.panelOpacity > .8,
       viewport.name + ": dropdown panel did not fade into place");
     if(viewport.width>920){
-      assert.ok(staggerState.panelShadow!=="none"&&staggerState.panelShadow.split("),").length>=3,
+      assert.ok(staggerState.panelShadow!=="none"&&(staggerState.panelShadow.match(/rgba?\(/g)||[]).length>=3,
         viewport.name + ": the contact menu frame needs a clearly layered shadow behind its border: "+staggerState.panelShadow);
       assert.ok(staggerState.linkStagger>0&&staggerState.linkStagger<=.08,
         viewport.name + ": desktop link words should appear slightly faster, without losing their stagger");
