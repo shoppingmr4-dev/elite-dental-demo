@@ -2333,6 +2333,8 @@ body,button,input,select,textarea{font-family:var(--body)}
     }
 
     const visibleItems=links().filter(link=>getComputedStyle(link).display!=="none");
+    nav.style.transformStyle="preserve-3d";
+    nav.style.backfaceVisibility="hidden";
     nav.dataset.ruwaMenuState="closing";
     nav.dataset.ruwaMenuAnimating="true";
     nav.dataset.ruwaMenuFrameState="soft-exit";
@@ -2369,7 +2371,7 @@ body,button,input,select,textarea{font-family:var(--body)}
      scale:.98,
      transformPerspective:1250,
      filter:"none",
-     boxShadow:foldedPanelShadow,
+     boxShadow:"0 8px 16px rgba(20,45,56,0),0 24px 38px rgba(20,45,56,0),0 3px 9px rgba(20,45,56,0),inset 0 1px 0 rgba(255,255,255,0)",
      duration:.36,
      ease:"power2.in",
      transformOrigin:"bottom right"
