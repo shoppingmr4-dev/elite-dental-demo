@@ -2363,16 +2363,8 @@ body,button,input,select,textarea{font-family:var(--body)}
   }
  });
 
- nav.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>{
-  const restoreMenuFocus=shouldCollapseNav();
-  close();
-  // Allow native same-page navigation to finish before restoring control focus.
-  if(restoreMenuFocus&&button.getClientRects().length){
-   window.setTimeout(()=>{
-    if(button.getClientRects().length)button.focus({preventScroll:true});
-   },0);
-  }
- }));
+ // Navigation links intentionally keep the panel open after same-page navigation.
+ // The visitor can continue browsing; the hamburger, Escape key, or outside click closes it.
 
  document.addEventListener("keydown",event=>{
   if(event.key==="Escape"&&button.getAttribute("aria-expanded")==="true"){
