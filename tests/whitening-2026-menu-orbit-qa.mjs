@@ -250,6 +250,8 @@ try {
         rect: {
           left: element.getBoundingClientRect().left,
           right: element.getBoundingClientRect().right,
+          top: element.getBoundingClientRect().top,
+          bottom: element.getBoundingClientRect().bottom,
           width: element.getBoundingClientRect().width,
           height: element.getBoundingClientRect().height,
           centerX: element.getBoundingClientRect().left + element.getBoundingClientRect().width / 2,
