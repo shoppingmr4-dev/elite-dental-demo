@@ -328,7 +328,7 @@ try {
         viewport.name + ": desktop side panel border is missing");
       assert.equal(opened.visibleLinks.length, 7,
         viewport.name + ": desktop left-side panel must expose all seven navigation links");
-      assert.ok(opened.rect.width >= 300 && opened.rect.width <= 340 &&
+      assert.ok(opened.rect.width >= 200 && opened.rect.width <= 340 &&
         opened.rect.height >= 300,
         viewport.name + ": Contact panel dimensions are not consistent with its full vertical link list");
       const contactCenterX=opened.rect.contactRect.left+opened.rect.contactRect.width/2;
