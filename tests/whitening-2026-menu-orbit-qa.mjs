@@ -170,11 +170,15 @@ try {
     await page.waitForTimeout(150);
     const frameOpening = await nav.evaluate(element => {
       const style=getComputedStyle(element);
+      const matrix=style.transform==="none"?null:new DOMMatrixReadOnly(style.transform);
       return {
         frameState:element.dataset.ruwaMenuFrameState,
         opacity:Number.parseFloat(style.opacity),
         filter:style.filter,
         transform:style.transform,
+        scaleX:matrix?matrix.a:1,
+        scaleY:matrix?matrix.d:1,
+        translateY:matrix?matrix.f:0,
         shadow:style.boxShadow,
         linkOpacity:Array.from(element.querySelectorAll("a"))
           .filter(link=>getComputedStyle(link).display!=="none")
@@ -187,8 +191,12 @@ try {
       viewport.name + ": panel should visibly fade in rather than appear abruptly");
     assert.notEqual(frameOpening.transform,"none",
       viewport.name + ": the frame should make a small, smooth settling movement");
-    assert.ok(frameOpening.filter.includes("blur("),
-      viewport.name + ": the opening transition should gently sharpen into focus");
+    assert.equal(frameOpening.filter,"none",
+      viewport.name + ": the new frame reveal must stay optically crisp without blur");
+    assert.ok(Math.abs(frameOpening.scaleX-1)<.002&&Math.abs(frameOpening.scaleY-1)<.002,
+      viewport.name + ": the frame must not scale or expand during its reveal");
+    assert.ok(Math.abs(frameOpening.translateY)<=4.1,
+      viewport.name + ": the frame movement must remain exceptionally subtle");
     assert.ok(frameOpening.shadow!=="none",
       viewport.name + ": the menu's layered shadow must remain attached to its frame");
     assert.ok(frameOpening.linkOpacity[0]>.05&&frameOpening.linkOpacity[6]<.05,
@@ -249,19 +257,19 @@ try {
       viewport.name + ": dropdown panel did not fade into place");
     assert.ok(staggerState.panelShadow!=="none"&&(staggerState.panelShadow.match(/rgba?\(/g)||[]).length>=3,
       viewport.name + ": the panel opened by the round hamburger must have a layered shadow behind its frame: "+staggerState.panelShadow);
-    assert.ok(staggerState.linkStagger>=.074&&staggerState.linkStagger<=.076,
+    assert.ok(staggerState.linkStagger>=.064&&staggerState.linkStagger<=.066,
       viewport.name + ": navigation links must use the refined, perceptible stagger on every device");
     assert.ok(staggerState.linkDuration>=.165&&staggerState.linkDuration<=.175,
       viewport.name + ": navigation links must retain the refined short fade duration");
     if(viewport.width>920){
-      assert.ok(staggerState.panelRevealDuration>=.43&&staggerState.panelRevealDuration<=.45,
+      assert.ok(staggerState.panelRevealDuration>=.55&&staggerState.panelRevealDuration<=.57,
         viewport.name + ": the hamburger panel soft reveal should use its refined duration");
       if(viewport.width>=1366){
         assert.ok(staggerState.panelRect.width>=332&&staggerState.panelRect.width<=337,
           viewport.name + ": hamburger link panel should be slightly wider than its former 320px width: "+staggerState.panelRect.width);
       }
     }else{
-      assert.ok(staggerState.panelRevealDuration>=.35&&staggerState.panelRevealDuration<=.37,
+      assert.ok(staggerState.panelRevealDuration>=.44&&staggerState.panelRevealDuration<=.46,
         viewport.name + ": mobile/tablet hamburger panel should open slightly faster");
     }
     assert.equal(staggerState.linkOpacity.length, 7,
@@ -456,6 +464,7 @@ try {
       await page.waitForTimeout(140);
       const exitState=await nav.evaluate(element=>{
         const style=getComputedStyle(element);
+        const matrix=style.transform==="none"?null:new DOMMatrixReadOnly(style.transform);
         const links=Array.from(element.querySelectorAll("a"))
           .filter(link=>getComputedStyle(link).display!=="none");
         return {
@@ -464,6 +473,8 @@ try {
           opacity:Number.parseFloat(style.opacity),
           filter:style.filter,
           transform:style.transform,
+          scaleX:matrix?matrix.a:1,
+          scaleY:matrix?matrix.d:1,
           clipPath:style.clipPath,
           shadow:style.boxShadow,
           first:Number.parseFloat(getComputedStyle(links[0]).opacity),
@@ -472,8 +483,10 @@ try {
       });
       assert.equal(exitState.exitMotion,"soft-lift-fade",
         viewport.name + ": closing must use the new dedicated soft-lift exit, not reverse the opening");
-      assert.ok(exitState.opacity>0&&exitState.opacity<1&&exitState.filter.includes("blur("),
-        viewport.name + ": the entire menu frame should softly fade and defocus as it exits");
+      assert.ok(exitState.opacity>0&&exitState.opacity<1&&exitState.filter==="none",
+        viewport.name + ": the entire menu frame should fade smoothly while staying crisp");
+      assert.ok(Math.abs(exitState.scaleX-1)<.002&&Math.abs(exitState.scaleY-1)<.002,
+        viewport.name + ": the closing frame must not scale or contract");
       assert.notEqual(exitState.transform,"none",
         viewport.name + ": the closing panel should make a small upward exit movement");
       assert.equal(exitState.clipPath,"none",
