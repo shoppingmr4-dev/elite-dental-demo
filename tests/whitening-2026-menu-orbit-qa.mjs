@@ -202,6 +202,9 @@ try {
         flexDirection: style.flexDirection,
         panelOpacity: Number.parseFloat(style.opacity),
         panelRect:panelRect.toJSON(),
+        panelShadow:style.boxShadow,
+        linkStagger:Number(element.dataset.ruwaLinkStagger||0),
+        linkDuration:Number(element.dataset.ruwaLinkDuration||0),
         contactRect:contactRect.toJSON(),
         belowContact:panelRect.top>=contactRect.bottom+8,
         panelCenterX:panelRect.left+panelRect.width/2,
@@ -234,6 +237,14 @@ try {
       viewport.name + ": dropdown links must be vertically aligned");
     assert.ok(staggerState.panelOpacity > .8,
       viewport.name + ": dropdown panel did not fade into place");
+    if(viewport.width>920){
+      assert.ok(staggerState.panelShadow!=="none"&&staggerState.panelShadow.split("),").length>=3,
+        viewport.name + ": the contact menu frame needs a clearly layered shadow behind its border: "+staggerState.panelShadow);
+      assert.ok(staggerState.linkStagger>0&&staggerState.linkStagger<=.08,
+        viewport.name + ": desktop link words should appear slightly faster, without losing their stagger");
+      assert.ok(staggerState.linkDuration>0&&staggerState.linkDuration<=.28,
+        viewport.name + ": desktop link reveal duration did not receive the requested small speed increase");
+    }
     assert.equal(staggerState.linkOpacity.length, 7,
       viewport.name + ": the stagger must include all seven navigation links");
     assert.ok(staggerState.linkOpacity[0] > .95 &&
@@ -620,6 +631,7 @@ try {
       ),
       pointerEvents:style.pointerEvents,
       animationName:style.animationName,
+      animationDuration:style.animationDuration,
       animationIterationCount:style.animationIterationCount,
       animationAngle:style.getPropertyValue("--ruwa-perimeter-angle").trim(),
       filter:style.filter,
@@ -652,6 +664,8 @@ try {
     "The luminous segment must travel around the perimeter on hover");
   assert.equal(activeGlow.animationIterationCount,"infinite",
     "The perimeter orbit must continue while the pointer remains over the card");
+  assert.ok(Number.parseFloat(activeGlow.animationDuration)<=1.0&&Number.parseFloat(activeGlow.animationDuration)>.5,
+    "The perimeter light must orbit much faster than the old 2.6-second cycle: "+activeGlow.animationDuration);
   assert.ok(activeGlow.animationAngle.endsWith("deg"),
     "The registered perimeter angle must be animatable in degrees");
   await glowPage.waitForTimeout(260);
