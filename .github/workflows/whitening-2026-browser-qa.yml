@@ -141,7 +141,7 @@ jobs:
           BASE_URL: http://127.0.0.1:4173/whitening-2026.html
         run: node tests/whitening-hero-fold-qa.mjs
 
-      - name: Verify cinematic menu expansion, orbiting perimeter light and accessibility
+      - name: Verify progressive menu reveal, complete glow removal and accessibility
         env:
           BASE_URL: http://127.0.0.1:4173/whitening-2026.html
         run: node tests/whitening-2026-menu-orbit-qa.mjs
