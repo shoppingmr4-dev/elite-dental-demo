@@ -1091,7 +1091,7 @@ body,button,input,select,textarea{font-family:var(--body)}
 .site-header .nav a[aria-current="location"]:hover,
 .site-header .nav a[aria-current="location"]:focus-visible{color:var(--blue-deep);font-weight:700}
 
-/* Compact desktop navigation: restore the complete, vertically stacked dropdown. */
+/* Compact desktop navigation: unfold the full panel directly beneath the Contact button. */
 @media(min-width:921px){
  .site-header.is-compact .nav:not(.open){
   visibility:hidden;opacity:0;pointer-events:none;
@@ -1101,16 +1101,18 @@ body,button,input,select,textarea{font-family:var(--body)}
   transform:translate(-50%,-50%);
  }
  .site-header.is-compact .nav.open{
-  /* A vertical side panel opens to the physical left of the separate hamburger. */
-  position:absolute;z-index:5;top:0;right:calc(50% + 34px);left:auto;
+  /* The panel aligns with the Contact CTA and begins 10px below its lower edge. */
+  position:absolute;z-index:5;
+  top:var(--ruwa-contact-menu-top,66px);
+  left:var(--ruwa-contact-menu-left,18px);right:auto;
   translate:0 0;display:flex;flex-direction:column;align-items:stretch;
   justify-self:auto;gap:0;margin:0;
-  width:min(360px,calc(50% - 64px));max-height:min(70vh,560px);
+  width:min(360px,calc(100vw - 32px));max-height:min(70vh,560px);
   overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
   padding:8px;border:1px solid var(--line);border-radius:16px;
   background:var(--paper);box-shadow:0 18px 34px rgba(20,45,56,.14);
   visibility:visible;opacity:1;pointer-events:auto;
-  transform-origin:right center;
+  transform-origin:top left;
  }
  /* All seven destinations are restored in their original order. */
  .site-header.is-compact .nav.open .nav-secondary{display:flex}
@@ -2195,10 +2197,26 @@ body,button,input,select,textarea{font-family:var(--body)}
   button.removeAttribute("data-pointer-hover");
  });
  const links=()=>Array.from(nav.querySelectorAll("a"));
+ const contactAction=header.querySelector(".header-action");
  const isDesktopCompact=()=>window.innerWidth>920&&header.classList.contains("is-compact");
  const shouldCollapseNav=()=>window.innerWidth<=920||isDesktopCompact();
  let navHadFocus=false;
  let menuTimeline=null;
+
+ // Measure the live Contact CTA so the menu remains anchored beneath it as the header compacts.
+ const syncContactMenuAnchor=()=>{
+  if(!isDesktopCompact()||!contactAction)return;
+  const headerRect=header.getBoundingClientRect();
+  const contactRect=contactAction.getBoundingClientRect();
+  const panelWidth=Math.min(360,Math.max(0,headerRect.width-32));
+  const left=Math.max(16,Math.min(
+   contactRect.left-headerRect.left,
+   headerRect.width-panelWidth-16
+  ));
+  const top=contactRect.bottom-headerRect.top+10;
+  nav.style.setProperty("--ruwa-contact-menu-left",left.toFixed(2)+"px");
+  nav.style.setProperty("--ruwa-contact-menu-top",top.toFixed(2)+"px");
+ };
 
  const syncNavInert=()=>{
   nav.inert=shouldCollapseNav()&&button.getAttribute("aria-expanded")!=="true";
@@ -2236,20 +2254,23 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.dataset.ruwaMenuAnimating="false";
   nav.removeAttribute("data-ruwa-menu-progress");
   nav.removeAttribute("data-ruwa-menu-shape");
+  nav.removeAttribute("data-ruwa-menu-frame-state");
   syncNavInert();
  };
 
  const createOpenTimeline=()=>{
   const gsap=window.gsap;
   const animatedItems=links().filter(link=>getComputedStyle(link).display!=="none");
-  const leftSidePanel=isDesktopCompact();
-  const presentation=leftSidePanel?"left-side-panel":"dropdown";
+  const contactAnchoredPanel=isDesktopCompact();
+  const presentation=contactAnchoredPanel?"contact-panel":"dropdown";
+  if(contactAnchoredPanel)syncContactMenuAnchor();
 
   if(reducedMotion.matches){
    root.dataset.ruwaMenuMotion="reduced";
    clearInlineMotion();
    settleDesktopMenuOpen();
    nav.dataset.ruwaMenuShape=presentation;
+   nav.dataset.ruwaMenuFrameState="revealed";
    nav.dataset.ruwaMenuState="open";
    nav.dataset.ruwaMenuAnimating="false";
    if(document.activeElement===button)animatedItems[0]?.focus({preventScroll:true});
@@ -2261,6 +2282,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    clearInlineMotion();
    settleDesktopMenuOpen();
    nav.dataset.ruwaMenuShape=presentation;
+   nav.dataset.ruwaMenuFrameState="revealed";
    nav.dataset.ruwaMenuState="open";
    nav.dataset.ruwaMenuAnimating="false";
    if(document.activeElement===button)animatedItems[0]?.focus({preventScroll:true});
@@ -2273,6 +2295,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    clearInlineMotion();
    settleDesktopMenuOpen();
    nav.dataset.ruwaMenuShape=presentation;
+   nav.dataset.ruwaMenuFrameState="revealed";
    nav.dataset.ruwaMenuState="open";
    nav.dataset.ruwaMenuAnimating="false";
    return;
@@ -2280,25 +2303,29 @@ body,button,input,select,textarea{font-family:var(--body)}
 
   root.dataset.ruwaMenuMotion="gsap-staggered";
   nav.dataset.ruwaMenuShape=presentation;
+  nav.dataset.ruwaMenuFrameState=contactAnchoredPanel?"drawing":"revealed";
   nav.dataset.ruwaMenuState="opening";
   nav.dataset.ruwaMenuAnimating="true";
   nav.dataset.ruwaMenuProgress="0";
 
-  // Desktop: the menu glides out from beside the hamburger toward the left.
-  // Its seven links then fade and settle sequentially in their original DOM order.
+  // Desktop: draw the complete rectangular frame first, from top to bottom.
+  // Only after the frame finishes do the seven links appear in a deliberate sequence.
   gsap.set(nav,{
    autoAlpha:0,
-   x:leftSidePanel?16:0,
-   y:leftSidePanel?0:-8,
-   scale:.985,
+   x:0,
+   y:contactAnchoredPanel?-6:-8,
+   scale:contactAnchoredPanel?.99:.985,
    rotation:0,
-   transformOrigin:leftSidePanel?"right center":"top center",
+   clipPath:contactAnchoredPanel
+    ?"inset(0% 0% 96% 0% round 16px)"
+    :"inset(0% 0% 0% 0% round 14px)",
+   transformOrigin:contactAnchoredPanel?"top left":"top center",
    force3D:false
   });
   gsap.set(animatedItems,{
    autoAlpha:0,
-   x:leftSidePanel?12:0,
-   y:leftSidePanel?0:10,
+   x:0,
+   y:contactAnchoredPanel?9:10,
    rotation:0,
    scale:1,
    transformOrigin:"50% 50%"
@@ -2311,6 +2338,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    },
    onComplete(){
     nav.dataset.ruwaMenuProgress="1";
+    nav.dataset.ruwaMenuFrameState="revealed";
     nav.dataset.ruwaMenuState="open";
     nav.dataset.ruwaMenuAnimating="false";
     settleDesktopMenuOpen();
@@ -2324,6 +2352,9 @@ body,button,input,select,textarea{font-family:var(--body)}
 
   menuTimeline.to(nav,{
    autoAlpha:1,
+   clipPath:contactAnchoredPanel
+    ?"inset(0% 0% 0% 0% round 16px)"
+    :"inset(0% 0% 0% 0% round 14px)",
    x:0,
    y:0,
    scale:1,
@@ -2331,6 +2362,13 @@ body,button,input,select,textarea{font-family:var(--body)}
    ease:"expo.out"
   },0);
 
+  if(contactAnchoredPanel){
+   menuTimeline.add(()=>{nav.dataset.ruwaMenuFrameState="revealed";},.4);
+  }
+
+  const linkStart=contactAnchoredPanel?.44:.16;
+  const linkStagger=contactAnchoredPanel?.095:.105;
+  const linkDuration=contactAnchoredPanel?.30:.38;
   animatedItems.forEach((link,index)=>{
    menuTimeline.to(link,{
     autoAlpha:1,
@@ -2338,9 +2376,9 @@ body,button,input,select,textarea{font-family:var(--body)}
     y:0,
     rotation:0,
     scale:1,
-    duration:.38,
+    duration:linkDuration,
     ease:"power3.out"
-   },.16+index*.105);
+   },linkStart+index*linkStagger);
   });
 
   menuTimeline.play(0);
@@ -2378,7 +2416,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  nav.addEventListener("click",event=>{
   if(isDesktopCompact()&&button.getAttribute("aria-expanded")==="true"&&event.target===nav)close();
  });
- // Dismissing anywhere outside the header reverses the same spiral funnel.
+ // Dismissing outside the panel reverses the frame and link sequence.
  document.addEventListener("pointerdown",event=>{
   if(!isDesktopCompact()||button.getAttribute("aria-expanded")!=="true")return;
   if(nav.contains(event.target)||button.contains(event.target))return;
@@ -2389,6 +2427,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   if(open){
    button.setAttribute("aria-expanded","true");
    button.setAttribute("aria-label","إغلاق القائمة");
+   syncContactMenuAnchor();
    nav.classList.add("open");
    syncNavInert();
 
@@ -2435,6 +2474,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    navHadFocus=false;
    if(button.getClientRects().length)button.focus({preventScroll:true});
   }
+  syncContactMenuAnchor();
   syncNavInert();
  });
 
@@ -2450,6 +2490,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    nav.classList.add("open");
    nav.inert=false;
    settleDesktopMenuOpen();
+   nav.dataset.ruwaMenuFrameState="revealed";
    nav.dataset.ruwaMenuState="open";
    nav.dataset.ruwaMenuAnimating="false";
   }else{
