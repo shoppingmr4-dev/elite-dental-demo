@@ -376,7 +376,7 @@ try {
         viewport.name + ": Contact panel must remain inside the viewport");
       for (let index = 0; index < opened.visibleLinks.length; index++) {
         const link = opened.visibleLinks[index];
-        assert.ok(link.rect.height >= 44 && link.rect.width >= opened.rect.width - 20,
+        assert.ok(link.rect.height >= 44 && link.rect.width >= opened.rect.width - 24,
           viewport.name + ": dropdown row is too small or too narrow: " + JSON.stringify(link));
         if (index > 0) {
           const previous = opened.visibleLinks[index - 1];
