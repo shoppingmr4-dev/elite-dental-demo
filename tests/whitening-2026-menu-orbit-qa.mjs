@@ -194,7 +194,7 @@ try {
     assert.ok(frameOpening.linkOpacity[0]>.05&&frameOpening.linkOpacity[6]<.05,
       viewport.name + ": links should arrive after the frame begins, in a gentle stagger");
 
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(100);
     const staggerState = await nav.evaluate(element => {
       const style = getComputedStyle(element);
       const links = Array.from(element.querySelectorAll("a"))
