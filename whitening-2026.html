@@ -1075,6 +1075,9 @@ body,button,input,select,textarea{font-family:var(--body)}
  overscroll-behavior:contain;
  scrollbar-width:none;
  -ms-overflow-style:none;
+ padding:10px;
+ border-radius:16px;
+ box-shadow:0 14px 30px rgba(20,45,56,.16),0 30px 58px rgba(20,45,56,.22),0 6px 14px rgba(20,45,56,.12),inset 0 1px 0 rgba(255,255,255,.9);
 }
 .site-header .nav.open::-webkit-scrollbar{
  display:none;
@@ -1107,17 +1110,17 @@ body,button,input,select,textarea{font-family:var(--body)}
   left:var(--ruwa-contact-menu-left,18px);right:auto;
   translate:0 0;display:flex;flex-direction:column;align-items:stretch;
   justify-self:auto;gap:0;margin:0;
-  width:var(--ruwa-contact-menu-width,min(320px,calc(100vw - 32px)));max-height:min(70vh,560px);
+  width:var(--ruwa-contact-menu-width,min(336px,calc(100vw - 32px)));max-height:min(70vh,560px);
   overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
-  padding:8px;border:1px solid var(--line);border-radius:16px;
-  background:var(--paper);box-shadow:0 12px 24px rgba(20,45,56,.13),0 26px 58px rgba(20,45,56,.20),0 4px 10px rgba(20,45,56,.10),inset 0 1px 0 rgba(255,255,255,.88);
+  padding:10px;border:1px solid var(--line);border-radius:16px;
+  background:var(--paper);box-shadow:0 14px 30px rgba(20,45,56,.16),0 30px 58px rgba(20,45,56,.22),0 6px 14px rgba(20,45,56,.12),inset 0 1px 0 rgba(255,255,255,.9);
   visibility:visible;opacity:1;pointer-events:auto;
   transform-origin:top left;
  }
  /* All seven destinations are restored in their original order. */
  .site-header.is-compact .nav.open .nav-secondary{display:flex}
  .site-header.is-compact .nav.open a{
-  display:flex;align-items:center;width:100%;min-height:46px;padding:11px 14px;
+  display:flex;align-items:center;width:100%;min-height:47px;padding:12px 15px;
   border-bottom:1px solid var(--line);font-size:14px;white-space:normal;
  }
  .site-header.is-compact .nav.open a:last-child{border-bottom:0}
@@ -1615,83 +1618,12 @@ body,button,input,select,textarea{font-family:var(--body)}
 
 
 
-/* RUWA PREMIUM PERIMETER LIGHT — a single moving luminous arc, masked to the border only. */
-@property --ruwa-perimeter-angle{
- syntax:"<angle>";
- inherits:false;
- initial-value:0deg;
-}
-:where(
- .info-card,
- .option-card,
- .journey-step,
- .team-card,
- .review-card,
- .expect-card,
- .reviews-preview,
- .reviews-criteria,
- .clinical-note
-){
- position:relative;
- isolation:isolate;
-}
-:where(
- .info-card,
- .option-card,
- .journey-step,
- .team-card,
- .review-card,
- .expect-card,
- .reviews-preview,
- .reviews-criteria,
- .clinical-note
-)::after{
- content:"";
- position:absolute;
- inset:0;
- z-index:3;
- border-radius:inherit;
- padding:1.35px;
- pointer-events:none;
- opacity:0;
- --ruwa-perimeter-angle:0deg;
- background:conic-gradient(
-  from var(--ruwa-perimeter-angle),
-  transparent 0deg 292deg,
-  rgba(67,190,184,.12) 300deg,
-  rgba(91,222,213,.58) 310deg,
-  rgba(226,255,251,1) 321deg,
-  rgba(104,229,218,.96) 331deg,
-  rgba(62,177,171,.2) 344deg,
-  transparent 352deg 360deg
- );
- -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
- -webkit-mask-composite:xor;
- mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
- mask-composite:exclude;
- filter:drop-shadow(0 0 2px rgba(86,218,209,.62)) drop-shadow(0 0 6px rgba(66,187,181,.34));
- transition:opacity .22s ease;
-}
-@keyframes ruwa-perimeter-orbit{
- to{--ruwa-perimeter-angle:360deg}
-}
-@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
- :where(
-  .info-card,
-  .option-card,
-  .journey-step,
-  .team-card,
-  .review-card,
-  .expect-card,
-  .reviews-preview,
-  .reviews-criteria,
-  .clinical-note
- ):hover::after{
-  opacity:1;
-  animation:ruwa-perimeter-orbit .9s linear infinite;
+/* RUWA PREMIUM PERIMETER LIGHT — a fully illuminated border with a gentle flowing pulse. */
+ @property --ruwa-perimeter-angle{
+  syntax:"<angle>";
+  inherits:false;
+  initial-value:0deg;
  }
-}
-@media (prefers-reduced-motion:no-preference){
  :where(
   .info-card,
   .option-card,
@@ -1701,13 +1633,15 @@ body,button,input,select,textarea{font-family:var(--body)}
   .expect-card,
   .reviews-preview,
   .reviews-criteria,
-  .clinical-note
- ):focus-within::after{
-  opacity:1;
-  animation:ruwa-perimeter-orbit .9s linear infinite;
+  .clinical-note,
+  .info-card .card-index,
+  .step-no,
+  .journey-step-number,
+  .check-item .check-mark
+ ){
+  position:relative;
+  isolation:isolate;
  }
-}
-@media(prefers-reduced-motion:reduce){
  :where(
   .info-card,
   .option-card,
@@ -1717,25 +1651,122 @@ body,button,input,select,textarea{font-family:var(--body)}
   .expect-card,
   .reviews-preview,
   .reviews-criteria,
-  .clinical-note
+  .clinical-note,
+  .info-card .card-index,
+  .step-no,
+  .journey-step-number,
+  .check-item .check-mark
  )::after{
-  transition:none;
-  animation:none!important;
-  filter:none;
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:3;
+  border-radius:inherit;
+  padding:1.55px;
+  pointer-events:none;
+  opacity:0;
+  --ruwa-perimeter-angle:0deg;
+  background:conic-gradient(
+   from var(--ruwa-perimeter-angle),
+   rgba(55,157,153,.62) 0deg,
+   rgba(112,224,212,.94) 58deg,
+   rgba(236,255,251,1) 112deg,
+   rgba(73,181,176,.82) 178deg,
+   rgba(42,132,137,.66) 240deg,
+   rgba(130,235,224,.96) 302deg,
+   rgba(244,255,252,1) 338deg,
+   rgba(55,157,153,.62) 360deg
+  );
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  filter:drop-shadow(0 0 2px rgba(86,218,209,.58)) drop-shadow(0 0 7px rgba(66,187,181,.34));
+  transition:opacity .22s ease;
  }
- :where(
-  .info-card,
-  .option-card,
-  .journey-step,
-  .team-card,
-  .review-card,
-  .expect-card,
-  .reviews-preview,
-  .reviews-criteria,
- .clinical-note
- ):focus-within::after{opacity:.78}
-}
-
+ @keyframes ruwa-perimeter-orbit{
+  to{--ruwa-perimeter-angle:360deg}
+ }
+ @keyframes ruwa-perimeter-breathe{
+  0%,100%{filter:drop-shadow(0 0 2px rgba(86,218,209,.5)) drop-shadow(0 0 6px rgba(66,187,181,.28))}
+  50%{filter:drop-shadow(0 0 4px rgba(142,247,236,.88)) drop-shadow(0 0 12px rgba(66,187,181,.52))}
+ }
+ @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  :where(
+   .info-card,
+   .option-card,
+   .journey-step,
+   .team-card,
+   .review-card,
+   .expect-card,
+   .reviews-preview,
+   .reviews-criteria,
+   .clinical-note
+  ):hover::after,
+  .info-card:hover .card-index::after,
+  .step:hover .step-no::after,
+  .journey-step:hover .journey-step-number::after,
+  .check-item:hover .check-mark::after{
+   opacity:1;
+   animation:ruwa-perimeter-orbit .9s linear infinite,ruwa-perimeter-breathe 2.1s ease-in-out infinite;
+  }
+ }
+ @media (prefers-reduced-motion:no-preference){
+  :where(
+   .info-card,
+   .option-card,
+   .journey-step,
+   .team-card,
+   .review-card,
+   .expect-card,
+   .reviews-preview,
+   .reviews-criteria,
+   .clinical-note
+  ):focus-within::after,
+  .info-card:focus-within .card-index::after,
+  .step:focus-within .step-no::after,
+  .journey-step:focus-within .journey-step-number::after,
+  .check-item:focus-within .check-mark::after{
+   opacity:1;
+   animation:ruwa-perimeter-orbit .9s linear infinite,ruwa-perimeter-breathe 2.1s ease-in-out infinite;
+  }
+ }
+ @media(prefers-reduced-motion:reduce){
+  :where(
+   .info-card,
+   .option-card,
+   .journey-step,
+   .team-card,
+   .review-card,
+   .expect-card,
+   .reviews-preview,
+   .reviews-criteria,
+   .clinical-note,
+   .info-card .card-index,
+   .step-no,
+   .journey-step-number,
+   .check-item .check-mark
+  )::after{
+   transition:none;
+   animation:none!important;
+   filter:none;
+  }
+  :where(
+   .info-card,
+   .option-card,
+   .journey-step,
+   .team-card,
+   .review-card,
+   .expect-card,
+   .reviews-preview,
+   .reviews-criteria,
+   .clinical-note
+  ):focus-within::after,
+  .info-card:focus-within .card-index::after,
+  .step:focus-within .step-no::after,
+  .journey-step:focus-within .journey-step-number::after,
+  .check-item:focus-within .check-mark::after{opacity:.78}
+ }
 </style>
 
 <!-- Pinned GSAP runtime: deferred so it never blocks the initial Hero render. -->
@@ -2220,7 +2251,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    desiredCenter-16,
    headerRect.width-16-desiredCenter
   );
-  const panelWidth=Math.max(200,Math.min(320,headerRect.width-32,centeredCapacity));
+  const panelWidth=Math.max(200,Math.min(336,headerRect.width-32,centeredCapacity));
   const left=desiredCenter-panelWidth/2;
   const top=headerRect.height+12;
   nav.style.setProperty("--ruwa-contact-menu-width",panelWidth.toFixed(2)+"px");
@@ -2348,13 +2379,13 @@ body,button,input,select,textarea{font-family:var(--body)}
     nav.dataset.ruwaMenuProgress=progress.toFixed(4);
     if(contactAnchoredPanel){
      if(menuTimeline.reversed()){
-      nav.dataset.ruwaMenuFrameState=time>=.78
+      nav.dataset.ruwaMenuFrameState=time>=.70
        ?"closing-links"
-       :time>=.34?"collapsing-height":"retracting-width";
+       :time>=.30?"collapsing-height":"retracting-width";
      }else{
-      nav.dataset.ruwaMenuFrameState=time>=.78
+      nav.dataset.ruwaMenuFrameState=time>=.70
        ?"revealed"
-       :time>=.34?"drawing-height":"drawing-width";
+       :time>=.30?"drawing-height":"drawing-width";
      }
     }
    },
@@ -2378,15 +2409,15 @@ body,button,input,select,textarea{font-family:var(--body)}
     clipPath:"inset(0% 0% 96% 0% round 16px)",
     y:-2,
     scale:1,
-    duration:.34,
+    duration:.30,
     ease:"expo.out"
    },0);
    menuTimeline.to(nav,{
     clipPath:"inset(0% 0% 0% 0% round 16px)",
     y:0,
-    duration:.44,
+    duration:.40,
     ease:"power3.out"
-   },.34);
+   },.30);
   }else{
    menuTimeline.to(nav,{
     autoAlpha:1,
@@ -2394,14 +2425,16 @@ body,button,input,select,textarea{font-family:var(--body)}
     x:0,
     y:0,
     scale:1,
-    duration:.4,
+    duration:.36,
     ease:"expo.out"
    },0);
   }
 
-  const linkStart=contactAnchoredPanel ? .82 : .16;
-  const linkStagger=contactAnchoredPanel ? .075 : .105;
-  const linkDuration=contactAnchoredPanel ? .27 : .38;
+  const panelRevealDuration=contactAnchoredPanel?.70:.36;
+  nav.dataset.ruwaPanelRevealDuration=String(panelRevealDuration);
+  const linkStart=contactAnchoredPanel ? .74 : .14;
+  const linkStagger=contactAnchoredPanel ? .068 : .095;
+  const linkDuration=contactAnchoredPanel ? .25 : .34;
   nav.dataset.ruwaLinkStagger=String(linkStagger);
   nav.dataset.ruwaLinkDuration=String(linkDuration);
   animatedItems.forEach((link,index)=>{
