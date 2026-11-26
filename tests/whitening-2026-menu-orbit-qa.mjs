@@ -263,7 +263,7 @@ try {
       viewport.name + ": dropdown panel did not fade into place");
     assert.ok(staggerState.panelShadow!=="none"&&(staggerState.panelShadow.match(/rgba?\(/g)||[]).length>=3,
       viewport.name + ": the panel opened by the round hamburger must have a layered shadow behind its frame: "+staggerState.panelShadow);
-    assert.ok(staggerState.linkStagger>=.059&&staggerState.linkStagger<=.061,
+    assert.ok(staggerState.linkStagger>=.054&&staggerState.linkStagger<=.056,
       viewport.name + ": navigation links must use the refined, perceptible stagger on every device");
     assert.ok(staggerState.linkDuration>=.115&&staggerState.linkDuration<=.125,
       viewport.name + ": navigation links must retain the refined short fade duration");
@@ -487,7 +487,7 @@ try {
           last:Number.parseFloat(getComputedStyle(links[links.length-1]).opacity)
         };
       });
-      assert.equal(exitState.exitMotion,"soft-lift-fade",
+      assert.equal(exitState.exitMotion,"paper-fold",
         viewport.name + ": closing must use the new dedicated soft-lift exit, not reverse the opening");
       assert.ok(exitState.opacity>0&&exitState.opacity<1&&exitState.filter==="none",
         viewport.name + ": the entire menu frame should fade smoothly while staying crisp");
