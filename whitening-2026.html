@@ -2219,12 +2219,12 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.style.backfaceVisibility="hidden";
   gsap.set(nav,{
    autoAlpha:0,
-   x:-16,
-   y:18,
+   x:0,
+   y:0,
    rotationX:-68,
    rotationY:15,
    rotationZ:-1.2,
-   scale:.975,
+   scale:1,
    transformPerspective:1250,
    filter:"none",
    boxShadow:foldedPanelShadow,
@@ -2275,12 +2275,12 @@ body,button,input,select,textarea{font-family:var(--body)}
   // Lift and unfold from the lower corner like a notebook page being turned upward.
   menuTimeline.to(nav,{
    autoAlpha:.92,
-   x:-4,
-   y:5,
+   x:0,
+   y:0,
    rotationX:-12,
    rotationY:4,
    rotationZ:-.25,
-   scale:.992,
+   scale:1,
    boxShadow:liftedPanelShadow,
    duration:panelFoldDuration,
    ease:"power2.out"
@@ -2363,12 +2363,12 @@ body,button,input,select,textarea{font-family:var(--body)}
      stagger:.018
     },0).to(nav,{
      autoAlpha:0,
-     x:-12,
-     y:16,
+     x:0,
+     y:0,
      rotationX:-62,
      rotationY:13,
      rotationZ:-1,
-     scale:.98,
+     scale:1,
      transformPerspective:1250,
      filter:"none",
      boxShadow:"0 8px 16px rgba(20,45,56,0),0 24px 38px rgba(20,45,56,0),0 3px 9px rgba(20,45,56,0),inset 0 1px 0 rgba(255,255,255,0)",
