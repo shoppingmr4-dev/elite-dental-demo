@@ -2314,7 +2314,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    autoAlpha:0,
    x:0,
    y:contactAnchoredPanel?-6:-8,
-   scale:contactAnchoredPanel?.99:.985,
+   scale:contactAnchoredPanel ? .99 : .985,
    rotation:0,
    clipPath:contactAnchoredPanel
     ?"inset(0% 0% 96% 0% round 16px)"
@@ -2366,9 +2366,9 @@ body,button,input,select,textarea{font-family:var(--body)}
    menuTimeline.add(()=>{nav.dataset.ruwaMenuFrameState="revealed";},.4);
   }
 
-  const linkStart=contactAnchoredPanel?.44:.16;
-  const linkStagger=contactAnchoredPanel?.095:.105;
-  const linkDuration=contactAnchoredPanel?.30:.38;
+  const linkStart=contactAnchoredPanel ? .44 : .16;
+  const linkStagger=contactAnchoredPanel ? .095 : .105;
+  const linkDuration=contactAnchoredPanel ? .30 : .38;
   animatedItems.forEach((link,index)=>{
    menuTimeline.to(link,{
     autoAlpha:1,
