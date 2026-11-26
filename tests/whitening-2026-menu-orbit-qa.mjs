@@ -164,30 +164,37 @@ try {
     );
 
     const mode = await page.evaluate(() => document.documentElement.dataset.ruwaMenuMotion || "unset");
-    assert.equal(mode, "gsap-staggered",
-      viewport.name + ": expected the Contact-anchored panel with its frame-first reveal");
+    assert.equal(mode, "gsap-premium",
+      viewport.name + ": expected the premium unified panel reveal");
 
-    if (viewport.width > 920) {
-      await page.waitForTimeout(150);
-      const frameOpening = await nav.evaluate(element => ({
-        frameState: element.dataset.ruwaMenuFrameState,
-        clipPath: getComputedStyle(element).clipPath,
-        opacity: Number.parseFloat(getComputedStyle(element).opacity),
-        linkOpacity: Array.from(element.querySelectorAll("a"))
-          .filter(link => getComputedStyle(link).display !== "none")
-          .map(link => Number.parseFloat(getComputedStyle(link).opacity))
-      }));
-      assert.ok(frameOpening.frameState.startsWith("drawing"),
-        viewport.name + ": the panel frame must begin its staged draw before navigation text");
-      assert.ok(frameOpening.clipPath.includes("inset"),
-        viewport.name + ": the frame must reveal as a rectangle, never from a circular mask");
-      assert.ok(frameOpening.opacity > .1,
-        viewport.name + ": the panel frame did not begin appearing");
-      assert.ok(frameOpening.linkOpacity.every(opacity => opacity < .05),
-        viewport.name + ": navigation text appeared before the outer frame finished");
-    }
+    await page.waitForTimeout(150);
+    const frameOpening = await nav.evaluate(element => {
+      const style=getComputedStyle(element);
+      return {
+        frameState:element.dataset.ruwaMenuFrameState,
+        opacity:Number.parseFloat(style.opacity),
+        filter:style.filter,
+        transform:style.transform,
+        shadow:style.boxShadow,
+        linkOpacity:Array.from(element.querySelectorAll("a"))
+          .filter(link=>getComputedStyle(link).display!=="none")
+          .map(link=>Number.parseFloat(getComputedStyle(link).opacity))
+      };
+    });
+    assert.ok(["soft-reveal","revealed"].includes(frameOpening.frameState),
+      viewport.name + ": menu should use the new unified soft-reveal transition");
+    assert.ok(frameOpening.opacity>.1&&frameOpening.opacity<1,
+      viewport.name + ": panel should visibly fade in rather than appear abruptly");
+    assert.notEqual(frameOpening.transform,"none",
+      viewport.name + ": the frame should make a small, smooth settling movement");
+    assert.ok(frameOpening.filter.includes("blur("),
+      viewport.name + ": the opening transition should gently sharpen into focus");
+    assert.ok(frameOpening.shadow!=="none",
+      viewport.name + ": the menu's layered shadow must remain attached to its frame");
+    assert.ok(frameOpening.linkOpacity[0]>.05&&frameOpening.linkOpacity[6]<.05,
+      viewport.name + ": links should arrive after the frame begins, in a gentle stagger");
 
-    await page.waitForTimeout(viewport.width > 920 ? 950 : 450);
+    await page.waitForTimeout(150);
     const staggerState = await nav.evaluate(element => {
       const style = getComputedStyle(element);
       const links = Array.from(element.querySelectorAll("a"))
@@ -198,6 +205,8 @@ try {
         shape: element.dataset.ruwaMenuShape,
         frameState: element.dataset.ruwaMenuFrameState,
         clipPath: style.clipPath,
+        filter:style.filter,
+        transform:style.transform,
         position: style.position,
         flexDirection: style.flexDirection,
         panelOpacity: Number.parseFloat(style.opacity),
@@ -225,10 +234,10 @@ try {
     assert.equal(staggerState.position, "absolute",
       viewport.name + ": menu must remain independently positioned");
     if(viewport.width>920){
-      assert.equal(staggerState.frameState,"revealed",
-        viewport.name + ": the full outer frame must finish before the link sequence completes");
-      assert.ok(staggerState.clipPath.includes("inset"),
-        viewport.name + ": panel must retain its rectangular frame, not a circular reveal");
+      assert.ok(["soft-reveal","revealed"].includes(staggerState.frameState),
+        viewport.name + ": the menu must preserve its elegant soft-reveal state while links arrive");
+      assert.equal(staggerState.clipPath,"none",
+        viewport.name + ": the full rectangular frame must remain intact during the reveal");
       assert.equal(staggerState.belowContact,true,
         viewport.name + ": animated panel must appear below the Contact CTA");
       assert.equal(staggerState.centeredAndNudgedLeft,true,
@@ -241,18 +250,18 @@ try {
     assert.ok(staggerState.panelShadow!=="none"&&(staggerState.panelShadow.match(/rgba?\(/g)||[]).length>=3,
       viewport.name + ": the panel opened by the round hamburger must have a layered shadow behind its frame: "+staggerState.panelShadow);
     if(viewport.width>920){
-      assert.ok(staggerState.linkStagger>0&&staggerState.linkStagger<=.07,
+      assert.ok(staggerState.linkStagger>=.044&&staggerState.linkStagger<=.046,
         viewport.name + ": desktop link words should appear slightly faster, without losing their stagger");
-      assert.ok(staggerState.linkDuration>0&&staggerState.linkDuration<=.26,
+      assert.ok(staggerState.linkDuration>=.18&&staggerState.linkDuration<=.20,
         viewport.name + ": desktop link reveal duration did not receive the requested slight speed increase");
-      assert.ok(staggerState.panelRevealDuration>.65&&staggerState.panelRevealDuration<=.71,
-        viewport.name + ": the hamburger panel frame should open a little faster than before");
+      assert.ok(staggerState.panelRevealDuration>=.43&&staggerState.panelRevealDuration<=.45,
+        viewport.name + ": the hamburger panel soft reveal should use its refined duration");
       if(viewport.width>=1366){
         assert.ok(staggerState.panelRect.width>=332&&staggerState.panelRect.width<=337,
           viewport.name + ": hamburger link panel should be slightly wider than its former 320px width: "+staggerState.panelRect.width);
       }
     }else{
-      assert.ok(staggerState.panelRevealDuration>.30&&staggerState.panelRevealDuration<=.37,
+      assert.ok(staggerState.panelRevealDuration>=.35&&staggerState.panelRevealDuration<=.37,
         viewport.name + ": mobile/tablet hamburger panel should open slightly faster");
     }
     assert.equal(staggerState.linkOpacity.length, 7,
@@ -439,34 +448,42 @@ try {
         null,
         { timeout: 3000 }
       );
-      await page.waitForTimeout(240);
-      const reverseState = await nav.evaluate(element => {
-        const links = Array.from(element.querySelectorAll("a"))
-          .filter(link => getComputedStyle(link).display !== "none");
+      await page.waitForFunction(
+        () => document.querySelector("#main-nav")?.dataset.ruwaMenuFrameState === "soft-exit",
+        null,
+        { timeout: 2000 }
+      );
+      await page.waitForTimeout(140);
+      const exitState=await nav.evaluate(element=>{
+        const style=getComputedStyle(element);
+        const links=Array.from(element.querySelectorAll("a"))
+          .filter(link=>getComputedStyle(link).display!=="none");
         return {
+          frameState:element.dataset.ruwaMenuFrameState,
+          exitMotion:element.dataset.ruwaMenuExitMotion,
+          opacity:Number.parseFloat(style.opacity),
+          filter:style.filter,
+          transform:style.transform,
+          clipPath:style.clipPath,
+          shadow:style.boxShadow,
           first:Number.parseFloat(getComputedStyle(links[0]).opacity),
-          last:Number.parseFloat(getComputedStyle(links[links.length-1]).opacity),
-          clipPath:getComputedStyle(element).clipPath
+          last:Number.parseFloat(getComputedStyle(links[links.length-1]).opacity)
         };
       });
-      assert.ok(reverseState.first>.95 && reverseState.last<reverseState.first-.1,
-        viewport.name + ": closing must reverse the link sequence from last to first: " +
-        JSON.stringify(reverseState));
-      assert.ok(reverseState.clipPath.includes("inset"),
-        viewport.name + ": closing must preserve the rectangular frame animation, never a circular reveal");
-      await page.waitForTimeout(650);
-      const reversingFrame=await nav.evaluate(element=>({
-        state:element.dataset.ruwaMenuFrameState,
-        clipPath:getComputedStyle(element).clipPath
-      }));
-      assert.ok(["collapsing-height","retracting-width"].includes(reversingFrame.state),
-        viewport.name + ": the menu frame must collapse in its own staged sequence after links disappear: "+
-        JSON.stringify(reversingFrame));
-      assert.ok(reversingFrame.clipPath.includes("inset")&&
-        !reversingFrame.clipPath.includes("inset(0px 0px 0px 0px"),
-        viewport.name + ": the menu frame did not visibly retract after the links");
+      assert.equal(exitState.exitMotion,"soft-lift-fade",
+        viewport.name + ": closing must use the new dedicated soft-lift exit, not reverse the opening");
+      assert.ok(exitState.opacity>0&&exitState.opacity<1&&exitState.filter.includes("blur("),
+        viewport.name + ": the entire menu frame should softly fade and defocus as it exits");
+      assert.notEqual(exitState.transform,"none",
+        viewport.name + ": the closing panel should make a small upward exit movement");
+      assert.equal(exitState.clipPath,"none",
+        viewport.name + ": the menu frame must remain whole during its exit");
+      assert.ok(exitState.shadow!=="none",
+        viewport.name + ": the panel shadow should travel and fade with its frame");
+      assert.ok(exitState.last<exitState.first,
+        viewport.name + ": navigation text should dissolve in reverse order before the panel finishes");
       if (viewport.width === 1440) {
-        await page.screenshot({path:OUT+"/menu-contact-panel-frame-staged-exit-1440.png",fullPage:false});
+        await page.screenshot({path:OUT+"/menu-premium-soft-lift-exit-1440.png",fullPage:false});
       }
     } else {
       await clickHamburger(page, button, viewport.name);
@@ -494,14 +511,14 @@ try {
       menuMotion: mode,
       contactAnchoredVerified: viewport.width <= 920 ||
         Math.abs(opened.rect.left-opened.rect.contactRect.left)<=2,
-      frameFirstVerified: viewport.width <= 920 ||
-        (staggerState.frameState==="revealed"&&staggerState.clipPath.includes("inset")),
+      premiumRevealVerified: frameOpening.frameState==="soft-reveal"&&
+        frameOpening.shadow!=="none"&&staggerState.clipPath==="none",
       sequentialLinksVisible: opened.links.filter(link => link.display !== "none").length,
       closeRestored: true,
       noHorizontalOverflow: true
     });
     await page.close();
-    console.log("[PASS] " + viewport.name + ": Contact-anchored frame reveal, sequential links, reverse close and responsive layout");
+    console.log("[PASS] " + viewport.name + ": premium whole-panel reveal, sequential links, soft-lift exit and responsive layout");
   }
 
   // Verify Escape, focus restoration, link selection, and quick direction reversal.
@@ -553,7 +570,7 @@ try {
   assert.equal(
     await interactionPage.evaluate(() => document.activeElement?.id),
     "menu-toggle",
-    "Selecting a menu destination must restore focus to the menu button while the panel reverses"
+    "Selecting a menu destination must restore focus to the menu button while the panel softly exits"
   );
 
   await interactionPage.evaluate(() => window.scrollTo(0, 0));
@@ -586,7 +603,7 @@ try {
   assert.equal(interactionErrors.length, 0,
     "Menu keyboard/link/reversal browser errors: " + interactionErrors.join(" | "));
   await interactionPage.close();
-  console.log("[PASS] Escape focus restoration, native anchor close, and rapid open/close reversal");
+  console.log("[PASS] Escape focus restoration, native anchor close, dedicated soft-lift exit and rapid reopen");
 
   // Moving conic-gradient arc: verify the luminous segment stays masked to the border line.
   const glowPage = await browser.newPage({
@@ -827,9 +844,9 @@ try {
     result: "passed",
     viewports: viewportResults,
     interactions: [
-      "desktop menu opens to the left of the separate hamburger control",
+      "desktop menu opens below Contact with a premium unified soft reveal",
       "all seven side-panel links reveal sequentially in DOM order",
-      "reverse stagger close and repeated direction changes",
+      "reverse stagger text exit, soft-lift panel fade and rapid reopen support",
       "Escape closes and restores focus",
       "native anchor destination remains active",
       "reduced-motion menu is immediate and fully accessible",
