@@ -90,7 +90,7 @@ try {
         titleText: title?.innerText?.trim() || "",
         bodyTextLength: document.body.innerText.trim().length,
         expectations: (() => {
-          const section=document.querySelector("#expectations");
+          const section=document.querySelector("#suitability .expectations-panel");
           const grid=section?.querySelector(".expect-grid");
           const cards=[...(section?.querySelectorAll(".expect-card")||[])];
           return {
