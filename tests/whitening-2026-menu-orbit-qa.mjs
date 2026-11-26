@@ -164,45 +164,48 @@ try {
     );
 
     const mode = await page.evaluate(() => document.documentElement.dataset.ruwaMenuMotion || "unset");
-    assert.equal(mode, "gsap-premium",
-      viewport.name + ": expected the premium unified panel reveal");
+    assert.equal(mode, "gsap",
+      viewport.name + ": expected the original hamburger-origin circular reveal");
 
-    await page.waitForTimeout(150);
+    await page.waitForTimeout(110);
     const frameOpening = await nav.evaluate(element => {
+      const panel=element.getBoundingClientRect();
+      const toggle=document.querySelector("#menu-toggle").getBoundingClientRect();
       const style=getComputedStyle(element);
-      const matrix=style.transform==="none"?null:new DOMMatrixReadOnly(style.transform);
+      const match=style.clipPath.match(/^circle\(([-\d.]+)px at ([-\d.]+)px ([-\d.]+)px\)$/);
       return {
         frameState:element.dataset.ruwaMenuFrameState,
-        opacity:Number.parseFloat(style.opacity),
-        filter:style.filter,
-        transform:style.transform,
-        scaleX:matrix?matrix.a:1,
-        scaleY:matrix?matrix.d:1,
-        translateY:matrix?matrix.f:0,
+        clipPath:style.clipPath,
+        radius:match?Number(match[1]):0,
+        originX:match?Number(match[2]):NaN,
+        originY:match?Number(match[3]):NaN,
+        expectedX:toggle.left+toggle.width/2-panel.left,
+        expectedY:toggle.top+toggle.height/2-panel.top,
+        maxRadius:Number(element.dataset.ruwaMenuRadius||0),
         shadow:style.boxShadow,
+        transform:style.transform,
         linkOpacity:Array.from(element.querySelectorAll("a"))
           .filter(link=>getComputedStyle(link).display!=="none")
           .map(link=>Number.parseFloat(getComputedStyle(link).opacity))
       };
     });
-    assert.ok(["soft-reveal","revealed"].includes(frameOpening.frameState),
-      viewport.name + ": menu should use the new unified soft-reveal transition");
-    assert.ok(frameOpening.opacity>.1&&frameOpening.opacity<1,
-      viewport.name + ": panel should visibly fade in rather than appear abruptly");
-    assert.notEqual(frameOpening.transform,"none",
-      viewport.name + ": the frame should make a small, smooth settling movement");
-    assert.equal(frameOpening.filter,"none",
-      viewport.name + ": the new frame reveal must stay optically crisp without blur");
-    assert.ok(Math.abs(frameOpening.scaleX-1)<.002&&Math.abs(frameOpening.scaleY-1)<.002,
-      viewport.name + ": the frame must not scale or expand during its reveal");
-    assert.ok(Math.abs(frameOpening.translateY)<=4.1,
-      viewport.name + ": the frame movement must remain exceptionally subtle");
+    assert.equal(frameOpening.frameState,"circle-reveal",
+      viewport.name + ": the menu frame must use the original circular reveal");
+    assert.ok(frameOpening.radius>0&&frameOpening.radius<frameOpening.maxRadius,
+      viewport.name + ": the panel circle must be growing from zero toward the full frame");
+    assert.ok(Math.abs(frameOpening.originX-frameOpening.expectedX)<=1.25&&
+      Math.abs(frameOpening.originY-frameOpening.expectedY)<=1.25,
+      viewport.name + ": the reveal must originate at the actual hamburger center");
+    assert.ok(frameOpening.clipPath.startsWith("circle("),
+      viewport.name + ": the menu frame is not being revealed through a circular clip-path");
+    assert.equal(frameOpening.transform,"none",
+      viewport.name + ": the original frame reveal must not rotate or translate the menu panel");
     assert.ok(frameOpening.shadow!=="none",
-      viewport.name + ": the menu's layered shadow must remain attached to its frame");
-    assert.ok(frameOpening.linkOpacity[0]>.05&&frameOpening.linkOpacity[6]<.05,
-      viewport.name + ": links should arrive after the frame begins, in a gentle stagger");
+      viewport.name + ": the menu frame must retain its original layered shadow");
+    assert.ok(frameOpening.linkOpacity.every(opacity=>opacity<.05),
+      viewport.name + ": navigation links must enter after the frame begins expanding");
 
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(350);
     const staggerState = await nav.evaluate(element => {
       const style = getComputedStyle(element);
       const links = Array.from(element.querySelectorAll("a"))
@@ -213,6 +216,8 @@ try {
         shape: element.dataset.ruwaMenuShape,
         frameState: element.dataset.ruwaMenuFrameState,
         clipPath: style.clipPath,
+        frameRadius:Number((style.clipPath.match(/^circle\(([-\d.]+)px/)||[])[1]||0),
+        frameMaxRadius:Number(element.dataset.ruwaMenuRadius||0),
         filter:style.filter,
         transform:style.transform,
         position: style.position,
@@ -242,10 +247,11 @@ try {
     assert.equal(staggerState.position, "absolute",
       viewport.name + ": menu must remain independently positioned");
     if(viewport.width>920){
-      assert.ok(["soft-reveal","revealed"].includes(staggerState.frameState),
-        viewport.name + ": the menu must preserve its elegant soft-reveal state while links arrive");
-      assert.equal(staggerState.clipPath,"none",
-        viewport.name + ": the full rectangular frame must remain intact during the reveal");
+      assert.equal(staggerState.frameState,"circle-reveal",
+        viewport.name + ": the original circle must remain active while the frame is expanding");
+      assert.ok(staggerState.clipPath.startsWith("circle(")&&
+        staggerState.frameRadius>0&&staggerState.frameRadius<staggerState.frameMaxRadius,
+        viewport.name + ": the frame must be visibly partway through its circular expansion");
       assert.equal(staggerState.belowContact,true,
         viewport.name + ": animated panel must appear below the Contact CTA");
       assert.equal(staggerState.centeredAndNudgedLeft,true,
@@ -257,20 +263,17 @@ try {
       viewport.name + ": dropdown panel did not fade into place");
     assert.ok(staggerState.panelShadow!=="none"&&(staggerState.panelShadow.match(/rgba?\(/g)||[]).length>=3,
       viewport.name + ": the panel opened by the round hamburger must have a layered shadow behind its frame: "+staggerState.panelShadow);
-    assert.ok(staggerState.linkStagger>=.064&&staggerState.linkStagger<=.066,
-      viewport.name + ": navigation links must use the refined, perceptible stagger on every device");
-    assert.ok(staggerState.linkDuration>=.165&&staggerState.linkDuration<=.175,
-      viewport.name + ": navigation links must retain the refined short fade duration");
+    assert.ok(staggerState.linkStagger>=.074&&staggerState.linkStagger<=.076,
+      viewport.name + ": links must keep the original 75ms sequential entrance");
+    assert.ok(staggerState.linkDuration>=.275&&staggerState.linkDuration<=.285,
+      viewport.name + ": links must keep the original 280ms entrance duration");
+    assert.ok(staggerState.panelRevealDuration>=.615&&staggerState.panelRevealDuration<=.625,
+      viewport.name + ": the menu frame must keep the original 620ms circular expansion");
     if(viewport.width>920){
-      assert.ok(staggerState.panelRevealDuration>=.55&&staggerState.panelRevealDuration<=.57,
-        viewport.name + ": the hamburger panel soft reveal should use its refined duration");
       if(viewport.width>=1366){
         assert.ok(staggerState.panelRect.width>=332&&staggerState.panelRect.width<=337,
           viewport.name + ": hamburger link panel should be slightly wider than its former 320px width: "+staggerState.panelRect.width);
       }
-    }else{
-      assert.ok(staggerState.panelRevealDuration>=.44&&staggerState.panelRevealDuration<=.46,
-        viewport.name + ": mobile/tablet hamburger panel should open slightly faster");
     }
     assert.equal(staggerState.linkOpacity.length, 7,
       viewport.name + ": the stagger must include all seven navigation links");
@@ -298,6 +301,7 @@ try {
         expanded: document.querySelector("#menu-toggle").getAttribute("aria-expanded"),
         inert: element.inert,
         open: element.classList.contains("open"),
+        clipPath: getComputedStyle(element).clipPath,
         links: links.map(link => ({
           href: link.getAttribute("href"),
           display: getComputedStyle(link).display,
@@ -351,6 +355,7 @@ try {
     assert.equal(opened.expanded, "true", viewport.name + ": aria-expanded did not become true");
     assert.equal(opened.inert, false, viewport.name + ": visible nav remained inert");
     assert.equal(opened.open, true, viewport.name + ": open nav class was removed");
+    assert.equal(opened.clipPath,"none",viewport.name + ": completed circular reveal did not release its clip mask");
     assert.ok(opened.rect.width > 0 && opened.rect.height > 0,
       viewport.name + ": expanded panel has no rendered dimensions");
     if (viewport.width > 920) {
@@ -457,44 +462,33 @@ try {
         { timeout: 3000 }
       );
       await page.waitForFunction(
-        () => document.querySelector("#main-nav")?.dataset.ruwaMenuFrameState === "soft-exit",
+        () => document.querySelector("#main-nav")?.dataset.ruwaMenuFrameState === "circle-reveal-exit",
         null,
         { timeout: 2000 }
       );
-      await page.waitForTimeout(140);
+      await page.waitForTimeout(600);
       const exitState=await nav.evaluate(element=>{
         const style=getComputedStyle(element);
-        const matrix=style.transform==="none"?null:new DOMMatrixReadOnly(style.transform);
+        const match=style.clipPath.match(/^circle\(([-\d.]+)px at ([-\d.]+)px ([-\d.]+)px\)$/);
         const links=Array.from(element.querySelectorAll("a"))
           .filter(link=>getComputedStyle(link).display!=="none");
         return {
           frameState:element.dataset.ruwaMenuFrameState,
           exitMotion:element.dataset.ruwaMenuExitMotion,
-          opacity:Number.parseFloat(style.opacity),
-          filter:style.filter,
-          transform:style.transform,
-          scaleX:matrix?matrix.a:1,
-          scaleY:matrix?matrix.d:1,
           clipPath:style.clipPath,
-          shadow:style.boxShadow,
+          radius:match?Number(match[1]):0,
+          maxRadius:Number(element.dataset.ruwaMenuRadius||0),
           first:Number.parseFloat(getComputedStyle(links[0]).opacity),
           last:Number.parseFloat(getComputedStyle(links[links.length-1]).opacity)
         };
       });
-      assert.equal(exitState.exitMotion,"soft-lift-fade",
-        viewport.name + ": closing must use the new dedicated soft-lift exit, not reverse the opening");
-      assert.ok(exitState.opacity>0&&exitState.opacity<1&&exitState.filter==="none",
-        viewport.name + ": the entire menu frame should fade smoothly while staying crisp");
-      assert.ok(Math.abs(exitState.scaleX-1)<.002&&Math.abs(exitState.scaleY-1)<.002,
-        viewport.name + ": the closing frame must not scale or contract");
-      assert.notEqual(exitState.transform,"none",
-        viewport.name + ": the closing panel should make a small upward exit movement");
-      assert.equal(exitState.clipPath,"none",
-        viewport.name + ": the menu frame must remain whole during its exit");
-      assert.ok(exitState.shadow!=="none",
-        viewport.name + ": the panel shadow should travel and fade with its frame");
+      assert.equal(exitState.exitMotion,"circle-reveal-reverse",
+        viewport.name + ": closing must reverse the original circular frame reveal");
+      assert.ok(exitState.clipPath.startsWith("circle(")&&
+        exitState.radius>0&&exitState.radius<exitState.maxRadius,
+        viewport.name + ": the frame must visibly contract back toward the hamburger origin");
       assert.ok(exitState.last<exitState.first,
-        viewport.name + ": navigation text should dissolve in reverse order before the panel finishes");
+        viewport.name + ": the final links must disappear before the first links during reverse close");
       if (viewport.width === 1440) {
         await page.screenshot({path:OUT+"/menu-premium-soft-lift-exit-1440.png",fullPage:false});
       }
@@ -524,14 +518,14 @@ try {
       menuMotion: mode,
       contactAnchoredVerified: viewport.width <= 920 ||
         Math.abs(opened.rect.left-opened.rect.contactRect.left)<=2,
-      premiumRevealVerified: frameOpening.frameState==="soft-reveal"&&
-        frameOpening.shadow!=="none"&&staggerState.clipPath==="none",
+      premiumRevealVerified: frameOpening.frameState==="circle-reveal"&&
+        frameOpening.shadow!=="none"&&staggerState.clipPath.startsWith("circle("),
       sequentialLinksVisible: opened.links.filter(link => link.display !== "none").length,
       closeRestored: true,
       noHorizontalOverflow: true
     });
     await page.close();
-    console.log("[PASS] " + viewport.name + ": premium whole-panel reveal, sequential links, soft-lift exit and responsive layout");
+    console.log("[PASS] " + viewport.name + ": original hamburger-origin circle expansion, sequential links, reverse circle close and responsive layout");
   }
 
   // Verify Escape, focus restoration, link selection, and quick direction reversal.
@@ -583,7 +577,7 @@ try {
   assert.equal(
     await interactionPage.evaluate(() => document.activeElement?.id),
     "menu-toggle",
-    "Selecting a menu destination must restore focus to the menu button while the panel softly exits"
+    "Selecting a menu destination must restore focus to the menu button while the circular frame closes"
   );
 
   await interactionPage.evaluate(() => window.scrollTo(0, 0));
@@ -616,7 +610,7 @@ try {
   assert.equal(interactionErrors.length, 0,
     "Menu keyboard/link/reversal browser errors: " + interactionErrors.join(" | "));
   await interactionPage.close();
-  console.log("[PASS] Escape focus restoration, native anchor close, dedicated soft-lift exit and rapid reopen");
+  console.log("[PASS] Escape focus restoration, native anchor close, reverse circular reveal and rapid reopen");
 
   // Verify complete removal of the rotating perimeter-light system while preserving cards and doctor imagery.
   const cleanPage=await browser.newPage({
@@ -771,9 +765,9 @@ try {
     result: "passed",
     viewports: viewportResults,
     interactions: [
-      "desktop menu opens below Contact with a premium unified soft reveal",
-      "all seven side-panel links reveal sequentially in DOM order",
-      "reverse stagger text exit, soft-lift panel fade and rapid reopen support",
+      "desktop menu opens below Contact with the original hamburger-origin circular frame reveal",
+      "all seven side-panel links reveal sequentially after the circular frame begins expanding",
+      "reverse circular frame close, reverse-staggered links and rapid reopen support",
       "Escape closes and restores focus",
       "native anchor destination remains active",
       "reduced-motion menu is immediate and fully accessible",
