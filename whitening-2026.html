@@ -2212,6 +2212,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   // The movement is intentionally tiny so the rectangular frame never looks warped.
   const settledPanelShadow=getComputedStyle(nav).boxShadow;
   const softPanelShadow="0 10px 24px rgba(20,45,56,0),0 22px 42px rgba(20,45,56,0),0 3px 10px rgba(20,45,56,0),inset 0 1px 0 rgba(255,255,255,0)";
+  const midPanelShadow="0 10px 24px rgba(20,45,56,.07),0 22px 42px rgba(20,45,56,.09),0 3px 10px rgba(20,45,56,.05),inset 0 1px 0 rgba(255,255,255,.45)";
   gsap.set(nav,{
    autoAlpha:0,
    x:8,
@@ -2233,8 +2234,8 @@ body,button,input,select,textarea{font-family:var(--body)}
   });
 
   const panelDuration=contactAnchoredPanel?.66:.51;
-  const panelArcDuration=contactAnchoredPanel?.26:.21;
-  const panelSettleDuration=contactAnchoredPanel?.48:.36;
+  const panelArcDuration=contactAnchoredPanel?.24:.18;
+  const panelSettleDuration=contactAnchoredPanel?.42:.33;
   const linkStart=contactAnchoredPanel?.14:.11;
   const linkStagger=.06;
   const linkDuration=.16;
@@ -2264,11 +2265,12 @@ body,button,input,select,textarea{font-family:var(--body)}
 
   // First arc: the frame glides diagonally while turning gently toward neutral.
   menuTimeline.to(nav,{
-   autoAlpha:.52,
+   autoAlpha:.82,
    x:-1.5,
    y:-1,
    rotation:.45,
    scale:.996,
+   boxShadow:midPanelShadow,
    duration:panelArcDuration,
    ease:"power2.out"
   },0);
@@ -2284,7 +2286,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    boxShadow:settledPanelShadow,
    duration:panelSettleDuration,
    ease:"power3.out"
-  },contactAnchoredPanel?.18:.15);
+  },contactAnchoredPanel?.24:.18);
 
   animatedItems.forEach((link,index)=>{
    menuTimeline.to(link,{
