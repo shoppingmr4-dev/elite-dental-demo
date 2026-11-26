@@ -1101,7 +1101,10 @@ body,button,input,select,textarea{font-family:var(--body)}
   transform:translate(-50%,-50%);
  }
  .site-header.is-compact .nav.open{
-  position:absolute;z-index:5;top:calc(100% + 10px);left:50%;right:auto;
+  /* Span all three header grid tracks so the dropdown centers on the hamburger,
+     not on the narrower middle navigation track. */
+  position:absolute;z-index:5;grid-column:1 / -1;align-self:start;
+  top:calc(100% + 10px);left:50%;right:auto;
   translate:-50% 0;display:flex;flex-direction:column;align-items:stretch;
   justify-self:auto;gap:0;margin:0;
   width:min(360px,calc(100vw - 32px));max-height:min(70vh,560px);
