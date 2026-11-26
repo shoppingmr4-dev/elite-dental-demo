@@ -656,9 +656,16 @@ try {
   await teamCard.scrollIntoViewIfNeeded();
   await glowPage.waitForTimeout(420);
   await teamCard.hover();
+  const teamCardHandle=await teamCard.elementHandle();
   await glowPage.waitForFunction(element=>
     Number.parseFloat(getComputedStyle(element,"::after").opacity)>.45,
-    await teamCard.elementHandle(),{timeout:2000}
+    teamCardHandle,{timeout:2000}
+  );
+  // The existing image zoom has a 340ms CSS transition. Wait for its finished
+  // rendered value rather than sampling the first hover frame.
+  await glowPage.waitForFunction(element=>
+    Number.parseFloat(getComputedStyle(element.querySelector(".team-card-media img")).scale)>1.02,
+    teamCardHandle,{timeout:2000}
   );
   const teamGlow=await teamCard.evaluate(element=>({
     opacity:Number.parseFloat(getComputedStyle(element,"::after").opacity),
