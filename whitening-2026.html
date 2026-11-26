@@ -2241,8 +2241,8 @@ body,button,input,select,textarea{font-family:var(--body)}
   });
 
   const panelFoldDuration=contactAnchoredPanel?.50:.42;
-  const panelSettleDuration=contactAnchoredPanel?.38:.32;
-  const panelDuration=panelFoldDuration+panelSettleDuration-.04;
+  const panelSettleDuration=contactAnchoredPanel?.34:.28;
+  const panelDuration=panelFoldDuration+panelSettleDuration;
   const linkStart=contactAnchoredPanel?.22:.18;
   const linkStagger=.055;
   const linkDuration=.12;
@@ -2274,7 +2274,7 @@ body,button,input,select,textarea{font-family:var(--body)}
 
   // Lift and unfold from the lower corner like a notebook page being turned upward.
   menuTimeline.to(nav,{
-   autoAlpha:.78,
+   autoAlpha:.92,
    x:-4,
    y:5,
    rotationX:-12,
@@ -2300,7 +2300,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    boxShadow:settledPanelShadow,
    duration:panelSettleDuration,
    ease:"power3.out"
-  },contactAnchoredPanel?.42:.34);
+  },contactAnchoredPanel?.50:.42);
 
   animatedItems.forEach((link,index)=>{
    menuTimeline.to(link,{
