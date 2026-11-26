@@ -176,9 +176,12 @@ try {
         opacity:Number.parseFloat(style.opacity),
         filter:style.filter,
         transform:style.transform,
-        scaleX:matrix?matrix.a:1,
-        scaleY:matrix?matrix.d:1,
+        scaleX:matrix?Math.hypot(matrix.a,matrix.b):1,
+        scaleY:matrix?Math.hypot(matrix.c,matrix.d):1,
+        rotationDeg:matrix?Math.atan2(matrix.b,matrix.a)*180/Math.PI:0,
+        translateX:matrix?matrix.e:0,
         translateY:matrix?matrix.f:0,
+        motionStyle:element.dataset.ruwaPanelMotionStyle,
         shadow:style.boxShadow,
         linkOpacity:Array.from(element.querySelectorAll("a"))
           .filter(link=>getComputedStyle(link).display!=="none")
@@ -193,10 +196,15 @@ try {
       viewport.name + ": the frame should make a small, smooth settling movement");
     assert.equal(frameOpening.filter,"none",
       viewport.name + ": the new frame reveal must stay optically crisp without blur");
-    assert.ok(Math.abs(frameOpening.scaleX-1)<.002&&Math.abs(frameOpening.scaleY-1)<.002,
-      viewport.name + ": the frame must not scale or expand during its reveal");
-    assert.ok(Math.abs(frameOpening.translateY)<=4.1,
-      viewport.name + ": the frame movement must remain exceptionally subtle");
+    assert.equal(frameOpening.motionStyle,"subtle-spiral",
+      viewport.name + ": the panel must use the new restrained spiral-style frame entrance");
+    assert.ok(Math.abs(frameOpening.rotationDeg)>.12&&Math.abs(frameOpening.rotationDeg)<2.4,
+      viewport.name + ": the frame's spiral turn must be subtle and visibly measurable: "+frameOpening.rotationDeg);
+    assert.ok(Math.abs(frameOpening.translateX)<=9&&Math.abs(frameOpening.translateY)<=9,
+      viewport.name + ": the spiral arc must stay within a very small diagonal movement");
+    assert.ok(frameOpening.scaleX>.985&&frameOpening.scaleX<1.002&&
+      frameOpening.scaleY>.985&&frameOpening.scaleY<1.002,
+      viewport.name + ": the spiral frame scale must remain almost imperceptible");
     assert.ok(frameOpening.shadow!=="none",
       viewport.name + ": the menu's layered shadow must remain attached to its frame");
     assert.ok(frameOpening.linkOpacity[0]>.05&&frameOpening.linkOpacity[6]<.05,
@@ -257,19 +265,19 @@ try {
       viewport.name + ": dropdown panel did not fade into place");
     assert.ok(staggerState.panelShadow!=="none"&&(staggerState.panelShadow.match(/rgba?\(/g)||[]).length>=3,
       viewport.name + ": the panel opened by the round hamburger must have a layered shadow behind its frame: "+staggerState.panelShadow);
-    assert.ok(staggerState.linkStagger>=.064&&staggerState.linkStagger<=.066,
+    assert.ok(staggerState.linkStagger>=.059&&staggerState.linkStagger<=.061,
       viewport.name + ": navigation links must use the refined, perceptible stagger on every device");
-    assert.ok(staggerState.linkDuration>=.165&&staggerState.linkDuration<=.175,
+    assert.ok(staggerState.linkDuration>=.155&&staggerState.linkDuration<=.165,
       viewport.name + ": navigation links must retain the refined short fade duration");
     if(viewport.width>920){
-      assert.ok(staggerState.panelRevealDuration>=.55&&staggerState.panelRevealDuration<=.57,
+      assert.ok(staggerState.panelRevealDuration>=.65&&staggerState.panelRevealDuration<=.67,
         viewport.name + ": the hamburger panel soft reveal should use its refined duration");
       if(viewport.width>=1366){
         assert.ok(staggerState.panelRect.width>=332&&staggerState.panelRect.width<=337,
           viewport.name + ": hamburger link panel should be slightly wider than its former 320px width: "+staggerState.panelRect.width);
       }
     }else{
-      assert.ok(staggerState.panelRevealDuration>=.44&&staggerState.panelRevealDuration<=.46,
+      assert.ok(staggerState.panelRevealDuration>=.50&&staggerState.panelRevealDuration<=.52,
         viewport.name + ": mobile/tablet hamburger panel should open slightly faster");
     }
     assert.equal(staggerState.linkOpacity.length, 7,
