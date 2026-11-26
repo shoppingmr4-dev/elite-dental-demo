@@ -165,19 +165,24 @@ try {
 
     const mode = await page.evaluate(() => document.documentElement.dataset.ruwaMenuMotion || "unset");
     assert.equal(mode, "gsap-staggered",
-      viewport.name + ": expected the normal dropdown and staggered links, not a circle/funnel reveal");
+      viewport.name + ": expected a left-side desktop panel with sequential links, not a circle/funnel reveal");
 
     await page.waitForTimeout(450);
     const staggerState = await nav.evaluate(element => {
       const style = getComputedStyle(element);
       const links = Array.from(element.querySelectorAll("a"))
         .filter(link => getComputedStyle(link).display !== "none");
+      const panelRect=element.getBoundingClientRect();
+      const buttonRect=document.querySelector("#menu-toggle").getBoundingClientRect();
       return {
         shape: element.dataset.ruwaMenuShape,
         clipPath: style.clipPath,
         position: style.position,
         flexDirection: style.flexDirection,
         panelOpacity: Number.parseFloat(style.opacity),
+        panelRect:panelRect.toJSON(),
+        buttonRect:buttonRect.toJSON(),
+        leftOfButton:panelRect.right<=buttonRect.left-8,
         progress: Number(element.dataset.ruwaMenuProgress || 0),
         linkOpacity: links.map(link => Number.parseFloat(getComputedStyle(link).opacity)),
         linkRects: links.map(link => {
@@ -186,12 +191,18 @@ try {
         })
       };
     });
-    assert.equal(staggerState.shape, "dropdown",
-      viewport.name + ": menu panel must remain a normal dropdown");
+    assert.equal(staggerState.shape, viewport.width > 920 ? "left-side-panel" : "dropdown",
+      viewport.name + ": desktop menu must open on the left of the hamburger; mobile/tablet keeps its dropdown");
     assert.equal(staggerState.clipPath, "none",
       viewport.name + ": dropdown must not reveal from the hamburger circle");
     assert.equal(staggerState.position, "absolute",
-      viewport.name + ": dropdown must remain independently positioned");
+      viewport.name + ": menu must remain independently positioned");
+    if(viewport.width>920){
+      assert.equal(staggerState.leftOfButton,true,
+        viewport.name + ": animated desktop panel must emerge to the physical left of the hamburger");
+      assert.ok(staggerState.panelRect.top<=staggerState.buttonRect.top+2,
+        viewport.name + ": desktop side panel must not open below the hamburger");
+    }
     assert.equal(staggerState.flexDirection, "column",
       viewport.name + ": dropdown links must be vertically aligned");
     assert.ok(staggerState.panelOpacity > .8,
@@ -208,7 +219,7 @@ try {
     ), viewport.name + ": sequential links lost their consistent vertical row layout");
 
     if (viewport.width === 1440) {
-      await page.screenshot({path:OUT+"/menu-stagger-mid-1440.png",fullPage:false});
+      await page.screenshot({path:OUT+"/menu-left-panel-stagger-mid-1440.png",fullPage:false});
     }
     await page.waitForFunction(
       () => document.querySelector("#main-nav")?.dataset.ruwaMenuState === "open",
@@ -278,32 +289,29 @@ try {
       viewport.name + ": expanded panel has no rendered dimensions");
     if (viewport.width > 920) {
       assert.equal(opened.navStyle.position, "absolute",
-        viewport.name + ": desktop navigation did not open as a dropdown panel");
+        viewport.name + ": desktop navigation did not open as a left-side panel");
       assert.equal(opened.navStyle.flexDirection, "column",
-        viewport.name + ": desktop dropdown links are not arranged vertically");
+        viewport.name + ": desktop left-side panel links are not arranged vertically");
       assert.ok(["auto", "scroll"].includes(opened.navStyle.overflowY),
-        viewport.name + ": desktop dropdown must retain vertical overflow support");
+        viewport.name + ": desktop side panel must retain vertical overflow support");
       assert.notEqual(opened.navStyle.backgroundColor, "rgba(0, 0, 0, 0)",
-        viewport.name + ": desktop dropdown panel background is missing");
+        viewport.name + ": desktop side panel background is missing");
       assert.equal(opened.navStyle.borderTopWidth, "1px",
-        viewport.name + ": desktop dropdown panel border is missing");
+        viewport.name + ": desktop side panel border is missing");
       assert.equal(opened.visibleLinks.length, 7,
-        viewport.name + ": desktop dropdown must expose all seven navigation links");
+        viewport.name + ": desktop left-side panel must expose all seven navigation links");
       assert.ok(opened.rect.width >= 300 && opened.rect.width <= 380 &&
         opened.rect.height >= 300,
-        viewport.name + ": desktop dropdown dimensions are not consistent with a full vertical link list");
-      assert.ok(Math.abs(opened.rect.centerX - opened.rect.buttonCenterX) <= 1.5,
-        viewport.name + ": desktop dropdown is not centered under its hamburger: " +
-        JSON.stringify({
-          panelCenter:opened.rect.centerX,
-          buttonCenter:opened.rect.buttonCenterX,
-          panel:opened.rect,
-          navStyle:opened.rect.style
-        }));
-      assert.ok(opened.rect.top > opened.rect.header.bottom,
-        viewport.name + ": desktop dropdown does not sit below the header: " +
-        JSON.stringify({panelTop:opened.rect.top,headerBottom:opened.rect.header.bottom,
-          panelRect:opened.rect,navStyle:opened.navStyle}));
+        viewport.name + ": desktop side-panel dimensions are not consistent with its full vertical link list");
+      assert.ok(opened.rect.right <= opened.rect.buttonRect.left - 8,
+        viewport.name + ": desktop navigation must sit physically left of the separate hamburger: " +
+        JSON.stringify({panel:opened.rect,button:opened.rect.buttonRect}));
+      assert.ok(Math.abs(opened.rect.right - (opened.rect.buttonRect.left - 12)) <= 2,
+        viewport.name + ": side panel should keep a refined 12px gap from the hamburger: " +
+        JSON.stringify({panelRight:opened.rect.right,buttonLeft:opened.rect.buttonRect.left}));
+      assert.ok(Math.abs(opened.rect.top - opened.rect.header.top) <= 2,
+        viewport.name + ": side panel must align with the header top instead of sitting under the hamburger: " +
+        JSON.stringify({panelTop:opened.rect.top,headerTop:opened.rect.header.top}));
       for (let index = 0; index < opened.visibleLinks.length; index++) {
         const link = opened.visibleLinks[index];
         assert.ok(link.rect.height >= 44 && link.rect.width >= opened.rect.width - 20,
@@ -394,7 +402,7 @@ try {
       assert.equal(reverseState.clipPath,"none",
         viewport.name + ": closing must not reintroduce a circular reveal");
       if (viewport.width === 1440) {
-        await page.screenshot({path:OUT+"/menu-stagger-reverse-1440.png",fullPage:false});
+        await page.screenshot({path:OUT+"/menu-left-panel-stagger-reverse-1440.png",fullPage:false});
       }
     } else {
       await clickHamburger(page, button, viewport.name);
@@ -703,8 +711,8 @@ try {
     result: "passed",
     viewports: viewportResults,
     interactions: [
-      "dropdown panel remains separate from the hamburger circle",
-      "all seven dropdown links reveal sequentially in DOM order",
+      "desktop menu opens to the left of the separate hamburger control",
+      "all seven side-panel links reveal sequentially in DOM order",
       "reverse stagger close and repeated direction changes",
       "Escape closes and restores focus",
       "native anchor destination remains active",
