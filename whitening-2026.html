@@ -2236,6 +2236,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  const shouldCollapseNav=()=>window.innerWidth<=920||isDesktopCompact();
  let navHadFocus=false;
  let menuTimeline=null;
+ let menuExitTimeline=null;
 
  // Center beneath the Contact CTA, then nudge the panel 14px to the left
  // so it stays clearly separated from the independent hamburger circle.
@@ -2269,6 +2270,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.style.removeProperty("visibility");
   nav.style.removeProperty("transform");
   nav.style.removeProperty("transform-origin");
+  nav.style.removeProperty("filter");
   nav.style.removeProperty("pointer-events");
   button.style.removeProperty("opacity");
   button.style.removeProperty("pointer-events");
@@ -2288,6 +2290,10 @@ body,button,input,select,textarea{font-family:var(--body)}
   if(killTimeline&&menuTimeline){
    menuTimeline.kill();
    menuTimeline=null;
+  }
+  if(killTimeline&&menuExitTimeline){
+   menuExitTimeline.kill();
+   menuExitTimeline=null;
   }
   nav.classList.remove("open");
   clearInlineMotion();
@@ -2340,54 +2346,46 @@ body,button,input,select,textarea{font-family:var(--body)}
    return;
   }
 
-  root.dataset.ruwaMenuMotion="gsap-staggered";
+  root.dataset.ruwaMenuMotion="gsap-premium";
   nav.dataset.ruwaMenuShape=presentation;
-  nav.dataset.ruwaMenuFrameState=contactAnchoredPanel?"drawing-width":"revealed";
+  nav.dataset.ruwaMenuFrameState="soft-reveal";
   nav.dataset.ruwaMenuState="opening";
   nav.dataset.ruwaMenuAnimating="true";
   nav.dataset.ruwaMenuProgress="0";
 
-  // The frame unfolds in two distinct phases: its top edge extends horizontally,
-  // then the complete rectangle opens downward. Reversing plays the same stages
-  // in reverse order so the border itself has a deliberate exit sequence.
+  // A refined, unified reveal: the full framed panel lifts into place,
+  // sharpens from a light blur, and settles without a center-out frame wipe.
   gsap.set(nav,{
    autoAlpha:0,
    x:0,
-   y:contactAnchoredPanel?-5:-8,
-   scale:contactAnchoredPanel ? .995 : .985,
-   rotation:0,
-   clipPath:contactAnchoredPanel
-    ?"inset(0% 49% 96% 49% round 16px)"
-    :"inset(0% 0% 0% 0% round 14px)",
+   y:-9,
+   scale:.972,
+   filter:"blur(5px)",
    transformOrigin:"top center",
    force3D:false
   });
   gsap.set(animatedItems,{
    autoAlpha:0,
    x:0,
-   y:contactAnchoredPanel?9:10,
+   y:7,
    rotation:0,
-   scale:1,
+   scale:.99,
    transformOrigin:"50% 50%"
   });
+
+  const panelDuration=contactAnchoredPanel?.44:.36;
+  const linkStart=contactAnchoredPanel?.10:.08;
+  const linkStagger=.045;
+  const linkDuration=contactAnchoredPanel?.19:.18;
+  nav.dataset.ruwaPanelRevealDuration=String(panelDuration);
+  nav.dataset.ruwaLinkStagger=String(linkStagger);
+  nav.dataset.ruwaLinkDuration=String(linkDuration);
 
   menuTimeline=gsap.timeline({
    paused:true,
    onUpdate(){
-    const progress=menuTimeline.progress();
-    const time=menuTimeline.time();
-    nav.dataset.ruwaMenuProgress=progress.toFixed(4);
-    if(contactAnchoredPanel){
-     if(menuTimeline.reversed()){
-      nav.dataset.ruwaMenuFrameState=time>=.70
-       ?"closing-links"
-       :time>=.30?"collapsing-height":"retracting-width";
-     }else{
-      nav.dataset.ruwaMenuFrameState=time>=.70
-       ?"revealed"
-       :time>=.30?"drawing-height":"drawing-width";
-     }
-    }
+    nav.dataset.ruwaMenuProgress=menuTimeline.progress().toFixed(4);
+    nav.dataset.ruwaMenuFrameState="soft-reveal";
    },
    onComplete(){
     nav.dataset.ruwaMenuProgress="1";
@@ -2396,47 +2394,19 @@ body,button,input,select,textarea{font-family:var(--body)}
     nav.dataset.ruwaMenuAnimating="false";
     settleDesktopMenuOpen();
     if(document.activeElement===button)animatedItems[0]?.focus({preventScroll:true});
-   },
-   onReverseComplete(){
-    menuTimeline=null;
-    finishClosed(false);
    }
   });
 
-  if(contactAnchoredPanel){
-   menuTimeline.to(nav,{
-    autoAlpha:1,
-    clipPath:"inset(0% 0% 96% 0% round 16px)",
-    y:-2,
-    scale:1,
-    duration:.30,
-    ease:"expo.out"
-   },0);
-   menuTimeline.to(nav,{
-    clipPath:"inset(0% 0% 0% 0% round 16px)",
-    y:0,
-    duration:.40,
-    ease:"power3.out"
-   },.30);
-  }else{
-   menuTimeline.to(nav,{
-    autoAlpha:1,
-    clipPath:"inset(0% 0% 0% 0% round 14px)",
-    x:0,
-    y:0,
-    scale:1,
-    duration:.36,
-    ease:"expo.out"
-   },0);
-  }
+  menuTimeline.to(nav,{
+   autoAlpha:1,
+   x:0,
+   y:0,
+   scale:1,
+   filter:"blur(0px)",
+   duration:panelDuration,
+   ease:"power2.out"
+  },0);
 
-  const panelRevealDuration=contactAnchoredPanel ? .70 : .36;
-  nav.dataset.ruwaPanelRevealDuration=String(panelRevealDuration);
-  const linkStart=contactAnchoredPanel ? .74 : .14;
-  const linkStagger=contactAnchoredPanel ? .068 : .095;
-  const linkDuration=contactAnchoredPanel ? .25 : .34;
-  nav.dataset.ruwaLinkStagger=String(linkStagger);
-  nav.dataset.ruwaLinkDuration=String(linkDuration);
   animatedItems.forEach((link,index)=>{
    menuTimeline.to(link,{
     autoAlpha:1,
@@ -2445,7 +2415,7 @@ body,button,input,select,textarea{font-family:var(--body)}
     rotation:0,
     scale:1,
     duration:linkDuration,
-    ease:"power3.out"
+    ease:"power2.out"
    },linkStart+index*linkStagger);
   });
   menuTimeline.play(0);
@@ -2456,11 +2426,52 @@ body,button,input,select,textarea{font-family:var(--body)}
    button.setAttribute("aria-label","فتح القائمة");
    nav.inert=true;
 
-   if(!immediate&&!reducedMotion.matches&&menuTimeline){
+   const gsap=window.gsap;
+   if(!immediate&&!reducedMotion.matches&&gsap&&typeof gsap.timeline==="function"&&nav.classList.contains("open")){
+    if(menuTimeline){
+     menuTimeline.kill();
+     menuTimeline=null;
+    }
+    if(menuExitTimeline){
+     menuExitTimeline.kill();
+     menuExitTimeline=null;
+    }
+
+    const visibleItems=links().filter(link=>getComputedStyle(link).display!=="none");
     nav.dataset.ruwaMenuState="closing";
     nav.dataset.ruwaMenuAnimating="true";
+    nav.dataset.ruwaMenuFrameState="soft-exit";
+    nav.dataset.ruwaMenuExitMotion="soft-lift-fade";
     if(isDesktopCompact())button.style.removeProperty("pointer-events");
-    menuTimeline.reverse();
+
+    // A dedicated exit: links dissolve in reverse order while the intact panel
+    // lifts a few pixels, softens and fades with its shadow as one complete surface.
+    menuExitTimeline=gsap.timeline({
+     paused:true,
+     onUpdate(){
+      nav.dataset.ruwaMenuExitProgress=menuExitTimeline.progress().toFixed(4);
+      nav.dataset.ruwaMenuFrameState="soft-exit";
+     },
+     onComplete(){
+      menuExitTimeline=null;
+      finishClosed(false);
+     }
+    });
+    menuExitTimeline.to(visibleItems.slice().reverse(),{
+     autoAlpha:0,
+     y:-4,
+     scale:.985,
+     duration:.12,
+     ease:"power2.in",
+     stagger:.018
+    },0).to(nav,{
+     autoAlpha:0,
+     y:-8,
+     scale:.985,
+     filter:"blur(4px)",
+     duration:.25,
+     ease:"power2.in"
+    },.06).play(0);
    }else{
     finishClosed(true);
    }
@@ -2498,6 +2509,12 @@ body,button,input,select,textarea{font-family:var(--body)}
    nav.classList.add("open");
    syncNavInert();
 
+   if(menuExitTimeline){
+    menuExitTimeline.kill();
+    menuExitTimeline=null;
+    menuTimeline=null;
+    clearInlineMotion();
+   }
    if(menuTimeline){
     nav.dataset.ruwaMenuState="opening";
     nav.dataset.ruwaMenuAnimating="true";
@@ -2550,6 +2567,10 @@ body,button,input,select,textarea{font-family:var(--body)}
   if(menuTimeline){
    menuTimeline.kill();
    menuTimeline=null;
+  }
+  if(menuExitTimeline){
+   menuExitTimeline.kill();
+   menuExitTimeline=null;
   }
   clearInlineMotion();
   root.dataset.ruwaMenuMotion="reduced";
