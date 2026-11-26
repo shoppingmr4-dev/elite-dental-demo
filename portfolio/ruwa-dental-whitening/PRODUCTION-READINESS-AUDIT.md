@@ -12,7 +12,7 @@
 
 RUWA is a fictional portfolio concept, not a commissioned or operating dental clinic. It must not be presented as a real clinic, and it must not acquire invented doctors, qualifications, ratings, testimonials, prices, addresses, opening hours, patient statistics, clinical outcomes, or appointment inventory.
 
-The current page has a coherent service-specific education journey. It contains **11 main content sections** plus the shared header, announcement strip, and footer. Its educational structure does not need extra placeholder sections. The missing items are real-business evidence and an operational conversion destination, not decorative content.
+The current page has a coherent service-specific education journey. It contains **9 main content sections** plus the shared header, announcement strip, and footer. The assessment approach is integrated into the treatment journey, while suitability, safety, and realistic expectations share one combined section. The missing items are real-business evidence and an operational conversion destination, not decorative content.
 
 ## 2. Repository source-of-truth and route audit
 
@@ -28,20 +28,18 @@ The current page has a coherent service-specific education journey. It contains 
 
 The actual current DOM order is:
 
-| Order | ID | Section | Decision | Evidence-based rationale |
+| DOM order | ID | Section | Decision | Evidence-based rationale |
 |---:|---|---|---|---|
-| Header | main-nav | Brand, seven section links, phone CTA labelled «اتصل بنا» | KEEP | Directs visitors to the current patient-education journey, including the treatment journey and reviews-transparency note. |
+| Header | main-nav | Brand, seven section links, phone CTA labelled «اتصل بنا» | KEEP | Directs visitors to the revised patient-education journey and preserves access to the team and transparent reviews sections. |
 | 01 | top | Hero | KEEP / protect | Explains the whitening subject and presents the approved illustrative portrait and first actions. |
-| 02 | approach | Assessment approach | KEEP | Explains why assessment precedes choosing an option. |
-| 03 | causes | Causes of discoloration | KEEP | Provides concise context about surface and deeper colour changes. |
-| 04 | options | Whitening options | IMPROVE only for a real clinic | General education is not proof that a real clinic offers all listed options. |
-| 05 | journey | Treatment journey | KEEP | Explains the general sequence from initial assessment and option selection to the procedure and aftercare, without claiming a clinic-specific protocol. |
-| 06 | suitability | Suitability and safety | KEEP / clinical review required | Explains factors that may affect suitability or timing. |
-| 07 | expectations | Realistic expectations | KEEP | Covers individual result variation, possible temporary sensitivity and gum irritation, restorations that do not whiten like natural teeth, and general aftercare without invented clinic-specific restrictions or timelines. |
-| 08 | team | Dentist/team | KEEP / demo-only | Three distinct AI-generated illustrative male portraits extracted from the existing RUWA concept image; no real clinician identity or credentials are claimed. |
-| 09 | reviews | Patient reviews | KEEP / transparency-only | States that no verified patient reviews are available in this fictional demo; includes publication criteria but no testimonials or scores. |
-| 10 | faq | Frequently asked questions | KEEP | Four native details/summary entries are present. |
-| 11 | consultation | Final contact | KEEP / activate only with verified details | The actions disclose that real channels are not configured. |
+| 02 | causes | Causes of discoloration | KEEP | Provides concise context about surface and deeper colour changes. |
+| 03 | options | Whitening options | KEEP / clinical review for a real clinic | General education is not proof that a real clinic offers all listed options. |
+| 04 | journey | Assessment and treatment journey | KEEP / consolidated | Integrates assessment, option discussion, implementation, and aftercare into one ordered four-step sequence. |
+| 05 | suitability | Suitability, safety, and realistic expectations | KEEP / consolidated / clinical review required | Combines health and timing factors with result variation, possible effects, restoration limits, and aftercare. |
+| 06 | team | Dentist/team | KEEP / unchanged demo-only section | The three distinct AI-generated illustrative male portraits remain exactly as approved; no real clinician identity or credentials are claimed. |
+| 07 | reviews | Patient reviews | KEEP / unchanged transparency-only section | The notice and all three review placeholders remain exactly as approved; no testimonials or scores are invented. |
+| 08 | faq | Frequently asked questions | KEEP | Two non-redundant native details/summary entries are present. |
+| 09 | consultation | Final contact | KEEP / activate only with verified details | The actions disclose that real channels are not configured. |
 | Footer | — | Portfolio and image disclosures | KEEP | Prevents the sample from being mistaken for a real operating clinic. |
 
 The team section contains three equal demo-only profile cards with distinct AI-generated illustrative male portraits extracted from an existing RUWA concept image; these are not real doctor profiles or credentials. No authentic patient review/testimonial, review count, or rating score is supplied. The new patient-reviews panel is a transparency notice only, not social proof. No before-and-after gallery, clinic gallery, pricing section, map, or hours-of-operation section exists in this page.
@@ -52,7 +50,7 @@ The team section contains three equal demo-only profile cards with distinct AI-g
 - The page has a document title, meta description, Open Graph title/description/image, and favicon.
 - The current Hero image is assets/ruwa-hero-90-768.webp.
 - The current Hero image alt text and visible caption explicitly identify it as AI-generated and not a real dentist.
-- FAQ count: **4 native details entries**.
+- FAQ count: **2 native details entries**.
 - Contact controls: **3 WhatsApp actions and 3 phone actions**, including a context-aware floating WhatsApp control and a header phone action labelled «اتصل بنا».
 - WHATSAPP_NUMBER and PHONE_NUMBER are intentionally empty.
 - When clicked with those values empty, the actions open the local contact-unavailable dialog. They do not open WhatsApp or begin a phone call.
@@ -95,17 +93,15 @@ These are production blockers. Do not add placeholder-looking proof to the demo.
 
 Once genuine clinic data is supplied and approved, use this one conversion-oriented sequence:
 
-1. Hero — service, real clinic context, honest benefit, and one primary action.
-2. Verified trust strip — only verifiable clinic and professional facts.
+1. Hero — service, genuine clinic context, honest benefit, and one primary action.
+2. Verified trust information — only verifiable clinic and professional facts.
 3. Understanding the problem — concise reasons and concerns relevant to whitening.
-4. Assessment journey — what is assessed and why.
-5. Real service options — only the methods actually offered, plus accurate terms/pricing when confirmed.
-6. Doctor profile — replace the current disclosed demonstration template only when the treating professional’s identity, registration, and publishable qualifications are verified; do not present the AI illustration as the real clinician.
-7. Suitability and safety — clinically reviewed constraints and expectations.
-8. Patient reviews — conditional on genuine, authorized material and applicable rules; omit when unavailable.
-9. FAQ — focused questions based on real visitor concerns.
-10. Location and contact — genuine address, hours, directions, staffed contact, and final CTA.
-11. Footer — accurate business, privacy, and legal information.
+4. Whitening options — only the methods actually offered, plus accurate terms/pricing when confirmed.
+5. Assessment and treatment journey — what is assessed, how options are discussed, and how the plan is followed.
+6. Suitability, safety, and realistic expectations — clinically reviewed constraints, possible effects, and limitations.
+7. Doctor profile — only when the treating professional’s identity, registration, and qualifications are verified.
+8. Patient reviews — only when genuine, authorized material and applicable rules permit publication; otherwise omit.
+9. FAQ, location/contact, and footer — answer remaining questions and provide verified business, privacy, and legal information.
 
 Before/after results, clinic photographs, detailed team galleries, promotions, and price cards are conditional, not compulsory sections. Never insert them without authentic source material.
 
@@ -131,17 +127,17 @@ Targets for future production:
 
 The page has no canonical URL or LocalBusiness structured data. Those should only be added when a real production domain and verified business details exist.
 
-## 10. Final verification — 24 November 2026
+## 10. Previous verification snapshot — 24 November 2026
 
-The latest successful RUWA Browser QA run is [GitHub Actions #45506899194](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45506899194), executed against application commit `9a3b47ec9e321b8994bc5af27f07234046a38873`.
+The latest successful run before the section consolidation was [GitHub Actions #45506899194](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45506899194), executed against application commit `9a3b47ec9e321b8994bc5af27f07234046a38873`.
 
 Verified results:
 - Approved Hero asset SHA guard: passed.
-- Repository consistency and section/order checks: passed.
+- Repository consistency and section/order checks: passed on the pre-consolidation structure; rerun required for the current nine-section version.
 - Dependency security audit (`npm audit --audit-level=high`): passed.
 - Full-page visual capture: nine viewport widths (320, 360, 390, 430, 768, 1024, 1280, 1366, 1440); no horizontal overflow and no duplicate IDs reported.
 - Hero above-the-fold checks: nine viewports passed.
-- Playwright browser suite: all nine responsive checks passed, including navigation, sticky-header synchronisation, FAQ keyboard (Enter/Space) and pointer interaction, and contact-dialog focus handling.
+- Historical Playwright browser suite: all nine responsive checks passed on the previous page structure. A new run is required for the consolidated sections and persistent-on-selection menu behavior.
 - Immutable public preview: Chromium checks passed at 1024px, 1280px, and 1440px; zero JavaScript errors were reported in those public-preview checks.
 - Social metadata: Open Graph and Twitter metadata accurately disclose that this is a fictional Apex Studio demo; the immutable WebP OG image responds with HTTP 200 and the expected image content type.
 - Screenshot and metrics evidence: [artifact 14971429866](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45506899194/artifacts/14971429866).
@@ -154,10 +150,10 @@ Limitations:
 - A canonical URL and LocalBusiness/medical-provider structured data remain intentionally absent because this is a staged fictional demo without a real production domain or verified business identity.
 - The GitHub Actions runner emitted deprecation warnings for some action/runtime dependencies; the workflow still completed successfully. These warnings are maintenance notes, not page-runtime failures.
 
-The public portfolio preview is technically and visually suitable for presentation as a disclosed concept. This is not a production-readiness approval for a real dental clinic.
+The results above are historical and predate the section consolidation; they do not verify the current branch. The current consolidated page must pass the latest browser and consistency workflows before this audit can be marked current. The public portfolio preview is a disclosed concept only, not a production-readiness approval for a real dental clinic.
 
 ## 11. Final verdict
 
-The RUWA portfolio page has eleven main sections, including the treatment-journey overview and patient-reviews transparency notice. That notice is not social proof: no authentic patient review, rating, or review count has been supplied. Adding fabricated clinicians, patient reviews, ratings, clinic facts, or prices would be a regression. Keep the page honest and focused; publish patient reviews only after genuine material and authorization are verified.
+The RUWA portfolio page now has nine main sections, including the consolidated treatment journey and safety/expectations section. The protected team and patient-reviews sections remain unchanged. That notice is not social proof: no authentic patient review, rating, or review count has been supplied. Adding fabricated clinicians, patient reviews, ratings, clinic facts, or prices would be a regression. Keep the page honest and focused; publish patient reviews only after genuine material and authorization are verified.
 
 The RUWA implementation remains staged on the feature branch. Do not merge the PR, publish a production site, or activate a contact channel without explicit approval and verified clinic information.
