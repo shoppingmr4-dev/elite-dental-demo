@@ -14,7 +14,7 @@ const viewports = [
   { name: "mobile-360", width: 360, height: 800, mobile: true },
   { name: "mobile-320", width: 320, height: 740, mobile: true }
 ];
-const sectionIds = ["causes", "options", "journey", "suitability", "team", "reviews", "faq", "consultation"];
+const sectionIds = ["causes", "options", "journey", "suitability", "team", "reviews", "visit", "faq", "consultation"];
 await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
 const results = [];
@@ -239,7 +239,7 @@ try {
       if(journeyDetails.columns!==expectedColumns)
         problems.push("Merged journey grid does not match its responsive four/two/one-column layout");
     }
-    if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","causes","options","journey","suitability","team","reviews","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
+    if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","causes","options","journey","suitability","team","reviews","visit","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
     if(metrics.counts.expectationsCards!==4)problems.push("Section 07 must contain exactly four realistic-expectations cards");
     if(metrics.counts.expectationsCardColumns!==(vp.width<=600?1:2))problems.push("Section 07 must use two grid columns on desktop/tablet and one on mobile");
     if(metrics.counts.teamCards!==3||metrics.counts.teamPortraits!==3)problems.push("team section must render exactly three portrait cards");

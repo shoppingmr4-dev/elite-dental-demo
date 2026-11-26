@@ -31,10 +31,21 @@ const [
 const sectionIds = [...html.matchAll(/<section\b[^>]*\bid=["']([^"']+)["']/gi)].map(match => match[1]);
 assert.deepEqual(
   sectionIds,
-  ["top", "causes", "options", "journey", "suitability", "team", "reviews", "faq", "consultation"],
-  "RUWA must keep the approved nine-section visitor journey in order"
+  ["top", "causes", "options", "journey", "suitability", "team", "reviews", "visit", "faq", "consultation"],
+  "RUWA must keep the approved ten-section visitor journey in order"
 );
 
+
+const reviewsPosition = html.indexOf('id="reviews"');
+const visitPosition = html.indexOf('id="visit"');
+const faqPosition = html.indexOf('id="faq"');
+assert.ok(reviewsPosition < visitPosition && visitPosition < faqPosition, "Riyadh location must follow reviews and precede FAQ");
+const visitSection = html.slice(visitPosition, html.indexOf("</section>", visitPosition) + 10);
+assert.ok(visitSection.includes("الرياض") && visitSection.includes("المملكة العربية السعودية"), "Riyadh city and country must be visible");
+assert.ok(visitSection.includes("دون تحديد حي أو عنوان شارع"), "Location must remain city-level without an invented street address");
+assert.ok(visitSection.includes("يُضاف بعد اعتماد موقع العيادة"), "Exact address remains pending until approval");
+assert.ok(visitSection.includes("لا يعرض دبوسًا على الخريطة قبل اعتماد العنوان الرسمي"), "No unverified map pin");
+assert.doesNotMatch(visitSection, /href=["'][^"']*(?:google\.com\/maps|maps\.app\.goo\.gl)/i, "No generic map link as clinic destination");
 
 const journeyStart = html.indexOf('id="journey"');
 const optionsStart = html.indexOf('id="options"');
@@ -84,9 +95,9 @@ const headerEnd = html.indexOf("</header>", headerStart) + "</header>".length;
 const headerMarkup = html.slice(headerStart, headerEnd);
 assert.ok(headerStart >= 0 && headerEnd > headerStart, "RUWA semantic header is missing");
 const headerLinks = [...headerMarkup.matchAll(/<a\b[^>]*href=["'](#[^"']+)["'][^>]*>/g)].map(match => match[1]);
-assert.deepEqual(headerLinks, ["#top","#causes","#options","#journey","#suitability","#team","#reviews","#faq"], "Header must preserve its brand anchor and all seven internal destinations");
+assert.deepEqual(headerLinks, ["#top","#causes","#options","#journey","#suitability","#team","#reviews","#visit","#faq"], "Header must preserve its brand anchor and all seven internal destinations");
 const secondaryHeaderLinks = [...headerMarkup.matchAll(/<a\b[^>]*class=["']nav-secondary["'][^>]*href=["'](#[^"']+)["'][^>]*>/g)].map(match => match[1]);
-assert.deepEqual(secondaryHeaderLinks, ["#causes","#options","#suitability","#reviews"], "Only the four secondary destinations may be hidden from the expanded desktop navigation");
+assert.deepEqual(secondaryHeaderLinks, ["#causes","#options","#suitability","#reviews","#visit"], "Only the four secondary destinations may be hidden from the expanded desktop navigation");
 assert.match(html, /\.nav \.nav-secondary\{display:none\}/, "Secondary links must be hidden in the expanded desktop header");
 assert.match(html, /\.nav\.open \.nav-secondary\{display:flex\}/, "All secondary links must reappear when navigation opens");
 assert.match(html, /\.site-header\.is-compact \.menu-toggle/, "Compact desktop header must expose its menu control");
@@ -106,7 +117,7 @@ assert.equal([...teamSection.matchAll(/بيانات الطبيب الفعلية/
 
 const reviewsStart = html.indexOf('id="reviews"');
 const faqStart = html.indexOf('id="faq"');
-assert.ok(reviewsStart > html.indexOf('id="team"') && reviewsStart < faqStart, "Patient reviews must appear after the team and before FAQ");
+assert.ok(reviewsStart > html.indexOf('id="team"') && reviewsStart < visitPosition && visitPosition < faqStart, "Reviews remain after team; location follows reviews and precedes FAQ");
 const reviewsSection = html.slice(reviewsStart, html.indexOf("</section>", reviewsStart) + 10);
 assert.ok(reviewsSection.includes("القسم التاسع: آراء المرضى"), "Patient reviews section marker must be number 08");
 assert.ok(reviewsSection.includes("كل تجربة تستحق أن تُعرض كما هي."), "Patient reviews headline is missing");
@@ -212,6 +223,7 @@ assert.equal(footerAnchors.some(href => /instagram|snapchat|tiktok|x\.com/i.test
 const footerTargets = footerAnchors.filter(href => href.startsWith("#")).map(href => href.slice(1));
 assert.ok(footerTargets.length >= 9, "RUWA footer must provide useful internal navigation");
 assert.ok(footer.includes('<a href="#journey">التقييم ورحلة التبييض</a>'), "Footer must link to the treatment journey");
+assert.ok(footer.includes('<a href="#visit">معلومات الزيارة</a>'), "Footer must link to the Riyadh location section");
 assert.deepEqual(footerTargets.filter(target => !ids.has(target)), [], "Every RUWA footer navigation target must exist on the page");
 assert.match(footer, /مفهوم تجريبي أُعدّ ضمن معرض أعمال Apex Studio/);
 assert.match(footer, /الصور المعروضة، بما فيها صور الأطباء، توضيحية مولّدة بالذكاء الاصطناعي/);
@@ -241,16 +253,16 @@ for (const [name, content] of [
   assert.doesNotMatch(content, /Elite Dental Clinic|Tailwind CSS refresh|portfolio\/elite-dental-whitening/i, name + " must not describe the retired Elite project as active");
 }
 
-assert.match(readme, /9 content sections/);
+assert.match(readme, /10 content sections/);
 assert.match(readme, /2 FAQ entries/);
 assert.match(readme, /3 WhatsApp actions and 3 phone actions/);
-assert.match(designSystem, /9 content sections/);
+assert.match(designSystem, /10 content sections/);
 assert.match(designSystem, /2 native HTML details\/summary FAQ entries/);
 assert.match(designSystem, /3 WhatsApp actions and 3 phone actions/);
-assert.match(caseStudy, /9 أقسام رئيسية/);
+assert.match(caseStudy, /10 أقسام رئيسية/);
 assert.match(caseStudy, /سؤالان/);
 assert.match(caseStudy, /3 أزرار واتساب و3 أزرار اتصال هاتفي/);
-assert.match(productionAudit, /9 main content sections/);
+assert.match(productionAudit, /10 main content sections/);
 assert.match(productionAudit, /2 native details entries/);
 assert.match(productionAudit, /3 WhatsApp actions and 3 phone actions/);
 

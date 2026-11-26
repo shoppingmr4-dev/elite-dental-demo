@@ -63,11 +63,11 @@ The current page alt text and visible disclosure state that this is an AI-genera
 
 The approved file, its HTML element, figure placement, dimensions, focal position, framing, transform, and loading priority are protected. The source image's earlier documentation was inconsistent; the old Pexels-based preview has been retired. Do not add an external stock-photo credit to this image.
 
-## 5. Current page architecture — exactly 9 content sections
+## 5. Current page architecture — exactly 10 content sections
 
 Header and announcement strip:
 - RUWA wordmark and Arabic descriptor.
-- Seven navigation links to the visitor journey, including the treatment journey and patient-reviews transparency note.
+- Eight navigation links to the visitor journey, including the treatment journey, patient-reviews transparency note, and city-level location section.
 - One phone-labelled header action: «اتصل بنا».
 - Mobile menu with aria-expanded state and keyboard behavior.
 
@@ -82,10 +82,11 @@ Content sections in actual DOM order:
 | 05 | suitability | Suitability, safety, and realistic expectations | Combine health/timing factors with result variation, potential effects, restoration limits, and aftercare |
 | 06 | team | Dentist/team | Preserve the three distinct AI-generated illustrative male portrait cards exactly as approved; no real clinician identity or credentials are claimed |
 | 07 | reviews | Patient reviews | Preserve the transparent demo-only notice exactly as approved; no patient quotes, names, ratings, counts, or AggregateRating data are invented |
-| 08 | faq | Frequently asked questions | Answer two focused, non-redundant visitor questions |
-| 09 | consultation | Final contact | Offer WhatsApp and phone actions with an explicit inactive state |
+| 08 | visit | Clinic location | Identify Riyadh, Saudi Arabia at city level only; withhold street address and map pin until a real location is approved |
+| 09 | faq | Frequently asked questions | Answer two focused, non-redundant visitor questions |
+| 10 | consultation | Final contact | Offer WhatsApp and phone actions with an explicit inactive state |
 
-The assessment content now lives inside the first two steps of the four-step treatment journey. Suitability and safety remain together with a nested realistic-expectations panel, preserving its four existing patient-information cards. The patient-reviews section remains after the dentist/team section and before FAQ, and is unchanged: it is an editorial transparency panel, not a testimonial feed. It states that no verified patient reviews are available in this fictional demo and lists three publication principles (verifiable source, explicit permission, and faithful presentation). It includes no patient names, photos, quotes, star ratings, review counts, or Review/AggregateRating structured data. The footer preserves the fictional portfolio disclosure and AI-image disclosure. The team section remains unchanged and contains three equal demonstration cards using distinct portraits extracted from an existing AI-generated RUWA concept image; it contains no real doctor identity or professional credentials.
+The assessment content now lives inside the first two steps of the four-step treatment journey. Suitability and safety remain together with a nested realistic-expectations panel, preserving its four existing patient-information cards. The patient-reviews section remains after the dentist/team section and before the city-level Riyadh location panel, and is unchanged: it is an editorial transparency panel, not a testimonial feed. The location panel identifies Riyadh, Saudi Arabia without inventing a neighborhood, street address, branch, or map pin. It states that no verified patient reviews are available in this fictional demo and lists three publication principles (verifiable source, explicit permission, and faithful presentation). It includes no patient names, photos, quotes, star ratings, review counts, or Review/AggregateRating structured data. The footer preserves the fictional portfolio disclosure and AI-image disclosure. The team section remains unchanged and contains three equal demonstration cards using distinct portraits extracted from an existing AI-generated RUWA concept image; it contains no real doctor identity or professional credentials.
 
 ## 6. FAQ source of truth
 

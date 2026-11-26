@@ -18,7 +18,7 @@ There is only one maintained RUWA page implementation. The root entry point and 
 
 RUWA is a fictional portfolio concept created by Apex Studio. It is not a commissioned or operating clinic and must not be presented as a real commercial clinic or client project.
 
-The page contains **9 content sections** and **2 FAQ entries**. Assessment is now integrated into the four-step treatment journey, while suitability, safety, and realistic expectations are presented together in one section.
+The page contains **10 content sections** and **2 FAQ entries**. Assessment is now integrated into the four-step treatment journey, while suitability, safety, and realistic expectations are presented together in one section.
 
 The separate demo sentence beneath the Hero contact buttons has been removed as requested. The footer and page metadata continue to identify RUWA as a fictional Apex Studio portfolio demonstration; the Hero portrait caption independently identifies the dentist image as AI-generated.
 
@@ -37,8 +37,9 @@ There are **3 WhatsApp actions and 3 phone actions**. The Hero WhatsApp action a
 5. Suitability, safety, and realistic expectations — relevant health factors, possible effects, result variation, restoration limits, and aftercare.
 6. Dentist/team — three illustrative portraits with explicit disclosure and no invented identities or credentials; this protected section remains unchanged.
 7. Patient reviews — a transparent notice that no verified patient reviews are available in this fictional demo; this protected section remains unchanged.
-8. FAQ — two non-redundant native HTML details/summary entries.
-9. Consultation/contact — WhatsApp and phone actions that disclose their inactive demo state.
+8. Clinic location — the city is identified as Riyadh, Saudi Arabia; no neighborhood, street address, or unverified map pin is shown.
+9. FAQ — two non-redundant native HTML details/summary entries.
+10. Consultation/contact — WhatsApp and phone actions that disclose their inactive demo state.
 
 The shared header, navigation, announcement strip, and footer support these sections; they are not additional numbered content sections.
 

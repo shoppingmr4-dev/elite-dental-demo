@@ -12,7 +12,7 @@
 
 RUWA is a fictional portfolio concept, not a commissioned or operating dental clinic. It must not be presented as a real clinic, and it must not acquire invented doctors, qualifications, ratings, testimonials, prices, addresses, opening hours, patient statistics, clinical outcomes, or appointment inventory.
 
-The current page has a coherent service-specific education journey. It contains **9 main content sections** plus the shared header, announcement strip, and footer. The assessment approach is integrated into the treatment journey, while suitability, safety, and realistic expectations share one combined section. The missing items are real-business evidence and an operational conversion destination, not decorative content.
+The current page has a coherent service-specific education journey. It contains **10 main content sections** plus the shared header, announcement strip, and footer. The assessment approach is integrated into the treatment journey, while suitability, safety, and realistic expectations share one combined section. The missing items are real-business evidence and an operational conversion destination, not decorative content.
 
 ## 2. Repository source-of-truth and route audit
 
@@ -30,7 +30,7 @@ The actual current DOM order is:
 
 | DOM order | ID | Section | Decision | Evidence-based rationale |
 |---:|---|---|---|---|
-| Header | main-nav | Brand, seven section links, phone CTA labelled «اتصل بنا» | KEEP | Directs visitors to the revised patient-education journey and preserves access to the team and transparent reviews sections. |
+| Header | main-nav | Brand, eight section links, phone CTA labelled «اتصل بنا» | KEEP | Directs visitors to the revised patient-education journey, transparent reviews, and location information. |
 | 01 | top | Hero | KEEP / protect | Explains the whitening subject and presents the approved illustrative portrait and first actions. |
 | 02 | causes | Causes of discoloration | KEEP | Provides concise context about surface and deeper colour changes. |
 | 03 | options | Whitening options | KEEP / clinical review for a real clinic | General education is not proof that a real clinic offers all listed options. |
@@ -38,11 +38,12 @@ The actual current DOM order is:
 | 05 | suitability | Suitability, safety, and realistic expectations | KEEP / consolidated / clinical review required | Combines health and timing factors with result variation, possible effects, restoration limits, and aftercare. |
 | 06 | team | Dentist/team | KEEP / unchanged demo-only section | The three distinct AI-generated illustrative male portraits remain exactly as approved; no real clinician identity or credentials are claimed. |
 | 07 | reviews | Patient reviews | KEEP / unchanged transparency-only section | The notice and all three review placeholders remain exactly as approved; no testimonials or scores are invented. |
-| 08 | faq | Frequently asked questions | KEEP | Two non-redundant native details/summary entries are present. |
-| 09 | consultation | Final contact | KEEP / activate only with verified details | The actions disclose that real channels are not configured. |
+| 08 | visit | Clinic location | KEEP / city-level only | Identifies Riyadh, Saudi Arabia; no neighborhood, street address, or unverified map destination is supplied. |
+| 09 | faq | Frequently asked questions | KEEP | Two non-redundant native details/summary entries are present. |
+| 10 | consultation | Final contact | KEEP / activate only with verified details | The actions disclose that real channels are not configured. |
 | Footer | — | Portfolio and image disclosures | KEEP | Prevents the sample from being mistaken for a real operating clinic. |
 
-The team section contains three equal demo-only profile cards with distinct AI-generated illustrative male portraits extracted from an existing RUWA concept image; these are not real doctor profiles or credentials. No authentic patient review/testimonial, review count, or rating score is supplied. The new patient-reviews panel is a transparency notice only, not social proof. No before-and-after gallery, clinic gallery, pricing section, map, or hours-of-operation section exists in this page.
+The team section contains three equal demo-only profile cards with distinct AI-generated illustrative male portraits extracted from an existing RUWA concept image; these are not real doctor profiles or credentials. No authentic patient review/testimonial, review count, or rating score is supplied. The patient-reviews panel is a transparency notice only, not social proof. A city-level location panel identifies Riyadh, Saudi Arabia, but deliberately has no precise address, map pin, or branch-specific details. No before-and-after gallery, clinic gallery, pricing section, or hours-of-operation section exists in this page.
 
 ## 4. Confirmed current content and interaction behavior
 

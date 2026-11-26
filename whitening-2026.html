@@ -232,6 +232,21 @@ body.dialog-open{overflow:hidden}
 .faq-section{background:var(--canvas)}
 
 .reviews-section{background:#F4F7FA}
+.visit-section{background:var(--paper)}
+.visit-panel{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);align-items:stretch;gap:clamp(16px,2.8vw,28px);max-width:1100px;margin-inline:auto;padding:clamp(16px,2.8vw,28px);border:1px solid var(--line);border-radius:20px;background:#F4F7FA}
+.visit-city-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-width:0;min-height:220px;padding:clamp(22px,3vw,34px);overflow:hidden;border-radius:16px;background:var(--ink);color:#FFFFFF}
+.visit-city-card::after{content:"";position:absolute;left:-42px;bottom:-84px;width:190px;height:190px;border:1px solid rgba(169,220,210,.2);border-radius:50%;box-shadow:0 0 0 18px rgba(169,220,210,.045),0 0 0 38px rgba(169,220,210,.035);pointer-events:none}
+.visit-city-icon{display:grid;place-items:center;width:52px;height:52px;margin-bottom:18px;border:1px solid rgba(169,220,210,.35);border-radius:15px;background:rgba(255,255,255,.07);color:#A9DCD2}
+.visit-city-icon svg{display:block;width:28px;height:28px}
+.visit-city-kicker{color:#A9DCD2;font-size:11px;font-weight:800;line-height:1.6}
+.visit-city-card h3{margin:7px 0 3px;font-family:var(--display);font-size:clamp(28px,3.4vw,40px);font-weight:800;line-height:1.35}
+.visit-city-card p{margin:0;color:rgba(255,255,255,.8);font-size:13px;line-height:1.8}
+.visit-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:center;gap:12px;min-width:0}
+.visit-detail{min-width:0;padding:17px 18px;border:1px solid var(--line);border-radius:13px;background:#FFFFFF}
+.visit-detail-label{display:block;margin-bottom:7px;color:var(--muted);font-size:11px;font-weight:700;line-height:1.6}
+.visit-detail strong{display:block;color:var(--ink);font-family:var(--display);font-size:14px;font-weight:800;line-height:1.85;overflow-wrap:anywhere}
+.visit-note{grid-column:1/-1;margin:1px 0 0;padding:13px 15px;border-right:3px solid var(--coral);border-radius:10px;background:#FFFFFF;color:var(--ink2);font-size:11px;line-height:2}
+@media(max-width:760px){.visit-panel{grid-template-columns:1fr;gap:12px}.visit-city-card{min-height:174px}.visit-details{grid-template-columns:1fr;gap:10px}}
 .reviews-head{margin-bottom:clamp(26px,3.2vw,36px)}
 .reviews-head h2{max-width:720px}
 .reviews-panel{display:grid;gap:17px;max-width:1100px;margin-inline:auto}
@@ -1554,6 +1569,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    <a class="nav-secondary" href="#suitability">السلامة والتوقعات</a>
    <a href="#team">الأطباء</a>
    <a class="nav-secondary" href="#reviews">آراء المرضى</a>
+   <a class="nav-secondary" href="#visit">معلومات الزيارة</a>
    <a href="#faq">الأسئلة الشائعة</a>
   </nav>
   <button class="header-action phone-cta" type="button" data-contact-action="phone" aria-haspopup="dialog" aria-controls="contact-unavailable-dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.19 18a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.08 3.18 2 2 0 0 1 4.08 1h3a2 2 0 0 1 2 1.72l.45 3.12a2 2 0 0 1-.57 1.73L7.7 8.83a16 16 0 0 0 6 6l1.26-1.26a2 2 0 0 1 1.73-.57l3.12.45A2 2 0 0 1 22 16.92Z"/></svg>اتصل بنا</button>
@@ -1818,11 +1834,43 @@ body,button,input,select,textarea{font-family:var(--body)}
  </div>
 </section>
 
+ 
+<section class="content-section visit-section" id="visit" aria-labelledby="visit-title">
+ <div class="wrap">
+  <header class="section-head visit-head">
+   <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم العاشر: معلومات الزيارة">
+    <span class="section-marker-number" aria-hidden="true">10</span>
+    <span class="section-marker-divider" aria-hidden="true"></span>
+    <span class="section-marker-label">معلومات الزيارة</span>
+   </span>
+   <h2 id="visit-title">العيادة في الرياض.</h2>
+   <p>الرياض، المملكة العربية السعودية. يوضح هذا القسم المدينة فقط، دون تحديد حي أو عنوان شارع.</p>
+  </header>
+  <div class="visit-panel">
+   <div class="visit-city-card">
+    <span class="visit-city-icon" aria-hidden="true">
+     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+      <path d="M20 10.1c0 5.3-8 11.4-8 11.4S4 15.4 4 10.1a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/>
+     </svg>
+    </span>
+    <span class="visit-city-kicker">موقع العيادة</span>
+    <h3>الرياض</h3>
+    <p>المملكة العربية السعودية</p>
+   </div>
+   <div class="visit-details">
+    <article class="visit-detail"><span class="visit-detail-label">النطاق الجغرافي</span><strong>مدينة الرياض</strong></article>
+    <article class="visit-detail"><span class="visit-detail-label">العنوان التفصيلي</span><strong>يُضاف بعد اعتماد موقع العيادة</strong></article>
+    <p class="visit-note">لا يشير هذا النموذج إلى حي أو فرع محدد، ولا يعرض دبوسًا على الخريطة قبل اعتماد العنوان الرسمي. سيُضاف رابط خرائط Google عند توفر بيانات الموقع المؤكدة.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
  <section class="content-section faq-section" id="faq" aria-labelledby="faq-title">
   <div class="wrap">
    <div class="section-head">
-    <span class="eyebrow section-marker section-marker--canvas" role="group" aria-label="القسم العاشر: إجابات واضحة">
-      <span class="section-marker-number" aria-hidden="true">10</span>
+    <span class="eyebrow section-marker section-marker--canvas" role="group" aria-label="القسم الحادي عشر: إجابات واضحة">
+      <span class="section-marker-number" aria-hidden="true">11</span>
       <span class="section-marker-divider" aria-hidden="true"></span>
       <span class="section-marker-label">إجابات واضحة</span>
      </span>
@@ -1916,6 +1964,7 @@ body,button,input,select,textarea{font-family:var(--body)}
      <li><a href="#suitability">السلامة والتوقعات</a></li>
      <li><a href="#team">الأطباء</a></li>
      <li><a href="#reviews">آراء المرضى</a></li>
+     <li><a href="#visit">معلومات الزيارة</a></li>
      <li><a href="#faq">الأسئلة الشائعة</a></li>
      <li><a href="#consultation">تواصل معنا</a></li>
     </ul>
