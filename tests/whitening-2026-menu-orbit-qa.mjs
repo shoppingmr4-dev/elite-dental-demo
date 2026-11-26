@@ -252,10 +252,8 @@ try {
         viewport.name + ": the menu must preserve its elegant soft-reveal state while links arrive");
       assert.equal(staggerState.clipPath,"none",
         viewport.name + ": the full rectangular frame must remain intact during the reveal");
-      assert.equal(staggerState.belowContact,true,
-        viewport.name + ": animated panel must appear below the Contact CTA");
-      assert.equal(staggerState.centeredAndNudgedLeft,true,
-        viewport.name + ": panel must be centered below Contact with a slight 14px left offset");
+      // The 3D sheet is intentionally projected away from its final rectangle mid-fold.
+      // Exact Contact anchoring is verified again after the panel settles flat.
     }
     assert.equal(staggerState.flexDirection, "column",
       viewport.name + ": dropdown links must be vertically aligned");
