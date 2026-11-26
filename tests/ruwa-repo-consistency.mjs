@@ -133,8 +133,8 @@ assert.equal([...reviewsSection.matchAll(/مساحة مخصصة لعرض رأي 
 assert.equal([...reviewsSection.matchAll(/لا يمثل رأيًا حقيقيًا/g)].length, 3, "Every card must disclose that it is not a real review");
 assert.doesNotMatch(reviewsSection, /\b[0-5](?:\.\d)?\s*\/\s*5\b|4\.9|Google|تجربة مريض حقيقية|قال أحد المرضى/, "No fabricated patient claim, average rating, or platform attribution may be displayed");
 assert.doesNotMatch(html, /AggregateRating|reviewCount|ratingValue|itemprop=["']review/i, "No review or rating structured data may be added");
-assert.match(html, /القسم العاشر: إجابات واضحة/);
-assert.match(html, /<span class="section-marker-number" aria-hidden="true">10<\/span>/);
+assert.match(html, /القسم الحادي عشر: إجابات واضحة/);
+assert.match(html, /<span class="section-marker-number" aria-hidden="true">11<\/span>/);
 
 
 const faqAuditStart = html.indexOf('id="faq"');
