@@ -225,6 +225,8 @@ try {
         panelOpacity: Number.parseFloat(style.opacity),
         panelRect:panelRect.toJSON(),
         panelShadow:style.boxShadow,
+        panelPadding:style.padding,
+        firstLinkMinHeight:links.length?getComputedStyle(links[0]).minHeight:"0px",
         linkStagger:Number(element.dataset.ruwaLinkStagger||0),
         linkDuration:Number(element.dataset.ruwaLinkDuration||0),
         panelRevealDuration:Number(element.dataset.ruwaPanelRevealDuration||0),
@@ -271,8 +273,12 @@ try {
       viewport.name + ": the menu frame must keep the original 620ms circular expansion");
     if(viewport.width>920){
       if(viewport.width>=1366){
-        assert.ok(staggerState.panelRect.width>=332&&staggerState.panelRect.width<=337,
-          viewport.name + ": hamburger link panel should be slightly wider than its former 320px width: "+staggerState.panelRect.width);
+        assert.ok(staggerState.panelRect.width>=416&&staggerState.panelRect.width<=421,
+          viewport.name + ": desktop link frame must restore its original 420px width: "+staggerState.panelRect.width);
+        assert.equal(staggerState.panelPadding,"8px",
+          viewport.name + ": the frame must restore its original 8px inner padding");
+        assert.equal(staggerState.firstLinkMinHeight,"46px",
+          viewport.name + ": navigation rows must restore their original 46px height");
       }
     }
     assert.equal(staggerState.linkOpacity.length, 7,
@@ -371,7 +377,7 @@ try {
         viewport.name + ": desktop side panel border is missing");
       assert.equal(opened.visibleLinks.length, 7,
         viewport.name + ": desktop left-side panel must expose all seven navigation links");
-      assert.ok(opened.rect.width >= 200 && opened.rect.width <= 340 &&
+      assert.ok(opened.rect.width >= 200 && opened.rect.width <= 424 &&
         opened.rect.height >= 300,
         viewport.name + ": Contact panel dimensions are not consistent with its full vertical link list");
       const contactCenterX=opened.rect.contactRect.left+opened.rect.contactRect.width/2;
