@@ -1618,155 +1618,6 @@ body,button,input,select,textarea{font-family:var(--body)}
 
 
 
-/* RUWA PREMIUM PERIMETER LIGHT — a fully illuminated border with a gentle flowing pulse. */
- @property --ruwa-perimeter-angle{
-  syntax:"<angle>";
-  inherits:false;
-  initial-value:0deg;
- }
- :where(
-  .info-card,
-  .option-card,
-  .journey-step,
-  .team-card,
-  .review-card,
-  .expect-card,
-  .reviews-preview,
-  .reviews-criteria,
-  .clinical-note,
-  .info-card .card-index,
-  .step-no,
-  .journey-step-number,
-  .check-item .check-mark
- ){
-  position:relative;
-  isolation:isolate;
- }
- :where(
-  .info-card,
-  .option-card,
-  .journey-step,
-  .team-card,
-  .review-card,
-  .expect-card,
-  .reviews-preview,
-  .reviews-criteria,
-  .clinical-note,
-  .info-card .card-index,
-  .step-no,
-  .journey-step-number,
-  .check-item .check-mark
- )::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:3;
-  border-radius:inherit;
-  padding:1.55px;
-  pointer-events:none;
-  opacity:0;
-  --ruwa-perimeter-angle:0deg;
-  background:conic-gradient(
-   from var(--ruwa-perimeter-angle),
-   rgba(55,157,153,.62) 0deg,
-   rgba(112,224,212,.94) 58deg,
-   rgba(236,255,251,1) 112deg,
-   rgba(73,181,176,.82) 178deg,
-   rgba(42,132,137,.66) 240deg,
-   rgba(130,235,224,.96) 302deg,
-   rgba(244,255,252,1) 338deg,
-   rgba(55,157,153,.62) 360deg
-  );
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  mask-composite:exclude;
-  filter:drop-shadow(0 0 2px rgba(86,218,209,.58)) drop-shadow(0 0 7px rgba(66,187,181,.34));
-  transition:opacity .22s ease;
- }
- @keyframes ruwa-perimeter-orbit{
-  to{--ruwa-perimeter-angle:360deg}
- }
- @keyframes ruwa-perimeter-breathe{
-  0%,100%{filter:drop-shadow(0 0 2px rgba(86,218,209,.5)) drop-shadow(0 0 6px rgba(66,187,181,.28))}
-  50%{filter:drop-shadow(0 0 4px rgba(142,247,236,.88)) drop-shadow(0 0 12px rgba(66,187,181,.52))}
- }
- @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
-  :where(
-   .info-card,
-   .option-card,
-   .journey-step,
-   .team-card,
-   .review-card,
-   .expect-card,
-   .reviews-preview,
-   .reviews-criteria,
-   .clinical-note
-  ):hover::after,
-  .info-card:hover .card-index::after,
-  .step:hover .step-no::after,
-  .journey-step:hover .journey-step-number::after,
-  .check-item:hover .check-mark::after{
-   opacity:1;
-   animation:ruwa-perimeter-orbit .9s linear infinite,ruwa-perimeter-breathe 2.1s ease-in-out infinite;
-  }
- }
- @media (prefers-reduced-motion:no-preference){
-  :where(
-   .info-card,
-   .option-card,
-   .journey-step,
-   .team-card,
-   .review-card,
-   .expect-card,
-   .reviews-preview,
-   .reviews-criteria,
-   .clinical-note
-  ):focus-within::after,
-  .info-card:focus-within .card-index::after,
-  .step:focus-within .step-no::after,
-  .journey-step:focus-within .journey-step-number::after,
-  .check-item:focus-within .check-mark::after{
-   opacity:1;
-   animation:ruwa-perimeter-orbit .9s linear infinite,ruwa-perimeter-breathe 2.1s ease-in-out infinite;
-  }
- }
- @media(prefers-reduced-motion:reduce){
-  :where(
-   .info-card,
-   .option-card,
-   .journey-step,
-   .team-card,
-   .review-card,
-   .expect-card,
-   .reviews-preview,
-   .reviews-criteria,
-   .clinical-note,
-   .info-card .card-index,
-   .step-no,
-   .journey-step-number,
-   .check-item .check-mark
-  )::after{
-   transition:none;
-   animation:none!important;
-   filter:none;
-  }
-  :where(
-   .info-card,
-   .option-card,
-   .journey-step,
-   .team-card,
-   .review-card,
-   .expect-card,
-   .reviews-preview,
-   .reviews-criteria,
-   .clinical-note
-  ):focus-within::after,
-  .info-card:focus-within .card-index::after,
-  .step:focus-within .step-no::after,
-  .journey-step:focus-within .journey-step-number::after,
-  .check-item:focus-within .check-mark::after{opacity:.78}
- }
 </style>
 
 <!-- Pinned GSAP runtime: deferred so it never blocks the initial Hero render. -->
@@ -2377,8 +2228,8 @@ body,button,input,select,textarea{font-family:var(--body)}
 
   const panelDuration=contactAnchoredPanel?.44:.36;
   const linkStart=contactAnchoredPanel?.10:.08;
-  const linkStagger=.065;
-  const linkDuration=.16;
+  const linkStagger=.075;
+  const linkDuration=.17;
   nav.dataset.ruwaPanelRevealDuration=String(panelDuration);
   nav.dataset.ruwaLinkStagger=String(linkStagger);
   nav.dataset.ruwaLinkDuration=String(linkDuration);
@@ -2597,8 +2448,6 @@ body,button,input,select,textarea{font-family:var(--body)}
  nav.dataset.ruwaMenuAnimating="false";
  syncNavInert();
 })();
-
-// CSS-only full-perimeter hover glow is defined in the page stylesheet.
 
 // Floating RUWA header: one shared progress value and content-derived frame geometry.
 (function(){
