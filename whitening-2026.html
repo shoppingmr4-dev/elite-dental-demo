@@ -2207,18 +2207,20 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.removeAttribute("data-ruwa-menu-exit-motion");
   nav.removeAttribute("data-ruwa-menu-exit-progress");
 
-  // Reveal the complete surface as one calm plane: no scale, blur, or center-out
-  // expansion. Its background, border, and shadow settle together with a tiny lift.
+  // A restrained spiral-like arrival: the whole panel follows a short curved
+  // arc around its top-right anchor, rotates a fraction past neutral, then settles.
+  // The movement is intentionally tiny so the rectangular frame never looks warped.
   const settledPanelShadow=getComputedStyle(nav).boxShadow;
   const softPanelShadow="0 10px 24px rgba(20,45,56,0),0 22px 42px rgba(20,45,56,0),0 3px 10px rgba(20,45,56,0),inset 0 1px 0 rgba(255,255,255,0)";
   gsap.set(nav,{
    autoAlpha:0,
-   x:0,
-   y:-4,
-   scale:1,
+   x:8,
+   y:-8,
+   rotation:-1.6,
+   scale:.988,
    filter:"none",
    boxShadow:softPanelShadow,
-   transformOrigin:"top center",
+   transformOrigin:"top right",
    force3D:false
   });
   gsap.set(animatedItems,{
@@ -2230,10 +2232,15 @@ body,button,input,select,textarea{font-family:var(--body)}
    transformOrigin:"50% 50%"
   });
 
-  const panelDuration=contactAnchoredPanel?.56:.45;
-  const linkStart=contactAnchoredPanel?.10:.08;
-  const linkStagger=.065;
-  const linkDuration=.17;
+  const panelDuration=contactAnchoredPanel?.66:.51;
+  const panelArcDuration=contactAnchoredPanel?.26:.21;
+  const panelSettleDuration=contactAnchoredPanel?.48:.36;
+  const linkStart=contactAnchoredPanel?.14:.11;
+  const linkStagger=.06;
+  const linkDuration=.16;
+  nav.dataset.ruwaPanelMotionStyle="subtle-spiral";
+  nav.dataset.ruwaPanelRotationStart="-1.6";
+  nav.dataset.ruwaPanelRotationOvershoot=".45";
   nav.dataset.ruwaPanelRevealDuration=String(panelDuration);
   nav.dataset.ruwaLinkStagger=String(linkStagger);
   nav.dataset.ruwaLinkDuration=String(linkDuration);
@@ -2255,16 +2262,29 @@ body,button,input,select,textarea{font-family:var(--body)}
    }
   });
 
+  // First arc: the frame glides diagonally while turning gently toward neutral.
+  menuTimeline.to(nav,{
+   autoAlpha:.52,
+   x:-1.5,
+   y:-1,
+   rotation:.45,
+   scale:.996,
+   duration:panelArcDuration,
+   ease:"power2.out"
+  },0);
+
+  // Second arc: a quiet counter-settle completes the spiral and restores exact geometry.
   menuTimeline.to(nav,{
    autoAlpha:1,
    x:0,
    y:0,
+   rotation:0,
    scale:1,
    filter:"none",
    boxShadow:settledPanelShadow,
-   duration:panelDuration,
+   duration:panelSettleDuration,
    ease:"power3.out"
-  },0);
+  },contactAnchoredPanel?.18:.15);
 
   animatedItems.forEach((link,index)=>{
    menuTimeline.to(link,{
@@ -2325,11 +2345,14 @@ body,button,input,select,textarea{font-family:var(--body)}
      stagger:.018
     },0).to(nav,{
      autoAlpha:0,
-     y:-4,
-     scale:1,
+     x:3,
+     y:-5,
+     rotation:-.7,
+     scale:.995,
      filter:"none",
-     duration:.26,
-     ease:"power2.in"
+     duration:.28,
+     ease:"power2.in",
+     transformOrigin:"top right"
     },.05).play(0);
    }else{
     finishClosed(true);
