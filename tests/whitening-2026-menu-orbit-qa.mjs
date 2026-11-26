@@ -249,11 +249,11 @@ try {
       viewport.name + ": dropdown panel did not fade into place");
     assert.ok(staggerState.panelShadow!=="none"&&(staggerState.panelShadow.match(/rgba?\(/g)||[]).length>=3,
       viewport.name + ": the panel opened by the round hamburger must have a layered shadow behind its frame: "+staggerState.panelShadow);
+    assert.ok(staggerState.linkStagger>=.074&&staggerState.linkStagger<=.076,
+      viewport.name + ": navigation links must use the refined, perceptible stagger on every device");
+    assert.ok(staggerState.linkDuration>=.165&&staggerState.linkDuration<=.175,
+      viewport.name + ": navigation links must retain the refined short fade duration");
     if(viewport.width>920){
-      assert.ok(staggerState.linkStagger>=.064&&staggerState.linkStagger<=.066,
-        viewport.name + ": desktop link words should appear slightly faster, without losing their stagger");
-      assert.ok(staggerState.linkDuration>=.15&&staggerState.linkDuration<=.17,
-        viewport.name + ": desktop link reveal duration did not receive the requested slight speed increase");
       assert.ok(staggerState.panelRevealDuration>=.43&&staggerState.panelRevealDuration<=.45,
         viewport.name + ": the hamburger panel soft reveal should use its refined duration");
       if(viewport.width>=1366){
@@ -605,240 +605,155 @@ try {
   await interactionPage.close();
   console.log("[PASS] Escape focus restoration, native anchor close, dedicated soft-lift exit and rapid reopen");
 
-  // Moving conic-gradient arc: verify the luminous segment stays masked to the border line.
-  const glowPage = await browser.newPage({
+  // Verify complete removal of the rotating perimeter-light system while preserving cards and doctor imagery.
+  const cleanPage=await browser.newPage({
     viewport:{width:1440,height:900},
     reducedMotion:"no-preference"
   });
-  const glowErrors=[];
-  glowPage.on("pageerror",error=>glowErrors.push(error.message));
-  const glowResponse=await glowPage.goto(BASE_URL,{waitUntil:"domcontentloaded",timeout:45000});
-  assert.ok(glowResponse&&glowResponse.ok(),"Glow desktop page failed to load");
+  const cleanErrors=[];
+  cleanPage.on("pageerror",error=>cleanErrors.push(error.message));
+  const cleanResponse=await cleanPage.goto(BASE_URL,{waitUntil:"domcontentloaded",timeout:45000});
+  assert.ok(cleanResponse&&cleanResponse.ok(),"Clean-cards desktop page failed to load");
+  await cleanPage.evaluate(()=>document.fonts.ready);
 
-  const glowSelector=".info-card,.option-card,.journey-step,.team-card,.review-card,.expect-card,.reviews-preview,.reviews-criteria,.clinical-note";
-  const glowTargetCount=await glowPage.locator(glowSelector).count();
-  assert.ok(glowTargetCount>=18,
-    "Expected the full-perimeter glow on relevant cards and panels; found "+glowTargetCount);
-  assert.equal(await glowPage.locator("canvas.ruwa-orbit-light").count(),0,
-    "The obsolete comet canvas must be removed completely");
-  assert.equal(await glowPage.locator("svg.ruwa-orbit-geometry").count(),0,
-    "The obsolete hidden SVG path geometry must be removed completely");
-
-  const card=glowPage.locator(".info-card").first();
-  await card.scrollIntoViewIfNeeded();
-  await glowPage.waitForTimeout(420);
-  const before=await card.evaluate(element=>({
-    width:element.offsetWidth,
-    height:element.offsetHeight,
-    radius:getComputedStyle(element).borderRadius
-  }));
-  await card.screenshot({path:OUT+"/perimeter-glow-card-before.png"});
-  await card.hover();
-  await glowPage.waitForFunction(element=>{
-    const style=getComputedStyle(element,"::after");
-    return Number.parseFloat(style.opacity)>.45&&style.backgroundImage.includes("conic-gradient");
-  },await card.elementHandle(),{timeout:2500});
-  await glowPage.waitForTimeout(180);
-  await card.screenshot({path:OUT+"/perimeter-orbit-card-hover.png"});
-
-  const activeGlow=await card.evaluate(element=>{
-    const style=getComputedStyle(element,"::after");
+  const cleanSelector=".info-card,.option-card,.journey-step,.team-card,.review-card,.expect-card,.reviews-preview,.reviews-criteria,.clinical-note";
+  const glowAudit=await cleanPage.evaluate(selector=>{
+    const cssText=Array.from(document.querySelectorAll("style"))
+      .map(style=>style.textContent||"").join("\\n");
+    const targets=Array.from(document.querySelectorAll(selector));
+    const targetPseudoStates=targets.map(element=>{
+      const after=getComputedStyle(element,"::after");
+      const before=getComputedStyle(element,"::before");
+      return {
+        afterBackground:after.backgroundImage,
+        afterAnimation:after.animationName,
+        beforeBackground:before.backgroundImage,
+        beforeAnimation:before.animationName
+      };
+    });
+    const doctorImages=Array.from(document.querySelectorAll(".team-card-media img"));
     return {
-      opacity:Number.parseFloat(style.opacity),
-      backgroundImage:style.backgroundImage,
-      borderRadius:style.borderRadius,
-      maskComposite:style.maskComposite,
-      webkitMaskComposite:style.webkitMaskComposite,
-      maskImage:style.maskImage,
-      webkitMaskImage:style.webkitMaskImage,
-      maskSupported:CSS.supports("mask-composite","exclude")||CSS.supports("-webkit-mask-composite","xor"),
-      maskRulePresent:[...document.querySelectorAll("style")].some(sheet=>
-        sheet.textContent.includes("mask-composite:exclude")&&
-        sheet.textContent.includes("-webkit-mask-composite:xor")
-      ),
-      pointerEvents:style.pointerEvents,
-      animationName:style.animationName,
-      animationDuration:style.animationDuration,
-      animationIterationCount:style.animationIterationCount,
-      animationAngle:style.getPropertyValue("--ruwa-perimeter-angle").trim(),
-      filter:style.filter,
-      elementRadius:getComputedStyle(element).borderRadius,
-      width:element.offsetWidth,
-      height:element.offsetHeight
+      cssText,
+      targetCount:targets.length,
+      targetPseudoStates,
+      doctorImageCount:doctorImages.length,
+      doctorImages:doctorImages.map(image=>({
+        complete:image.complete,
+        naturalWidth:image.naturalWidth,
+        naturalHeight:image.naturalHeight,
+        src:image.currentSrc||image.src,
+        framePresent:Boolean(image.closest(".team-card-media"))
+      })),
+      oldCanvasCount:document.querySelectorAll("canvas.ruwa-orbit-light").length,
+      oldSvgCount:document.querySelectorAll("svg.ruwa-orbit-geometry").length,
+      teamCardCount:document.querySelectorAll(".team-card").length
+    };
+  },cleanSelector);
+  const glowTargetCount=glowAudit.targetCount;
+  assert.ok(glowTargetCount>=18,
+    "Expected the existing content cards and panels to remain present; found "+glowTargetCount);
+  assert.equal(/ruwa-perimeter|perimeter-orbit|perimeter-breathe|--ruwa-perimeter-angle|conic-gradient\\s*\\(/i.test(glowAudit.cssText),false,
+    "The page stylesheet still contains perimeter-light CSS, keyframes or conic-gradient code");
+  assert.equal(/ruwa-orbit-light|ruwa-orbit-geometry/i.test(glowAudit.cssText),false,
+    "Obsolete orbit-rendering code remains in the page stylesheet");
+  assert.ok(glowAudit.targetPseudoStates.every(state=>
+    !/conic-gradient/i.test(state.afterBackground+" "+state.beforeBackground)&&
+    !/ruwa-perimeter|perimeter-orbit|perimeter-breathe/i.test(state.afterAnimation+" "+state.beforeAnimation)
+  ),"A targeted card or panel still has an animated perimeter overlay");
+  assert.equal(glowAudit.oldCanvasCount,0,"The obsolete orbit canvas must remain absent");
+  assert.equal(glowAudit.oldSvgCount,0,"The obsolete orbit SVG geometry must remain absent");
+  assert.ok(glowAudit.teamCardCount>=3,"Doctor profile cards were removed unexpectedly");
+  assert.ok(glowAudit.doctorImageCount>=3,"Doctor photographs or their image frames were removed unexpectedly");
+
+  const doctorSection=cleanPage.locator(".team-card").first();
+  await doctorSection.scrollIntoViewIfNeeded();
+  await cleanPage.waitForFunction(()=>{
+    const images=Array.from(document.querySelectorAll(".team-card-media img"));
+    return images.length>=3&&images.every(image=>image.complete&&image.naturalWidth>0);
+  },null,{timeout:8000});
+  const doctorImagesAfterLoad=await cleanPage.locator(".team-card-media img").evaluateAll(images=>
+    images.map(image=>({
+      width:image.naturalWidth,
+      height:image.naturalHeight,
+      frame: Boolean(image.closest(".team-card-media"))
+    }))
+  );
+  assert.ok(doctorImagesAfterLoad.every(image=>image.width>0&&image.height>0&&image.frame),
+    "Doctor portrait assets or their existing image frames are not intact");
+
+  const card=cleanPage.locator(".info-card").first();
+  await card.scrollIntoViewIfNeeded();
+  await cleanPage.waitForTimeout(180);
+  const cardBefore=await card.evaluate(element=>{
+    const style=getComputedStyle(element);
+    const rect=element.getBoundingClientRect();
+    return {
+      width:rect.width,
+      height:rect.height,
+      borderWidth:style.borderTopWidth,
+      borderStyle:style.borderTopStyle,
+      borderColor:style.borderTopColor,
+      radius:style.borderRadius
     };
   });
-  assert.ok(activeGlow.opacity>.45,"The moving perimeter arc did not become visible on hover");
-  assert.ok(activeGlow.backgroundImage.includes("conic-gradient"),
-    "The perimeter must use a rotating conic gradient");
-  assert.ok(!activeGlow.backgroundImage.includes("transparent")&&
-    (activeGlow.backgroundImage.match(/rgba?\(/g)||[]).length>=8,
-    "The illuminated border must cover the entire perimeter continuously, with no dark gap: "+activeGlow.backgroundImage);
-  const hasTwoMaskLayers=[activeGlow.maskImage,activeGlow.webkitMaskImage].some(value=>
-    (String(value||"").match(/linear-gradient/gi)||[]).length>=2
-  );
-  const compositorRecognized=String(activeGlow.maskComposite||"").includes("exclude")||
-    String(activeGlow.webkitMaskComposite||"").includes("xor");
-  assert.ok(compositorRecognized||(activeGlow.maskRulePresent&&activeGlow.maskSupported)||hasTwoMaskLayers,
-    "The gradient must be masked into a complete border ring: "+JSON.stringify({
-      maskComposite:activeGlow.maskComposite,
-      webkitMaskComposite:activeGlow.webkitMaskComposite,
-      maskImage:activeGlow.maskImage,
-      webkitMaskImage:activeGlow.webkitMaskImage,
-      maskSupported:activeGlow.maskSupported,
-      maskRulePresent:activeGlow.maskRulePresent
-    }));
-  assert.equal(activeGlow.borderRadius,activeGlow.elementRadius,
-    "The luminous ring must inherit the exact rounded card corners");
-  assert.equal(activeGlow.pointerEvents,"none","Glow must not intercept pointer input");
-  const activeAnimations=activeGlow.animationName.split(",").map(name=>name.trim());
-  assert.ok(activeAnimations.includes("ruwa-perimeter-orbit")&&activeAnimations.includes("ruwa-perimeter-breathe"),
-    "The complete perimeter light must flow around the border and gently pulse on hover: "+activeGlow.animationName);
-  assert.ok(activeGlow.animationIterationCount.split(",").every(value=>value.trim()==="infinite"),
-    "Both full-frame motion layers must continue while the pointer remains over the card");
-  assert.ok(Number.parseFloat(activeGlow.animationDuration)<=1.0&&Number.parseFloat(activeGlow.animationDuration)>.5,
-    "The perimeter light must orbit much faster than the old 2.6-second cycle: "+activeGlow.animationDuration);
-  assert.ok(activeGlow.animationAngle.endsWith("deg"),
-    "The registered perimeter angle must be animatable in degrees");
-  await glowPage.waitForTimeout(260);
-  const angleAfter=await card.evaluate(element=>
-    getComputedStyle(element,"::after").getPropertyValue("--ruwa-perimeter-angle").trim()
-  );
-  assert.notEqual(angleAfter,activeGlow.animationAngle,
-    "The luminous arc did not physically advance around the outline");
-  assert.ok(activeGlow.filter.includes("drop-shadow"),
-    "The luminous border must include a soft restrained halo");
-  const iconGlow=await card.locator(".card-index").evaluate(element=>{
-    const style=getComputedStyle(element,"::after");
-    return {opacity:Number.parseFloat(style.opacity),backgroundImage:style.backgroundImage,animationName:style.animationName};
+  await card.screenshot({path:OUT+"/cards-without-perimeter-glow-1440.png"});
+  await card.hover();
+  await cleanPage.waitForTimeout(420);
+  const cardAfter=await card.evaluate(element=>{
+    const style=getComputedStyle(element);
+    const rect=element.getBoundingClientRect();
+    const after=getComputedStyle(element,"::after");
+    return {
+      width:rect.width,
+      height:rect.height,
+      borderWidth:style.borderTopWidth,
+      borderStyle:style.borderTopStyle,
+      borderColor:style.borderTopColor,
+      radius:style.borderRadius,
+      afterBackground:after.backgroundImage,
+      afterAnimation:after.animationName
+    };
   });
-  assert.ok(iconGlow.opacity>.45&&iconGlow.backgroundImage.includes("conic-gradient")&&
-    iconGlow.animationName.includes("ruwa-perimeter-orbit"),
-    "The numbered icon tiles must receive their own complete illuminated frame and movement");
-  assert.equal(activeGlow.width,before.width,"Glow changed the card width");
-  assert.equal(activeGlow.height,before.height,"Glow changed the card height");
+  assert.equal(cardAfter.width,cardBefore.width,"Removing glow changed the original card width");
+  assert.equal(cardAfter.height,cardBefore.height,"Removing glow changed the original card height");
+  assert.equal(cardAfter.borderWidth,cardBefore.borderWidth,"The card's original static border width changed");
+  assert.equal(cardAfter.borderStyle,cardBefore.borderStyle,"The card's original static border style changed");
+  assert.equal(cardAfter.borderColor,cardBefore.borderColor,"The card's original static border color changed");
+  assert.equal(cardAfter.radius,cardBefore.radius,"The card's original border radius changed");
+  assert.equal(/conic-gradient/i.test(cardAfter.afterBackground),false,"Card hover still creates a luminous gradient border");
+  assert.equal(/ruwa-perimeter|perimeter-orbit|perimeter-breathe/i.test(cardAfter.afterAnimation),false,
+    "Card hover still starts a perimeter-light animation");
 
-  await glowPage.mouse.move(8,8);
-  await glowPage.waitForTimeout(430);
-  const exitedOpacity=await card.evaluate(element=>
-    Number.parseFloat(getComputedStyle(element,"::after").opacity)
-  );
-  assert.ok(exitedOpacity<.05,"Perimeter glow did not fade after pointer exit");
-
-  await card.evaluate(element=>{element.tabIndex=0;element.focus();});
-  await glowPage.waitForFunction(element=>
-    Number.parseFloat(getComputedStyle(element,"::after").opacity)>.45,
-    await card.elementHandle(),{timeout:2000}
-  );
-  await glowPage.screenshot({path:OUT+"/perimeter-glow-card-keyboard-focus.png"});
-  await card.evaluate(element=>{element.blur();element.removeAttribute("tabindex");});
-
-  const teamCard=glowPage.locator(".team-card").first();
-  await teamCard.scrollIntoViewIfNeeded();
-  await glowPage.waitForTimeout(420);
-  await teamCard.hover();
-  const teamCardHandle=await teamCard.elementHandle();
-  await glowPage.waitForFunction(element=>
-    Number.parseFloat(getComputedStyle(element,"::after").opacity)>.45,
-    teamCardHandle,{timeout:2000}
-  );
-  // The existing image zoom has a 340ms CSS transition. Wait for its finished
-  // rendered value rather than sampling the first hover frame.
-  await glowPage.waitForFunction(element=>
+  await doctorSection.hover();
+  const doctorCardHandle=await doctorSection.elementHandle();
+  await cleanPage.waitForFunction(element=>
     Number.parseFloat(getComputedStyle(element.querySelector(".team-card-media img")).scale)>1.02,
-    teamCardHandle,{timeout:2000}
+    doctorCardHandle,{timeout:2500}
   );
-  const teamGlow=await teamCard.evaluate(element=>({
-    opacity:Number.parseFloat(getComputedStyle(element,"::after").opacity),
-    animationName:getComputedStyle(element,"::after").animationName,
-    imageScale:getComputedStyle(element.querySelector(".team-card-media img")).scale
-  }));
-  assert.ok(teamGlow.opacity>.45&&teamGlow.animationName.includes("ruwa-perimeter-orbit")&&
-    teamGlow.animationName.includes("ruwa-perimeter-breathe"),
-    "Doctor/team cards did not receive continuous full-frame light and a gentle motion.");
-  assert.ok(Number.parseFloat(teamGlow.imageScale)>1.02,
-    "Existing doctor image zoom did not remain active");
-  await teamCard.screenshot({path:OUT+"/perimeter-orbit-doctor-card-hover.png"});
-  assert.equal(glowErrors.length,0,"Glow browser errors: "+glowErrors.join(" | "));
-  await glowPage.close();
-  console.log("[PASS] CSS full-perimeter light is a moving, masked border arc, pointer-safe and keyboard-visible");
+  const doctorHover=await doctorSection.evaluate(element=>{
+    const image=element.querySelector(".team-card-media img");
+    const after=getComputedStyle(element,"::after");
+    return {
+      imageScale:getComputedStyle(image).scale,
+      imageWidth:image.naturalWidth,
+      frameExists:Boolean(image.closest(".team-card-media")),
+      afterBackground:after.backgroundImage,
+      afterAnimation:after.animationName
+    };
+  });
+  assert.ok(Number.parseFloat(doctorHover.imageScale)>1.02,
+    "The existing subtle doctor-image zoom interaction was removed");
+  assert.ok(doctorHover.imageWidth>0&&doctorHover.frameExists,
+    "The original doctor portrait or its frame is missing");
+  assert.equal(/conic-gradient/i.test(doctorHover.afterBackground),false,
+    "Doctor-card hover still creates a luminous gradient border");
+  assert.equal(/ruwa-perimeter|perimeter-orbit|perimeter-breathe/i.test(doctorHover.afterAnimation),false,
+    "Doctor-card hover still starts a perimeter-light animation");
+  await doctorSection.screenshot({path:OUT+"/doctor-card-hover-without-glow-1440.png"});
+  assert.equal(cleanErrors.length,0,"Clean-cards browser errors: "+cleanErrors.join(" | "));
+  await cleanPage.close();
 
-  // Touch-only devices must not receive a sticky hover effect or animated layer.
-  const touchPage=await browser.newPage({
-    viewport:{width:430,height:900},
-    isMobile:true,
-    hasTouch:true,
-    reducedMotion:"no-preference"
-  });
-  await touchPage.goto(BASE_URL,{waitUntil:"domcontentloaded",timeout:45000});
-  assert.equal(
-    await touchPage.evaluate(()=>matchMedia("(hover:hover) and (pointer:fine)").matches),
-    false,
-    "Touch viewport unexpectedly advertises a fine hover pointer"
-  );
-  const touchCard=touchPage.locator(".info-card").first();
-  await touchCard.scrollIntoViewIfNeeded();
-  await touchCard.tap();
-  const touchGlow=await touchCard.evaluate(element=>({
-    opacity:Number.parseFloat(getComputedStyle(element,"::after").opacity),
-    animationName:getComputedStyle(element,"::after").animationName
-  }));
-  assert.equal(touchGlow.opacity,0,"Touch tap left a sticky hover glow");
-  assert.equal(touchGlow.animationName,"none","Touch-only devices must not animate the hover glow");
-  assert.equal(await touchPage.locator("canvas.ruwa-orbit-light,svg.ruwa-orbit-geometry").count(),0,
-    "Touch devices must not contain old comet-rendering layers");
-  assert.equal(
-    await touchPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),
-    true,
-    "The glow interaction introduced touch-layout overflow"
-  );
-  await touchPage.close();
 
-  const reducedPage = await browser.newPage({
-    viewport: { width: 390, height: 844 },
-    reducedMotion: "reduce"
-  });
-  const reducedMenu = await prepareMenuPage(reducedPage, {
-    name: "reduced-motion-390",
-    width: 390,
-    height: 844
-  });
-  await reducedMenu.button.click();
-  await reducedPage.waitForFunction(
-    () => document.querySelector("#main-nav")?.dataset.ruwaMenuState === "open",
-    null,
-    { timeout: 1000 }
-  );
-  assert.equal(
-    await reducedPage.evaluate(() => document.documentElement.dataset.ruwaMenuMotion),
-    "reduced",
-    "Reduced-motion preference did not disable the cinematic menu timeline"
-  );
-  assert.equal(
-    await reducedMenu.nav.evaluate(element => Array.from(element.querySelectorAll("a")).every(link =>
-      getComputedStyle(link).visibility !== "hidden" && Number.parseFloat(getComputedStyle(link).opacity) >= .99
-    )),
-    true,
-    "Reduced-motion mode must expose all menu links immediately"
-  );
-  await reducedMenu.button.click();
-  assert.equal(
-    await reducedMenu.nav.evaluate(element => !element.classList.contains("open")),
-    true,
-    "Reduced-motion menu close should be immediate"
-  );
-  const reducedCard=reducedPage.locator(".info-card").first();
-  await reducedCard.evaluate(element=>{element.tabIndex=0;element.focus();});
-  const reducedGlow=await reducedCard.evaluate(element=>({
-    opacity:Number.parseFloat(getComputedStyle(element,"::after").opacity),
-    animationName:getComputedStyle(element,"::after").animationName
-  }));
-  assert.ok(reducedGlow.opacity>=.7,
-    "Keyboard focus must retain a visible static outline for reduced-motion users");
-  assert.ok(reducedGlow.animationName===""||reducedGlow.animationName.split(",").every(name=>name.trim()==="none"),
-    "Reduced-motion preference must disable both perimeter movement and pulse");
-  assert.equal(await reducedPage.locator("canvas.ruwa-orbit-light,svg.ruwa-orbit-geometry").count(),0,
-    "Reduced-motion page must contain no particle rendering layers");
-  await reducedPage.close();
 
   console.log(JSON.stringify({
     result: "passed",
@@ -850,20 +765,18 @@ try {
       "Escape closes and restores focus",
       "native anchor destination remains active",
       "reduced-motion menu is immediate and fully accessible",
-      "Continuous full-frame border illumination flows around cards, doctor frames and icon tiles with a soft pulse",
-      "luminous perimeter does not intercept pointer or change card geometry",
-      "existing card elevation and image zoom remain active",
-      "touch avoids sticky hover glow and reduced motion keeps a static focus border"
+      "all rotating perimeter-light CSS, conic gradients and glow keyframes are completely absent",
+      "cards retain their original dimensions, static borders and radii after glow removal",
+      "doctor photographs and image frames remain intact",
+      "the existing subtle doctor-image zoom remains active without any perimeter glow"
     ],
     glowTargetCount,
     screenshots: [
       OUT + "/menu-open-1440.png",
       OUT + "/menu-stagger-mid-1440.png",
       OUT + "/menu-open-390.png",
-      OUT + "/perimeter-glow-card-before.png",
-      OUT + "/perimeter-orbit-card-hover.png",
-      OUT + "/perimeter-glow-card-keyboard-focus.png",
-      OUT + "/perimeter-orbit-doctor-card-hover.png"
+      OUT + "/cards-without-perimeter-glow-1440.png",
+      OUT + "/doctor-card-hover-without-glow-1440.png"
     ],
     failures
   }, null, 2));
