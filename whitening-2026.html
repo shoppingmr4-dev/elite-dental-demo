@@ -1107,7 +1107,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   left:var(--ruwa-contact-menu-left,18px);right:auto;
   translate:0 0;display:flex;flex-direction:column;align-items:stretch;
   justify-self:auto;gap:0;margin:0;
-  width:min(320px,calc(100vw - 32px));max-height:min(70vh,560px);
+  width:var(--ruwa-contact-menu-width,min(320px,calc(100vw - 32px)));max-height:min(70vh,560px);
   overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
   padding:8px;border:1px solid var(--line);border-radius:16px;
   background:var(--paper);box-shadow:0 18px 34px rgba(20,45,56,.14);
@@ -2211,14 +2211,18 @@ body,button,input,select,textarea{font-family:var(--body)}
   if(!isDesktopCompact()||!contactAction)return;
   const headerRect=header.getBoundingClientRect();
   const contactRect=contactAction.getBoundingClientRect();
-  const panelWidth=Math.min(320,Math.max(0,headerRect.width-32));
   const contactCenter=contactRect.left+contactRect.width/2-headerRect.left;
   const desiredCenter=contactCenter-14;
-  const left=Math.max(16,Math.min(
-   desiredCenter-panelWidth/2,
-   headerRect.width-panelWidth-16
-  ));
+  // On narrower desktop widths, reduce panel width only as much as needed
+  // to preserve the exact centered position without clipping either edge.
+  const centeredCapacity=2*Math.min(
+   desiredCenter-16,
+   headerRect.width-16-desiredCenter
+  );
+  const panelWidth=Math.max(200,Math.min(320,headerRect.width-32,centeredCapacity));
+  const left=desiredCenter-panelWidth/2;
   const top=headerRect.height+12;
+  nav.style.setProperty("--ruwa-contact-menu-width",panelWidth.toFixed(2)+"px");
   nav.style.setProperty("--ruwa-contact-menu-left",left.toFixed(2)+"px");
   nav.style.setProperty("--ruwa-contact-menu-top",top.toFixed(2)+"px");
  };
