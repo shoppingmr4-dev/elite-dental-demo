@@ -205,6 +205,7 @@ try {
         panelShadow:style.boxShadow,
         linkStagger:Number(element.dataset.ruwaLinkStagger||0),
         linkDuration:Number(element.dataset.ruwaLinkDuration||0),
+        panelRevealDuration:Number(element.dataset.ruwaPanelRevealDuration||0),
         contactRect:contactRect.toJSON(),
         belowContact:panelRect.top>=contactRect.bottom+8,
         panelCenterX:panelRect.left+panelRect.width/2,
@@ -237,13 +238,22 @@ try {
       viewport.name + ": dropdown links must be vertically aligned");
     assert.ok(staggerState.panelOpacity > .8,
       viewport.name + ": dropdown panel did not fade into place");
+    assert.ok(staggerState.panelShadow!=="none"&&(staggerState.panelShadow.match(/rgba?\(/g)||[]).length>=3,
+      viewport.name + ": the panel opened by the round hamburger must have a layered shadow behind its frame: "+staggerState.panelShadow);
     if(viewport.width>920){
-      assert.ok(staggerState.panelShadow!=="none"&&(staggerState.panelShadow.match(/rgba?\(/g)||[]).length>=3,
-        viewport.name + ": the contact menu frame needs a clearly layered shadow behind its border: "+staggerState.panelShadow);
-      assert.ok(staggerState.linkStagger>0&&staggerState.linkStagger<=.08,
+      assert.ok(staggerState.linkStagger>0&&staggerState.linkStagger<=.07,
         viewport.name + ": desktop link words should appear slightly faster, without losing their stagger");
-      assert.ok(staggerState.linkDuration>0&&staggerState.linkDuration<=.28,
-        viewport.name + ": desktop link reveal duration did not receive the requested small speed increase");
+      assert.ok(staggerState.linkDuration>0&&staggerState.linkDuration<=.26,
+        viewport.name + ": desktop link reveal duration did not receive the requested slight speed increase");
+      assert.ok(staggerState.panelRevealDuration>.65&&staggerState.panelRevealDuration<=.71,
+        viewport.name + ": the hamburger panel frame should open a little faster than before");
+      if(viewport.width>=1366){
+        assert.ok(staggerState.panelRect.width>=332&&staggerState.panelRect.width<=337,
+          viewport.name + ": hamburger link panel should be slightly wider than its former 320px width: "+staggerState.panelRect.width);
+      }
+    }else{
+      assert.ok(staggerState.panelRevealDuration>.30&&staggerState.panelRevealDuration<=.37,
+        viewport.name + ": mobile/tablet hamburger panel should open slightly faster");
     }
     assert.equal(staggerState.linkOpacity.length, 7,
       viewport.name + ": the stagger must include all seven navigation links");
@@ -642,7 +652,10 @@ try {
   });
   assert.ok(activeGlow.opacity>.45,"The moving perimeter arc did not become visible on hover");
   assert.ok(activeGlow.backgroundImage.includes("conic-gradient"),
-    "The perimeter must use a rotating conic light segment, not a stationary glow");
+    "The perimeter must use a rotating conic gradient");
+  assert.ok(!activeGlow.backgroundImage.includes("transparent")&&
+    activeGlow.backgroundImage.split("rgba(").length>=8,
+    "The illuminated border must cover the entire perimeter continuously, with no dark gap: "+activeGlow.backgroundImage);
   const hasTwoMaskLayers=[activeGlow.maskImage,activeGlow.webkitMaskImage].some(value=>
     (String(value||"").match(/linear-gradient/gi)||[]).length>=2
   );
@@ -660,8 +673,9 @@ try {
   assert.equal(activeGlow.borderRadius,activeGlow.elementRadius,
     "The luminous ring must inherit the exact rounded card corners");
   assert.equal(activeGlow.pointerEvents,"none","Glow must not intercept pointer input");
-  assert.equal(activeGlow.animationName,"ruwa-perimeter-orbit",
-    "The luminous segment must travel around the perimeter on hover");
+  const activeAnimations=activeGlow.animationName.split(",").map(name=>name.trim());
+  assert.ok(activeAnimations.includes("ruwa-perimeter-orbit")&&activeAnimations.includes("ruwa-perimeter-breathe"),
+    "The complete perimeter light must flow around the border and gently pulse on hover: "+activeGlow.animationName);
   assert.equal(activeGlow.animationIterationCount,"infinite",
     "The perimeter orbit must continue while the pointer remains over the card");
   assert.ok(Number.parseFloat(activeGlow.animationDuration)<=1.0&&Number.parseFloat(activeGlow.animationDuration)>.5,
@@ -676,6 +690,13 @@ try {
     "The luminous arc did not physically advance around the outline");
   assert.ok(activeGlow.filter.includes("drop-shadow"),
     "The luminous border must include a soft restrained halo");
+  const iconGlow=await card.locator(".card-index").evaluate(element=>{
+    const style=getComputedStyle(element,"::after");
+    return {opacity:Number.parseFloat(style.opacity),backgroundImage:style.backgroundImage,animationName:style.animationName};
+  });
+  assert.ok(iconGlow.opacity>.45&&iconGlow.backgroundImage.includes("conic-gradient")&&
+    iconGlow.animationName.includes("ruwa-perimeter-orbit"),
+    "The numbered icon tiles must receive their own complete illuminated frame and movement");
   assert.equal(activeGlow.width,before.width,"Glow changed the card width");
   assert.equal(activeGlow.height,before.height,"Glow changed the card height");
 
@@ -714,8 +735,9 @@ try {
     animationName:getComputedStyle(element,"::after").animationName,
     imageScale:getComputedStyle(element.querySelector(".team-card-media img")).scale
   }));
-  assert.ok(teamGlow.opacity>.45&&teamGlow.animationName==="ruwa-perimeter-orbit",
-    "Doctor/team cards did not receive the same moving perimeter light");
+  assert.ok(teamGlow.opacity>.45&&teamGlow.animationName.includes("ruwa-perimeter-orbit")&&
+    teamGlow.animationName.includes("ruwa-perimeter-breathe"),
+    "Doctor/team cards did not receive continuous full-frame light and a gentle motion.");
   assert.ok(Number.parseFloat(teamGlow.imageScale)>1.02,
     "Existing doctor image zoom did not remain active");
   await teamCard.screenshot({path:OUT+"/perimeter-orbit-doctor-card-hover.png"});
@@ -795,8 +817,8 @@ try {
   }));
   assert.ok(reducedGlow.opacity>=.7,
     "Keyboard focus must retain a visible static outline for reduced-motion users");
-  assert.ok(reducedGlow.animationName==="none"||reducedGlow.animationName==="",
-    "Reduced-motion preference must disable perimeter breathing");
+  assert.ok(reducedGlow.animationName===""||reducedGlow.animationName.split(",").every(name=>name.trim()==="none"),
+    "Reduced-motion preference must disable both perimeter movement and pulse");
   assert.equal(await reducedPage.locator("canvas.ruwa-orbit-light,svg.ruwa-orbit-geometry").count(),0,
     "Reduced-motion page must contain no particle rendering layers");
   await reducedPage.close();
@@ -811,7 +833,7 @@ try {
       "Escape closes and restores focus",
       "native anchor destination remains active",
       "reduced-motion menu is immediate and fully accessible",
-      "CSS-only full-perimeter teal/cyan glow breathes evenly without a traveling point or trail",
+      "Continuous full-frame border illumination flows around cards, doctor frames and icon tiles with a soft pulse",
       "luminous perimeter does not intercept pointer or change card geometry",
       "existing card elevation and image zoom remain active",
       "touch avoids sticky hover glow and reduced motion keeps a static focus border"
