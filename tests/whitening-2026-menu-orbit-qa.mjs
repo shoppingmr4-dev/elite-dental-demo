@@ -181,6 +181,9 @@ try {
         foldY:matrix?matrix.m13:0,
         motionStyle:element.dataset.ruwaPanelMotionStyle,
         foldOrigin:element.dataset.ruwaPanelFoldOrigin,
+        foldDirection:element.dataset.ruwaPanelFoldDirection,
+        foldRotationX:Number(element.dataset.ruwaPanelFoldRotationX||0),
+        foldRotationY:Number(element.dataset.ruwaPanelFoldRotationY||0),
         shadow:style.boxShadow,
         linkOpacity:Array.from(element.querySelectorAll("a"))
           .filter(link=>getComputedStyle(link).display!=="none")
@@ -195,10 +198,16 @@ try {
       viewport.name + ": the frame should make a small, smooth settling movement");
     assert.equal(frameOpening.filter,"none",
       viewport.name + ": the new frame reveal must stay optically crisp without blur");
-    assert.equal(frameOpening.motionStyle,"paper-unfold",
-      viewport.name + ": the panel must use the notebook-page unfolding motion");
-    assert.equal(frameOpening.foldOrigin,"bottom-right",
-      viewport.name + ": the paper sheet must unfold from its lower-right corner");
+    assert.equal(frameOpening.motionStyle,"paper-unfold-diagonal",
+      viewport.name + ": the panel must use the diagonal notebook-page unfolding motion");
+    assert.equal(frameOpening.foldOrigin,"top-right",
+      viewport.name + ": the paper sheet must unfold from its upper-right corner");
+    assert.equal(frameOpening.foldDirection,"top-right-to-bottom-left",
+      viewport.name + ": the page fold must travel diagonally toward the lower-left corner");
+    assert.equal(frameOpening.foldRotationX,68,
+      viewport.name + ": the upper-right hinge rotation must match the approved direction");
+    assert.equal(frameOpening.foldRotationY,-28,
+      viewport.name + ": the diagonal page turn must carry the panel toward the lower-left");
     assert.equal(frameOpening.is3D,true,
       viewport.name + ": the paper turn must use a real perspective transform");
     assert.ok(Math.abs(frameOpening.foldX)>.12,
