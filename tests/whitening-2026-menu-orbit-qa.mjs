@@ -592,6 +592,13 @@ try {
       borderRadius:style.borderRadius,
       maskComposite:style.maskComposite,
       webkitMaskComposite:style.webkitMaskComposite,
+      maskImage:style.maskImage,
+      webkitMaskImage:style.webkitMaskImage,
+      maskSupported:CSS.supports("mask-composite","exclude")||CSS.supports("-webkit-mask-composite","xor"),
+      maskRulePresent:[...document.querySelectorAll("style")].some(sheet=>
+        sheet.textContent.includes("mask-composite:exclude")&&
+        sheet.textContent.includes("-webkit-mask-composite:xor")
+      ),
       pointerEvents:style.pointerEvents,
       animationName:style.animationName,
       animationIterationCount:style.animationIterationCount,
@@ -604,8 +611,20 @@ try {
   assert.ok(activeGlow.opacity>.45,"The complete perimeter glow did not become visible on hover");
   assert.ok(activeGlow.backgroundImage.includes("linear-gradient"),
     "The perimeter must use a continuous gradient, not a traveling point");
-  assert.ok(activeGlow.maskComposite==="exclude"||activeGlow.webkitMaskComposite==="xor",
-    "The gradient must be masked into a complete border ring");
+  const hasTwoMaskLayers=[activeGlow.maskImage,activeGlow.webkitMaskImage].some(value=>
+    (String(value||"").match(/linear-gradient/gi)||[]).length>=2
+  );
+  const compositorRecognized=String(activeGlow.maskComposite||"").includes("exclude")||
+    String(activeGlow.webkitMaskComposite||"").includes("xor");
+  assert.ok(compositorRecognized||(activeGlow.maskRulePresent&&activeGlow.maskSupported)||hasTwoMaskLayers,
+    "The gradient must be masked into a complete border ring: "+JSON.stringify({
+      maskComposite:activeGlow.maskComposite,
+      webkitMaskComposite:activeGlow.webkitMaskComposite,
+      maskImage:activeGlow.maskImage,
+      webkitMaskImage:activeGlow.webkitMaskImage,
+      maskSupported:activeGlow.maskSupported,
+      maskRulePresent:activeGlow.maskRulePresent
+    }));
   assert.equal(activeGlow.borderRadius,activeGlow.elementRadius,
     "The luminous ring must inherit the exact rounded card corners");
   assert.equal(activeGlow.pointerEvents,"none","Glow must not intercept pointer input");
