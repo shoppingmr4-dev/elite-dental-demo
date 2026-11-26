@@ -449,7 +449,7 @@ try {
       await page.waitForTimeout(110);
       const reverseProgress = await nav.evaluate(element => {
         const clip = getComputedStyle(element).clipPath;
-        const match = clip.match(/circle\\(([-\\d.]+)px at/);
+        const match = clip.match(/circle\(([-\d.]+)px at/);
         const radius = match ? Number(match[1]) : 0;
         const maximum = Number(element.dataset.ruwaMenuRadius || 1);
         return radius / maximum;
