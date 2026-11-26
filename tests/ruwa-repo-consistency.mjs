@@ -31,8 +31,8 @@ const [
 const sectionIds = [...html.matchAll(/<section\b[^>]*\bid=["']([^"']+)["']/gi)].map(match => match[1]);
 assert.deepEqual(
   sectionIds,
-  ["top", "approach", "causes", "options", "journey", "suitability", "expectations", "team", "reviews", "faq", "consultation"],
-  "RUWA must keep the approved eleven-section visitor journey in order"
+  ["top", "causes", "options", "journey", "suitability", "team", "reviews", "faq", "consultation"],
+  "RUWA must keep the approved nine-section visitor journey in order"
 );
 
 
@@ -42,30 +42,31 @@ const suitabilityStart = html.indexOf('id="suitability"');
 assert.ok(optionsStart < journeyStart && journeyStart < suitabilityStart, "Treatment journey must follow whitening options and precede suitability and safety");
 const journeySection = html.slice(journeyStart, html.indexOf("</section>", journeyStart) + 10);
 assert.ok(journeySection.includes("من التقييم إلى العناية اللاحقة."), "Treatment journey headline is missing");
-assert.ok(journeySection.includes("تنفيذ الإجراء"), "Treatment implementation step is missing");
+assert.ok(journeySection.includes("تنفيذ الخطة"), "Treatment implementation step is missing");
 assert.ok(journeySection.includes("العناية والمتابعة"), "Aftercare and follow-up step is missing");
-assert.match(journeySection, /<ol class="journey-grid" aria-label="مراحل رحلة تبييض الأسنان">/);
+assert.match(journeySection, /<ol class="journey-grid" aria-label="خطوات تقييم وتنفيذ خطة تبييض الأسنان">/);
 assert.equal([...journeySection.matchAll(/<li class="journey-step">/g)].length, 4, "Treatment journey must contain exactly four ordered steps");
-assert.ok(journeySection.includes("تختلف تفاصيل الرحلة بحسب الخيار وحالتك"), "Treatment journey must disclose that details vary by method and case");
+assert.ok(journeySection.includes("تبدأ الرحلة بفهم سبب تغيّر اللون وصحة الأسنان واللثة"), "Merged journey must begin with patient assessment");
+assert.deepEqual([...journeySection.matchAll(/<h3>([^<]+)<\/h3>/g)].map(match => match[1]), ["فحص الأسنان واللثة", "مناقشة الخيارات المناسبة", "تنفيذ الخطة", "العناية والمتابعة"], "Merged journey steps must follow the patient journey");
 
-const expectationsStart = html.indexOf('id="expectations"');
-const expectationsSection = html.slice(expectationsStart, html.indexOf("</section>", expectationsStart) + 10);
-assert.ok(expectationsStart > suitabilityStart, "Realistic expectations must follow suitability and safety");
-assert.ok(expectationsSection.includes("فحص الأسنان واللثة وتحديد سبب تغيّر اللون لدى طبيب الأسنان"), "Expectations must explain the role of individual dental assessment");
+const expectationsSection = html.slice(suitabilityStart, html.indexOf('id="team"', suitabilityStart));
+assert.ok(suitabilityStart > journeyStart, "Merged safety and expectations must follow the treatment journey");
+assert.ok(expectationsSection.includes("قرار واعٍ وتكوين توقعات واقعية قبل الإجراء"), "Merged safety section must introduce realistic expectations");
 assert.deepEqual(
-  [...expectationsSection.matchAll(/<h3>([^<]+)<\/h3>/g)].map(match => match[1]),
+  [...expectationsSection.matchAll(/<article class="expect-card">[\s\S]*?<h3>([^<]+)<\/h3>/g)].map(match => match[1]),
   ["النتائج تختلف من شخص لآخر", "قد تحدث حساسية أو تهيّج مؤقت", "الحشوات والتيجان والقشور لا تتبيّض", "العناية بعد التبييض"],
-  "Expectations must contain four focused cards in the approved order"
+  "Merged expectations must contain four focused cards in the approved order"
 );
 assert.ok(expectationsSection.includes("لون الأسنان الأساسي وسبب التصبغ وعمقه"), "Factors influencing results are missing");
-assert.ok(expectationsSection.includes("لا توجد درجة نهائية واحدة يمكن ضمانها للجميع"), "No-guarantee disclosure is missing");
-assert.ok(expectationsSection.includes("حساسية مؤقتة في الأسنان أو تهيّج في اللثة"), "Temporary sensitivity and gum irritation must be disclosed");
+assert.ok(expectationsSection.includes("لا توجد درجة نهائية يمكن ضمانها للجميع"), "No-guarantee disclosure is missing");
+assert.ok(expectationsSection.includes("قد تظهر حساسية في الأسنان أو تهيّج في اللثة"), "Temporary sensitivity and gum irritation must be disclosed");
 assert.ok(expectationsSection.includes("شديدة أو مستمرة"), "Significant or persistent symptoms must prompt professional advice");
-assert.ok(expectationsSection.includes("الحشوات والتيجان والقشور التجميلية"), "Restoration limits must be disclosed");
-assert.ok(expectationsSection.includes("تعليمات طبيب الأسنان الخاصة بحالتك"), "Individualized aftercare guidance is missing");
+assert.ok(expectationsSection.includes("الحشوات والتيجان والقشور بالتبييض مثل الأسنان الطبيعية"), "Restoration limits must be disclosed");
+assert.ok(expectationsSection.includes("اتبع تعليمات طبيب الأسنان"), "Individualized aftercare guidance is missing");
 assert.ok(expectationsSection.includes("روتين نظافة الفم المعتاد"), "Normal oral hygiene guidance is missing");
 assert.ok(expectationsSection.includes("قد يتغير اللون بمرور الوقت"), "Changing whitening results must be disclosed");
 assert.ok(expectationsSection.includes("قبل تكرار التبييض"), "Advice before repeating whitening is missing");
+assert.ok(expectationsSection.includes("الحمل أو الرضاعة") && expectationsSection.includes("تأجيل التبييض خلال الحمل والرضاعة"), "Pregnancy and breastfeeding precautions must remain present");
 assert.doesNotMatch(expectationsSection, /\b\d+\s*(?:دقائق?|ساعات?|أيام?|أسابيع?|أشهر?|سنوات?)\b/, "Do not invent numerical aftercare waiting periods or result longevity");
 assert.match(html, /\.expect-grid\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\);gap:14px\}/, "Expectations grid must use two columns on desktop/tablet");
 assert.match(html, /\.cause-grid,\.options-grid,\.expect-grid,\.journey-grid\{grid-template-columns:1fr\}/, "Expectations grid must collapse to one column on mobile");
@@ -83,9 +84,9 @@ const headerEnd = html.indexOf("</header>", headerStart) + "</header>".length;
 const headerMarkup = html.slice(headerStart, headerEnd);
 assert.ok(headerStart >= 0 && headerEnd > headerStart, "RUWA semantic header is missing");
 const headerLinks = [...headerMarkup.matchAll(/<a\b[^>]*href=["'](#[^"']+)["'][^>]*>/g)].map(match => match[1]);
-assert.deepEqual(headerLinks, ["#top","#approach","#causes","#options","#journey","#suitability","#reviews","#faq"], "Header must preserve its brand anchor and all six internal destinations");
+assert.deepEqual(headerLinks, ["#top","#causes","#options","#journey","#suitability","#team","#reviews","#faq"], "Header must preserve its brand anchor and all seven internal destinations");
 const secondaryHeaderLinks = [...headerMarkup.matchAll(/<a\b[^>]*class=["']nav-secondary["'][^>]*href=["'](#[^"']+)["'][^>]*>/g)].map(match => match[1]);
-assert.deepEqual(secondaryHeaderLinks, ["#approach","#causes","#journey","#reviews"], "Only the four secondary destinations may be hidden from the expanded desktop navigation");
+assert.deepEqual(secondaryHeaderLinks, ["#causes","#options","#suitability","#reviews"], "Only the four secondary destinations may be hidden from the expanded desktop navigation");
 assert.match(html, /\.nav \.nav-secondary\{display:none\}/, "Secondary links must be hidden in the expanded desktop header");
 assert.match(html, /\.nav\.open \.nav-secondary\{display:flex\}/, "All secondary links must reappear when navigation opens");
 assert.match(html, /\.site-header\.is-compact \.menu-toggle/, "Compact desktop header must expose its menu control");
@@ -129,19 +130,17 @@ const faqAuditStart = html.indexOf('id="faq"');
 const faqAuditEnd = html.indexOf("</section>", faqAuditStart) + "</section>".length;
 const faqAuditMarkup = html.slice(faqAuditStart, faqAuditEnd);
 const faqCount = [...faqAuditMarkup.matchAll(/<details\b/gi)].length;
-assert.equal(faqCount, 4, "RUWA must contain exactly four focused native FAQ entries");
+assert.equal(faqCount, 2, "RUWA must contain exactly two non-redundant native FAQ entries");
 assert.deepEqual(
   [...faqAuditMarkup.matchAll(/<summary>([^<]+)<\/summary>/g)].map(match => match[1]),
   [
-    "ماذا يحدث خلال جلسة التبييض؟",
-    "هل معجون التبييض يعطي نتيجة التبييض نفسه؟",
     "هل أحتاج إلى أكثر من جلسة؟",
     "كم تدوم نتيجة التبييض؟"
   ],
   "FAQ questions must address distinct visitor concerns in the approved order"
 );
 assert.ok(faqAuditMarkup.includes("سبب التصبغ وعمقه والطريقة المستخدمة واستجابة الأسنان"), "Session-count answer must explain why treatment plans vary");
-assert.ok(faqAuditMarkup.includes("التصبغات السطحية"), "Toothpaste answer must distinguish surface stains from tooth colour");
+assert.ok(html.slice(optionsStart, html.indexOf("</section>", optionsStart)).includes("التصبغات السطحية"), "Whitening options must distinguish surface stains from tooth colour");
 assert.ok(faqAuditMarkup.includes("لا توجد مدة ثابتة للجميع"), "Result-longevity answer must avoid a universal promise");
 assert.doesNotMatch(faqAuditMarkup, /ما العناية المطلوبة بعد التبييض/, "The FAQ must not repeat the dedicated aftercare section");
 assert.match(html, /:focus-visible\{outline:3px solid var\(--coral\);outline-offset:4px\}/, "A visible global keyboard focus indicator must remain available");
@@ -212,7 +211,7 @@ const footerAnchors = [...footer.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>/
 assert.equal(footerAnchors.some(href => /instagram|snapchat|tiktok|x\.com/i.test(href)), false, "Social marks must remain icon-only without invented account URLs");
 const footerTargets = footerAnchors.filter(href => href.startsWith("#")).map(href => href.slice(1));
 assert.ok(footerTargets.length >= 9, "RUWA footer must provide useful internal navigation");
-assert.ok(footer.includes('<a href="#journey">رحلة تبييض الأسنان</a>'), "Footer must link to the treatment journey");
+assert.ok(footer.includes('<a href="#journey">التقييم ورحلة التبييض</a>'), "Footer must link to the treatment journey");
 assert.deepEqual(footerTargets.filter(target => !ids.has(target)), [], "Every RUWA footer navigation target must exist on the page");
 assert.match(footer, /مفهوم تجريبي أُعدّ ضمن معرض أعمال Apex Studio/);
 assert.match(footer, /الصور المعروضة، بما فيها صور الأطباء، توضيحية مولّدة بالذكاء الاصطناعي/);
@@ -242,17 +241,17 @@ for (const [name, content] of [
   assert.doesNotMatch(content, /Elite Dental Clinic|Tailwind CSS refresh|portfolio\/elite-dental-whitening/i, name + " must not describe the retired Elite project as active");
 }
 
-assert.match(readme, /11 content sections/);
-assert.match(readme, /4 FAQ entries/);
+assert.match(readme, /9 content sections/);
+assert.match(readme, /2 FAQ entries/);
 assert.match(readme, /3 WhatsApp actions and 3 phone actions/);
-assert.match(designSystem, /11 content sections/);
-assert.match(designSystem, /4 native HTML details\/summary FAQ entries/);
+assert.match(designSystem, /9 content sections/);
+assert.match(designSystem, /2 native HTML details\/summary FAQ entries/);
 assert.match(designSystem, /3 WhatsApp actions and 3 phone actions/);
-assert.match(caseStudy, /11 قسمًا رئيسيًا/);
-assert.match(caseStudy, /4 أسئلة/);
+assert.match(caseStudy, /9 أقسام رئيسية/);
+assert.match(caseStudy, /سؤالان/);
 assert.match(caseStudy, /3 أزرار واتساب و3 أزرار اتصال هاتفي/);
-assert.match(productionAudit, /11 main content sections/);
-assert.match(productionAudit, /4 native details entries/);
+assert.match(productionAudit, /9 main content sections/);
+assert.match(productionAudit, /2 native details entries/);
 assert.match(productionAudit, /3 WhatsApp actions and 3 phone actions/);
 
 console.log("RUWA repository consistency: PASS");
