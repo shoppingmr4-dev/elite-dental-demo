@@ -1110,9 +1110,9 @@ body,button,input,select,textarea{font-family:var(--body)}
   left:var(--ruwa-contact-menu-left,18px);right:auto;
   translate:0 0;display:flex;flex-direction:column;align-items:stretch;
   justify-self:auto;gap:0;margin:0;
-  width:var(--ruwa-contact-menu-width,min(336px,calc(100vw - 32px)));max-height:min(70vh,560px);
+  width:var(--ruwa-contact-menu-width,min(420px,calc(100vw - 32px)));max-height:min(70vh,560px);
   overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
-  padding:10px;border:1px solid var(--line);border-radius:16px;
+  padding:8px;border:1px solid var(--line);border-radius:16px;
   background:var(--paper);box-shadow:0 14px 30px rgba(20,45,56,.16),0 30px 58px rgba(20,45,56,.22),0 6px 14px rgba(20,45,56,.12),inset 0 1px 0 rgba(255,255,255,.9);
   visibility:visible;opacity:1;pointer-events:auto;
   transform-origin:top left;
@@ -1120,7 +1120,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  /* All seven destinations are restored in their original order. */
  .site-header.is-compact .nav.open .nav-secondary{display:flex}
  .site-header.is-compact .nav.open a{
-  display:flex;align-items:center;width:100%;min-height:47px;padding:12px 15px;
+  display:flex;align-items:center;width:100%;min-height:46px;padding:11px 14px;
   border-bottom:1px solid var(--line);font-size:14px;white-space:normal;
  }
  .site-header.is-compact .nav.open a:last-child{border-bottom:0}
@@ -2103,7 +2103,10 @@ body,button,input,select,textarea{font-family:var(--body)}
    desiredCenter-16,
    headerRect.width-16-desiredCenter
   );
-  const panelWidth=Math.max(200,Math.min(336,headerRect.width-32,centeredCapacity));
+  const hamburgerGapCapacity=2*(
+   button.getBoundingClientRect().left-headerRect.left-24-desiredCenter
+  );
+  const panelWidth=Math.max(200,Math.min(420,headerRect.width-32,centeredCapacity,hamburgerGapCapacity));
   const left=desiredCenter-panelWidth/2;
   const top=headerRect.height+12;
   nav.style.setProperty("--ruwa-contact-menu-width",panelWidth.toFixed(2)+"px");
