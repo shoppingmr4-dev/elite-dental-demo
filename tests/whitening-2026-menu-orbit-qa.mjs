@@ -299,7 +299,9 @@ try {
           navStyle:opened.rect.style
         }));
       assert.ok(opened.rect.top > opened.rect.header.bottom,
-        viewport.name + ": desktop dropdown does not sit below the header");
+        viewport.name + ": desktop dropdown does not sit below the header: " +
+        JSON.stringify({panelTop:opened.rect.top,headerBottom:opened.rect.header.bottom,
+          panelRect:opened.rect,navStyle:opened.navStyle}));
       for (let index = 0; index < opened.visibleLinks.length; index++) {
         const link = opened.visibleLinks[index];
         assert.ok(link.rect.height >= 44 && link.rect.width >= opened.rect.width - 20,
