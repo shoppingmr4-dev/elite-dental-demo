@@ -2402,6 +2402,8 @@ body,button,input,select,textarea{font-family:var(--body)}
   const linkStart=contactAnchoredPanel ? .82 : .16;
   const linkStagger=contactAnchoredPanel ? .075 : .105;
   const linkDuration=contactAnchoredPanel ? .27 : .38;
+  nav.dataset.ruwaLinkStagger=String(linkStagger);
+  nav.dataset.ruwaLinkDuration=String(linkDuration);
   animatedItems.forEach((link,index)=>{
    menuTimeline.to(link,{
     autoAlpha:1,
