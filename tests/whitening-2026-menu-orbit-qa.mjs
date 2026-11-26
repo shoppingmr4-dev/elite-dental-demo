@@ -176,14 +176,9 @@ try {
         opacity:Number.parseFloat(style.opacity),
         filter:style.filter,
         transform:style.transform,
-        is3D:matrix?matrix.is2D===false:false,
-        foldX:matrix?matrix.m23:0,
-        foldY:matrix?matrix.m13:0,
-        motionStyle:element.dataset.ruwaPanelMotionStyle,
-        foldOrigin:element.dataset.ruwaPanelFoldOrigin,
-        foldDirection:element.dataset.ruwaPanelFoldDirection,
-        foldRotationX:Number(element.dataset.ruwaPanelFoldRotationX||0),
-        foldRotationY:Number(element.dataset.ruwaPanelFoldRotationY||0),
+        scaleX:matrix?matrix.a:1,
+        scaleY:matrix?matrix.d:1,
+        translateY:matrix?matrix.f:0,
         shadow:style.boxShadow,
         linkOpacity:Array.from(element.querySelectorAll("a"))
           .filter(link=>getComputedStyle(link).display!=="none")
@@ -198,26 +193,16 @@ try {
       viewport.name + ": the frame should make a small, smooth settling movement");
     assert.equal(frameOpening.filter,"none",
       viewport.name + ": the new frame reveal must stay optically crisp without blur");
-    assert.equal(frameOpening.motionStyle,"paper-unfold-diagonal",
-      viewport.name + ": the panel must use the diagonal notebook-page unfolding motion");
-    assert.equal(frameOpening.foldOrigin,"top-right",
-      viewport.name + ": the paper sheet must unfold from its upper-right corner");
-    assert.equal(frameOpening.foldDirection,"top-right-to-bottom-left",
-      viewport.name + ": the page fold must travel diagonally toward the lower-left corner");
-    assert.equal(frameOpening.foldRotationX,68,
-      viewport.name + ": the upper-right hinge rotation must match the approved direction");
-    assert.equal(frameOpening.foldRotationY,-28,
-      viewport.name + ": the diagonal page turn must carry the panel toward the lower-left");
-    assert.equal(frameOpening.is3D,true,
-      viewport.name + ": the paper turn must use a real perspective transform");
-    assert.ok(Math.abs(frameOpening.foldX)>.12,
-      viewport.name + ": the panel must visibly lift around its lower edge like a sheet of paper");
+    assert.ok(Math.abs(frameOpening.scaleX-1)<.002&&Math.abs(frameOpening.scaleY-1)<.002,
+      viewport.name + ": the frame must not scale or expand during its reveal");
+    assert.ok(Math.abs(frameOpening.translateY)<=4.1,
+      viewport.name + ": the frame movement must remain exceptionally subtle");
     assert.ok(frameOpening.shadow!=="none",
       viewport.name + ": the menu's layered shadow must remain attached to its frame");
-    assert.ok(frameOpening.linkOpacity[0]<.05&&frameOpening.linkOpacity[6]<.05,
-      viewport.name + ": the links must wait until the sheet has begun to unfold");
+    assert.ok(frameOpening.linkOpacity[0]>.05&&frameOpening.linkOpacity[6]<.05,
+      viewport.name + ": links should arrive after the frame begins, in a gentle stagger");
 
-    await page.waitForTimeout(220);
+    await page.waitForTimeout(100);
     const staggerState = await nav.evaluate(element => {
       const style = getComputedStyle(element);
       const links = Array.from(element.querySelectorAll("a"))
@@ -261,8 +246,10 @@ try {
         viewport.name + ": the menu must preserve its elegant soft-reveal state while links arrive");
       assert.equal(staggerState.clipPath,"none",
         viewport.name + ": the full rectangular frame must remain intact during the reveal");
-      // The 3D sheet is intentionally projected away from its final rectangle mid-fold.
-      // Exact Contact anchoring is verified again after the panel settles flat.
+      assert.equal(staggerState.belowContact,true,
+        viewport.name + ": animated panel must appear below the Contact CTA");
+      assert.equal(staggerState.centeredAndNudgedLeft,true,
+        viewport.name + ": panel must be centered below Contact with a slight 14px left offset");
     }
     assert.equal(staggerState.flexDirection, "column",
       viewport.name + ": dropdown links must be vertically aligned");
@@ -270,20 +257,20 @@ try {
       viewport.name + ": dropdown panel did not fade into place");
     assert.ok(staggerState.panelShadow!=="none"&&(staggerState.panelShadow.match(/rgba?\(/g)||[]).length>=3,
       viewport.name + ": the panel opened by the round hamburger must have a layered shadow behind its frame: "+staggerState.panelShadow);
-    assert.ok(staggerState.linkStagger>=.054&&staggerState.linkStagger<=.056,
+    assert.ok(staggerState.linkStagger>=.064&&staggerState.linkStagger<=.066,
       viewport.name + ": navigation links must use the refined, perceptible stagger on every device");
-    assert.ok(staggerState.linkDuration>=.115&&staggerState.linkDuration<=.125,
+    assert.ok(staggerState.linkDuration>=.165&&staggerState.linkDuration<=.175,
       viewport.name + ": navigation links must retain the refined short fade duration");
     if(viewport.width>920){
-      assert.ok(staggerState.panelRevealDuration>=.83&&staggerState.panelRevealDuration<=.85,
-        viewport.name + ": the desktop panel should complete its controlled page unfold and settle");
+      assert.ok(staggerState.panelRevealDuration>=.55&&staggerState.panelRevealDuration<=.57,
+        viewport.name + ": the hamburger panel soft reveal should use its refined duration");
       if(viewport.width>=1366){
         assert.ok(staggerState.panelRect.width>=332&&staggerState.panelRect.width<=337,
           viewport.name + ": hamburger link panel should be slightly wider than its former 320px width: "+staggerState.panelRect.width);
       }
     }else{
-      assert.ok(staggerState.panelRevealDuration>=.69&&staggerState.panelRevealDuration<=.71,
-        viewport.name + ": the mobile panel should complete its compact page unfold and settle");
+      assert.ok(staggerState.panelRevealDuration>=.44&&staggerState.panelRevealDuration<=.46,
+        viewport.name + ": mobile/tablet hamburger panel should open slightly faster");
     }
     assert.equal(staggerState.linkOpacity.length, 7,
       viewport.name + ": the stagger must include all seven navigation links");
@@ -486,22 +473,20 @@ try {
           opacity:Number.parseFloat(style.opacity),
           filter:style.filter,
           transform:style.transform,
-          is3D:matrix?matrix.is2D===false:false,
-          foldX:matrix?matrix.m23:0,
+          scaleX:matrix?matrix.a:1,
+          scaleY:matrix?matrix.d:1,
           clipPath:style.clipPath,
           shadow:style.boxShadow,
           first:Number.parseFloat(getComputedStyle(links[0]).opacity),
           last:Number.parseFloat(getComputedStyle(links[links.length-1]).opacity)
         };
       });
-      assert.equal(exitState.exitMotion,"paper-fold",
+      assert.equal(exitState.exitMotion,"soft-lift-fade",
         viewport.name + ": closing must use the new dedicated soft-lift exit, not reverse the opening");
       assert.ok(exitState.opacity>0&&exitState.opacity<1&&exitState.filter==="none",
         viewport.name + ": the entire menu frame should fade smoothly while staying crisp");
-      assert.equal(exitState.is3D,true,
-        viewport.name + ": the closing panel should fold away in perspective like a paper sheet");
-      assert.ok(Math.abs(exitState.foldX)>.08,
-        viewport.name + ": the closing frame did not begin its paper-fold motion");
+      assert.ok(Math.abs(exitState.scaleX-1)<.002&&Math.abs(exitState.scaleY-1)<.002,
+        viewport.name + ": the closing frame must not scale or contract");
       assert.notEqual(exitState.transform,"none",
         viewport.name + ": the closing panel should make a small upward exit movement");
       assert.equal(exitState.clipPath,"none",
