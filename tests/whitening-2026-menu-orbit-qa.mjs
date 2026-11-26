@@ -652,7 +652,7 @@ try {
   const glowTargetCount=glowAudit.targetCount;
   assert.ok(glowTargetCount>=18,
     "Expected the existing content cards and panels to remain present; found "+glowTargetCount);
-  assert.equal(/ruwa-perimeter|perimeter-orbit|perimeter-breathe|--ruwa-perimeter-angle|conic-gradient\\s*\\(/i.test(glowAudit.cssText),false,
+  assert.equal(/ruwa-perimeter|perimeter-orbit|perimeter-breathe|--ruwa-perimeter-angle|conic-gradient\s*\(/i.test(glowAudit.cssText),false,
     "The page stylesheet still contains perimeter-light CSS, keyframes or conic-gradient code");
   assert.equal(/ruwa-orbit-light|ruwa-orbit-geometry/i.test(glowAudit.cssText),false,
     "Obsolete orbit-rendering code remains in the page stylesheet");
