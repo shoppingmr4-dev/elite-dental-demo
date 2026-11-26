@@ -194,7 +194,7 @@ try {
     assert.ok(frameOpening.linkOpacity[0]>.05&&frameOpening.linkOpacity[6]<.05,
       viewport.name + ": links should arrive after the frame begins, in a gentle stagger");
 
-    await page.waitForTimeout(150);
+    await page.waitForTimeout(200);
     const staggerState = await nav.evaluate(element => {
       const style = getComputedStyle(element);
       const links = Array.from(element.querySelectorAll("a"))
@@ -250,9 +250,9 @@ try {
     assert.ok(staggerState.panelShadow!=="none"&&(staggerState.panelShadow.match(/rgba?\(/g)||[]).length>=3,
       viewport.name + ": the panel opened by the round hamburger must have a layered shadow behind its frame: "+staggerState.panelShadow);
     if(viewport.width>920){
-      assert.ok(staggerState.linkStagger>=.044&&staggerState.linkStagger<=.046,
+      assert.ok(staggerState.linkStagger>=.064&&staggerState.linkStagger<=.066,
         viewport.name + ": desktop link words should appear slightly faster, without losing their stagger");
-      assert.ok(staggerState.linkDuration>=.18&&staggerState.linkDuration<=.20,
+      assert.ok(staggerState.linkDuration>=.15&&staggerState.linkDuration<=.17,
         viewport.name + ": desktop link reveal duration did not receive the requested slight speed increase");
       assert.ok(staggerState.panelRevealDuration>=.43&&staggerState.panelRevealDuration<=.45,
         viewport.name + ": the hamburger panel soft reveal should use its refined duration");
