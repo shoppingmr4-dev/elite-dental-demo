@@ -1110,7 +1110,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   width:var(--ruwa-contact-menu-width,min(320px,calc(100vw - 32px)));max-height:min(70vh,560px);
   overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
   padding:8px;border:1px solid var(--line);border-radius:16px;
-  background:var(--paper);box-shadow:0 18px 34px rgba(20,45,56,.14);
+  background:var(--paper);box-shadow:0 12px 24px rgba(20,45,56,.13),0 26px 58px rgba(20,45,56,.20),0 4px 10px rgba(20,45,56,.10),inset 0 1px 0 rgba(255,255,255,.88);
   visibility:visible;opacity:1;pointer-events:auto;
   transform-origin:top left;
  }
@@ -1688,7 +1688,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   .clinical-note
  ):hover::after{
   opacity:1;
-  animation:ruwa-perimeter-orbit 2.6s linear infinite;
+  animation:ruwa-perimeter-orbit .9s linear infinite;
  }
 }
 @media (prefers-reduced-motion:no-preference){
@@ -1704,7 +1704,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   .clinical-note
  ):focus-within::after{
   opacity:1;
-  animation:ruwa-perimeter-orbit 2.6s linear infinite;
+  animation:ruwa-perimeter-orbit .9s linear infinite;
  }
 }
 @media(prefers-reduced-motion:reduce){
@@ -2400,8 +2400,8 @@ body,button,input,select,textarea{font-family:var(--body)}
   }
 
   const linkStart=contactAnchoredPanel ? .82 : .16;
-  const linkStagger=contactAnchoredPanel ? .09 : .105;
-  const linkDuration=contactAnchoredPanel ? .30 : .38;
+  const linkStagger=contactAnchoredPanel ? .075 : .105;
+  const linkDuration=contactAnchoredPanel ? .27 : .38;
   animatedItems.forEach((link,index)=>{
    menuTimeline.to(link,{
     autoAlpha:1,
