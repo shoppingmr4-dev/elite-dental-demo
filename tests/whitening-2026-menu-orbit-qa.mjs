@@ -671,7 +671,7 @@ try {
   assert.ok(activeGlow.backgroundImage.includes("conic-gradient"),
     "The perimeter must use a rotating conic gradient");
   assert.ok(!activeGlow.backgroundImage.includes("transparent")&&
-    activeGlow.backgroundImage.split("rgba(").length>=8,
+    (activeGlow.backgroundImage.match(/rgba?\(/g)||[]).length>=8,
     "The illuminated border must cover the entire perimeter continuously, with no dark gap: "+activeGlow.backgroundImage);
   const hasTwoMaskLayers=[activeGlow.maskImage,activeGlow.webkitMaskImage].some(value=>
     (String(value||"").match(/linear-gradient/gi)||[]).length>=2
