@@ -187,7 +187,7 @@ try {
         viewport.name + ": navigation text appeared before the outer frame finished");
     }
 
-    await page.waitForTimeout(viewport.width > 920 ? 1050 : 450);
+    await page.waitForTimeout(viewport.width > 920 ? 950 : 450);
     const staggerState = await nav.evaluate(element => {
       const style = getComputedStyle(element);
       const links = Array.from(element.querySelectorAll("a"))
