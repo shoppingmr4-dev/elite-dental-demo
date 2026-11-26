@@ -255,6 +255,6 @@ assert.match(productionAudit, /2 native details entries/);
 assert.match(productionAudit, /3 WhatsApp actions and 3 phone actions/);
 
 console.log("RUWA repository consistency: PASS");
-console.log("Sections: 11 | Reviews: transparent demo-only state | FAQ: 4 | WhatsApp actions: 3 | Phone actions: 3");
+console.log("Sections: 9 | Reviews: unchanged transparent demo-only state | FAQ: 2 | WhatsApp actions: 3 | Phone actions: 3");
 console.log("ARIA controls: all targets exist | Hero AI illustration disclosure: present");
 console.log("Repository root and legacy preview paths: redirect to whitening-2026.html");
