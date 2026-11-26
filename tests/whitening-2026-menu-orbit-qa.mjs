@@ -176,12 +176,11 @@ try {
         opacity:Number.parseFloat(style.opacity),
         filter:style.filter,
         transform:style.transform,
-        scaleX:matrix?Math.hypot(matrix.a,matrix.b):1,
-        scaleY:matrix?Math.hypot(matrix.c,matrix.d):1,
-        rotationDeg:matrix?Math.atan2(matrix.b,matrix.a)*180/Math.PI:0,
-        translateX:matrix?matrix.e:0,
-        translateY:matrix?matrix.f:0,
+        is3D:matrix?matrix.is2D===false:false,
+        foldX:matrix?matrix.m23:0,
+        foldY:matrix?matrix.m13:0,
         motionStyle:element.dataset.ruwaPanelMotionStyle,
+        foldOrigin:element.dataset.ruwaPanelFoldOrigin,
         shadow:style.boxShadow,
         linkOpacity:Array.from(element.querySelectorAll("a"))
           .filter(link=>getComputedStyle(link).display!=="none")
@@ -196,21 +195,20 @@ try {
       viewport.name + ": the frame should make a small, smooth settling movement");
     assert.equal(frameOpening.filter,"none",
       viewport.name + ": the new frame reveal must stay optically crisp without blur");
-    assert.equal(frameOpening.motionStyle,"subtle-spiral",
-      viewport.name + ": the panel must use the new restrained spiral-style frame entrance");
-    assert.ok(Math.abs(frameOpening.rotationDeg)>.12&&Math.abs(frameOpening.rotationDeg)<2.4,
-      viewport.name + ": the frame's spiral turn must be subtle and visibly measurable: "+frameOpening.rotationDeg);
-    assert.ok(Math.abs(frameOpening.translateX)<=9&&Math.abs(frameOpening.translateY)<=9,
-      viewport.name + ": the spiral arc must stay within a very small diagonal movement");
-    assert.ok(frameOpening.scaleX>.985&&frameOpening.scaleX<1.002&&
-      frameOpening.scaleY>.985&&frameOpening.scaleY<1.002,
-      viewport.name + ": the spiral frame scale must remain almost imperceptible");
+    assert.equal(frameOpening.motionStyle,"paper-unfold",
+      viewport.name + ": the panel must use the notebook-page unfolding motion");
+    assert.equal(frameOpening.foldOrigin,"bottom-right",
+      viewport.name + ": the paper sheet must unfold from its lower-right corner");
+    assert.equal(frameOpening.is3D,true,
+      viewport.name + ": the paper turn must use a real perspective transform");
+    assert.ok(Math.abs(frameOpening.foldX)>.12,
+      viewport.name + ": the panel must visibly lift around its lower edge like a sheet of paper");
     assert.ok(frameOpening.shadow!=="none",
       viewport.name + ": the menu's layered shadow must remain attached to its frame");
-    assert.ok(frameOpening.linkOpacity[0]>.05&&frameOpening.linkOpacity[6]<.05,
-      viewport.name + ": links should arrive after the frame begins, in a gentle stagger");
+    assert.ok(frameOpening.linkOpacity[0]<.05&&frameOpening.linkOpacity[6]<.05,
+      viewport.name + ": the links must wait until the sheet has begun to unfold");
 
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(220);
     const staggerState = await nav.evaluate(element => {
       const style = getComputedStyle(element);
       const links = Array.from(element.querySelectorAll("a"))
@@ -267,18 +265,18 @@ try {
       viewport.name + ": the panel opened by the round hamburger must have a layered shadow behind its frame: "+staggerState.panelShadow);
     assert.ok(staggerState.linkStagger>=.059&&staggerState.linkStagger<=.061,
       viewport.name + ": navigation links must use the refined, perceptible stagger on every device");
-    assert.ok(staggerState.linkDuration>=.155&&staggerState.linkDuration<=.165,
+    assert.ok(staggerState.linkDuration>=.115&&staggerState.linkDuration<=.125,
       viewport.name + ": navigation links must retain the refined short fade duration");
     if(viewport.width>920){
-      assert.ok(staggerState.panelRevealDuration>=.65&&staggerState.panelRevealDuration<=.67,
-        viewport.name + ": the hamburger panel soft reveal should use its refined duration");
+      assert.ok(staggerState.panelRevealDuration>=.83&&staggerState.panelRevealDuration<=.85,
+        viewport.name + ": the desktop panel should complete its controlled page unfold and settle");
       if(viewport.width>=1366){
         assert.ok(staggerState.panelRect.width>=332&&staggerState.panelRect.width<=337,
           viewport.name + ": hamburger link panel should be slightly wider than its former 320px width: "+staggerState.panelRect.width);
       }
     }else{
-      assert.ok(staggerState.panelRevealDuration>=.50&&staggerState.panelRevealDuration<=.52,
-        viewport.name + ": mobile/tablet hamburger panel should open slightly faster");
+      assert.ok(staggerState.panelRevealDuration>=.69&&staggerState.panelRevealDuration<=.71,
+        viewport.name + ": the mobile panel should complete its compact page unfold and settle");
     }
     assert.equal(staggerState.linkOpacity.length, 7,
       viewport.name + ": the stagger must include all seven navigation links");
@@ -481,8 +479,8 @@ try {
           opacity:Number.parseFloat(style.opacity),
           filter:style.filter,
           transform:style.transform,
-          scaleX:matrix?matrix.a:1,
-          scaleY:matrix?matrix.d:1,
+          is3D:matrix?matrix.is2D===false:false,
+          foldX:matrix?matrix.m23:0,
           clipPath:style.clipPath,
           shadow:style.boxShadow,
           first:Number.parseFloat(getComputedStyle(links[0]).opacity),
@@ -493,8 +491,10 @@ try {
         viewport.name + ": closing must use the new dedicated soft-lift exit, not reverse the opening");
       assert.ok(exitState.opacity>0&&exitState.opacity<1&&exitState.filter==="none",
         viewport.name + ": the entire menu frame should fade smoothly while staying crisp");
-      assert.ok(Math.abs(exitState.scaleX-1)<.002&&Math.abs(exitState.scaleY-1)<.002,
-        viewport.name + ": the closing frame must not scale or contract");
+      assert.equal(exitState.is3D,true,
+        viewport.name + ": the closing panel should fold away in perspective like a paper sheet");
+      assert.ok(Math.abs(exitState.foldX)>.08,
+        viewport.name + ": the closing frame did not begin its paper-fold motion");
       assert.notEqual(exitState.transform,"none",
         viewport.name + ": the closing panel should make a small upward exit movement");
       assert.equal(exitState.clipPath,"none",
