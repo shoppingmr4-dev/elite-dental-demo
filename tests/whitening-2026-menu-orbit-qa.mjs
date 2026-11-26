@@ -217,7 +217,7 @@ try {
         viewport.name + ": funnel did not expand with subtle spiral motion: " + JSON.stringify(early));
 
       if (viewport.width === 1440) {
-        await page.screenshot({ path: OUT + "/menu-funnel-early-1440.png", fullPage: false });
+        await page.screenshot({ path: OUT + "/menu-dropdown-early-1440.png", fullPage: false });
       }
       await page.waitForTimeout(150);
       const middleProgress = await nav.evaluate(element =>
@@ -226,7 +226,7 @@ try {
       assert.ok(middleProgress > early.progress + .04 && middleProgress < 1,
         viewport.name + ": funnel did not widen progressively during its outward travel");
       if (viewport.width === 1440) {
-        await page.screenshot({ path: OUT + "/menu-funnel-middle-1440.png", fullPage: false });
+        await page.screenshot({ path: OUT + "/menu-dropdown-middle-1440.png", fullPage: false });
       }
     } else if (mode === "gsap") {
       await page.waitForTimeout(110);
@@ -353,35 +353,33 @@ try {
     assert.ok(opened.rect.width > 0 && opened.rect.height > 0,
       viewport.name + ": expanded panel has no rendered dimensions");
     if (viewport.width > 920) {
-      assert.ok(baselineNav, viewport.name + ": original desktop navigation geometry was not captured");
-      for (const edge of ["left", "right", "top", "bottom", "width", "height"]) {
-        assert.ok(Math.abs(opened.rect[edge] - baselineNav.rect[edge]) <= 1.5,
-          viewport.name + ": navigation did not return to its original " + edge + " position: " +
-          JSON.stringify({ before: baselineNav.rect, after: opened.rect }));
-      }
-      assert.equal(opened.navStyle.display, baselineNav.style.display,
-        viewport.name + ": original navigation display mode changed");
-      assert.equal(opened.navStyle.position, baselineNav.style.position,
-        viewport.name + ": navigation was moved into a positioned dropdown");
-      assert.equal(opened.navStyle.flexDirection, "row",
-        viewport.name + ": original horizontal navigation arrangement was not restored");
-      assert.equal(opened.navStyle.gap, baselineNav.style.gap,
-        viewport.name + ": original navigation spacing changed");
-      assert.equal(opened.navStyle.overflowY, "visible",
-        viewport.name + ": desktop nav still behaves as a scrollable dropdown");
-      assert.equal(opened.navStyle.backgroundColor, "rgba(0, 0, 0, 0)",
-        viewport.name + ": desktop nav acquired a new panel background");
-      assert.equal(opened.navStyle.borderTopWidth, "0px",
-        viewport.name + ": desktop nav acquired a new panel border");
-      assert.equal(opened.visibleLinks.length, baselineNav.links.length,
-        viewport.name + ": original number of visible desktop links changed");
-      for (const before of baselineNav.links) {
-        const after = opened.visibleLinks.find(link => link.href === before.href);
-        assert.ok(after, viewport.name + ": original navigation link disappeared: " + before.href);
-        for (const edge of ["left", "right", "top", "bottom", "width", "height"]) {
-          assert.ok(Math.abs(after.rect[edge] - before.rect[edge]) <= 1.5,
-            viewport.name + ": link " + before.href + " did not return to its exact original geometry: " +
-            JSON.stringify({ before: before.rect, after: after.rect }));
+      assert.equal(opened.navStyle.position, "absolute",
+        viewport.name + ": desktop navigation did not open as a dropdown panel");
+      assert.equal(opened.navStyle.flexDirection, "column",
+        viewport.name + ": desktop dropdown links are not arranged vertically");
+      assert.ok(["auto", "scroll"].includes(opened.navStyle.overflowY),
+        viewport.name + ": desktop dropdown must retain vertical overflow support");
+      assert.notEqual(opened.navStyle.backgroundColor, "rgba(0, 0, 0, 0)",
+        viewport.name + ": desktop dropdown panel background is missing");
+      assert.equal(opened.navStyle.borderTopWidth, "1px",
+        viewport.name + ": desktop dropdown panel border is missing");
+      assert.equal(opened.visibleLinks.length, 7,
+        viewport.name + ": desktop dropdown must expose all seven navigation links");
+      assert.ok(opened.rect.width >= 300 && opened.rect.width <= 380 &&
+        opened.rect.height >= 300,
+        viewport.name + ": desktop dropdown dimensions are not consistent with a full vertical link list");
+      assert.ok(Math.abs(opened.rect.centerX - opened.rect.viewportCenterX) <= 1.5,
+        viewport.name + ": desktop dropdown is not centered under the compact hamburger");
+      assert.ok(opened.rect.top > opened.rect.header.bottom,
+        viewport.name + ": desktop dropdown does not sit below the header");
+      for (let index = 0; index < opened.visibleLinks.length; index++) {
+        const link = opened.visibleLinks[index];
+        assert.ok(link.rect.height >= 44 && link.rect.width >= opened.rect.width - 20,
+          viewport.name + ": dropdown row is too small or too narrow: " + JSON.stringify(link));
+        if (index > 0) {
+          const previous = opened.visibleLinks[index - 1];
+          assert.ok(link.rect.top >= previous.rect.bottom - 1.5,
+            viewport.name + ": dropdown links are not stacked in a clean vertical order");
         }
       }
     }
@@ -391,14 +389,13 @@ try {
       scrollbarWidth: getComputedStyle(element).scrollbarWidth,
       webkitScrollbarDisplay: getComputedStyle(element, "::-webkit-scrollbar").display
     }));
+    assert.ok(["auto", "scroll"].includes(menuScrollStyle.overflowY),
+      viewport.name + ": expanded dropdown must remain vertically scrollable");
+    assert.equal(menuScrollStyle.scrollbarWidth, "none",
+      viewport.name + ": visible standards scrollbar was not hidden");
+    assert.equal(menuScrollStyle.webkitScrollbarDisplay, "none",
+      viewport.name + ": visible WebKit scrollbar was not hidden");
     if (viewport.width <= 920) {
-      assert.ok(["auto", "scroll"].includes(menuScrollStyle.overflowY),
-        viewport.name + ": expanded responsive menu must remain scrollable");
-      assert.equal(menuScrollStyle.scrollbarWidth, "none",
-        viewport.name + ": visible standards scrollbar was not hidden");
-      assert.equal(menuScrollStyle.webkitScrollbarDisplay, "none",
-        viewport.name + ": visible WebKit scrollbar was not hidden");
-
       const scrollAccess = await nav.evaluate(element => {
         const originalMaxHeight = element.style.maxHeight;
         const filler = document.createElement("a");
@@ -450,13 +447,17 @@ try {
         { timeout: 3000 }
       );
       await page.waitForTimeout(110);
-      const reverseProgress = await nav.evaluate(element =>
-        Number(element.dataset.ruwaMenuFunnelProgress || 1)
-      );
+      const reverseProgress = await nav.evaluate(element => {
+        const clip = getComputedStyle(element).clipPath;
+        const match = clip.match(/circle\\(([-\\d.]+)px at/);
+        const radius = match ? Number(match[1]) : 0;
+        const maximum = Number(element.dataset.ruwaMenuRadius || 1);
+        return radius / maximum;
+      });
       assert.ok(reverseProgress > 0 && reverseProgress < 1,
-        viewport.name + ": closing did not reverse the funnel toward the hamburger circle");
+        viewport.name + ": closing did not reverse the dropdown reveal back toward its trigger");
       if (viewport.width === 1440) {
-        await page.screenshot({ path: OUT + "/menu-funnel-reverse-1440.png", fullPage: false });
+        await page.screenshot({ path: OUT + "/menu-dropdown-reverse-1440.png", fullPage: false });
       }
     } else {
       await clickHamburger(page, button, viewport.name);
