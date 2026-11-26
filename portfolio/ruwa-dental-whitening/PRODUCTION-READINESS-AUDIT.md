@@ -38,12 +38,12 @@ The actual current DOM order is:
 | 05 | suitability | Suitability, safety, and realistic expectations | KEEP / consolidated / clinical review required | Combines health and timing factors with result variation, possible effects, restoration limits, and aftercare. |
 | 06 | team | Dentist/team | KEEP / unchanged demo-only section | The three distinct AI-generated illustrative male portraits remain exactly as approved; no real clinician identity or credentials are claimed. |
 | 07 | reviews | Patient reviews | KEEP / unchanged transparency-only section | The notice and all three review placeholders remain exactly as approved; no testimonials or scores are invented. |
-| 08 | visit | Clinic location | KEEP / city-level only | Identifies Riyadh, Saudi Arabia; no neighborhood, street address, or unverified map destination is supplied. |
+| 08 | visit | Clinic location | KEEP / city-level only | Identifies Riyadh, Saudi Arabia and opens a genuine Google Maps satellite city view in a new tab; no clinic pin or address is supplied. Embedded Maps Embed API requires an API key. |
 | 09 | faq | Frequently asked questions | KEEP | Two non-redundant native details/summary entries are present. |
 | 10 | consultation | Final contact | KEEP / activate only with verified details | The actions disclose that real channels are not configured. |
 | Footer | — | Portfolio and image disclosures | KEEP | Prevents the sample from being mistaken for a real operating clinic. |
 
-The team section contains three equal demo-only profile cards with distinct AI-generated illustrative male portraits extracted from an existing RUWA concept image; these are not real doctor profiles or credentials. No authentic patient review/testimonial, review count, or rating score is supplied. The patient-reviews panel is a transparency notice only, not social proof. A city-level location panel identifies Riyadh, Saudi Arabia, but deliberately has no precise address, map pin, or branch-specific details. No before-and-after gallery, clinic gallery, pricing section, or hours-of-operation section exists in this page.
+The team section contains three equal demo-only profile cards with distinct AI-generated illustrative male portraits extracted from an existing RUWA concept image; these are not real doctor profiles or credentials. No authentic patient review/testimonial, review count, or rating score is supplied. The patient-reviews panel is a transparency notice only, not social proof. A city-level location panel identifies Riyadh, Saudi Arabia, and provides a keyless Google Maps satellite-view link; it has no precise address, map pin, or branch-specific details. The Maps Embed API iframe remains unconfigured because no authorized API key is present. No before-and-after gallery, clinic gallery, pricing section, or hours-of-operation section exists in this page.
 
 ## 4. Confirmed current content and interaction behavior
 

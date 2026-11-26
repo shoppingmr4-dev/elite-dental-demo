@@ -120,7 +120,7 @@ try {
         const wrap=el.querySelector(".wrap");
         const heading=el.querySelector("h2");
         const marker=el.querySelector(".section-marker");
-        const cards=[...el.querySelectorAll(".info-card,.option-card,.journey-step,.check-item,.expect-card,.team-card,.team-card-media,.team-card-body,.reviews-panel,.reviews-preview,.review-card,.reviews-criteria,.reviews-criteria-list li,.faq-item,.step,.contact-band")];
+        const cards=[...el.querySelectorAll(".info-card,.option-card,.journey-step,.check-item,.expect-card,.team-card,.team-card-media,.team-card-body,.visit-map-stage,.visit-info-panel,.visit-info-item,.visit-map-action,.reviews-panel,.reviews-preview,.review-card,.reviews-criteria,.reviews-criteria-list li,.faq-item,.step,.contact-band")];
         const cardStyles=cards.map(card=>({className:card.className||card.tagName,rect:rect(card),style:style(card)}));
         return {
           id,rect:rect(el),style:style(el),

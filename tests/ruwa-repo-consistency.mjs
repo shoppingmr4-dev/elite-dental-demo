@@ -42,10 +42,17 @@ const faqPosition = html.indexOf('id="faq"');
 assert.ok(reviewsPosition < visitPosition && visitPosition < faqPosition, "Riyadh location must follow reviews and precede FAQ");
 const visitSection = html.slice(visitPosition, html.indexOf("</section>", visitPosition) + 10);
 assert.ok(visitSection.includes("الرياض") && visitSection.includes("المملكة العربية السعودية"), "Riyadh city and country must be visible");
+assert.ok(visitSection.includes("نلتقي بك في الرياض") && visitSection.includes("رُواء لطب الأسنان"), "Location identity must be visible");
 assert.ok(visitSection.includes("دون تحديد حي أو عنوان شارع"), "Location must remain city-level without an invented street address");
 assert.ok(visitSection.includes("يُضاف بعد اعتماد موقع العيادة"), "Exact address remains pending until approval");
 assert.ok(visitSection.includes("لا يعرض دبوسًا على الخريطة قبل اعتماد العنوان الرسمي"), "No unverified map pin");
-assert.doesNotMatch(visitSection, /href=["'][^"']*(?:google\.com\/maps|maps\.app\.goo\.gl)/i, "No generic map link as clinic destination");
+const cityMapLink = visitSection.match(/<a class="visit-map-action"[^>]*href="([^"]+)"/)?.[1] || "";
+assert.ok(cityMapLink.startsWith("https://www.google.com/maps/@?api=1&amp;map_action=map"), "Use official Google Maps map view URL");
+assert.ok(cityMapLink.includes("basemap=satellite") && cityMapLink.includes("zoom=10"), "Use satellite basemap at city scale");
+assert.match(visitSection, /target="_blank" rel="noopener noreferrer"/, "Google Maps must open safely in a new tab");
+assert.ok(visitSection.includes("هذا عرض عام للمدينة وليس موقعًا محددًا للعيادة"), "Disclose general city view");
+assert.ok(visitSection.includes("لن نعرض دبوسًا أو اتجاهات إلى فرع قبل اعتماد عنوانه الفعلي"), "Do not invent a clinic pin or directions");
+assert.ok(!visitSection.includes("<iframe"), "Do not claim an embedded map without a Maps Embed API key");
 
 const journeyStart = html.indexOf('id="journey"');
 const optionsStart = html.indexOf('id="options"');

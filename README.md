@@ -37,7 +37,7 @@ There are **3 WhatsApp actions and 3 phone actions**. The Hero WhatsApp action a
 5. Suitability, safety, and realistic expectations — relevant health factors, possible effects, result variation, restoration limits, and aftercare.
 6. Dentist/team — three illustrative portraits with explicit disclosure and no invented identities or credentials; this protected section remains unchanged.
 7. Patient reviews — a transparent notice that no verified patient reviews are available in this fictional demo; this protected section remains unchanged.
-8. Clinic location — the city is identified as Riyadh, Saudi Arabia; no neighborhood, street address, or unverified map pin is shown.
+8. Clinic location — identifies Riyadh, Saudi Arabia and provides an official Google Maps city-level satellite-view link; no clinic address or pin is invented. An embedded Maps Embed API view requires an authorized API key.
 9. FAQ — two non-redundant native HTML details/summary entries.
 10. Consultation/contact — WhatsApp and phone actions that disclose their inactive demo state.
 
