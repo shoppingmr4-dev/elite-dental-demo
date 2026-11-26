@@ -295,7 +295,7 @@ try {
             headerBorder:getComputedStyle(header,"::before").borderTopColor,
             heroGradients:getComputedStyle(document.querySelector(".hero")).backgroundImage,
             heroBottom:getComputedStyle(document.querySelector(".hero-bottom")).backgroundColor,
-            approach:getComputedStyle(document.querySelector(".approach")).backgroundColor
+            causes:getComputedStyle(document.querySelector("#causes")).backgroundColor
           };
         })(),
         eyebrowToothIcon:Boolean(document.querySelector(".hero-eyebrow-icon svg path")?.getAttribute("d")?.startsWith("M7.15")),
@@ -422,9 +422,9 @@ try {
           return {
             hero:{padding:pad(".hero"),markerToHeading:gap(".hero-eyebrow","#hero-title"),
               headingToCopy:gap("#hero-title",".hero-lead"),copyToActions:gap(".hero-lead",".hero-actions")},
-            approach:{padding:pad("#approach"),markerToHeading:gap("#approach .section-marker","#approach h2"),
-              headingToCopy:gap("#approach h2","#approach .approach-intro p"),stepRowPadding:style(".step")?.padding||null,
-              stepTitleToCopy:gap(".step h3",".step p")},
+            journey:{padding:pad("#journey"),markerToHeading:gap("#journey .section-marker","#journey h2"),
+              headingToCopy:gap("#journey h2","#journey .section-head > p"),introToCards:gap("#journey .section-head","#journey .journey-grid"),
+              stepRowPadding:style(".journey-step")?.padding||null,stepTitleToCopy:gap(".journey-step h3",".journey-step p")},
             causes:{padding:pad("#causes"),markerToHeading:gap("#causes .section-marker","#causes h2"),
               headingToCopy:gap("#causes h2","#causes .section-head p"),introToCards:gap("#causes .section-head",".cause-grid"),
               cardPadding:style(".info-card")?.padding||null,cardIndexToTitle:style(".info-card .card-index")?.marginBottom||null},
@@ -435,9 +435,9 @@ try {
             suitability:{padding:pad("#suitability"),markerToHeading:gap("#suitability .section-marker","#suitability h2"),
               headingToCopy:gap("#suitability h2","#suitability .suitability-copy p"),gridGap:style(".suitability-grid")?.gap||null,
               checkItemPadding:style(".check-item")?.padding||null,noteMargin:style(".clinical-note")?.marginTop||null},
-            expectations:{padding:pad("#expectations"),markerToHeading:gap("#expectations .section-marker","#expectations h2"),
-              headingToCopy:gap("#expectations h2","#expectations .section-head p"),
-              introToCards:gap("#expectations .section-head",".expect-grid"),cardPadding:style(".expect-card")?.padding||null},
+            expectations:{padding:pad("#suitability .expectations-panel"),markerToHeading:gap("#suitability .expectations-panel .section-marker","#suitability .expectations-panel h3"),
+              headingToCopy:gap("#suitability .expectations-panel h3","#suitability .expectations-panel .section-head p"),
+              introToCards:gap("#suitability .expectations-panel .section-head","#suitability .expect-grid"),cardPadding:style(".expect-card")?.padding||null},
             faq:{padding:pad("#faq"),markerToHeading:gap("#faq .section-marker","#faq h2"),
               headingToCopy:gap("#faq h2","#faq .section-head p"),introToList:gap("#faq .section-head",".faq-list"),
               summaryPadding:style(".faq-item summary")?.padding||null,answerPadding:style(".faq-answer")?.padding||null,
@@ -545,7 +545,7 @@ try {
            phone:document.querySelectorAll('[data-contact-action="phone"]').length
          },
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
-        contentSections:["approach","causes","options","journey","suitability","expectations","team","reviews","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
+        contentSections:["causes","options","journey","suitability","team","reviews","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
         journeyStepCount:document.querySelectorAll("#journey .journey-step").length,
         journeyListTag:document.querySelector("#journey .journey-grid")?.tagName||"",
         journeyListLabel:document.querySelector("#journey .journey-grid")?.getAttribute("aria-label")||"",
@@ -553,7 +553,7 @@ try {
         optionCards:document.querySelectorAll(".option-card").length,
         causeCards:document.querySelectorAll(".info-card").length,
         expectationsSection:(()=>{
-          const section=document.querySelector("#expectations");
+          const section=document.querySelector("#suitability .expectations-panel");
           const grid=section?.querySelector(".expect-grid");
           const cards=[...(section?.querySelectorAll(".expect-card")||[])];
           const rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width};};
@@ -786,10 +786,10 @@ try {
           };
           const selectors=[
             ".hero h1",".hero-title-benefit",".hero-lead",".nav a",".header-action",
-            ".primary-cta",".consultation-cta","#approach .step p","#causes .info-card p",
+            ".primary-cta",".consultation-cta","#journey .journey-step p","#causes .info-card p",
             "#options .option-card p","#options .option-card .option-note",
             "#suitability .suitability-copy p","#suitability .check-item p",
-            "#expectations .expect-card p","#team .team-intro h2","#team .team-lead","#team .team-card h3","#team .team-card p","#team .team-disclosure",
+            "#suitability .expectations-panel .expect-card p","#team .team-intro h2","#team .team-lead","#team .team-card h3","#team .team-card p","#team .team-disclosure",
             "#reviews .reviews-head h2","#reviews .reviews-head p","#reviews .reviews-preview-title","#reviews .reviews-rating-disclosure","#reviews .review-card-copy","#reviews .reviews-status-note","#reviews .reviews-criteria-list p",
             "#faq .faq-item summary","#faq .faq-answer",
             "#faq .reference-note","#consultation .contact-action--whatsapp",
@@ -867,10 +867,10 @@ try {
     assert.equal(state.demoDialogInitialOpen, false, `${vp.name}: demo dialog should start closed`);
     assert.ok(state.demoDialogText.includes("قنوات التواصل ستعمل مباشرة عند إضافة بيانات الاتصال الرسمية"), `${vp.name}: contact dialog initial explanation is missing`);
     assert.ok(state.demoDialogText.includes("لن يتم فتح محادثة أو بدء اتصال قبل إعداد رقم صحيح"), `${vp.name}: unavailable contact destinations must be disclosed`);
-    assert.deepEqual(state.navLabels, ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","رحلة التبييض","هل يناسبك؟","آراء المرضى","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
-    assert.deepEqual(state.navHrefs, ["#approach","#causes","#options","#journey","#suitability","#reviews","#faq"], `${vp.name}: navigation destinations are incorrect`);
-    assert.deepEqual(state.navSecondaryHrefs,["#approach","#causes","#journey","#reviews"],`${vp.name}: secondary navigation destinations changed`);
-    assert.deepEqual(state.navVisibleHrefs,vp.width>920?["#options","#suitability","#faq"]:[],`${vp.name}: expanded desktop header must show only three priority links`);
+    assert.deepEqual(state.navLabels, ["أسباب تغيّر اللون","خيارات التبييض","التقييم ورحلة التبييض","السلامة والتوقعات","الأطباء","آراء المرضى","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
+    assert.deepEqual(state.navHrefs, ["#causes","#options","#journey","#suitability","#team","#reviews","#faq"], `${vp.name}: navigation destinations are incorrect`);
+    assert.deepEqual(state.navSecondaryHrefs,["#causes","#options","#suitability","#reviews"],`${vp.name}: secondary navigation destinations changed`);
+    assert.deepEqual(state.navVisibleHrefs,vp.width>920?["#journey","#team","#faq"]:[],`${vp.name}: expanded desktop header must show only three priority links`);
     assert.equal(state.navInert,vp.width<=920,`${vp.name}: closed mobile/tablet navigation must be inert`);
     assert.equal(state.navLinkTypography.length,7, `${vp.name}: all seven navigation links must be present`);
     assert.ok(state.navLinkTypography.every(link=>
@@ -972,7 +972,7 @@ try {
     assert.equal(state.heroBackgroundHarmony.headerSurface,"rgba(255, 255, 255, 0.93)",`${vp.name}: glass header surface changed`);
     assert.equal(state.heroBackgroundHarmony.headerBorder,"rgba(220, 229, 234, 0.92)",`${vp.name}: glass header border changed`);
     assert.equal(state.heroBackgroundHarmony.heroBottom,"rgba(0, 0, 0, 0)",`${vp.name}: frameless Hero topic navigation gained an unintended background`);
-    assert.equal(state.heroBackgroundHarmony.approach,"rgb(255, 255, 255)",`${vp.name}: next section surface changed`);
+    assert.equal(state.heroBackgroundHarmony.causes,"rgb(241, 245, 248)",`${vp.name}: first educational section surface changed`);
     assert.ok(state.heroBackgroundHarmony.heroGradients.includes("radial-gradient"),
       `${vp.name}: subtle hero background gradients are missing`);
     assert.ok(state.headingFont.includes("IBM Plex Sans Arabic"), `${vp.name}: expected IBM Plex Sans Arabic headline font`);
@@ -1032,15 +1032,16 @@ try {
     assert.ok(audit.hero.markerToHeading>=16&&audit.hero.markerToHeading<=24, vp.name + ": Hero marker/headline spacing drifted: " + JSON.stringify(audit.hero));
     assert.ok(vp.width<=720 ? audit.hero.headingToCopy>=11&&audit.hero.headingToCopy<=13 : audit.hero.headingToCopy>=13&&audit.hero.headingToCopy<=19, vp.name + ": Hero headline/copy spacing drifted");
     assert.ok(audit.hero.copyToActions>=20&&audit.hero.copyToActions<=28, vp.name + ": Hero copy/CTA spacing drifted");
-    for(const [name,item] of Object.entries({approach:audit.approach,causes:audit.causes,options:audit.options,suitability:audit.suitability,expectations:audit.expectations,faq:audit.faq})){
+    for(const [name,item] of Object.entries({journey:audit.journey,causes:audit.causes,options:audit.options,suitability:audit.suitability,expectations:audit.expectations,faq:audit.faq})){
       assert.ok(item.markerToHeading>=12&&item.markerToHeading<=16, vp.name + ": " + name + " marker-to-heading spacing drifted: " + JSON.stringify(item));
       assert.ok(item.headingToCopy>=9&&item.headingToCopy<=14, vp.name + ": " + name + " heading-to-copy spacing drifted: " + JSON.stringify(item));
     }
     assert.ok(audit.causes.introToCards>=24&&audit.causes.introToCards<=40, vp.name + ": causes intro-to-cards spacing is inconsistent");
     assert.ok(audit.options.introToCards>=24&&audit.options.introToCards<=40, vp.name + ": options intro-to-cards spacing is inconsistent");
-    assert.ok(audit.expectations.introToCards>=24&&audit.expectations.introToCards<=40, vp.name + ": expectations intro-to-cards spacing is inconsistent");
+    assert.ok(audit.journey.introToCards>=24&&audit.journey.introToCards<=40, vp.name + ": journey intro-to-steps spacing is inconsistent");
+    assert.ok(audit.expectations.introToCards>=20&&audit.expectations.introToCards<=30, vp.name + ": expectations intro-to-cards spacing is inconsistent");
     assert.ok(audit.faq.introToList>=24&&audit.faq.introToList<=40, vp.name + ": FAQ intro-to-list spacing is inconsistent");
-    assert.equal(audit.approach.stepRowPadding,"18px 0px", vp.name + ": step row rhythm changed");
+    assert.equal(audit.journey.stepRowPadding,"19px 16px", vp.name + ": journey step card rhythm changed");
     assert.equal(audit.causes.cardIndexToTitle,"16px", vp.name + ": cause card index/title spacing changed");
     assert.equal(audit.options.numberToTitle,"20px", vp.name + ": option label/title spacing changed");
     assert.equal(audit.suitability.checkItemPadding,"15px 0px", vp.name + ": suitability checklist rhythm changed");
@@ -1228,7 +1229,7 @@ try {
       assert.equal(desktopMenuOpen.expanded,"true",`${vp.name}: compact desktop menu did not open`);
       assert.equal(desktopMenuOpen.inert,false,`${vp.name}: opened desktop navigation must be interactive`);
       assert.equal(desktopMenuOpen.visibility,"visible",`${vp.name}: compact desktop menu panel is not visible`);
-      assert.deepEqual(desktopMenuOpen.links,["#approach","#causes","#options","#journey","#suitability","#reviews","#faq"],`${vp.name}: compact desktop menu must expose every section destination`);
+      assert.deepEqual(desktopMenuOpen.links,["#causes","#options","#journey","#suitability","#team","#reviews","#faq"],`${vp.name}: compact desktop menu must expose every section destination`);
       await page.keyboard.press("Escape");
       await page.waitForFunction(()=>document.querySelector("#menu-toggle").getAttribute("aria-expanded")==="false"&&document.querySelector("#main-nav").inert===true&&document.activeElement===document.querySelector("#menu-toggle"),null,{timeout:3000});
     }
@@ -1388,12 +1389,12 @@ try {
     }
     assert.equal(state.contactHasDeadEnd, false, `${vp.name}: contact section still contains a dead-end return link`);
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
-    assert.deepEqual(state.pageSectionOrder, ["top","approach","causes","options","journey","suitability","expectations","team","reviews","faq","consultation"], `${vp.name}: page sections are missing or not in the approved patient-journey order`);
+    assert.deepEqual(state.pageSectionOrder, ["top","causes","options","journey","suitability","team","reviews","faq","consultation"], `${vp.name}: page sections are missing or not in the approved patient-journey order`);
     assert.deepEqual(state.duplicateIds, [], `${vp.name}: duplicate HTML IDs detected`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
     assert.equal(state.journeyStepCount,4,`${vp.name}: treatment journey must contain four clear steps`);
     assert.equal(state.journeyListTag,"OL",`${vp.name}: treatment journey must use an ordered list`);
-    assert.equal(state.journeyListLabel,"مراحل رحلة تبييض الأسنان",`${vp.name}: treatment journey list must have an accessible Arabic label`);
+    assert.equal(state.journeyListLabel,"خطوات تقييم وتنفيذ خطة تبييض الأسنان",`${vp.name}: treatment journey list must have an accessible Arabic label`);
     assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);
 
      assert.equal(state.expectationsSection.cardCount,4,"Four realistic-expectations cards must be present");
@@ -1487,25 +1488,23 @@ try {
       assert.equal(opened.expanded, "true", `${vp.name}: mobile menu aria state did not open`);
       assert.notEqual(opened.display, "none", `${vp.name}: mobile menu did not open`);
       assert.equal(opened.inert,false,`${vp.name}: opened mobile navigation must not be inert`);
-      assert.deepEqual(opened.visibleLinks,["#approach","#causes","#options","#journey","#suitability","#reviews","#faq"],`${vp.name}: mobile menu must expose every section destination`);
-      await page.locator('#main-nav a[href="#approach"]').click();
-      // The page restores focus on the next animation frame after native hash navigation.
-      await page.waitForFunction(
-        () => document.activeElement===document.querySelector("#menu-toggle"),
-        null,
-        {timeout:3000}
-      );
-      const closed = await page.evaluate(() => ({
+      assert.deepEqual(opened.visibleLinks,["#causes","#options","#journey","#suitability","#team","#reviews","#faq"],`${vp.name}: mobile menu must expose every section destination`);
+      await page.locator('#main-nav a[href="#journey"]').click();
+      const selected = await page.evaluate(() => ({
         expanded:document.querySelector("#menu-toggle")?.getAttribute("aria-expanded"),
         display:getComputedStyle(document.querySelector("#main-nav")).display,
-        hash:location.hash,focusOnToggle:document.activeElement===document.querySelector("#menu-toggle"),inert:document.querySelector("#main-nav").inert
+        hash:location.hash,
+        focusInsideNav:document.querySelector("#main-nav").contains(document.activeElement),
+        inert:document.querySelector("#main-nav").inert
       }));
-      assert.equal(closed.expanded, "false", `${vp.name}: mobile menu aria state did not close`);
-      assert.equal(closed.display, "none", `${vp.name}: mobile menu remained open after selection`);
-      assert.equal(closed.hash, "#approach", `${vp.name}: navigation target failed`);
-      assert.equal(closed.focusOnToggle,true,`${vp.name}: selecting a mobile navigation link must not leave focus inside the hidden menu`);
-      assert.equal(closed.inert,true,`${vp.name}: closed mobile navigation must be inert`);
-      await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#approach"]')?.getAttribute("aria-current")==="location",null,{timeout:3000});
+      assert.equal(selected.expanded, "true", `${vp.name}: selecting a navigation link must keep the menu open`);
+      assert.notEqual(selected.display, "none", `${vp.name}: navigation disappeared after selecting a destination`);
+      assert.equal(selected.hash, "#journey", `${vp.name}: native navigation target failed`);
+      assert.equal(selected.focusInsideNav,true,`${vp.name}: selected navigation link should retain focus in the open menu`);
+      assert.equal(selected.inert,false,`${vp.name}: open navigation must remain interactive`);
+      await page.waitForFunction(()=>document.querySelector('#main-nav a[href="#journey"]')?.getAttribute("aria-current")==="location",null,{timeout:3000});
+      await page.keyboard.press("Escape");
+      await page.waitForFunction(()=>document.querySelector("#menu-toggle")?.getAttribute("aria-expanded")==="false"&&document.querySelector("#main-nav").inert===true&&document.activeElement===document.querySelector("#menu-toggle"),null,{timeout:3000});
 
       await page.keyboard.press("Enter");
       assert.equal(await page.locator("#menu-toggle").getAttribute("aria-expanded"),"true",`${vp.name}: keyboard activation did not open the mobile menu`);
@@ -1672,11 +1671,11 @@ try {
 
       // Validate full-width active indicators on all seven navigation sections.
       const navTargets=[
-        {href:"#approach",id:"approach"},
         {href:"#causes",id:"causes"},
         {href:"#options",id:"options"},
         {href:"#journey",id:"journey"},
         {href:"#suitability",id:"suitability"},
+        {href:"#team",id:"team"},
         {href:"#reviews",id:"reviews"},
         {href:"#faq",id:"faq"}
       ];
