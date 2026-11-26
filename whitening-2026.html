@@ -2210,26 +2210,19 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.removeAttribute("data-ruwa-menu-exit-motion");
   nav.removeAttribute("data-ruwa-menu-exit-progress");
 
-  // Paper-page reveal: the panel opens diagonally from the upper-right corner
-  // toward the lower-left, like a real notebook page being turned.
+  // Reveal the complete surface as one calm plane: no scale, blur, or center-out
+  // expansion. Its background, border, and shadow settle together with a tiny lift.
   const settledPanelShadow=getComputedStyle(nav).boxShadow;
-  const foldedPanelShadow="0 8px 16px rgba(20,45,56,0),0 24px 38px rgba(20,45,56,0),0 3px 9px rgba(20,45,56,0),inset 0 1px 0 rgba(255,255,255,0)";
-  const liftedPanelShadow="0 10px 20px rgba(20,45,56,.10),0 26px 42px rgba(20,45,56,.13),0 4px 12px rgba(20,45,56,.08),inset 0 1px 0 rgba(255,255,255,.62)";
-  nav.style.transformStyle="preserve-3d";
-  nav.style.backfaceVisibility="hidden";
+  const softPanelShadow="0 10px 24px rgba(20,45,56,0),0 22px 42px rgba(20,45,56,0),0 3px 10px rgba(20,45,56,0),inset 0 1px 0 rgba(255,255,255,0)";
   gsap.set(nav,{
    autoAlpha:0,
    x:0,
-   y:0,
-   rotationX:68,
-   rotationY:-28,
-   rotationZ:1.6,
+   y:-4,
    scale:1,
-   transformPerspective:1250,
    filter:"none",
-   boxShadow:foldedPanelShadow,
-   transformOrigin:"top right",
-   force3D:true
+   boxShadow:softPanelShadow,
+   transformOrigin:"top center",
+   force3D:false
   });
   gsap.set(animatedItems,{
    autoAlpha:0,
@@ -2240,19 +2233,11 @@ body,button,input,select,textarea{font-family:var(--body)}
    transformOrigin:"50% 50%"
   });
 
-  const panelFoldDuration=contactAnchoredPanel?.50:.42;
-  const panelSettleDuration=contactAnchoredPanel?.34:.28;
-  const panelDuration=panelFoldDuration+panelSettleDuration;
-  const linkStart=contactAnchoredPanel?.22:.18;
-  const linkStagger=.055;
-  const linkDuration=.12;
-  nav.dataset.ruwaPanelMotionStyle="paper-unfold-diagonal";
-  nav.dataset.ruwaPanelFoldOrigin="top-right";
-  nav.dataset.ruwaPanelFoldDirection="top-right-to-bottom-left";
-  nav.dataset.ruwaPanelFoldRotationX="68";
-  nav.dataset.ruwaPanelFoldRotationY="-28";
+  const panelDuration=contactAnchoredPanel?.56:.45;
+  const linkStart=contactAnchoredPanel?.10:.08;
+  const linkStagger=.065;
+  const linkDuration=.17;
   nav.dataset.ruwaPanelRevealDuration=String(panelDuration);
-  nav.dataset.ruwaPanelFoldDuration=String(panelFoldDuration);
   nav.dataset.ruwaLinkStagger=String(linkStagger);
   nav.dataset.ruwaLinkDuration=String(linkDuration);
 
@@ -2273,35 +2258,16 @@ body,button,input,select,textarea{font-family:var(--body)}
    }
   });
 
-  // The diagonal fold travels away from the fixed upper-right corner toward the lower-left.
-  menuTimeline.to(nav,{
-   autoAlpha:.94,
-   x:0,
-   y:0,
-   rotationX:13,
-   rotationY:-7,
-   rotationZ:.35,
-   scale:1,
-   boxShadow:liftedPanelShadow,
-   duration:panelFoldDuration,
-   ease:"power2.out"
-  },0);
-
-  // The sheet settles flush into its original rectangle; no lingering perspective.
   menuTimeline.to(nav,{
    autoAlpha:1,
    x:0,
    y:0,
-   rotationX:0,
-   rotationY:0,
-   rotationZ:0,
    scale:1,
-   transformPerspective:1250,
    filter:"none",
    boxShadow:settledPanelShadow,
-   duration:panelSettleDuration,
+   duration:panelDuration,
    ease:"power3.out"
-  },contactAnchoredPanel?.50:.42);
+  },0);
 
   animatedItems.forEach((link,index)=>{
    menuTimeline.to(link,{
@@ -2334,12 +2300,10 @@ body,button,input,select,textarea{font-family:var(--body)}
     }
 
     const visibleItems=links().filter(link=>getComputedStyle(link).display!=="none");
-    nav.style.transformStyle="preserve-3d";
-    nav.style.backfaceVisibility="hidden";
     nav.dataset.ruwaMenuState="closing";
     nav.dataset.ruwaMenuAnimating="true";
     nav.dataset.ruwaMenuFrameState="soft-exit";
-    nav.dataset.ruwaMenuExitMotion="paper-fold";
+    nav.dataset.ruwaMenuExitMotion="soft-lift-fade";
     if(isDesktopCompact())button.style.removeProperty("pointer-events");
 
     // A dedicated exit: links dissolve in reverse order while the intact panel
@@ -2364,18 +2328,11 @@ body,button,input,select,textarea{font-family:var(--body)}
      stagger:.018
     },0).to(nav,{
      autoAlpha:0,
-     x:0,
-     y:0,
-     rotationX:66,
-     rotationY:-26,
-     rotationZ:1.4,
+     y:-4,
      scale:1,
-     transformPerspective:1250,
      filter:"none",
-     boxShadow:"0 8px 16px rgba(20,45,56,0),0 24px 38px rgba(20,45,56,0),0 3px 9px rgba(20,45,56,0),inset 0 1px 0 rgba(255,255,255,0)",
-     duration:.36,
-     ease:"power2.in",
-     transformOrigin:"top right"
+     duration:.26,
+     ease:"power2.in"
     },.05).play(0);
    }else{
     finishClosed(true);
