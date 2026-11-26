@@ -2430,7 +2430,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    },0);
   }
 
-  const panelRevealDuration=contactAnchoredPanel?.70:.36;
+  const panelRevealDuration=contactAnchoredPanel ? .70 : .36;
   nav.dataset.ruwaPanelRevealDuration=String(panelRevealDuration);
   const linkStart=contactAnchoredPanel ? .74 : .14;
   const linkStagger=contactAnchoredPanel ? .068 : .095;
