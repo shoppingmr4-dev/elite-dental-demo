@@ -1121,7 +1121,8 @@ body,button,input,select,textarea{font-family:var(--body)}
   border-bottom:1px solid var(--line);font-size:14px;white-space:normal;
  }
  .site-header.is-compact .nav.open a:last-child{border-bottom:0}
- .site-header.is-compact .nav.open a::after{display:none}
+ /* Preserve the full-width active/hover underline inside the open desktop panel. */
+ .site-header.is-compact .nav.open a::after{display:block}
  .site-header.is-compact .nav.open a:hover,
  .site-header.is-compact .nav.open a:focus-visible{
   background:var(--lime);border-radius:8px;
