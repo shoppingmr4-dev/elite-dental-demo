@@ -18,7 +18,7 @@ There is only one maintained RUWA page implementation. The root entry point and 
 
 RUWA is a fictional portfolio concept created by Apex Studio. It is not a commissioned or operating clinic and must not be presented as a real commercial clinic or client project.
 
-The page contains **11 content sections** (Hero, assessment, causes, options, treatment journey, suitability, expectations, dentist/team, a transparent patient-reviews section, FAQ, and contact) and **4 FAQ entries**.
+The page contains **9 main content sections** and **2 FAQ entries**. Assessment is now integrated into the four-step treatment journey, while suitability, safety, and realistic expectations are presented together in one section.
 
 The separate demo sentence beneath the Hero contact buttons has been removed as requested. The footer and page metadata continue to identify RUWA as a fictional Apex Studio portfolio demonstration; the Hero portrait caption independently identifies the dentist image as AI-generated.
 
@@ -31,16 +31,14 @@ There are **3 WhatsApp actions and 3 phone actions**. The Hero WhatsApp action a
 ## Page architecture
 
 1. Hero — whitening proposition, approved illustrative portrait, and contact actions.
-2. Assessment approach — why evaluation precedes treatment selection.
-3. Causes of discoloration — surface stains and deeper colour changes.
-4. Whitening options — general educational descriptions, not a claim about a real clinic's services.
-5. Treatment journey — a concise four-step overview from initial assessment and option selection to procedure and aftercare.
-6. Suitability and safety — factors that may affect suitability or timing.
-7. Realistic expectations — individual result variation and realistic limits, possible temporary sensitivity or gum irritation, restorations that do not whiten, and general aftercare with professional advice before repeating treatment.
-8. Dentist/team — three illustrative portraits with explicit disclosure and no invented identities or credentials.
-9. Patient reviews — a transparent notice that no verified patient reviews are available in this fictional demo.
-10. FAQ — four native HTML details/summary entries.
-11. Consultation/contact — WhatsApp and phone actions that disclose their inactive demo state.
+2. Causes of discoloration — surface stains and deeper colour changes.
+3. Whitening options — general educational descriptions, not a claim about a real clinic's services.
+4. Assessment and treatment journey — four steps from oral-health assessment and option selection to the agreed procedure and aftercare.
+5. Suitability, safety, and realistic expectations — relevant health factors, possible effects, result variation, restoration limits, and aftercare.
+6. Dentist/team — three illustrative portraits with explicit disclosure and no invented identities or credentials; this protected section remains unchanged.
+7. Patient reviews — a transparent notice that no verified patient reviews are available in this fictional demo; this protected section remains unchanged.
+8. FAQ — two non-redundant native HTML details/summary entries.
+9. Consultation/contact — WhatsApp and phone actions that disclose their inactive demo state.
 
 The shared header, navigation, announcement strip, and footer support these sections; they are not additional numbered content sections.
 
@@ -67,7 +65,7 @@ npm run test:ruwa:consistency
 npx playwright install chromium
 ```
 
-The consistency gate verifies the eleven-section order, four realistic-expectations cards and their medical/aftercare disclosures, three disclosed team portraits, transparent reviews state, four FAQ entries, six contact controls, smart floating WhatsApp visibility, header phone action, ARIA targets, retained footer and metadata demo disclosures, root redirect, and both preview redirects.
+The consistency gate verifies the nine-section order, the four cards in the combined safety/expectations area, three disclosed team portraits, the unchanged transparent reviews state, two focused FAQ entries, six contact controls, smart floating WhatsApp visibility, the persistent-on-selection navigation menu, header phone action, ARIA targets, retained footer and metadata demo disclosures, root redirect, and both preview redirects.
 
 The **RUWA Browser QA** GitHub Actions workflow runs the consistency gate, Playwright Chromium checks, full-page responsive captures, Hero fold checks, approved-Hero SHA validation, and immutable public-preview verification.
 
