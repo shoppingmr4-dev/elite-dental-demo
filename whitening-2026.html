@@ -1611,21 +1611,123 @@ body,button,input,select,textarea{font-family:var(--body)}
 
 
 
-/* RUWA COMET BORDER — continuous tapered canvas trail on the measured rounded border path. */
-.ruwa-orbit-target{position:relative}
-.ruwa-orbit-light{display:none}
-.ruwa-orbit-geometry{position:absolute;left:0;top:0;width:0;height:0;visibility:hidden;opacity:0;pointer-events:none;overflow:hidden}
-@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
- .ruwa-orbit-light{
-  position:absolute;display:block;z-index:4;overflow:visible;
-  pointer-events:none;opacity:0;border:0;padding:0;margin:0;
-  background:none;transition:opacity .18s ease;
+/* RUWA PREMIUM FULL-PERIMETER GLOW — complete stationary luminous frames. */
+:where(
+ .info-card,
+ .option-card,
+ .journey-step,
+ .team-card,
+ .review-card,
+ .expect-card,
+ .reviews-preview,
+ .reviews-criteria,
+ .clinical-note
+){
+ position:relative;
+ isolation:isolate;
+}
+:where(
+ .info-card,
+ .option-card,
+ .journey-step,
+ .team-card,
+ .review-card,
+ .expect-card,
+ .reviews-preview,
+ .reviews-criteria,
+ .clinical-note
+)::after{
+ content:"";
+ position:absolute;
+ inset:0;
+ z-index:3;
+ border-radius:inherit;
+ padding:1.25px;
+ pointer-events:none;
+ opacity:0;
+ background:linear-gradient(
+  118deg,
+  rgba(97,214,204,.78) 0%,
+  rgba(228,255,250,.92) 24%,
+  rgba(105,205,203,.66) 48%,
+  rgba(245,255,253,.9) 72%,
+  rgba(88,197,193,.72) 100%
+ );
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+ -webkit-mask-composite:xor;
+ mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+ mask-composite:exclude;
+ box-shadow:inset 0 0 12px rgba(111,225,215,.11);
+ filter:drop-shadow(0 0 4px rgba(72,190,185,.18)) drop-shadow(0 0 11px rgba(72,190,185,.1));
+ transition:opacity .34s ease;
+}
+@keyframes ruwa-full-perimeter-breathe{
+ 0%,100%{
+  opacity:.58;
+  filter:drop-shadow(0 0 4px rgba(72,190,185,.17)) drop-shadow(0 0 10px rgba(72,190,185,.09));
  }
- .ruwa-orbit-target:hover>.ruwa-orbit-light,
- .ruwa-orbit-target:focus-within>.ruwa-orbit-light{opacity:1}
+ 50%{
+  opacity:.96;
+  filter:drop-shadow(0 0 7px rgba(91,218,207,.25)) drop-shadow(0 0 17px rgba(72,190,185,.14));
+ }
+}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+ :where(
+  .info-card,
+  .option-card,
+  .journey-step,
+  .team-card,
+  .review-card,
+  .expect-card,
+  .reviews-preview,
+  .reviews-criteria,
+  .clinical-note
+ ):hover::after{
+  animation:ruwa-full-perimeter-breathe 3.4s ease-in-out infinite;
+ }
+}
+@media (prefers-reduced-motion:no-preference){
+ :where(
+  .info-card,
+  .option-card,
+  .journey-step,
+  .team-card,
+  .review-card,
+  .expect-card,
+  .reviews-preview,
+  .reviews-criteria,
+  .clinical-note
+ ):focus-within::after{
+  animation:ruwa-full-perimeter-breathe 3.4s ease-in-out infinite;
+ }
 }
 @media(prefers-reduced-motion:reduce){
- .ruwa-orbit-light{display:none!important;transition:none!important}
+ :where(
+  .info-card,
+  .option-card,
+  .journey-step,
+  .team-card,
+  .review-card,
+  .expect-card,
+  .reviews-preview,
+  .reviews-criteria,
+  .clinical-note
+ )::after{
+  transition:none;
+  animation:none!important;
+  filter:none;
+ }
+ :where(
+  .info-card,
+  .option-card,
+  .journey-step,
+  .team-card,
+  .review-card,
+  .expect-card,
+  .reviews-preview,
+  .reviews-criteria,
+ .clinical-note
+ ):focus-within::after{opacity:.78}
 }
 
 </style>
@@ -2103,6 +2205,8 @@ body,button,input,select,textarea{font-family:var(--body)}
 
  const clearInlineMotion=()=>{
   nav.style.removeProperty("clip-path");
+  nav.style.removeProperty("opacity");
+  nav.style.removeProperty("visibility");
   nav.style.removeProperty("transform");
   nav.style.removeProperty("transform-origin");
   nav.style.removeProperty("pointer-events");
@@ -2115,30 +2219,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   });
  };
 
- const funnelClipPath=(progress,width,height,originX,originY)=>{
-  const p=Math.max(0,Math.min(1,progress));
-  const points=[];
-  const steps=12;
-  const blend=Math.max(0,Math.min(1,(p-.66)/.34));
-  const smoothBlend=blend*blend*(3-2*blend);
-  const appendPoint=(q,side)=>{
-   const span=q<0?originX:width-originX;
-   const x=originX+q*span*p;
-   const extent=Math.pow(Math.abs(q),.72);
-   const baseHeight=.12+.88*extent;
-   const heightFactor=baseHeight+(1-baseHeight)*smoothBlend;
-   const sway=Math.sin(q*Math.PI*1.35)*Math.min(7,height*.18)*Math.sin(Math.PI*p);
-   const halfHeight=height*.5*p*heightFactor;
-   const y=originY+sway+(side==="top"?-halfHeight:halfHeight);
-   points.push((x/width*100).toFixed(3)+"% "+(y/height*100).toFixed(3)+"%");
-  };
-  for(let i=0;i<=steps;i++)appendPoint(-1+(2*i/steps),"top");
-  for(let i=steps;i>=0;i--)appendPoint(-1+(2*i/steps),"bottom");
-  return "polygon("+points.join(",")+")";
- };
-
  const settleDesktopMenuOpen=()=>{
-  // Keep the hamburger visible and clickable so the dropdown can be toggled closed.
   button.style.removeProperty("opacity");
   button.style.removeProperty("pointer-events");
  };
@@ -2152,23 +2233,8 @@ body,button,input,select,textarea{font-family:var(--body)}
   clearInlineMotion();
   nav.dataset.ruwaMenuState="closed";
   nav.dataset.ruwaMenuAnimating="false";
-  nav.removeAttribute("data-ruwa-menu-origin-x");
-  nav.removeAttribute("data-ruwa-menu-origin-y");
-  nav.removeAttribute("data-ruwa-menu-radius");
-  nav.removeAttribute("data-ruwa-menu-panel-left");
-  nav.removeAttribute("data-ruwa-menu-panel-top");
-  nav.removeAttribute("data-ruwa-menu-button-center-x");
-  nav.removeAttribute("data-ruwa-menu-button-center-y");
-  nav.removeAttribute("data-ruwa-menu-panel-width");
-  nav.removeAttribute("data-ruwa-menu-panel-height");
-  nav.removeAttribute("data-ruwa-menu-funnel-progress");
+  nav.removeAttribute("data-ruwa-menu-progress");
   nav.removeAttribute("data-ruwa-menu-shape");
-  links().forEach(link=>{
-   link.removeAttribute("data-ruwa-funnel-start-x");
-   link.removeAttribute("data-ruwa-funnel-start-y");
-   link.removeAttribute("data-ruwa-funnel-arc-x");
-   link.removeAttribute("data-ruwa-funnel-arc-y");
-  });
   syncNavInert();
  };
 
@@ -2180,6 +2246,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    root.dataset.ruwaMenuMotion="reduced";
    clearInlineMotion();
    settleDesktopMenuOpen();
+   nav.dataset.ruwaMenuShape="dropdown";
    nav.dataset.ruwaMenuState="open";
    nav.dataset.ruwaMenuAnimating="false";
    if(document.activeElement===button)animatedItems[0]?.focus({preventScroll:true});
@@ -2190,6 +2257,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    root.dataset.ruwaMenuMotion="fallback";
    clearInlineMotion();
    settleDesktopMenuOpen();
+   nav.dataset.ruwaMenuShape="dropdown";
    nav.dataset.ruwaMenuState="open";
    nav.dataset.ruwaMenuAnimating="false";
    if(document.activeElement===button)animatedItems[0]?.focus({preventScroll:true});
@@ -2197,51 +2265,47 @@ body,button,input,select,textarea{font-family:var(--body)}
   }
 
   const panel=nav.getBoundingClientRect();
-  const toggle=button.getBoundingClientRect();
   if(panel.width<1||panel.height<1){
    root.dataset.ruwaMenuMotion="fallback";
    clearInlineMotion();
    settleDesktopMenuOpen();
+   nav.dataset.ruwaMenuShape="dropdown";
    nav.dataset.ruwaMenuState="open";
    nav.dataset.ruwaMenuAnimating="false";
    return;
   }
 
-  // Measure the real hamburger center relative to the full vertical dropdown.
-  const buttonCenterX=toggle.left+toggle.width/2;
-  const buttonCenterY=toggle.top+toggle.height/2;
-  const originX=buttonCenterX-panel.left;
-  const originY=buttonCenterY-panel.top;
-  const corners=[[0,0],[panel.width,0],[0,panel.height],[panel.width,panel.height]];
-  const radius=Math.ceil(Math.max.apply(null,corners.map(point=>
-   Math.hypot(point[0]-originX,point[1]-originY)
-  ))+3);
-
-  root.dataset.ruwaMenuMotion="gsap";
-  nav.dataset.ruwaMenuShape="circle";
-  nav.dataset.ruwaMenuOriginX=originX.toFixed(2);
-  nav.dataset.ruwaMenuOriginY=originY.toFixed(2);
-  nav.dataset.ruwaMenuRadius=String(radius);
-  nav.dataset.ruwaMenuPanelLeft=panel.left.toFixed(2);
-  nav.dataset.ruwaMenuPanelTop=panel.top.toFixed(2);
-  nav.dataset.ruwaMenuPanelWidth=panel.width.toFixed(2);
-  nav.dataset.ruwaMenuPanelHeight=panel.height.toFixed(2);
-  nav.dataset.ruwaMenuButtonCenterX=buttonCenterX.toFixed(2);
-  nav.dataset.ruwaMenuButtonCenterY=buttonCenterY.toFixed(2);
+  root.dataset.ruwaMenuMotion="gsap-staggered";
+  nav.dataset.ruwaMenuShape="dropdown";
   nav.dataset.ruwaMenuState="opening";
   nav.dataset.ruwaMenuAnimating="true";
+  nav.dataset.ruwaMenuProgress="0";
 
+  // The panel fades and settles in its own position; its links then enter in DOM order.
   gsap.set(nav,{
-   clipPath:"circle(0px at "+originX+"px "+originY+"px)",
-   scale:.018,rotation:-5.2,transformOrigin:originX+"px "+originY+"px",force3D:false
+   autoAlpha:0,
+   y:-8,
+   scale:.985,
+   rotation:0,
+   transformOrigin:"top center",
+   force3D:false
   });
   gsap.set(animatedItems,{
-   autoAlpha:0,x:-9,y:11,rotation:-1.65,scale:.985,transformOrigin:"50% 50%"
+   autoAlpha:0,
+   x:0,
+   y:10,
+   rotation:0,
+   scale:1,
+   transformOrigin:"50% 50%"
   });
 
   menuTimeline=gsap.timeline({
    paused:true,
+   onUpdate(){
+    nav.dataset.ruwaMenuProgress=menuTimeline.progress().toFixed(4);
+   },
    onComplete(){
+    nav.dataset.ruwaMenuProgress="1";
     nav.dataset.ruwaMenuState="open";
     nav.dataset.ruwaMenuAnimating="false";
     settleDesktopMenuOpen();
@@ -2252,15 +2316,27 @@ body,button,input,select,textarea{font-family:var(--body)}
     finishClosed(false);
    }
   });
+
   menuTimeline.to(nav,{
-   clipPath:"circle("+radius+"px at "+originX+"px "+originY+"px)",
-   scale:1,rotation:0,duration:.78,ease:"power2.out"
+   autoAlpha:1,
+   y:0,
+   scale:1,
+   duration:.28,
+   ease:"power2.out"
   },0);
+
   animatedItems.forEach((link,index)=>{
    menuTimeline.to(link,{
-    autoAlpha:1,x:0,y:0,rotation:0,scale:1,duration:.32,ease:"power2.out"
+    autoAlpha:1,
+    x:0,
+    y:0,
+    rotation:0,
+    scale:1,
+    duration:.32,
+    ease:"power2.out"
    },.18+index*.075);
   });
+
   menuTimeline.play(0);
  };
  const close=({restoreFocus=false,immediate=false}={})=>{
@@ -2302,19 +2378,6 @@ body,button,input,select,textarea{font-family:var(--body)}
   if(nav.contains(event.target)||button.contains(event.target))return;
   close();
  },true);
- button.addEventListener("focus",()=>{
-  if(isDesktopCompact()&&button.getAttribute("aria-expanded")==="true"){
-   button.style.opacity="1";
-   button.style.pointerEvents="auto";
-  }
- });
- button.addEventListener("blur",()=>{
-  if(isDesktopCompact()&&button.getAttribute("aria-expanded")==="true"){
-   button.style.opacity="0";
-   button.style.pointerEvents="none";
-  }
- });
-
  button.addEventListener("click",()=>{
   const open=button.getAttribute("aria-expanded")!=="true";
   if(open){
@@ -2398,349 +2461,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  syncNavInert();
 })();
 
-// RUWA comet border: one fast, continuous, tapered light trail follows the measured border path.
-(function(){
- const selectors=[
-  ".info-card",
-  ".option-card",
-  ".journey-step",
-  ".team-card",
-  ".review-card",
-  ".expect-card",
-  ".reviews-preview",
-  ".reviews-criteria",
-  ".clinical-note",
-  ".info-card .card-index",
-  ".step .step-no",
-  ".journey-step .journey-step-number",
-  ".check-item .check-mark",
-  ".review-card-label"
- ];
- const targets=Array.from(new Set(document.querySelectorAll(selectors.join(","))));
- const svgNS="http://www.w3.org/2000/svg";
- const canHover=window.matchMedia("(hover:hover) and (pointer:fine)").matches;
- const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
- const travelSpeed=240; // CSS pixels per second, measured by distance along the border path.
- const tailCoverage=.86; // Long trailing sweep covers 86% of each complete perimeter.
- const records=new Map();
- const active=new Set();
- let animationFrame=0;
-
- const number=value=>{
-  const parsed=parseFloat(value);
-  return Number.isFinite(parsed)?parsed:0;
- };
- const resolveRadius=(value,width,height)=>{
-  const values=String(value||"0").trim().split(/\s+/);
-  const resolve=(part,basis)=>{
-   const token=part||"0";
-   const parsed=number(token);
-   return token.includes("%")?parsed*basis/100:parsed;
-  };
-  return {
-   x:Math.max(0,resolve(values[0],width)),
-   y:Math.max(0,resolve(values[1]||values[0],height))
-  };
- };
- const fmt=value=>Number(value.toFixed(3)).toString();
- const arc=(rx,ry,x,y)=>{
-  if(rx<.25||ry<.25)return "L "+fmt(x)+" "+fmt(y);
-  return "A "+fmt(rx)+" "+fmt(ry)+" 0 0 1 "+fmt(x)+" "+fmt(y);
- };
- const buildCenterlinePath=(width,height,border,style)=>{
-  const left=border.left/2;
-  const right=width-border.right/2;
-  const top=border.top/2;
-  const bottom=height-border.bottom/2;
-  const tl=resolveRadius(style.borderTopLeftRadius,width,height);
-  const tr=resolveRadius(style.borderTopRightRadius,width,height);
-  const br=resolveRadius(style.borderBottomRightRadius,width,height);
-  const bl=resolveRadius(style.borderBottomLeftRadius,width,height);
-  tl.x=Math.max(0,tl.x-border.left/2); tl.y=Math.max(0,tl.y-border.top/2);
-  tr.x=Math.max(0,tr.x-border.right/2); tr.y=Math.max(0,tr.y-border.top/2);
-  br.x=Math.max(0,br.x-border.right/2); br.y=Math.max(0,br.y-border.bottom/2);
-  bl.x=Math.max(0,bl.x-border.left/2); bl.y=Math.max(0,bl.y-border.bottom/2);
-  const maxRx=(right-left)/2;
-  const maxRy=(bottom-top)/2;
-  [tl,tr,br,bl].forEach(radius=>{
-   radius.x=Math.min(radius.x,maxRx);
-   radius.y=Math.min(radius.y,maxRy);
-  });
-  return [
-   "M "+fmt(left+tl.x)+" "+fmt(top),
-   "H "+fmt(right-tr.x),
-   arc(tr.x,tr.y,right,top+tr.y),
-   "V "+fmt(bottom-br.y),
-   arc(br.x,br.y,right-br.x,bottom),
-   "H "+fmt(left+bl.x),
-   arc(bl.x,bl.y,left,bottom-bl.y),
-   "V "+fmt(top+tl.y),
-   arc(tl.x,tl.y,left+tl.x,top),
-   "Z"
-  ].join(" ");
- };
- const modulo=(value,length)=>((value%length)+length)%length;
-
- const makeRecord=target=>{
-  const width=target.offsetWidth;
-  const height=target.offsetHeight;
-  if(width<4||height<4)return null;
-  const style=getComputedStyle(target);
-  const border={
-   top:number(style.borderTopWidth),
-   right:number(style.borderRightWidth),
-   bottom:number(style.borderBottomWidth),
-   left:number(style.borderLeftWidth)
-  };
-  const pathData=buildCenterlinePath(width,height,border,style);
-
-  const geometry=document.createElementNS(svgNS,"svg");
-  geometry.setAttribute("class","ruwa-orbit-geometry");
-  geometry.setAttribute("viewBox","0 0 "+fmt(width)+" "+fmt(height));
-  geometry.setAttribute("width",String(width));
-  geometry.setAttribute("height",String(height));
-  geometry.setAttribute("aria-hidden","true");
-  const path=document.createElementNS(svgNS,"path");
-  path.setAttribute("d",pathData);
-  path.setAttribute("fill","none");
-  path.setAttribute("stroke","none");
-  geometry.appendChild(path);
-  geometry.style.width="0px";
-  geometry.style.height="0px";
-  target.appendChild(geometry);
-
-  const pathLength=path.getTotalLength();
-  if(!Number.isFinite(pathLength)||pathLength<16){
-   geometry.remove();
-   return null;
-  }
-
-  const canvas=document.createElement("canvas");
-  canvas.className="ruwa-orbit-light";
-  canvas.setAttribute("aria-hidden","true");
-  canvas.setAttribute("role","presentation");
-  canvas.style.left=(-border.left)+"px";
-  canvas.style.top=(-border.top)+"px";
-  canvas.style.width=width+"px";
-  canvas.style.height=height+"px";
-  canvas.style.pointerEvents="none";
-  const dpr=Math.max(1,Math.min(2,window.devicePixelRatio||1));
-  canvas.width=Math.ceil(width*dpr);
-  canvas.height=Math.ceil(height*dpr);
-  const context=canvas.getContext("2d",{alpha:true});
-  if(!context){
-   geometry.remove();
-   return null;
-  }
-  context.setTransform(dpr,0,0,dpr,0,0);
-  target.appendChild(canvas);
-
-  const tailLength=pathLength*tailCoverage;
-  canvas.dataset.pathLength=pathLength.toFixed(3);
-  canvas.dataset.speed=String(travelSpeed);
-  canvas.dataset.tailLength=tailLength.toFixed(3);
-  canvas.dataset.tailCoverage=String(tailCoverage);
-  canvas.dataset.headRadius="4.2";
-  canvas.dataset.pixelRatio=String(dpr);
-  canvas.dataset.pointerEvents="none";
-  const record={
-   target,canvas,context,geometry,path,pathLength,width,height,border,
-   tailLength,startedAt:0,dpr
-  };
-  target.dataset.ruwaOrbitPathLength=pathLength.toFixed(3);
-  target.dataset.ruwaOrbitSpeed=String(travelSpeed);
-  target.dataset.ruwaOrbitTailCoverage=String(tailCoverage);
-  return record;
- };
-
- const drawQuad=(ctx,a,b,alpha,halfWidth)=>{
-  const ax=a.x+a.nx*halfWidth;
-  const ay=a.y+a.ny*halfWidth;
-  const bx=b.x+b.nx*halfWidth;
-  const by=b.y+b.ny*halfWidth;
-  const cx=b.x-b.nx*halfWidth;
-  const cy=b.y-b.ny*halfWidth;
-  const dx=a.x-a.nx*halfWidth;
-  const dy=a.y-a.ny*halfWidth;
-  ctx.globalAlpha=alpha;
-  ctx.beginPath();
-  ctx.moveTo(ax,ay);
-  ctx.lineTo(bx,by);
-  ctx.lineTo(cx,cy);
-  ctx.lineTo(dx,dy);
-  ctx.closePath();
-  ctx.fill();
- };
-
- const drawComet=(record,time)=>{
-  const {context:ctx,path,pathLength,tailLength,width,height,startedAt,canvas}=record;
-  ctx.clearRect(0,0,width,height);
-  const headDistance=modulo((time-startedAt)*travelSpeed/1000,pathLength);
-  const segmentCount=Math.max(90,Math.min(260,Math.ceil(tailLength/2.6)));
-  const samples=[];
-  const epsilon=Math.min(1.4,Math.max(.6,pathLength/1500));
-
-  for(let i=0;i<=segmentCount;i++){
-   const t=i/segmentCount;
-   const distance=modulo(headDistance-tailLength+t*tailLength,pathLength);
-   const point=path.getPointAtLength(distance);
-   const before=path.getPointAtLength(modulo(distance-epsilon,pathLength));
-   const after=path.getPointAtLength(modulo(distance+epsilon,pathLength));
-   let tx=after.x-before.x;
-   let ty=after.y-before.y;
-   const length=Math.hypot(tx,ty)||1;
-   tx/=length; ty/=length;
-   const nx=-ty;
-   const ny=tx;
-   samples.push({
-    x:point.x,y:point.y,nx,ny,t,
-    width:.24+2.55*Math.pow(t,1.28),
-    innerWidth:.12+1.12*Math.pow(t,1.2),
-    alpha:.09+.46*Math.pow(t,1.7)
-   });
-  }
-
-  // Broad cool-teal glow: adjacent tapered quads share their exact edges to form one continuous trail.
-  ctx.save();
-  ctx.shadowColor="rgba(74,218,207,.72)";
-  ctx.shadowBlur=8;
-  ctx.fillStyle="rgba(104,235,224,1)";
-  for(let i=0;i<segmentCount;i++){
-   const a=samples[i],b=samples[i+1];
-   drawQuad(ctx,a,b,(a.alpha+b.alpha)*.5,a.width>b.width?a.width:b.width);
-  }
-  ctx.restore();
-
-  // A narrower icy-white core keeps the long tail luminous without competing with the head.
-  ctx.save();
-  ctx.shadowColor="rgba(194,255,250,.45)";
-  ctx.shadowBlur=3;
-  ctx.fillStyle="rgba(226,255,251,1)";
-  for(let i=0;i<segmentCount;i++){
-   const a=samples[i],b=samples[i+1];
-   drawQuad(ctx,a,b,Math.min(.78,(a.alpha+b.alpha)*.42),
-    Math.max(a.innerWidth,b.innerWidth));
-  }
-  ctx.restore();
-
-  const head=path.getPointAtLength(headDistance);
-  const next=path.getPointAtLength(modulo(headDistance+1.2,pathLength));
-  const angle=Math.atan2(next.y-head.y,next.x-head.x);
-  ctx.save();
-  ctx.translate(head.x,head.y);
-  ctx.rotate(angle);
-  const halo=ctx.createRadialGradient(0,0,.2,0,0,9.5);
-  halo.addColorStop(0,"rgba(255,255,255,1)");
-  halo.addColorStop(.22,"rgba(235,255,253,.98)");
-  halo.addColorStop(.48,"rgba(136,239,230,.56)");
-  halo.addColorStop(1,"rgba(64,198,190,0)");
-  ctx.fillStyle=halo;
-  ctx.beginPath();
-  ctx.arc(0,0,9.5,0,Math.PI*2);
-  ctx.fill();
-  ctx.shadowColor="rgba(255,255,255,.98)";
-  ctx.shadowBlur=11;
-  ctx.fillStyle="#FFFFFF";
-  ctx.beginPath();
-  ctx.ellipse(0,0,4.4,2.8,0,0,Math.PI*2);
-  ctx.fill();
-  ctx.shadowBlur=0;
-  ctx.fillStyle="#FFFFFF";
-  ctx.beginPath();
-  ctx.arc(0,0,2.35,0,Math.PI*2);
-  ctx.fill();
-  ctx.restore();
-
-  canvas.dataset.headDistance=headDistance.toFixed(2);
-  canvas.dataset.renderedAt=String(Math.round(time));
- };
-
- const requestRender=()=>{
-  if(animationFrame===0&&!document.hidden){
-   animationFrame=requestAnimationFrame(renderFrame);
-  }
- };
- const renderFrame=time=>{
-  animationFrame=0;
-  for(const record of Array.from(active)){
-   const stillActive=record.target.isConnected&&(
-    record.target.matches(":hover")||record.target.contains(document.activeElement)
-   );
-   if(!stillActive){
-    active.delete(record);
-    record.context.clearRect(0,0,record.width,record.height);
-    continue;
-   }
-   drawComet(record,time);
-  }
-  if(active.size)requestRender();
- };
- const activate=record=>{
-  if(!record)return;
-  record.startedAt=performance.now();
-  active.add(record);
-  drawComet(record,record.startedAt);
-  requestRender();
- };
- const deactivate=record=>{
-  if(!record)return;
-  if(record.target.matches(":hover")||record.target.contains(document.activeElement))return;
-  active.delete(record);
-  record.context.clearRect(0,0,record.width,record.height);
- };
-
- targets.forEach(target=>{
-  target.classList.add("ruwa-orbit-target");
-  if(!canHover||reducedMotion||target.querySelector(":scope > .ruwa-orbit-light"))return;
-  const record=makeRecord(target);
-  if(!record)return;
-  records.set(target,record);
-  target.addEventListener("pointerenter",()=>activate(records.get(target)));
-  target.addEventListener("pointerleave",()=>deactivate(records.get(target)));
-  target.addEventListener("focusin",()=>activate(records.get(target)));
-  target.addEventListener("focusout",()=>requestAnimationFrame(()=>deactivate(records.get(target))));
- });
-
- const rebuildChangedTargets=()=>{
-  if(!canHover||reducedMotion)return;
-  for(const target of targets){
-   const old=records.get(target);
-   if(!old)continue;
-   if(old.width===target.offsetWidth&&old.height===target.offsetHeight)continue;
-   active.delete(old);
-   old.canvas.remove();
-   old.geometry.remove();
-   const next=makeRecord(target);
-   if(next){
-    records.set(target,next);
-    if(target.matches(":hover")||target.contains(document.activeElement))activate(next);
-   }else{
-    records.delete(target);
-   }
-  }
- };
- window.addEventListener("resize",rebuildChangedTargets,{passive:true});
- document.addEventListener("visibilitychange",()=>{
-  if(document.hidden){
-   if(animationFrame)cancelAnimationFrame(animationFrame);
-   animationFrame=0;
-  }else if(active.size){
-   requestRender();
-  }
- });
- window.addEventListener("pagehide",()=>{
-  if(animationFrame)cancelAnimationFrame(animationFrame);
-  animationFrame=0;
-  active.clear();
-  records.forEach(record=>record.context.clearRect(0,0,record.width,record.height));
- });
-
- document.documentElement.dataset.ruwaOrbitReady="true";
- document.documentElement.dataset.ruwaOrbitTargetCount=String(targets.length);
- document.documentElement.dataset.ruwaOrbitAnimatedCount=String(records.size);
- document.documentElement.dataset.ruwaOrbitSpeed=String(travelSpeed);
- document.documentElement.dataset.ruwaOrbitTailCoverage=String(tailCoverage);
-})();
+// CSS-only full-perimeter hover glow is defined in the page stylesheet.
 
 // Floating RUWA header: one shared progress value and content-derived frame geometry.
 (function(){
