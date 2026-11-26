@@ -2123,6 +2123,9 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.style.removeProperty("transform-origin");
   nav.style.removeProperty("filter");
   nav.style.removeProperty("box-shadow");
+  nav.style.removeProperty("perspective");
+  nav.style.removeProperty("transform-style");
+  nav.style.removeProperty("backface-visibility");
   nav.style.removeProperty("pointer-events");
   button.style.removeProperty("opacity");
   button.style.removeProperty("pointer-events");
@@ -2207,22 +2210,26 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.removeAttribute("data-ruwa-menu-exit-motion");
   nav.removeAttribute("data-ruwa-menu-exit-progress");
 
-  // A restrained spiral-like arrival: the whole panel follows a short curved
-  // arc around its top-right anchor, rotates a fraction past neutral, then settles.
-  // The movement is intentionally tiny so the rectangular frame never looks warped.
+  // Paper-page reveal: the panel opens upward from its lower-right corner,
+  // with a restrained 3D fold and a moving edge shadow before it lies flat.
   const settledPanelShadow=getComputedStyle(nav).boxShadow;
-  const softPanelShadow="0 10px 24px rgba(20,45,56,0),0 22px 42px rgba(20,45,56,0),0 3px 10px rgba(20,45,56,0),inset 0 1px 0 rgba(255,255,255,0)";
-  const midPanelShadow="0 10px 24px rgba(20,45,56,.07),0 22px 42px rgba(20,45,56,.09),0 3px 10px rgba(20,45,56,.05),inset 0 1px 0 rgba(255,255,255,.45)";
+  const foldedPanelShadow="0 8px 16px rgba(20,45,56,0),0 24px 38px rgba(20,45,56,0),0 3px 9px rgba(20,45,56,0),inset 0 1px 0 rgba(255,255,255,0)";
+  const liftedPanelShadow="0 10px 20px rgba(20,45,56,.10),0 26px 42px rgba(20,45,56,.13),0 4px 12px rgba(20,45,56,.08),inset 0 1px 0 rgba(255,255,255,.62)";
+  nav.style.transformStyle="preserve-3d";
+  nav.style.backfaceVisibility="hidden";
   gsap.set(nav,{
    autoAlpha:0,
-   x:8,
-   y:-8,
-   rotation:-1.6,
-   scale:.988,
+   x:-16,
+   y:18,
+   rotationX:-68,
+   rotationY:15,
+   rotationZ:-1.2,
+   scale:.975,
+   transformPerspective:1250,
    filter:"none",
-   boxShadow:softPanelShadow,
-   transformOrigin:"top right",
-   force3D:false
+   boxShadow:foldedPanelShadow,
+   transformOrigin:"bottom right",
+   force3D:true
   });
   gsap.set(animatedItems,{
    autoAlpha:0,
@@ -2233,16 +2240,18 @@ body,button,input,select,textarea{font-family:var(--body)}
    transformOrigin:"50% 50%"
   });
 
-  const panelDuration=contactAnchoredPanel?.66:.51;
-  const panelArcDuration=contactAnchoredPanel?.24:.18;
-  const panelSettleDuration=contactAnchoredPanel?.42:.33;
-  const linkStart=contactAnchoredPanel?.14:.11;
-  const linkStagger=.06;
-  const linkDuration=.16;
-  nav.dataset.ruwaPanelMotionStyle="subtle-spiral";
-  nav.dataset.ruwaPanelRotationStart="-1.6";
-  nav.dataset.ruwaPanelRotationOvershoot=".45";
+  const panelFoldDuration=contactAnchoredPanel?.50:.42;
+  const panelSettleDuration=contactAnchoredPanel?.38:.32;
+  const panelDuration=panelFoldDuration+panelSettleDuration-.04;
+  const linkStart=contactAnchoredPanel?.22:.18;
+  const linkStagger=.055;
+  const linkDuration=.12;
+  nav.dataset.ruwaPanelMotionStyle="paper-unfold";
+  nav.dataset.ruwaPanelFoldOrigin="bottom-right";
+  nav.dataset.ruwaPanelFoldRotationX="-68";
+  nav.dataset.ruwaPanelFoldRotationY="15";
   nav.dataset.ruwaPanelRevealDuration=String(panelDuration);
+  nav.dataset.ruwaPanelFoldDuration=String(panelFoldDuration);
   nav.dataset.ruwaLinkStagger=String(linkStagger);
   nav.dataset.ruwaLinkDuration=String(linkDuration);
 
@@ -2263,30 +2272,35 @@ body,button,input,select,textarea{font-family:var(--body)}
    }
   });
 
-  // First arc: the frame glides diagonally while turning gently toward neutral.
+  // Lift and unfold from the lower corner like a notebook page being turned upward.
   menuTimeline.to(nav,{
-   autoAlpha:.82,
-   x:-1.5,
-   y:-1,
-   rotation:.45,
-   scale:.996,
-   boxShadow:midPanelShadow,
-   duration:panelArcDuration,
+   autoAlpha:.78,
+   x:-4,
+   y:5,
+   rotationX:-12,
+   rotationY:4,
+   rotationZ:-.25,
+   scale:.992,
+   boxShadow:liftedPanelShadow,
+   duration:panelFoldDuration,
    ease:"power2.out"
   },0);
 
-  // Second arc: a quiet counter-settle completes the spiral and restores exact geometry.
+  // The sheet settles flush into its original rectangle; no lingering perspective.
   menuTimeline.to(nav,{
    autoAlpha:1,
    x:0,
    y:0,
-   rotation:0,
+   rotationX:0,
+   rotationY:0,
+   rotationZ:0,
    scale:1,
+   transformPerspective:1250,
    filter:"none",
    boxShadow:settledPanelShadow,
    duration:panelSettleDuration,
    ease:"power3.out"
-  },contactAnchoredPanel?.24:.18);
+  },contactAnchoredPanel?.42:.34);
 
   animatedItems.forEach((link,index)=>{
    menuTimeline.to(link,{
@@ -2347,14 +2361,18 @@ body,button,input,select,textarea{font-family:var(--body)}
      stagger:.018
     },0).to(nav,{
      autoAlpha:0,
-     x:3,
-     y:-5,
-     rotation:-.7,
-     scale:1,
+     x:-12,
+     y:16,
+     rotationX:-62,
+     rotationY:13,
+     rotationZ:-1,
+     scale:.98,
+     transformPerspective:1250,
      filter:"none",
-     duration:.28,
+     boxShadow:foldedPanelShadow,
+     duration:.36,
      ease:"power2.in",
-     transformOrigin:"top right"
+     transformOrigin:"bottom right"
     },.05).play(0);
    }else{
     finishClosed(true);
