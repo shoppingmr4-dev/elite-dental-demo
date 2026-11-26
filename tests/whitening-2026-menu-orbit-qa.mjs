@@ -567,7 +567,7 @@ try {
   await interactionPage.close();
   console.log("[PASS] Escape focus restoration, native anchor close, and rapid open/close reversal");
 
-  // Full-perimeter CSS glow: all sides and rounded corners illuminate together.
+  // Moving conic-gradient arc: verify the luminous segment stays masked to the border line.
   const glowPage = await browser.newPage({
     viewport:{width:1440,height:900},
     reducedMotion:"no-preference"
@@ -598,7 +598,7 @@ try {
   await card.hover();
   await glowPage.waitForFunction(element=>{
     const style=getComputedStyle(element,"::after");
-    return Number.parseFloat(style.opacity)>.45&&style.backgroundImage.includes("linear-gradient");
+    return Number.parseFloat(style.opacity)>.45&&style.backgroundImage.includes("conic-gradient");
   },await card.elementHandle(),{timeout:2500});
   await glowPage.waitForTimeout(180);
   await card.screenshot({path:OUT+"/perimeter-orbit-card-hover.png"});
@@ -628,7 +628,7 @@ try {
       height:element.offsetHeight
     };
   });
-  assert.ok(activeGlow.opacity>.45,"The complete perimeter glow did not become visible on hover");
+  assert.ok(activeGlow.opacity>.45,"The moving perimeter arc did not become visible on hover");
   assert.ok(activeGlow.backgroundImage.includes("conic-gradient"),
     "The perimeter must use a rotating conic light segment, not a stationary glow");
   const hasTwoMaskLayers=[activeGlow.maskImage,activeGlow.webkitMaskImage].some(value=>
