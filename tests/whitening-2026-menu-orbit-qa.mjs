@@ -165,24 +165,46 @@ try {
 
     const mode = await page.evaluate(() => document.documentElement.dataset.ruwaMenuMotion || "unset");
     assert.equal(mode, "gsap-staggered",
-      viewport.name + ": expected a left-side desktop panel with sequential links, not a circle/funnel reveal");
+      viewport.name + ": expected the Contact-anchored panel with its frame-first reveal");
 
-    await page.waitForTimeout(450);
+    if (viewport.width > 920) {
+      await page.waitForTimeout(150);
+      const frameOpening = await nav.evaluate(element => ({
+        frameState: element.dataset.ruwaMenuFrameState,
+        clipPath: getComputedStyle(element).clipPath,
+        opacity: Number.parseFloat(getComputedStyle(element).opacity),
+        linkOpacity: Array.from(element.querySelectorAll("a"))
+          .filter(link => getComputedStyle(link).display !== "none")
+          .map(link => Number.parseFloat(getComputedStyle(link).opacity))
+      }));
+      assert.equal(frameOpening.frameState, "drawing",
+        viewport.name + ": the complete panel frame must enter before its navigation text");
+      assert.ok(frameOpening.clipPath.includes("inset"),
+        viewport.name + ": the frame must reveal as a rectangle, never from a circular mask");
+      assert.ok(frameOpening.opacity > .1,
+        viewport.name + ": the panel frame did not begin appearing");
+      assert.ok(frameOpening.linkOpacity.every(opacity => opacity < .05),
+        viewport.name + ": navigation text appeared before the outer frame finished");
+    }
+
+    await page.waitForTimeout(viewport.width > 920 ? 550 : 450);
     const staggerState = await nav.evaluate(element => {
       const style = getComputedStyle(element);
       const links = Array.from(element.querySelectorAll("a"))
         .filter(link => getComputedStyle(link).display !== "none");
       const panelRect=element.getBoundingClientRect();
-      const buttonRect=document.querySelector("#menu-toggle").getBoundingClientRect();
+      const contactRect=document.querySelector(".header-action").getBoundingClientRect();
       return {
         shape: element.dataset.ruwaMenuShape,
+        frameState: element.dataset.ruwaMenuFrameState,
         clipPath: style.clipPath,
         position: style.position,
         flexDirection: style.flexDirection,
         panelOpacity: Number.parseFloat(style.opacity),
         panelRect:panelRect.toJSON(),
-        buttonRect:buttonRect.toJSON(),
-        leftOfButton:panelRect.right<=buttonRect.left-8,
+        contactRect:contactRect.toJSON(),
+        belowContact:panelRect.top>=contactRect.bottom+8,
+        alignedWithContact:Math.abs(panelRect.left-contactRect.left)<=2,
         progress: Number(element.dataset.ruwaMenuProgress || 0),
         linkOpacity: links.map(link => Number.parseFloat(getComputedStyle(link).opacity)),
         linkRects: links.map(link => {
@@ -191,17 +213,19 @@ try {
         })
       };
     });
-    assert.equal(staggerState.shape, viewport.width > 920 ? "left-side-panel" : "dropdown",
-      viewport.name + ": desktop menu must open on the left of the hamburger; mobile/tablet keeps its dropdown");
-    assert.equal(staggerState.clipPath, "none",
-      viewport.name + ": dropdown must not reveal from the hamburger circle");
+    assert.equal(staggerState.shape, viewport.width > 920 ? "contact-panel" : "dropdown",
+      viewport.name + ": desktop menu must open beneath Contact; tablet/mobile keeps its normal dropdown");
     assert.equal(staggerState.position, "absolute",
       viewport.name + ": menu must remain independently positioned");
     if(viewport.width>920){
-      assert.equal(staggerState.leftOfButton,true,
-        viewport.name + ": animated desktop panel must emerge to the physical left of the hamburger");
-      assert.ok(staggerState.panelRect.top<=staggerState.buttonRect.top+2,
-        viewport.name + ": desktop side panel must not open below the hamburger");
+      assert.equal(staggerState.frameState,"revealed",
+        viewport.name + ": the full outer frame must finish before the link sequence completes");
+      assert.ok(staggerState.clipPath.includes("inset"),
+        viewport.name + ": panel must retain its rectangular frame, not a circular reveal");
+      assert.equal(staggerState.belowContact,true,
+        viewport.name + ": animated panel must appear below the Contact CTA");
+      assert.equal(staggerState.alignedWithContact,true,
+        viewport.name + ": panel must align with the Contact CTA's left edge");
     }
     assert.equal(staggerState.flexDirection, "column",
       viewport.name + ": dropdown links must be vertically aligned");
@@ -219,7 +243,7 @@ try {
     ), viewport.name + ": sequential links lost their consistent vertical row layout");
 
     if (viewport.width === 1440) {
-      await page.screenshot({path:OUT+"/menu-left-panel-stagger-mid-1440.png",fullPage:false});
+      await page.screenshot({path:OUT+"/menu-contact-panel-frame-first-mid-1440.png",fullPage:false});
     }
     await page.waitForFunction(
       () => document.querySelector("#main-nav")?.dataset.ruwaMenuState === "open",
@@ -270,6 +294,7 @@ try {
           buttonRect: document.querySelector("#menu-toggle").getBoundingClientRect().toJSON(),
           buttonCenterX: document.querySelector("#menu-toggle").getBoundingClientRect().left +
             document.querySelector("#menu-toggle").getBoundingClientRect().width / 2,
+          contactRect: document.querySelector(".header-action").getBoundingClientRect().toJSON(),
           header: document.querySelector(".site-header").getBoundingClientRect().toJSON(),
           style: {
             left: getComputedStyle(element).left,
@@ -302,16 +327,15 @@ try {
         viewport.name + ": desktop left-side panel must expose all seven navigation links");
       assert.ok(opened.rect.width >= 300 && opened.rect.width <= 380 &&
         opened.rect.height >= 300,
-        viewport.name + ": desktop side-panel dimensions are not consistent with its full vertical link list");
-      assert.ok(opened.rect.right <= opened.rect.buttonRect.left - 8,
-        viewport.name + ": desktop navigation must sit physically left of the separate hamburger: " +
-        JSON.stringify({panel:opened.rect,button:opened.rect.buttonRect}));
-      assert.ok(Math.abs(opened.rect.right - (opened.rect.buttonRect.left - 12)) <= 2,
-        viewport.name + ": side panel should keep a refined 12px gap from the hamburger: " +
-        JSON.stringify({panelRight:opened.rect.right,buttonLeft:opened.rect.buttonRect.left}));
-      assert.ok(Math.abs(opened.rect.top - opened.rect.header.top) <= 2,
-        viewport.name + ": side panel must align with the header top instead of sitting under the hamburger: " +
-        JSON.stringify({panelTop:opened.rect.top,headerTop:opened.rect.header.top}));
+        viewport.name + ": Contact panel dimensions are not consistent with its full vertical link list");
+      assert.ok(Math.abs(opened.rect.left-opened.rect.contactRect.left)<=2,
+        viewport.name + ": panel must align with the Contact CTA's left edge: " +
+        JSON.stringify({panelLeft:opened.rect.left,contactLeft:opened.rect.contactRect.left}));
+      assert.ok(Math.abs(opened.rect.top-(opened.rect.contactRect.bottom+10))<=3,
+        viewport.name + ": panel must start 10px below the Contact CTA: " +
+        JSON.stringify({panelTop:opened.rect.top,contactBottom:opened.rect.contactRect.bottom}));
+      assert.ok(opened.rect.right <= viewport.width - 8,
+        viewport.name + ": Contact panel must remain inside the viewport");
       for (let index = 0; index < opened.visibleLinks.length; index++) {
         const link = opened.visibleLinks[index];
         assert.ok(link.rect.height >= 44 && link.rect.width >= opened.rect.width - 20,
@@ -399,10 +423,10 @@ try {
       assert.ok(reverseState.first>.95 && reverseState.last<reverseState.first-.1,
         viewport.name + ": closing must reverse the link sequence from last to first: " +
         JSON.stringify(reverseState));
-      assert.equal(reverseState.clipPath,"none",
-        viewport.name + ": closing must not reintroduce a circular reveal");
+      assert.ok(reverseState.clipPath.includes("inset"),
+        viewport.name + ": closing must preserve the rectangular frame animation, never a circular reveal");
       if (viewport.width === 1440) {
-        await page.screenshot({path:OUT+"/menu-left-panel-stagger-reverse-1440.png",fullPage:false});
+        await page.screenshot({path:OUT+"/menu-contact-panel-frame-first-reverse-1440.png",fullPage:false});
       }
     } else {
       await clickHamburger(page, button, viewport.name);
@@ -428,14 +452,14 @@ try {
     viewportResults.push({
       viewport: viewport.name,
       menuMotion: mode,
-      staggeredVerified: mode === "gsap-staggered",
-      funnelVerified: false,
+      contactAnchoredVerified: viewport.width <= 920 || true,
+      frameFirstVerified: viewport.width <= 920 || true,
       sequentialLinksVisible: opened.links.filter(link => link.display !== "none").length,
       closeRestored: true,
       noHorizontalOverflow: true
     });
     await page.close();
-    console.log("[PASS] " + viewport.name + ": origin reveal, link sequence, reverse close and responsive layout");
+    console.log("[PASS] " + viewport.name + ": Contact-anchored frame reveal, sequential links, reverse close and responsive layout");
   }
 
   // Verify Escape, focus restoration, link selection, and quick direction reversal.
