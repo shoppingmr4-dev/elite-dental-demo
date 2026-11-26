@@ -378,7 +378,7 @@ try {
         null,
         { timeout: 3000 }
       );
-      await page.waitForTimeout(110);
+      await page.waitForTimeout(240);
       const reverseState = await nav.evaluate(element => {
         const links = Array.from(element.querySelectorAll("a"))
           .filter(link => getComputedStyle(link).display !== "none");
