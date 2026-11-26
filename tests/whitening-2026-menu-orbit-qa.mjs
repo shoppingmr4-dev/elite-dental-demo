@@ -569,21 +569,34 @@ try {
     null,
     { timeout: 6000 }
   );
-  await interactionPage.locator('#main-nav a[href="#options"]').click();
+  const menuHrefs = await interactionPage.locator("#main-nav a[href^='#']").evaluateAll(
+    links => links.map(link => link.getAttribute("href"))
+  );
+  assert.ok(menuHrefs.length >= 7, "Expected all seven native navigation links to remain available");
+  for (const href of menuHrefs) {
+    await interactionPage.locator("#main-nav a[href='" + href + "']").click();
+    await interactionPage.waitForFunction(expectedHref => {
+      const nav = document.querySelector("#main-nav");
+      const button = document.querySelector("#menu-toggle");
+      return location.hash === expectedHref &&
+        nav?.dataset.ruwaMenuState === "open" &&
+        nav.classList.contains("open") &&
+        nav.inert === false &&
+        button?.getAttribute("aria-expanded") === "true";
+    }, href, { timeout: 6000 });
+  }
+  assert.equal(
+    await interactionPage.evaluate(() => location.hash),
+    menuHrefs[menuHrefs.length - 1],
+    "Native navigation must reach the final selected section"
+  );
+
+  // Link selection must not close the panel; the hamburger remains the explicit close control.
+  await clickHamburger(interactionPage, interaction.button, "mobile-390-interactions");
   await interactionPage.waitForFunction(
     () => document.querySelector("#main-nav")?.dataset.ruwaMenuState === "closed",
     null,
     { timeout: 6000 }
-  );
-  assert.equal(
-    await interactionPage.evaluate(() => location.hash),
-    "#options",
-    "Selecting a native navigation anchor must preserve its destination"
-  );
-  assert.equal(
-    await interactionPage.evaluate(() => document.activeElement?.id),
-    "menu-toggle",
-    "Selecting a menu destination must restore focus to the menu button while the circular frame closes"
   );
 
   await interactionPage.evaluate(() => window.scrollTo(0, 0));
@@ -616,7 +629,7 @@ try {
   assert.equal(interactionErrors.length, 0,
     "Menu keyboard/link/reversal browser errors: " + interactionErrors.join(" | "));
   await interactionPage.close();
-  console.log("[PASS] Escape focus restoration, native anchor close, reverse circular reveal and rapid reopen");
+  console.log("[PASS] Escape focus restoration, all native anchors keep the menu open, reverse circular reveal and rapid reopen");
 
   // Verify complete removal of the rotating perimeter-light system while preserving cards and doctor imagery.
   const cleanPage=await browser.newPage({
