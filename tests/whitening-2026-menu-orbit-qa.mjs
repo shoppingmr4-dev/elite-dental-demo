@@ -452,8 +452,10 @@ try {
     viewportResults.push({
       viewport: viewport.name,
       menuMotion: mode,
-      contactAnchoredVerified: viewport.width <= 920 || true,
-      frameFirstVerified: viewport.width <= 920 || true,
+      contactAnchoredVerified: viewport.width <= 920 ||
+        Math.abs(opened.rect.left-opened.rect.contactRect.left)<=2,
+      frameFirstVerified: viewport.width <= 920 ||
+        (staggerState.frameState==="revealed"&&staggerState.clipPath.includes("inset")),
       sequentialLinksVisible: opened.links.filter(link => link.display !== "none").length,
       closeRestored: true,
       noHorizontalOverflow: true
