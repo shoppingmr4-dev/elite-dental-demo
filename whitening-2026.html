@@ -298,6 +298,9 @@ body.dialog-open{overflow:hidden}
 .expect-section{background:var(--ink);color:#FFFFFF}
 .expect-section .section-head p{color:rgba(255,255,255,.78)}
 .expect-section .section-head .eyebrow{color:var(--blue-deep)}
+.expectations-panel{margin-top:clamp(30px,4vw,48px);padding:clamp(22px,3.4vw,38px);border-radius:18px}
+.expectations-panel .section-head{margin-bottom:clamp(20px,2.8vw,30px)}
+.expectations-panel .section-head h3{margin:14px 0 10px;font-family:var(--display);font-size:clamp(24px,3.2vw,36px);line-height:1.45;letter-spacing:0}
 .expect-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .expect-card{padding:21px 20px;border:1px solid rgba(255,255,255,.16);border-radius:15px;background:rgba(255,255,255,.045)}
 .expect-card h3{margin:0 0 9px;font-family:var(--display);font-size:15px}
@@ -1633,11 +1636,11 @@ body,button,input,select,textarea{font-family:var(--body)}
    <span class="brand-name"><strong>Ruwa</strong><small>رُواء لطب الأسنان</small></span>
   </a>
   <nav class="nav" id="main-nav" aria-label="التنقل الرئيسي">
-   <a class="nav-secondary" href="#approach">خطوات التقييم</a>
    <a class="nav-secondary" href="#causes">أسباب تغيّر اللون</a>
-   <a href="#options">خيارات التبييض</a>
-   <a class="nav-secondary" href="#journey">رحلة التبييض</a>
-   <a href="#suitability">هل يناسبك؟</a>
+   <a class="nav-secondary" href="#options">خيارات التبييض</a>
+   <a href="#journey">التقييم ورحلة التبييض</a>
+   <a class="nav-secondary" href="#suitability">السلامة والتوقعات</a>
+   <a href="#team">الأطباء</a>
    <a class="nav-secondary" href="#reviews">آراء المرضى</a>
    <a href="#faq">الأسئلة الشائعة</a>
   </nav>
@@ -1684,24 +1687,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    </nav>
   </div>
  </section>
-  <section class="section approach" id="approach" aria-labelledby="approach-title">
-  <div class="wrap approach-grid">
-   <div class="approach-intro">
-    <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم الثاني: خطوات التقييم">
-     <span class="section-marker-number" aria-hidden="true">02</span>
-     <span class="section-marker-divider" aria-hidden="true"></span>
-     <span class="section-marker-label">خطوات التقييم</span>
-    </span>
-    <h2 id="approach-title">قبل اختيار التبييض،<br><span class="approach-title-accent">نقيّم صحة فمك.</span></h2>
-    <p>لا يحدّد لون الأسنان وحده مدى ملاءمة التبييض؛ فصحة الفم جزء أساسي من القرار.</p>
-   </div>
-   <ol class="step-list" role="list" aria-label="مراحل التقييم">
-    <li class="step"><span class="step-no" aria-hidden="true">01</span><div><h3>نبدأ بفهم حالتك</h3><p>نستمع إلى ملاحظاتك، ونفحص الأسنان واللثة، ونسأل عن أي حساسية أو ألم.</p></div></li>
-    <li class="step"><span class="step-no" aria-hidden="true">02</span><div><h3>نستعرض الخيارات المتاحة لحالتك</h3><p>نوضح لكل خيار نتائجه المتوقعة، وآثاره الجانبية المحتملة، وحدوده.</p></div></li>
-    <li class="step"><span class="step-no" aria-hidden="true">03</span><div><h3>نحدّد الخطوة التالية</h3><p>نبيّن ما إذا كان التبييض مناسبًا الآن، أم أن هناك مشكلة تستدعي العلاج أولًا.</p></div></li>
-   </ol>
-  </div>
- </section>
+  
 
  <section class="content-section cause-section" id="causes" aria-labelledby="causes-title">
   <div class="wrap">
@@ -1767,92 +1753,91 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="content-section journey-section" id="journey" aria-labelledby="journey-title">
   <div class="wrap">
    <div class="section-head journey-head">
-    <span class="eyebrow section-marker section-marker--canvas" role="group" aria-label="القسم الخامس: رحلة التبييض">
+    <span class="eyebrow section-marker section-marker--canvas" role="group" aria-label="القسم الخامس: التقييم ورحلة التبييض">
      <span class="section-marker-number" aria-hidden="true">05</span>
      <span class="section-marker-divider" aria-hidden="true"></span>
-     <span class="section-marker-label">رحلة التبييض</span>
+     <span class="section-marker-label">التقييم ورحلة التبييض</span>
     </span>
     <h2 id="journey-title">من التقييم إلى العناية اللاحقة.</h2>
-    <p>تختلف تفاصيل الرحلة بحسب الخيار وحالتك. يشرح لك طبيب الأسنان الخطوات والنتائج المتوقعة قبل البدء.</p>
+    <p>تبدأ الرحلة بفهم سبب تغيّر اللون وصحة الأسنان واللثة، ثم مناقشة الخيارات، وتنفيذ الخطة المناسبة ومتابعتها.</p>
    </div>
-   <ol class="journey-grid" aria-label="مراحل رحلة تبييض الأسنان">
+   <ol class="journey-grid" aria-label="خطوات تقييم وتنفيذ خطة تبييض الأسنان">
     <li class="journey-step">
      <span class="journey-step-number" aria-hidden="true">01</span>
-     <div><h3>التقييم الأولي</h3><p>يقيّم طبيب الأسنان صحة الأسنان واللثة، ويساعد على تحديد سبب تغيّر اللون والعوامل التي قد تؤثر في ملاءمة التبييض.</p></div>
+     <div><h3>فحص الأسنان واللثة</h3><p>يستمع الطبيب إلى ملاحظاتك، ويفحص الأسنان واللثة، ويسأل عن الحساسية أو الألم لتحديد ما إذا كانت هناك مشكلة تحتاج إلى علاج أولًا.</p></div>
     </li>
     <li class="journey-step">
      <span class="journey-step-number" aria-hidden="true">02</span>
-     <div><h3>اختيار الطريقة المناسبة</h3><p>تُناقش الخيارات المتاحة وحدود كل منها، ثم يُختار النهج المناسب بعد الفحص.</p></div>
+     <div><h3>مناقشة الخيارات المناسبة</h3><p>يشرح الخيارات المتاحة ونتائجها المتوقعة وآثارها المحتملة وحدود كل منها، ثم يحدد النهج المناسب بعد التقييم.</p></div>
     </li>
     <li class="journey-step">
      <span class="journey-step-number" aria-hidden="true">03</span>
-     <div><h3>تنفيذ الإجراء</h3><p>يُنفّذ الخيار المتفق عليه وفق تعليمات طبيب الأسنان واحتياطات السلامة المناسبة للحالة.</p></div>
+     <div><h3>تنفيذ الخطة</h3><p>إذا كان التبييض مناسبًا، يُنفّذ الطبيب الخيار المتفق عليه وفق تعليماته واحتياطات السلامة الملائمة للحالة.</p></div>
     </li>
     <li class="journey-step">
      <span class="journey-step-number" aria-hidden="true">04</span>
-     <div><h3>العناية والمتابعة</h3><p>اتبع إرشادات العناية التي يوضحها الطبيب، واطلب المشورة عند حدوث حساسية أو تهيّج شديد أو مستمر.</p></div>
+     <div><h3>العناية والمتابعة</h3><p>اتبع تعليمات العناية التي يوضحها الطبيب، واطلب المشورة عند حدوث حساسية أو تهيّج شديد أو مستمر.</p></div>
     </li>
    </ol>
   </div>
  </section>
 
  <section class="content-section suitability-section" id="suitability" aria-labelledby="suitability-title">
-  <div class="wrap suitability-grid">
-   <div class="suitability-copy">
-    <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم السادس: قبل اتخاذ القرار">
+  <div class="wrap">
+   <div class="suitability-grid">
+    <div class="suitability-copy">
+     <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم السادس: السلامة والملاءمة">
       <span class="section-marker-number" aria-hidden="true">06</span>
       <span class="section-marker-divider" aria-hidden="true"></span>
-      <span class="section-marker-label">قبل اتخاذ القرار</span>
+      <span class="section-marker-label">السلامة والملاءمة</span>
      </span>
-    <h2 id="suitability-title">السلامة أولًا، ثم اختيار اللون.</h2>
-    <p>الفحص المسبق يساعد على اكتشاف ما قد يؤثر في أمان الإجراء أو توقيته، مثل صحة الأسنان واللثة والحساسية أو أي ألم أو تشققات. القرار النهائي فردي ويعود إلى طبيب الأسنان.</p>
-    <div class="clinical-note">إذا وُجد تسوّس غير معالج أو التهاب في اللثة أو مشكلة في السن، فقد يلزم التعامل معها أولًا قبل التفكير في التبييض.</div>
+     <h2 id="suitability-title">السلامة أولًا، ثم اختيار اللون.</h2>
+     <p>لا يناسب التبييض كل حالة بالطريقة نفسها. يساعد فحص الأسنان واللثة ومعرفة أي حساسية أو ألم أو تشققات في تحديد مدى ملاءمة الإجراء وتوقيته؛ ويعود القرار النهائي إلى طبيب الأسنان بعد التقييم.</p>
+     <div class="clinical-note">إذا وُجد تسوّس غير معالج أو التهاب في اللثة أو مشكلة في السن، فقد يلزم التعامل معها أولًا قبل التفكير في التبييض.</div>
+    </div>
+    <div class="check-list">
+     <article class="check-item">
+      <span class="check-mark" aria-hidden="true">✓</span>
+      <div><h3>صحة الأسنان واللثة</h3><p>قد يلزم علاج التسوّس أو التهاب اللثة أو أي مشكلة نشطة قبل التفكير في إجراء تجميلي.</p></div>
+     </article>
+     <article class="check-item">
+      <span class="check-mark" aria-hidden="true">✓</span>
+      <div><h3>الحساسية أو الألم أو التشققات</h3><p>أخبر الطبيب بأي حساسية أو ألم أو تشققات؛ فقد تؤثر في اختيار الخطة أو توقيتها.</p></div>
+     </article>
+     <article class="check-item">
+      <span class="check-mark" aria-hidden="true">✓</span>
+      <div><h3>الحمل أو الرضاعة</h3><p>يُنصح بمناقشة الأمر مع طبيب الأسنان؛ وتوصي إرشادات NHS بتأجيل التبييض خلال الحمل والرضاعة.</p></div>
+     </article>
+    </div>
    </div>
-   <div class="check-list">
-    <article class="check-item">
-     <span class="check-mark" aria-hidden="true">✓</span>
-     <div><h3>صحة الأسنان واللثة</h3><p>يتحقق الطبيب من عدم وجود مشكلات تحتاج إلى علاج قبل أي إجراء تجميلي.</p></div>
-    </article>
-    <article class="check-item">
-     <span class="check-mark" aria-hidden="true">✓</span>
-     <div><h3>الحساسية أو التشققات</h3><p>تُناقش الحساسية وأي ألم أو تشققات؛ فقد تؤثر في اختيار الخطة أو توقيتها.</p></div>
-    </article>
-    <article class="check-item">
-     <span class="check-mark" aria-hidden="true">✓</span>
-     <div><h3>الحمل أو الرضاعة</h3><p>يُفضّل مناقشة الأمر مع طبيب الأسنان؛ وتوصي إرشادات NHS بتأجيل التبييض خلال الحمل والرضاعة.</p></div>
-    </article>
-   </div>
-  </div>
- </section>
-
- <section class="content-section expect-section" id="expectations" aria-labelledby="expectations-title">
-  <div class="wrap">
-   <div class="section-head">
-    <span class="eyebrow section-marker section-marker--dark" role="group" aria-label="القسم السابع: توقعات واقعية">
+   <div class="expect-section expectations-panel" role="group" aria-labelledby="expectations-title">
+    <div class="section-head expectations-head">
+     <span class="eyebrow section-marker section-marker--dark" role="group" aria-label="القسم السابع: توقعات واقعية">
       <span class="section-marker-number" aria-hidden="true">07</span>
       <span class="section-marker-divider" aria-hidden="true"></span>
       <span class="section-marker-label">توقعات واقعية</span>
      </span>
-    <h2 id="expectations-title">ما الذي ينبغي معرفته قبل البدء؟</h2>
-    <p>تختلف النتائج والآثار المحتملة من حالة إلى أخرى. يساعد فحص الأسنان واللثة وتحديد سبب تغيّر اللون لدى طبيب الأسنان على اختيار النهج المناسب ووضع توقعات واقعية قبل البدء.</p>
-   </div>
-   <div class="expect-grid">
-    <article class="expect-card">
-     <h3>النتائج تختلف من شخص لآخر</h3>
-     <p>يتأثر مقدار التغيّر بلون الأسنان الأساسي وسبب التصبغ وعمقه والطريقة المستخدمة. لا توجد درجة نهائية واحدة يمكن ضمانها للجميع.</p>
-    </article>
-    <article class="expect-card">
-     <h3>قد تحدث حساسية أو تهيّج مؤقت</h3>
-     <p>قد تظهر حساسية مؤقتة في الأسنان أو تهيّج في اللثة لدى بعض الأشخاص. تواصل مع طبيب الأسنان إذا كانت الأعراض شديدة أو مستمرة أو تسبب انزعاجًا ملحوظًا.</p>
-    </article>
-    <article class="expect-card">
-     <h3>الحشوات والتيجان والقشور لا تتبيّض</h3>
-     <p>لا تتغير ألوان الحشوات والتيجان والقشور التجميلية بالتبييض مثل الأسنان الطبيعية. ناقش وجودها مع الطبيب قبل الإجراء حتى يقيّم احتمال ظهور فرق في اللون.</p>
-    </article>
-    <article class="expect-card">
-     <h3>العناية بعد التبييض</h3>
-     <p>اتبع تعليمات طبيب الأسنان الخاصة بحالتك، وحافظ على روتين نظافة الفم المعتاد. قد يتغير اللون بمرور الوقت؛ استشر الطبيب قبل تكرار التبييض أو استخدام منتجات إضافية.</p>
-    </article>
+     <h3 id="expectations-title">ما الذي ينبغي معرفته قبل البدء؟</h3>
+     <p>يساعد فهم حدود التبييض وآثاره المحتملة على اتخاذ قرار واعٍ وتكوين توقعات واقعية قبل الإجراء.</p>
+    </div>
+    <div class="expect-grid">
+     <article class="expect-card">
+      <h3>النتائج تختلف من شخص لآخر</h3>
+      <p>يتأثر مقدار التغيّر بلون الأسنان الأساسي وسبب التصبغ وعمقه والطريقة المستخدمة. لا توجد درجة نهائية يمكن ضمانها للجميع.</p>
+     </article>
+     <article class="expect-card">
+      <h3>قد تحدث حساسية أو تهيّج مؤقت</h3>
+      <p>قد تظهر حساسية في الأسنان أو تهيّج في اللثة لدى بعض الأشخاص. تواصل مع طبيب الأسنان إذا كانت الأعراض شديدة أو مستمرة.</p>
+     </article>
+     <article class="expect-card">
+      <h3>الحشوات والتيجان والقشور لا تتبيّض</h3>
+      <p>لا يتغيّر لون الحشوات والتيجان والقشور بالتبييض مثل الأسنان الطبيعية. ناقش وجودها مع الطبيب قبل الإجراء لتقييم احتمال اختلاف اللون.</p>
+     </article>
+     <article class="expect-card">
+      <h3>العناية بعد التبييض</h3>
+      <p>اتبع تعليمات طبيب الأسنان. قد يتغير اللون بمرور الوقت؛ استشره قبل تكرار التبييض أو استخدام منتجات إضافية.</p>
+     </article>
+    </div>
    </div>
   </div>
  </section> 
@@ -1933,14 +1918,8 @@ body,button,input,select,textarea{font-family:var(--body)}
     <p>إجابات عامة تساعدك على فهم الإجراء. تبقى التوصية المناسبة مرتبطة بفحص حالتك لدى طبيب الأسنان.</p>
    </div>
       <div class="faq-list">
-    <details class="faq-item">
-     <summary>ماذا يحدث خلال جلسة التبييض؟</summary>
-     <div class="faq-answer">تختلف الخطوات بحسب الطريقة المختارة. يبدأ الطبيب بتقييم صحة الأسنان واللثة وسبب تغيّر اللون، ثم يشرح لك الخطة والتوقعات والاحتياطات. إذا كان التبييض مناسبًا، يُنفّذ الإجراء وفق الخطة مع اتخاذ ما يلزم لحماية اللثة والأنسجة المحيطة.</div>
-    </details>
-    <details class="faq-item">
-     <summary>هل معجون التبييض يعطي نتيجة التبييض نفسه؟</summary>
-     <div class="faq-answer">ليس بالضرورة. تعمل كثير من معاجين التبييض أساسًا على إزالة التصبغات السطحية، ولا تغيّر عادةً اللون الداخلي للسن بالطريقة نفسها. أما مواد التبييض الكيميائية فتستهدف لون الأسنان الطبيعية، وتختلف نتائج المنتجات باختلاف تركيبتها وطريقة استخدامها.</div>
-    </details>
+    
+    
     <details class="faq-item">
      <summary>هل أحتاج إلى أكثر من جلسة؟</summary>
      <div class="faq-answer">لا يوجد عدد موحّد يناسب الجميع. قد تختلف الحاجة إلى جلسات إضافية أو خطة على مراحل بحسب سبب التصبغ وعمقه والطريقة المستخدمة واستجابة الأسنان. يحدد طبيب الأسنان ذلك بعد التقييم والمتابعة، من دون افتراض عدد مسبق.</div>
@@ -2019,16 +1998,16 @@ body,button,input,select,textarea{font-family:var(--body)}
    <nav class="footer-nav" aria-label="روابط داخل الصفحة">
     <h2 class="footer-heading">روابط سريعة</h2>
     <ul>
-     <li><a href="#approach">خطوات التقييم</a></li>
      <li><a href="#causes">أسباب تغيّر لون الأسنان</a></li>
      <li><a href="#options">خيارات تبييض الأسنان</a></li>
-     <li><a href="#journey">رحلة تبييض الأسنان</a></li>
-     <li><a href="#suitability">مدى ملاءمة التبييض</a></li>
+     <li><a href="#journey">التقييم ورحلة التبييض</a></li>
+     <li><a href="#suitability">السلامة والتوقعات</a></li>
+     <li><a href="#team">الأطباء</a></li>
      <li><a href="#reviews">آراء المرضى</a></li>
      <li><a href="#faq">الأسئلة الشائعة</a></li>
      <li><a href="#consultation">تواصل معنا</a></li>
     </ul>
-   </nav>
+  </nav>
    <section class="footer-notes" aria-labelledby="footer-notes-title">
     <h2 class="footer-heading" id="footer-notes-title">معلومات مهمة</h2>
     <p>رُواء مفهوم تجريبي أُعدّ ضمن معرض أعمال Apex Studio، ولا يمثّل عيادة قائمة أو جهة طبية فعلية.</p>
