@@ -2157,6 +2157,11 @@ body,button,input,select,textarea{font-family:var(--body)}
   nav.removeAttribute("data-ruwa-menu-progress");
   nav.removeAttribute("data-ruwa-menu-shape");
   nav.removeAttribute("data-ruwa-menu-frame-state");
+  nav.removeAttribute("data-ruwa-menu-origin-x");
+  nav.removeAttribute("data-ruwa-menu-origin-y");
+  nav.removeAttribute("data-ruwa-menu-radius");
+  nav.removeAttribute("data-ruwa-menu-exit-motion");
+  nav.removeAttribute("data-ruwa-menu-exit-progress");
   syncNavInert();
  };
 
@@ -2189,8 +2194,10 @@ body,button,input,select,textarea{font-family:var(--body)}
    if(document.activeElement===button)animatedItems[0]?.focus({preventScroll:true});
    return;
   }
+
   const panel=nav.getBoundingClientRect();
-  if(panel.width<1||panel.height<1){
+  const toggle=button.getBoundingClientRect();
+  if(panel.width<1||panel.height<1||toggle.width<1||toggle.height<1){
    root.dataset.ruwaMenuMotion="fallback";
    clearInlineMotion();
    settleDesktopMenuOpen();
@@ -2201,51 +2208,57 @@ body,button,input,select,textarea{font-family:var(--body)}
    return;
   }
 
-  root.dataset.ruwaMenuMotion="gsap-premium";
+  // Original RUWA menu motion: the link frame expands from the exact center
+  // of the round hamburger button, using one growing circular reveal.
+  const originX=toggle.left+toggle.width/2-panel.left;
+  const originY=toggle.top+toggle.height/2-panel.top;
+  const corners=[
+   [0,0],
+   [panel.width,0],
+   [0,panel.height],
+   [panel.width,panel.height]
+  ];
+  const radius=Math.ceil(Math.max(...corners.map(point=>
+   Math.hypot(point[0]-originX,point[1]-originY)
+  ))+3);
+
+  root.dataset.ruwaMenuMotion="gsap";
   nav.dataset.ruwaMenuShape=presentation;
-  nav.dataset.ruwaMenuFrameState="soft-reveal";
+  nav.dataset.ruwaMenuOriginX=originX.toFixed(2);
+  nav.dataset.ruwaMenuOriginY=originY.toFixed(2);
+  nav.dataset.ruwaMenuRadius=String(radius);
+  nav.dataset.ruwaMenuFrameState="circle-reveal";
   nav.dataset.ruwaMenuState="opening";
   nav.dataset.ruwaMenuAnimating="true";
   nav.dataset.ruwaMenuProgress="0";
   nav.removeAttribute("data-ruwa-menu-exit-motion");
   nav.removeAttribute("data-ruwa-menu-exit-progress");
 
-  // Reveal the complete surface as one calm plane: no scale, blur, or center-out
-  // expansion. Its background, border, and shadow settle together with a tiny lift.
-  const settledPanelShadow=getComputedStyle(nav).boxShadow;
-  const softPanelShadow="0 10px 24px rgba(20,45,56,0),0 22px 42px rgba(20,45,56,0),0 3px 10px rgba(20,45,56,0),inset 0 1px 0 rgba(255,255,255,0)";
+  const panelDuration=.62;
+  const linkStart=.18;
+  const linkStagger=.075;
+  const linkDuration=.28;
+  nav.dataset.ruwaPanelRevealDuration=String(panelDuration);
+  nav.dataset.ruwaLinkStart=String(linkStart);
+  nav.dataset.ruwaLinkStagger=String(linkStagger);
+  nav.dataset.ruwaLinkDuration=String(linkDuration);
+
   gsap.set(nav,{
-   autoAlpha:0,
-   x:0,
-   y:-4,
-   scale:1,
-   filter:"none",
-   boxShadow:softPanelShadow,
-   transformOrigin:"top center",
-   force3D:false
+   clipPath:"circle(0px at "+originX+"px "+originY+"px)"
   });
   gsap.set(animatedItems,{
    autoAlpha:0,
-   x:0,
-   y:4,
-   rotation:0,
-   scale:1,
+   y:10,
+   scale:.975,
    transformOrigin:"50% 50%"
   });
-
-  const panelDuration=contactAnchoredPanel?.56:.45;
-  const linkStart=contactAnchoredPanel?.10:.08;
-  const linkStagger=.065;
-  const linkDuration=.17;
-  nav.dataset.ruwaPanelRevealDuration=String(panelDuration);
-  nav.dataset.ruwaLinkStagger=String(linkStagger);
-  nav.dataset.ruwaLinkDuration=String(linkDuration);
 
   menuTimeline=gsap.timeline({
    paused:true,
    onUpdate(){
     nav.dataset.ruwaMenuProgress=menuTimeline.progress().toFixed(4);
-    nav.dataset.ruwaMenuFrameState="soft-reveal";
+    nav.dataset.ruwaMenuFrameState=
+     nav.dataset.ruwaMenuState==="closing"?"circle-reveal-exit":"circle-reveal";
    },
    onComplete(){
     clearInlineMotion();
@@ -2255,16 +2268,15 @@ body,button,input,select,textarea{font-family:var(--body)}
     nav.dataset.ruwaMenuAnimating="false";
     settleDesktopMenuOpen();
     if(document.activeElement===button)animatedItems[0]?.focus({preventScroll:true});
+   },
+   onReverseComplete(){
+    menuTimeline=null;
+    finishClosed(false);
    }
   });
 
   menuTimeline.to(nav,{
-   autoAlpha:1,
-   x:0,
-   y:0,
-   scale:1,
-   filter:"none",
-   boxShadow:settledPanelShadow,
+   clipPath:"circle("+radius+"px at "+originX+"px "+originY+"px)",
    duration:panelDuration,
    ease:"power3.out"
   },0);
@@ -2272,14 +2284,13 @@ body,button,input,select,textarea{font-family:var(--body)}
   animatedItems.forEach((link,index)=>{
    menuTimeline.to(link,{
     autoAlpha:1,
-    x:0,
     y:0,
-    rotation:0,
     scale:1,
     duration:linkDuration,
     ease:"power2.out"
    },linkStart+index*linkStagger);
   });
+
   menuTimeline.play(0);
  };
  const close=({restoreFocus=false,immediate=false}={})=>{
@@ -2288,52 +2299,12 @@ body,button,input,select,textarea{font-family:var(--body)}
    button.setAttribute("aria-label","فتح القائمة");
    nav.inert=true;
 
-   const gsap=window.gsap;
-   if(!immediate&&!reducedMotion.matches&&gsap&&typeof gsap.timeline==="function"&&nav.classList.contains("open")){
-    if(menuTimeline){
-     menuTimeline.kill();
-     menuTimeline=null;
-    }
-    if(menuExitTimeline){
-     menuExitTimeline.kill();
-     menuExitTimeline=null;
-    }
-
-    const visibleItems=links().filter(link=>getComputedStyle(link).display!=="none");
+   if(!immediate&&!reducedMotion.matches&&menuTimeline&&nav.classList.contains("open")){
     nav.dataset.ruwaMenuState="closing";
     nav.dataset.ruwaMenuAnimating="true";
-    nav.dataset.ruwaMenuFrameState="soft-exit";
-    nav.dataset.ruwaMenuExitMotion="soft-lift-fade";
-    if(isDesktopCompact())button.style.removeProperty("pointer-events");
-
-    // A dedicated exit: links dissolve in reverse order while the intact panel
-    // lifts a few pixels, softens and fades with its shadow as one complete surface.
-    menuExitTimeline=gsap.timeline({
-     paused:true,
-     onUpdate(){
-      nav.dataset.ruwaMenuExitProgress=menuExitTimeline.progress().toFixed(4);
-      nav.dataset.ruwaMenuFrameState="soft-exit";
-     },
-     onComplete(){
-      menuExitTimeline=null;
-      finishClosed(false);
-     }
-    });
-    menuExitTimeline.to(visibleItems.slice().reverse(),{
-     autoAlpha:0,
-     y:-3,
-     scale:1,
-     duration:.14,
-     ease:"power2.in",
-     stagger:.018
-    },0).to(nav,{
-     autoAlpha:0,
-     y:-4,
-     scale:1,
-     filter:"none",
-     duration:.26,
-     ease:"power2.in"
-    },.05).play(0);
+    nav.dataset.ruwaMenuFrameState="circle-reveal-exit";
+    nav.dataset.ruwaMenuExitMotion="circle-reveal-reverse";
+    menuTimeline.reverse();
    }else{
     finishClosed(true);
    }
