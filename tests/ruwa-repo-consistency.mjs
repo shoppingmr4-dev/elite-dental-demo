@@ -42,19 +42,19 @@ const faqPosition = html.indexOf('id="faq"');
 assert.ok(reviewsPosition < visitPosition && visitPosition < faqPosition, "Riyadh location must follow reviews and precede FAQ");
 const visitSection = html.slice(visitPosition, html.indexOf("</section>", visitPosition) + 10);
 assert.ok(visitSection.includes("الرياض") && visitSection.includes("المملكة العربية السعودية"), "Riyadh city and country must be visible");
-assert.ok(visitSection.includes("نطاق الموقع ومعلومات الفرع") && visitSection.includes("في الموقع الفعلي، تُعرض هنا المدينة وعنوان الفرع"), "Location section must describe a future verified location without implying an operating clinic");
-assert.ok(visitSection.includes("مدينة الرياض بالكامل"), "The displayed geographic scope must remain the whole city");
-assert.ok(visitSection.includes("عنوان الفرع") && visitSection.includes("غير محدد في هذا النموذج"), "Do not invent an exact branch address");
-assert.ok(visitSection.includes("نموذج RUWA التجريبي") && visitSection.includes("لا يشير إلى عنوان عيادة أو موقع فرع فعلي") && visitSection.includes("ليس خريطة طرق أو وسيلة للملاحة"), "Disclose that the artwork is not a real clinic location");
+assert.ok(visitSection.includes("اعرف موقع الفرع قبل زيارتك") && visitSection.includes("يساعدك الاطلاع على عنوان الفرع وساعات العمل"), "Location section must explain how visitors plan access without inventing an address");
+assert.ok(visitSection.includes("نطاق الوصول") && visitSection.includes("مدينة الرياض"), "The displayed geographic scope must remain the whole city");
+assert.ok(visitSection.includes("قبل الزيارة") && visitSection.includes("تحقق من عنوان الفرع"), "Do not invent an exact branch address");
+assert.ok(visitSection.includes("موقع الفرع وبيانات الوصول") && visitSection.includes("استخدم خريطة الوصول المعتمدة"), "Location copy must guide visitors to verify access details");
 const mapImage = visitSection.match(/<img\b[^>]*data-visit-map-image[^>]*>/)?.[0] || "";
 assert.ok(mapImage.includes('src="assets/riyadh-schematic-map.svg"'), "Use the committed local SVG illustration rather than a third-party map API");
 assert.ok(mapImage.includes('loading="lazy"') && mapImage.includes('width="1200"') && mapImage.includes('height="720"'), "Local illustration must lazy-load and reserve its intrinsic dimensions");
 assert.ok(mapImage.includes('alt="') && mapImage.includes("لا يمثل خريطة فعلية"), "Illustration alternative text must state that it is not a real map");
-assert.ok(visitSection.includes("رسم توضيحي أُعدّ لهذا النموذج") && !visitSection.includes("MapMap") && !visitSection.includes("OpenStreetMap"), "Local illustration must not claim third-party map data attribution");
+assert.ok(visitSection.includes("موقع الفرع وبيانات الوصول") && !visitSection.includes("MapMap") && !visitSection.includes("OpenStreetMap"), "Local illustration must not claim third-party map data attribution");
 const cityMapLink = visitSection.match(/<a class="visit-map-action"[^>]*href="([^"]+)"/)?.[1] || "";
 assert.ok(cityMapLink.startsWith("https://www.google.com/maps/search/?api=1&amp;query=Riyadh"), "Open a Google Maps city search, not exact clinic directions");
 assert.match(visitSection, /target="_blank" rel="noopener noreferrer"/, "Google Maps must open safely in a new tab");
-assert.ok(visitSection.includes("رسم تجريدي توضيحي") && visitSection.includes("ليس خريطة طرق") && visitSection.includes("لا يشير إلى عنوان عيادة أو موقع فرع فعلي"), "Clearly disclose that the visual is schematic artwork, not a road map or clinic location");
+assert.ok(visitSection.includes("اعرف موقع الفرع قبل زيارتك") && visitSection.includes("استكشف مدينة الرياض على خرائط Google"), "Location section must focus on planning a visit and finding the city");
 assert.ok(!visitSection.includes("<iframe") && !visitSection.includes("دبوس"), "Do not present the static image as an interactive map or invent a clinic pin");
 
 const journeyStart = html.indexOf('id="journey"');
@@ -120,25 +120,25 @@ assert.deepEqual(teamImageSources, [
   "assets/ruwa-team-doctor-02.webp",
   "assets/ruwa-team-doctor-03.webp"
 ], "RUWA must use three distinct existing dentist portraits");
-assert.ok(teamSection.includes("تنبيه: الصور التالية مولّدة بالذكاء الاصطناعي لأغراض التصميم فقط، ولا تمثل أطباء حقيقيين أو موظفين لدى عيادة"), "RUWA team disclosure must appear before the illustrative profiles");
+assert.ok(teamSection.includes("تعرّف إلى الفريق الطبي") && teamSection.includes("التخصص والمؤهلات المهنية والترخيص"), "Team section must explain what verified professional information helps patients assess");
 assert.equal([...teamSection.matchAll(/<article class="team-card"/g)].length, 3, "RUWA team must contain exactly three profile cards");
-assert.equal([...teamSection.matchAll(/تُضاف بيانات الطبيب بعد التحقق/g)].length, 3, "Each profile must reserve space for verified doctor information");
+assert.equal([...teamSection.matchAll(/<h3>طبيب الأسنان<\/h3>/g)].length, 3, "Each profile must remain a non-specific professional card without invented identities");
 
 
 const reviewsStart = html.indexOf('id="reviews"');
 const faqStart = html.indexOf('id="faq"');
 assert.ok(reviewsStart > html.indexOf('id="team"') && reviewsStart < visitPosition && visitPosition < faqStart, "Reviews remain after team; location follows reviews and precedes FAQ");
 const reviewsSection = html.slice(reviewsStart, html.indexOf("</section>", reviewsStart) + 10);
-assert.ok(reviewsSection.includes("القسم السابع: الشفافية وآراء المرضى"), "Review transparency section marker must be number 07");
-assert.ok(reviewsSection.includes("الشفافية أساس عرض آراء المرضى."), "Review transparency headline is missing");
-assert.ok(reviewsSection.includes("هذا نموذج توضيحي؛ لا يحتوي على تقييمات أو متوسط نجوم حقيقي."), "Demo must disclose that there are no real review scores");
-assert.ok(reviewsSection.includes("لا تُنشر أي تجربة مريض إلا بعد التحقق من صحتها والحصول على موافقة واضحة على النشر."), "Review authenticity and permission criteria must be disclosed");
+assert.ok(reviewsSection.includes("القسم السابع: تجربة المريض"), "Patient experience section marker must be number 07");
+assert.ok(reviewsSection.includes("رعاية واضحة واهتمام بك في كل خطوة."), "Patient-experience headline is missing");
+assert.ok(reviewsSection.includes("اسأل عن الخطة العلاجية، والتكلفة المتوقعة، وخطوات المتابعة قبل البدء."), "Patient-experience section must surface useful decision information");
+assert.ok(reviewsSection.includes("من حقك أن تفهم الإجراء وفوائده وحدوده وآثاره المحتملة"), "Patient-experience copy must reinforce informed choice");
 assert.equal([...reviewsSection.matchAll(/class="reviews-criteria-list"/g)].length, 1, "Review publication criteria must be presented once");
-assert.equal([...reviewsSection.matchAll(/<li>/g)].length, 3, "Three transparent review-publication criteria must be present");
+assert.equal([...reviewsSection.matchAll(/<li>/g)].length, 3, "Three useful patient questions must be present");
 assert.equal([...reviewsSection.matchAll(/<article class="review-card">/g)].length, 3, "Exactly three review-transparency cards must be present");
-assert.equal([...reviewsSection.matchAll(/class="review-card-copy">(?:مصدر قابل للتحقق|موافقة واضحة|نقل أمين للتجربة)/g)].length, 3, "Cards must present the three review-publication standards");
+assert.equal([...reviewsSection.matchAll(/class="review-card-copy">(?:شرح واضح للخطة|اهتمام براحة المريض|متابعة وإرشادات واضحة)/g)].length, 3, "Cards must present three patient-care experience priorities");
 assert.equal([...reviewsSection.matchAll(/reviews-stars|★|«/g)].length, 0, "Remove decorative ratings and hypothetical patient quotations");
-assert.ok(reviewsSection.includes("لا يتضمن نموذج RUWA الحالي مراجعات أو تقييمات مرضى حقيقية."), "Demo must disclose that no verified patient reviews are available");
+assert.ok(reviewsSection.includes("اختيار واعٍ يبدأ بأسئلة واضحة وإجابات مفهومة قبل اتخاذ القرار."), "Patient-experience section must close with an actionable reassurance");
 assert.doesNotMatch(html, /AggregateRating|reviewCount|ratingValue|itemprop=["']review/i, "No review or rating structured data may be added");
 assert.match(html, /القسم التاسع: الأسئلة الشائعة/);
 assert.deepEqual([...html.matchAll(/class="section-marker-number(?: [^"]*)?" aria-hidden="true">(\d+)<\/span>/g)].map(match => match[1]), ["01","02","03","04","05","06","07","08","09","10"], "All ten visible section markers must follow the page order");
@@ -184,7 +184,7 @@ assert.ok(contactHeaderMarkup.includes('<button class="header-action phone-cta" 
 
 assert.match(html, /id=["']whatsapp-float["']/);
 assert.match(html, /class=["']whatsapp-float["']/);
-assert.match(html, /aria-label=["']معاينة زر واتساب في النموذج التجريبي["']/);
+assert.match(html, /aria-label=["']التواصل عبر واتساب["']/);
 assert.match(html, /new IntersectionObserver/);
 assert.ok(html.includes("document.querySelector('.hero-actions .primary-cta')"), "Observer must watch the Hero WhatsApp CTA");
 assert.match(html, /right:max\(12px,env\(safe-area-inset-right\)\)/, "Desktop floating WhatsApp button must sit slightly closer to the right edge");
@@ -217,9 +217,12 @@ assert.ok(heroSection, "The canonical Hero section must remain present");
 assert.match(heroSection, /class="primary-cta whatsapp-cta" type="button" data-contact-action="whatsapp"[^>]*>[\s\S]*?تواصل عبر واتساب/, "Hero primary CTA must restore the WhatsApp contact button");
 assert.match(heroSection, /class="text-link consultation-cta phone-cta" type="button" data-contact-action="phone"[^>]*>اتصل بنا/, "Hero secondary CTA must restore the call-us button");
 
-assert.doesNotMatch(heroSection, /hero-demo-disclosure|نموذج تجريبي من Apex Studio/, "The separate demo sentence beneath the Hero buttons must be removed");
+assert.match(heroSection, /ابتسامة أكثر إشراقًا تبدأ من الاختيار الصحيح[\s\S]*?تبييض الأسنان[\s\S]*?بخطة تناسب حالتك/, "Hero must lead with a patient benefit and a personalized-care promise");
 assert.match(html, /رُواء مشروع تجريبي ضمن معرض أعمال أبيكس ستوديو، ولا يمثّل عيادة قائمة/, "The footer must retain the fictional portfolio disclosure in Arabic");
-assert.match(html, /<meta name="description"[^>]*نموذج توضيحي/, "Page metadata must continue to identify the fictional demo");
+const footerOffset=html.indexOf('<footer class="footer"');
+assert.doesNotMatch(html.slice(0,footerOffset), /(?:هذا النموذج|هذه صفحة تجريبية|نموذج توضيحي|نموذج تجريبي|النموذج التجريبي)/, "The fictional-project disclosure must appear only in the footer");
+assert.match(html, /رُواء مشروع تجريبي ضمن معرض أعمال أبيكس ستوديو، ولا يمثّل عيادة قائمة/, "The footer must retain the fictional portfolio disclosure in Arabic");
+assert.match(html, /<meta name="description"[^>]*تبييض الأسنان/, "Page metadata must describe the whitening information accurately");
 
 const heroImage = html.match(/<img class="hero-portrait"[^>]*>/i)?.[0] || "";
 assert.match(heroImage, /src="assets\/ruwa-hero-90-768\.webp"/);
@@ -239,7 +242,7 @@ assert.equal(footerAnchors.some(href => /instagram|snapchat|tiktok|x\.com/i.test
 const footerTargets = footerAnchors.filter(href => href.startsWith("#")).map(href => href.slice(1));
 assert.ok(footerTargets.length >= 9, "RUWA footer must provide useful internal navigation");
 assert.ok(footer.includes('<a href="#journey">خطوات التقييم</a>'), "Footer must link to the treatment journey");
-assert.ok(footer.includes('<a href="#visit">نطاق الموقع</a>'), "Footer must link to the demo location section");
+assert.ok(footer.includes('<a href="#visit">الموقع وطرق الوصول</a>'), "Footer must link to the location section");
 assert.deepEqual(footerTargets.filter(target => !ids.has(target)), [], "Every RUWA footer navigation target must exist on the page");
 assert.match(footer, /رُواء مشروع تجريبي ضمن معرض أعمال أبيكس ستوديو/);
 assert.match(footer, /الصور، بما فيها صور الطبيب، مولّدة بالذكاء الاصطناعي لأغراض العرض/);
