@@ -586,9 +586,10 @@ try {
           };
         })(),
         reviewSection:(()=>{
-          const section=document.getElementById("reviews"),panel=section?.querySelector(".reviews-panel"),title=section?.querySelector("#reviews-title"),status=section?.querySelector(".reviews-status-note"),disclosure=section?.querySelector(".reviews-rating-disclosure"),sampleDisclosure=section?.querySelector(".reviews-sample-disclosure"),stars=[...(section?.querySelectorAll(".reviews-stars")||[])],cards=[...(section?.querySelectorAll(".review-card")||[])],criteria=[...(section?.querySelectorAll(".reviews-criteria-list li")||[])],rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width};},pr=panel?rect(panel):null;
-          const cardTitles=cards.map(card=>card.querySelector(".review-card-copy")?.innerText.trim()||"");
-          return {present:Boolean(section&&panel),heading:title?.innerText.trim()||"",status:status?.innerText.trim()||"",disclosure:disclosure?.innerText.trim()||"",sampleDisclosure:sampleDisclosure?.innerText.trim()||"",starsAccessibleLabel:stars[0]?.getAttribute("aria-label")||"",starColor:stars[0]?getComputedStyle(stars[0]).color:"",criteriaCount:criteria.length,panelWidth:pr?.width||0,panelWithinViewport:Boolean(pr&&pr.left>=-1&&pr.right<=window.innerWidth+1),horizontalOverflow:section?section.scrollWidth>section.clientWidth:false,starCount:stars.reduce((sum,row)=>sum+row.querySelectorAll('[aria-hidden="true"]').length,0),reviewCards:cards.length,demoCards:cards.filter(card=>/^المعيار 0[1-3]$/.test(card.querySelector(".review-card-label")?.innerText.trim()||"")).length,placeholderCards:cardTitles.filter(title=>["أن يشرح لك الطبيب الخيارات المتاحة وفوائدها وحدودها قبل اتخاذ القرار.","أن يستمع إلى مخاوفك، ويراعي راحتك، ويجيب عن أسئلتك بوضوح.","أن تحصل على تعليمات عناية واضحة، وتعرف متى تتواصل مع الطبيب بعد الإجراء."].includes(title)).length};
+          const section=document.getElementById("reviews"),grid=section?.querySelector(".reviews-grid"),title=section?.querySelector("#reviews-title"),intro=section?.querySelector(".reviews-head p"),cards=[...(section?.querySelectorAll(".review-card")||[])],rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width};},gr=grid?rect(grid):null;
+          const cardLabels=cards.map(card=>card.querySelector(".review-card-label")?.innerText.trim()||"");
+          const cardCopy=cards.map(card=>card.querySelector(".review-card-copy")?.innerText.trim()||"");
+          return {present:Boolean(section&&grid),heading:title?.innerText.trim()||"",intro:intro?.innerText.trim()||"",cardLabels,cardCopy,panelWithinViewport:Boolean(gr&&gr.left>=-1&&gr.right<=window.innerWidth+1),horizontalOverflow:section?section.scrollWidth>section.clientWidth:false,reviewCards:cards.length,starCount:section?.querySelectorAll(".reviews-stars, .review-stars, [aria-label*='نجوم']").length||0,placeholders:cardCopy.filter(copy=>/رأي مريض موثّق|تجربة مريض حقيقية|تجربة فعلية/.test(copy)).length};
         })(),
         faqItems:document.querySelectorAll(".faq-item").length,
         clinicalReferences:[...document.querySelectorAll(".reference-note a")].map(a=>a.href),
@@ -1431,19 +1432,15 @@ try {
      assert.equal(state.expectationsSection.gridColumnCount,vp.width<=600?1:2,"Expectations grid must use two columns except on mobile");
      assert.equal(state.expectationsSection.horizontalOverflow,false,"Expectations section must not overflow horizontally");
      assert.equal(state.expectationsSection.cardsWithinSection,true,"Expectations cards must remain within section bounds");
-    assert.equal(state.reviewSection.present,true,`${vp.name}: patient reviews trust section is missing`);
-    assert.equal(state.reviewSection.heading,"تجربة رعاية جيدة تبدأ بالوضوح والاهتمام.",`${vp.name}: patient reviews headline changed`);
-    assert.equal(state.reviewSection.status,"قرارك يكون أوضح عندما تعرف الخطة وفوائدها وحدودها قبل البدء.",`${vp.name}: transparent demo review status is missing`);
-    assert.equal(state.reviewSection.criteriaCount,3,`${vp.name}: all three review-publishing criteria must be present`);
-    assert.ok(state.reviewSection.panelWithinViewport&&!state.reviewSection.horizontalOverflow,`${vp.name}: review panel overflows its section or viewport`);
-    assert.equal(state.reviewSection.disclosure,"اسأل عن الخطة العلاجية، والتكلفة المتوقعة، وخطوات المتابعة قبل البدء.",`${vp.name}: review-score disclosure is missing`);
-    assert.ok(state.reviewSection.sampleDisclosure.includes("فوائده وحدوده وآثاره المحتملة")&&state.reviewSection.sampleDisclosure.includes("إجابات واضحة"),`${vp.name}: review-publication standards must disclose source verification and permission`);
-    assert.equal(state.reviewSection.starCount,0,`${vp.name}: review-transparency cards must not contain rating stars`);
-    assert.equal(state.reviewSection.starColor,"",`${vp.name}: the review-transparency section must not have star-rating styling`);
-    assert.equal(state.reviewSection.starsAccessibleLabel,"",`${vp.name}: review section must not expose decorative rating stars`);
-    assert.equal(state.reviewSection.reviewCards,3,`${vp.name}: exactly three review-transparency cards must be present`);
-    assert.equal(state.reviewSection.demoCards,3,`${vp.name}: each review-transparency card must have its numbered criterion label`);
-    assert.equal(state.reviewSection.placeholderCards,3,`${vp.name}: all three review-publication standards must be present`);
+    assert.equal(state.reviewSection.present,true,`${vp.name}: patient reviews section is missing`);
+    assert.equal(state.reviewSection.heading,"آراء المرضى وتجاربهم",`${vp.name}: patient reviews headline changed`);
+    assert.ok(state.reviewSection.intro.includes("بعد التحقق من مصدرها")&&state.reviewSection.intro.includes("الحصول على موافقتهم"),`${vp.name}: review authenticity and patient permission must be disclosed`);
+    assert.ok(state.reviewSection.panelWithinViewport&&!state.reviewSection.horizontalOverflow,`${vp.name}: review grid overflows its section or viewport`);
+    assert.equal(state.reviewSection.starCount,0,`${vp.name}: do not display unverified patient star ratings`);
+    assert.equal(state.reviewSection.reviewCards,3,`${vp.name}: exactly three patient-review slots must be present`);
+    assert.deepEqual(state.reviewSection.cardLabels,["تجربة موثّقة","تجربة موثّقة","تجربة موثّقة"],`${vp.name}: each review slot must be clearly reserved for verified patient feedback`);
+    assert.equal(state.reviewSection.placeholders,3,`${vp.name}: all review cards must await genuine patient statements`);
+    assert.ok(state.reviewSection.cardCopy.every(copy=>/رأي مريض موثّق|تجربة مريض حقيقية|تجربة فعلية/.test(copy)),`${vp.name}: no invented patient quote may be shown as real`);
     assert.equal(state.faqItems, 7, `${vp.name}: the six focused FAQ entries are not present`);
     assert.equal(state.teamProfile.heading,"كيف تختار طبيب الأسنان المناسب؟",vp.name + ": team headline changed");
     assert.deepEqual(state.teamProfile.imageSources,["assets/ruwa-team-doctor-01.webp","assets/ruwa-team-doctor-02.webp","assets/ruwa-team-doctor-03.webp"],vp.name + ": team portrait sources changed");
