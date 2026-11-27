@@ -14,6 +14,8 @@ This repository now contains one active website project: the **RUWA** Arabic den
 
 There is only one maintained RUWA page implementation. The root entry point and preview aliases do not contain duplicate website markup.
 
+**Editorial update:** The page-wide medical-copy, clinical-accuracy, and conversion-language review was implemented on 27 November 2026. RUWA remains a fictional portfolio demonstration, not an operating clinic.
+
 ## Project facts and transparency
 
 RUWA is a fictional portfolio concept created by Apex Studio. It is not a commissioned or operating clinic and must not be presented as a real commercial clinic or client project.
