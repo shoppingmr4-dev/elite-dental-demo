@@ -12,7 +12,7 @@
 
 RUWA is a fictional portfolio concept, not a commissioned or operating dental clinic. It must not be presented as a real clinic, and it must not acquire invented doctors, qualifications, ratings, testimonials, prices, addresses, opening hours, patient statistics, clinical outcomes, or appointment inventory.
 
-The current page has a coherent service-specific education journey. It contains **10 main content sections** plus the shared header, announcement strip, and footer. The assessment approach is integrated into the treatment journey, while suitability, safety, and realistic expectations share one combined section. The missing items are real-business evidence and an operational conversion destination, not decorative content.
+The current page has a coherent service-specific education journey. It contains **10 main content sections** plus the shared header, announcement strip, and footer. The visible section markers now run from 01 to 10 in DOM order. The assessment approach is integrated into the four-step treatment journey, while suitability, safety, and realistic expectations share one combined section. The missing items are real-business evidence and an operational conversion destination, not decorative content.
 
 ## 2. Repository source-of-truth and route audit
 
@@ -30,20 +30,20 @@ The actual current DOM order is:
 
 | DOM order | ID | Section | Decision | Evidence-based rationale |
 |---:|---|---|---|---|
-| Header | main-nav | Brand, eight section links, phone CTA labelled «اتصل بنا» | KEEP | Directs visitors to the revised patient-education journey, transparent reviews, and location information. |
+| Header | main-nav | Brand, eight section links, internal CTA «استكشف الخيارات» | KEEP / internal navigation | CTA links to #options and does not imply a live phone, messaging, or booking channel. |
 | 01 | top | Hero | KEEP / protect | Explains the whitening subject and presents the approved illustrative portrait and first actions. |
 | 02 | causes | Causes of discoloration | KEEP | Provides concise context about surface and deeper colour changes. |
 | 03 | options | Whitening options | KEEP / clinical review for a real clinic | General education is not proof that a real clinic offers all listed options. |
 | 04 | journey | Assessment and treatment journey | KEEP / consolidated | Integrates assessment, option discussion, implementation, and aftercare into one ordered four-step sequence. |
 | 05 | suitability | Suitability, safety, and realistic expectations | KEEP / consolidated / clinical review required | Combines health and timing factors with result variation, possible effects, restoration limits, and aftercare. |
 | 06 | team | Dentist/team | KEEP / unchanged demo-only section | The three distinct AI-generated illustrative male portraits remain exactly as approved; no real clinician identity or credentials are claimed. |
-| 07 | reviews | Patient reviews | KEEP / explicitly illustrative | Three hypothetical patient-priority phrases appear in pastel cards with yellow decorative stars; every card and the section disclose that no authentic patient review or score is represented. |
-| 08 | visit | City context | KEEP / city-level only | Uses a committed local SVG illustration inspired by a city street network; it is clearly disclosed as schematic artwork, not a road map, navigation aid, clinic pin, or exact address. A separate Google Maps action searches for Riyadh city-wide only. |
+| 07 | reviews | Review transparency | KEEP / transparent standards only | Three informational cards explain source verification, explicit permission, and faithful presentation. No hypothetical patient quotations, testimonials, star icons, scores, or review count are shown. |
+| 08 | visit | Location-section preview | KEEP / demo-only | Uses a committed abstract Riyadh SVG and says that the real branch address will be added only after verification. The artwork is not a map or clinic location; Google Maps searches Riyadh city-wide only. |
 | 09 | faq | Frequently asked questions | KEEP | Four focused native details/summary entries cover sessions, result longevity, surface versus internal discoloration, and cautions about DIY whitening mixtures. |
-| 10 | consultation | Final contact | KEEP / activate only with verified details | The actions disclose that real channels are not configured. |
+| 10 | consultation | Next step | KEEP / internal links | The section links to FAQ and assessment content. It does not pretend to place a call, send a message, or book an appointment. |
 | Footer | — | Portfolio and image disclosures | KEEP | Prevents the sample from being mistaken for a real operating clinic. |
 
-The team section contains three equal demo-only profile cards with distinct AI-generated illustrative male portraits extracted from an existing RUWA concept image; these are not real doctor profiles or credentials. No authentic patient review/testimonial, review count, or rating score is supplied. The patient-reviews panel contains three fictional patient-priority phrases for design demonstration only; it is not social proof, and both the section and each card disclose that the phrases and yellow stars are not genuine testimonials or ratings. A city-level context panel identifies Riyadh, Saudi Arabia, and displays a local abstract SVG illustration. The artwork is explicitly not a real street map or navigation aid; its external Google Maps action searches for the city rather than a clinic. It has no precise address, map pin, or branch-specific details. No before-and-after gallery, clinic gallery, pricing section, or hours-of-operation section exists in this page.
+The team section contains three equal demo-only profile cards with distinct AI-generated illustrative male portraits; a clear disclosure appears before the cards and placeholders reserve space for details only after identity and professional credentials are verified. No authentic patient review, testimonial, rating score, or review count is supplied. The review-transparency panel uses three informational cards about source verification, explicit permission, and faithful presentation; hypothetical quotations and decorative rating stars have been removed. The location preview displays an abstract Riyadh illustration, not a real map, clinic, branch, or address; the separate Google Maps action searches the city only. No before-and-after gallery, clinic gallery, pricing section, or hours-of-operation section exists in this page.
 
 ## 4. Confirmed current content and interaction behavior
 
@@ -52,14 +52,14 @@ The team section contains three equal demo-only profile cards with distinct AI-g
 - The current Hero image is assets/ruwa-hero-90-768.webp.
 - The current Hero image alt text and visible caption explicitly identify it as AI-generated and not a real dentist.
 - FAQ count: **4 native details entries**.
-- Contact controls: **3 WhatsApp actions and 3 phone actions**, including a context-aware floating WhatsApp control and a header phone action labelled «اتصل بنا».
-- WHATSAPP_NUMBER and PHONE_NUMBER are intentionally empty.
-- When clicked with those values empty, the actions open the local contact-unavailable dialog. They do not open WhatsApp or begin a phone call.
+- Contact controls: **one floating WhatsApp demo control**; Hero, header, and final CTAs are internal links to relevant sections.
+- WHATSAPP_NUMBER and PHONE_NUMBER remain intentionally empty.
+- The floating WhatsApp preview opens the local contact-unavailable dialog, which explicitly states that no real WhatsApp, phone, or booking channel is connected.
 - Contact dialog ID: contact-unavailable-dialog.
-- The page has no HTML form, no lead endpoint, no appointment availability, no booking confirmation, no data collection, and no analytics/ad pixels.
+- The page has no HTML form, lead endpoint, appointment availability, booking confirmation, data collection, or analytics/ad pixels.
 - It does not transmit or store visitor details.
 
-All aria-controls references must resolve to real IDs. The header phone action, Hero actions, and floating WhatsApp control must reference contact-unavailable-dialog; the mobile menu toggle must reference main-nav. The consistency and browser tests enforce this relationship.
+The floating demo control references contact-unavailable-dialog; the mobile menu toggle references main-nav. No header or Hero CTA is a phone/WhatsApp contact action. The consistency and browser tests enforce these boundaries.
 
 ## 5. Protected Hero image
 
@@ -155,6 +155,6 @@ The results above are historical and predate the section consolidation; they do 
 
 ## 11. Final verdict
 
-The RUWA portfolio page now has nine main sections, including the consolidated treatment journey and safety/expectations section. The protected team section remains unchanged; the patient-reviews section now contains clearly labelled fictional sample phrases and decorative yellow stars without claiming authentic feedback. That notice is not social proof: no authentic patient review, rating, or review count has been supplied. Adding fabricated clinicians, patient reviews, ratings, clinic facts, or prices would be a regression. Keep the page honest and focused; publish patient reviews only after genuine material and authorization are verified.
+The RUWA portfolio page contains ten main sections in DOM order, including the consolidated treatment journey and safety/expectations section. The protected team portraits remain unchanged, but the disclosure now appears before the three illustrative profile cards. The patient-review presentation has been changed to three transparency-standard cards; hypothetical review-style phrases and decorative stars have been removed. No authentic patient review, rating, or review count has been supplied. The Hero, header, and final CTAs use truthful internal links; only one floating WhatsApp demo preview remains, with a disclosure dialog. Adding fabricated clinicians, patient reviews, ratings, clinic facts, or prices would be a regression.
 
-The RUWA implementation remains staged on the feature branch. Do not merge the PR, publish a production site, or activate a contact channel without explicit approval and verified clinic information.
+The RUWA implementation remains staged on the feature branch. The Hero and header CTAs navigate internally to educational sections; the final CTAs link to FAQ and assessment content. One floating WhatsApp demo control opens a disclosure dialog only. Do not merge the PR, publish a production site, or activate a contact channel without explicit approval and verified clinic information.
