@@ -552,8 +552,8 @@ try {
           const href=a.getAttribute("href") || "";
           return href.startsWith("tel:") || a.hostname==="wa.me" || a.hostname==="api.whatsapp.com";
         }),
-        finalWhatsAppButton:Boolean(document.querySelector('#consultation a[href="#faq"]')),
-         finalPhoneButton:Boolean(document.querySelector('#consultation a[href="#journey"]')),
+        finalWhatsAppButton:Boolean(document.querySelector('#consultation [data-contact-action="whatsapp"]')),
+         finalPhoneButton:Boolean(document.querySelector('#consultation [data-contact-action="phone"]')),
          contactChannelCounts:{
            whatsapp:document.querySelectorAll('[data-contact-action="whatsapp"]').length,
            phone:document.querySelectorAll('[data-contact-action="phone"]').length
@@ -873,7 +873,7 @@ try {
     assert.equal(state.headerActionTag, "BUTTON", `${vp.name}: header CTA must be restored as a button`);
     assert.equal(state.headerActionChannel, "phone", `${vp.name}: header call button must use the phone demo-dialog action`);
     assert.ok(state.headerActionHasPhoneIcon && !state.headerActionWhatsAppIcon, `${vp.name}: header CTA must show the phone icon, not WhatsApp branding`);
-    assert.equal(state.contactTriggerCount, 4, `${vp.name}: Hero, header, and floating contact controls must all use the shared dialog`);
+    assert.equal(state.contactTriggerCount, 6, `${vp.name}: Hero, header, final-section and floating contact controls must all use the shared dialog`);
     assert.equal(state.heroDemoDisclosurePresent, false, `${vp.name}: the separate demo sentence under the Hero buttons must be absent`);
     assert.equal(state.floatingWhatsAppPresent, true, `${vp.name}: smart floating WhatsApp button is missing`);
      assert.ok(state.floatingWhatsAppMetrics, `${vp.name}: floating WhatsApp measurements are unavailable`);
@@ -1073,8 +1073,8 @@ try {
     assert.equal(audit.faq.referenceMargin,"24px", vp.name + ": reference note spacing changed");
     assert.ok(Number.parseFloat(audit.contactFooter.contactToFooter)>=52, vp.name + ": contact-to-footer separation is too tight");
     assert.equal(state.liveContactChannelPresent, false, `${vp.name}: demo must not contain a live WhatsApp or phone destination`);
-    assert.ok(state.finalWhatsAppButton && state.finalPhoneButton, `${vp.name}: final internal next-step links are missing`);
-     assert.deepEqual(state.contactChannelCounts,{whatsapp:2,phone:2},`${vp.name}: Hero/header/floating contact buttons must retain their WhatsApp/phone roles`);
+    assert.ok(state.finalWhatsAppButton && state.finalPhoneButton, `${vp.name}: final WhatsApp and phone contact actions are missing`);
+     assert.deepEqual(state.contactChannelCounts,{whatsapp:3,phone:3},`${vp.name}: Hero/header/final-section/floating contact controls must retain their WhatsApp/phone roles`);
     const dialog=page.locator("#contact-unavailable-dialog");
     const heroTrigger=page.locator(".primary-cta");
     const headerTrigger=page.locator(".header-action");
