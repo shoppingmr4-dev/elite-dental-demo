@@ -211,7 +211,7 @@ try {
       {number:"08",label:"نموذج عرض الموقع",context:"paper"},
       {number:"09",label:"الأسئلة الشائعة",context:"canvas"},
       {number:"10",label:"الخطوة التالية",context:"dark"}
-    ], `${viewport.name}: immutable preview does not render the complete approved seven-marker system`);
+    ], `${viewport.name}: immutable preview does not render the complete approved ten-marker system`);
     assert.ok(initial.markerSystem.markers.every(marker=>marker.numberWidth>=10&&marker.numberWidth<=22&&
       marker.numberHeight>=12&&marker.numberHeight<=18&&marker.numberBorder==="0px"&&
       marker.numberRadius==="0px"&&marker.numberBackground==="rgba(0, 0, 0, 0)"&&
@@ -228,7 +228,7 @@ try {
       `${viewport.name}: published Hero benefit line does not use the complete, unadorned RUWA Teal treatment`);
     assert.deepEqual(initial.navLabels,
       ["أسباب تغيّر اللون","خيارات التبييض","خطوات التقييم","السلامة والتوقعات","تصوّر قسم الأطباء","معايير عرض الآراء","نموذج عرض الموقع","الأسئلة الشائعة"],
-      `${viewport.name}: the seven navigation labels or their order changed`);
+      `${viewport.name}: the eight navigation labels or their order changed`);
     assert.ok(initial.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic")&&link.fontSize===14&&
       link.fontWeight===600&&Math.abs(link.lineHeight-22.4)<.2&&

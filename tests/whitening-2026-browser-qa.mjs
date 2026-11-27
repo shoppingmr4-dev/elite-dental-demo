@@ -844,19 +844,19 @@ try {
     assert.equal(state.headerPanelTopInset, 0, `${vp.name}: header should start in its full-size state`);
     assert.equal(state.headerCompactInitially, false, `${vp.name}: header must not start in the compact state`);
     assert.equal(state.headerActionText, "استكشف الخيارات", `${vp.name}: header options CTA copy is incorrect`);
-     assert.ok(state.headerActionAlignment, `${vp.name}: header phone CTA alignment metrics are unavailable`);
-     assert.ok(["flex","inline-flex"].includes(state.headerActionAlignment.display), `${vp.name}: header phone CTA must use a flex formatting context (grid/flex items may compute inline-flex to flex)`);
-     assert.equal(state.headerActionAlignment.alignItems, "center", `${vp.name}: header phone CTA contents must be vertically centered`);
-     assert.equal(state.headerActionAlignment.justifyContent, "center", `${vp.name}: header phone CTA content group must be horizontally centered`);
-     assert.equal(state.headerActionAlignment.lineHeight, `${Number.parseFloat(state.headerActionAlignment.fontSize)}px`, `${vp.name}: header phone CTA label line-height must stay compact and centered`);
-     assert.equal(state.headerActionAlignment.buttonHeight, 44, `${vp.name}: header phone CTA hit-area height must remain unchanged`);
-     assert.equal(state.headerActionAlignment.iconDisplay, "block", `${vp.name}: header phone SVG must not use inline baseline alignment`);
-     assert.equal(state.headerActionAlignment.iconFlexShrink, "0", `${vp.name}: header phone icon must retain its fixed box`);
-     assert.ok(state.headerActionAlignment.centerDeltaY<=1.5, `${vp.name}: phone icon and Arabic label do not share a vertical centerline: ${JSON.stringify(state.headerActionAlignment)}`);
-     assert.ok(state.headerActionAlignment.centerDeltaX<=1.5, `${vp.name}: phone icon and label are not centered together inside the button: ${JSON.stringify(state.headerActionAlignment)}`);
+     assert.ok(state.headerActionAlignment, `${vp.name}: header options CTA alignment metrics are unavailable`);
+     assert.ok(["flex","inline-flex"].includes(state.headerActionAlignment.display), `${vp.name}: header options CTA must use a flex formatting context (grid/flex items may compute inline-flex to flex)`);
+     assert.equal(state.headerActionAlignment.alignItems, "center", `${vp.name}: header options CTA contents must be vertically centered`);
+     assert.equal(state.headerActionAlignment.justifyContent, "center", `${vp.name}: header options CTA content group must be horizontally centered`);
+     assert.equal(state.headerActionAlignment.lineHeight, `${Number.parseFloat(state.headerActionAlignment.fontSize)}px`, `${vp.name}: header options CTA label line-height must stay compact and centered`);
+     assert.equal(state.headerActionAlignment.buttonHeight, 44, `${vp.name}: header options CTA hit-area height must remain unchanged`);
+     assert.equal(state.headerActionAlignment.iconDisplay, "block", `${vp.name}: header CTA SVG must not use inline baseline alignment`);
+     assert.equal(state.headerActionAlignment.iconFlexShrink, "0", `${vp.name}: header CTA icon must retain its fixed box`);
+     assert.ok(state.headerActionAlignment.centerDeltaY<=1.5, `${vp.name}: header icon and Arabic label do not share a vertical centerline: ${JSON.stringify(state.headerActionAlignment)}`);
+     assert.ok(state.headerActionAlignment.centerDeltaX<=1.5, `${vp.name}: header icon and label are not centered together inside the link: ${JSON.stringify(state.headerActionAlignment)}`);
      const expectedHeaderPadding=vp.width<=390?10:vp.width<=720?13:vp.width<=920?16:19;
      assert.equal(Number.parseFloat(state.headerActionPaddingInlineStart),expectedHeaderPadding,
-       `${vp.name}: header phone CTA horizontal padding should be slightly roomier without changing its height`);
+       `${vp.name}: header options CTA horizontal padding should be slightly roomier without changing its height`);
     assert.equal(state.headerActionHref, "#options", `${vp.name}: header CTA must navigate to the whitening options`);
     assert.equal(state.headerActionTag, "A", `${vp.name}: header CTA must be a real internal link`);
     assert.equal(state.headerActionChannel, "", `${vp.name}: header CTA must not claim a live contact channel`);
@@ -1023,15 +1023,15 @@ try {
     assert.equal(state.heroCtaText, "استكشف خيارات التبييض", vp.name + ": hero CTA copy is incorrect");
     assert.ok(state.heroSecondaryCta, vp.name + ": the secondary consultation link must remain visible");
     assert.equal(state.heroSecondaryCta.text, "تعرّف على خطوات التقييم", vp.name + ": secondary CTA label must match the assessment journey");
-    assert.equal(state.heroSecondaryCta.href, "#journey", vp.name + ": phone CTA must not contain a fabricated number destination");
-     assert.equal(state.heroSecondaryCta.tag, "A", vp.name + ": phone CTA must be a button until a number is configured");
-     assert.equal(state.heroSecondaryCta.channel, null, vp.name + ": Hero secondary action should use the phone channel");
+    assert.equal(state.heroSecondaryCta.href, "#journey", vp.name + ": assessment CTA must navigate internally instead of opening a phone number");
+     assert.equal(state.heroSecondaryCta.tag, "A", vp.name + ": assessment CTA must remain an internal link");
+     assert.equal(state.heroSecondaryCta.channel, null, vp.name + ": Hero secondary action must not claim a contact channel");
     assert.ok(state.heroSecondaryCta.minHeight>=44, vp.name + ": secondary CTA click target must be at least 44px tall");
     assert.ok(state.heroSecondaryCta.gap>=7&&state.heroSecondaryCta.gap<=18,
       vp.name + ": primary/secondary CTA spacing is not balanced: " + JSON.stringify(state.heroSecondaryCta));
-    assert.equal(state.heroSecondaryCta.stacked,false, vp.name + ": Hero WhatsApp and phone CTAs must remain side-by-side at every viewport");
+    assert.equal(state.heroSecondaryCta.stacked,false, vp.name + ": Hero internal navigation CTAs must remain side-by-side at every viewport");
     assert.equal(state.heroCtaHref, "#options", `${vp.name}: demo hero CTA must not contain a fake external destination`);
-    assert.equal(state.heroCtaTag, "A", `${vp.name}: hero CTA must open the local demo dialog`);
+    assert.equal(state.heroCtaTag, "A", `${vp.name}: Hero CTA must navigate to the options section`);
     assert.ok(!state.heroCtaWhatsAppIcon, `${vp.name}: internal hero CTA must not display WhatsApp branding`);
     assert.equal(state.heroCtaBackground, "rgb(24, 122, 128)", `${vp.name}: primary CTA should retain the RUWA teal`);
     assert.equal(state.heroCtaForeground, "rgb(255, 255, 255)", `${vp.name}: primary CTA text should remain white`);
@@ -1416,14 +1416,14 @@ try {
     assert.equal(state.reviewSection.status,"هذا النموذج لا يتضمن تقييمات أو شهادات مرضى موثّقة.",`${vp.name}: transparent demo review status is missing`);
     assert.equal(state.reviewSection.criteriaCount,3,`${vp.name}: all three review-publishing criteria must be present`);
     assert.ok(state.reviewSection.panelWithinViewport&&!state.reviewSection.horizontalOverflow,`${vp.name}: review panel overflows its section or viewport`);
-    assert.equal(state.reviewSection.disclosure,"هذا النموذج لا يعرض تقييمات أو متوسطات نجوم حقيقية.",`${vp.name}: yellow decorative-star disclosure is missing`);
-    assert.ok(state.reviewSection.sampleDisclosure.includes("التحقق من مصدرها")&&state.reviewSection.sampleDisclosure.includes("موافقة صريحة"),`${vp.name}: sample phrases must be clearly disclosed as fictional`);
-    assert.equal(state.reviewSection.starCount,0,`${vp.name}: three cards must each contain five decorative stars`);
-    assert.equal(state.reviewSection.starColor,"",`${vp.name}: review stars must use the approved golden-yellow color`);
+    assert.equal(state.reviewSection.disclosure,"هذا النموذج لا يعرض تقييمات أو متوسطات نجوم حقيقية.",`${vp.name}: review-score disclosure is missing`);
+    assert.ok(state.reviewSection.sampleDisclosure.includes("التحقق من مصدرها")&&state.reviewSection.sampleDisclosure.includes("موافقة صريحة"),`${vp.name}: review-publication standards must disclose source verification and permission`);
+    assert.equal(state.reviewSection.starCount,0,`${vp.name}: review-transparency cards must not contain rating stars`);
+    assert.equal(state.reviewSection.starColor,"",`${vp.name}: the review-transparency section must not have star-rating styling`);
     assert.equal(state.reviewSection.starsAccessibleLabel,"",`${vp.name}: review section must not expose decorative rating stars`);
-    assert.equal(state.reviewSection.reviewCards,3,`${vp.name}: exactly three review-style cards must be present`);
-    assert.equal(state.reviewSection.demoCards,3,`${vp.name}: each sample phrase card must be visibly labelled as illustrative`);
-    assert.equal(state.reviewSection.placeholderCards,3,`${vp.name}: all three approved sample phrases must be present`);
+    assert.equal(state.reviewSection.reviewCards,3,`${vp.name}: exactly three review-transparency cards must be present`);
+    assert.equal(state.reviewSection.demoCards,3,`${vp.name}: each review-transparency card must have its numbered criterion label`);
+    assert.equal(state.reviewSection.placeholderCards,3,`${vp.name}: all three review-publication standards must be present`);
     assert.equal(state.faqItems, 4, `${vp.name}: the four focused FAQ entries are not present`);
     assert.equal(state.teamProfile.heading,"مساحة مخصّصة للتعريف بأطباء العيادة.",vp.name + ": team headline changed");
     assert.deepEqual(state.teamProfile.imageSources,["assets/ruwa-team-doctor-01.webp","assets/ruwa-team-doctor-02.webp","assets/ruwa-team-doctor-03.webp"],vp.name + ": team portrait sources changed");
@@ -1467,7 +1467,7 @@ try {
       return {active,visible:element.matches(":focus-visible"),outline:style.outlineStyle,width:style.outlineWidth,color:style.outlineColor};
     });
     assert.ok(secondaryFocus.active&&secondaryFocus.visible&&secondaryFocus.outline==="solid"&&secondaryFocus.width==="3px", `${vp.name}: Hero secondary focus indicator is not visible: ${JSON.stringify(secondaryFocus)}`);
-    assert.equal(secondaryFocus.color,"rgb(17, 90, 96)", `${vp.name}: Hero phone CTA focus indicator should use the accessible deep-teal token`);
+    assert.equal(secondaryFocus.color,"rgb(17, 90, 96)", `${vp.name}: Hero secondary link focus indicator should use the accessible deep-teal token`);
     assert.equal(state.missingAnchors.length, 0, `${vp.name}: broken in-page anchors: ${state.missingAnchors.join(", ")}`);
     assert.ok(state.skipLink, `${vp.name}: skip link missing`);
     assert.ok(state.faviconHref.endsWith("assets/ruwa-mark.png"), `${vp.name}: RUWA favicon link is missing`);
@@ -1680,7 +1680,7 @@ try {
 
       await page.keyboard.press("Escape");
 
-      // Validate full-width active indicators on all seven navigation sections.
+      // Validate full-width active indicators on all eight navigation sections.
       const navTargets=[
         {href:"#causes",id:"causes"},
         {href:"#options",id:"options"},
@@ -1688,6 +1688,7 @@ try {
         {href:"#suitability",id:"suitability"},
         {href:"#team",id:"team"},
         {href:"#reviews",id:"reviews"},
+        {href:"#visit",id:"visit"},
         {href:"#faq",id:"faq"}
       ];
       for(const target of navTargets){
