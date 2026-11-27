@@ -234,7 +234,7 @@ assert.equal(footerAnchors.some(href => /instagram|snapchat|tiktok|x\.com/i.test
 const footerTargets = footerAnchors.filter(href => href.startsWith("#")).map(href => href.slice(1));
 assert.ok(footerTargets.length >= 9, "RUWA footer must provide useful internal navigation");
 assert.ok(footer.includes('<a href="#journey">خطوات التقييم</a>'), "Footer must link to the treatment journey");
-assert.ok(footer.includes('<a href="#visit">معلومات الزيارة</a>'), "Footer must link to the Riyadh location section");
+assert.ok(footer.includes('<a href="#visit">نموذج عرض الموقع</a>'), "Footer must link to the demo location section");
 assert.deepEqual(footerTargets.filter(target => !ids.has(target)), [], "Every RUWA footer navigation target must exist on the page");
 assert.match(footer, /مفهوم تجريبي أُعدّ ضمن معرض أعمال أبيكس ستوديو/);
 assert.match(footer, /الصور المعروضة، بما فيها صور الأطباء، توضيحية مولّدة بالذكاء الاصطناعي/);
