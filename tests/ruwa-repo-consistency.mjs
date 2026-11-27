@@ -42,7 +42,7 @@ const faqPosition = html.indexOf('id="faq"');
 assert.ok(reviewsPosition < visitPosition && visitPosition < faqPosition, "Riyadh location must follow reviews and precede FAQ");
 const visitSection = html.slice(visitPosition, html.indexOf("</section>", visitPosition) + 10);
 assert.ok(visitSection.includes("الرياض") && visitSection.includes("المملكة العربية السعودية"), "Riyadh city and country must be visible");
-assert.ok(visitSection.includes("تحقّق من عنوان العيادة قبل الزيارة") && visitSection.includes("تأكد من العنوان الدقيق وساعات العمل عبر قنواتها الرسمية"), "Location section must explain how visitors plan access without inventing an address");
+assert.ok(visitSection.includes("ما الذي ينبغي التحقق منه قبل زيارة عيادة الأسنان؟") && visitSection.includes("تأكد من العنوان الدقيق وساعات العمل عبر قنواتها الرسمية"), "Location section must explain how visitors plan access without inventing an address");
 assert.ok(visitSection.includes("المدينة") && visitSection.includes("الرياض"), "The displayed geographic scope must remain the whole city");
 assert.ok(visitSection.includes("قبل الزيارة") && visitSection.includes("تحقّق من ساعات العمل"), "Do not invent an exact branch address");
 assert.ok(visitSection.includes("تأكد من عنوان العيادة وساعات العمل وتفاصيل الموعد عبر قنواتها الرسمية") && visitSection.includes("استخدم العنوان الدقيق المنشور عبر القنوات الرسمية لتحديد وجهتك"), "Location copy must guide visitors to verify access details");
