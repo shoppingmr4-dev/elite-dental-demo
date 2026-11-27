@@ -218,10 +218,10 @@ assert.match(heroSection, /class="primary-cta whatsapp-cta" type="button" data-c
 assert.match(heroSection, /class="text-link consultation-cta phone-cta" type="button" data-contact-action="phone"[^>]*>اتصل بنا/, "Hero secondary CTA must restore the call-us button");
 
 assert.match(heroSection, /ابتسامة أكثر إشراقًا[\s\S]*?تبييض الأسنان[\s\S]*?بخطة تناسب حالتك/, "Hero must lead with a patient benefit and a personalized-care promise");
-assert.match(html, /رُواء مشروع تجريبي ضمن معرض أعمال أبيكس ستوديو، ولا يمثّل عيادة قائمة/, "The footer must retain the fictional portfolio disclosure in Arabic");
+assert.match(html, /رُواء نموذج تصميمي ضمن معرض أعمال أبيكس ستوديو، ولا يمثّل عيادة قائمة/, "The footer must retain the fictional portfolio disclosure in Arabic");
 const footerOffset=html.indexOf('<footer class="footer"');
-assert.doesNotMatch(html.slice(0,footerOffset), /(?:هذا النموذج|هذه صفحة تجريبية|نموذج توضيحي|نموذج تجريبي|النموذج التجريبي)/, "The fictional-project disclosure must appear only in the footer");
-assert.match(html, /رُواء مشروع تجريبي ضمن معرض أعمال أبيكس ستوديو، ولا يمثّل عيادة قائمة/, "The footer must retain the fictional portfolio disclosure in Arabic");
+assert.doesNotMatch(html.slice(0,footerOffset), /(?:هذا النموذج|هذه صفحة تجريبية|نموذج توضيحي|نموذج تجريبي|نموذج تصميمي|مشروع تجريبي|النموذج التجريبي)/, "The fictional-project disclosure must appear only in the footer");
+assert.match(html, /رُواء نموذج تصميمي ضمن معرض أعمال أبيكس ستوديو، ولا يمثّل عيادة قائمة/, "The footer must retain the fictional portfolio disclosure in Arabic");
 assert.match(html, /<meta name="description"[^>]*تبييض الأسنان/, "Page metadata must describe the whitening information accurately");
 
 const heroImage = html.match(/<img class="hero-portrait"[^>]*>/i)?.[0] || "";
@@ -229,14 +229,14 @@ assert.match(heroImage, /src="assets\/ruwa-hero-90-768\.webp"/);
 assert.match(heroImage, /width="768"/);
 assert.match(heroImage, /height="1152"/);
 assert.match(heroImage, /fetchpriority="high"/);
-assert.match(html, /الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا/);
+assert.match(html, /alt="صورة توضيحية لطبيب أسنان يرتدي معطفًا أبيض وزيًا طبيًا كحليًا وسماعة طبيب\."/);
 
 const footerStart = html.indexOf('<footer class="footer"');
 const footerEnd = html.indexOf("</footer>", footerStart) + "</footer>".length;
 const footer = footerStart >= 0 && footerEnd > footerStart ? html.slice(footerStart, footerEnd) : "";
 assert.ok(footer, "RUWA must contain a semantic footer");
 assert.equal([...footer.matchAll(/class="footer-social-icon footer-social-icon--/g)].length, 0, "Unlinked social-media icons must not imply official accounts");
-assert.ok(footer.includes("لا ترتبط بهذا النموذج حسابات تواصل أو قنوات حجز فعلية."), "Footer must clarify that no official social accounts are connected");
+assert.ok(footer.includes("العناية تبدأ بالمعلومة الصحيحة والقرار الواعي."), "Footer must clarify that no official social accounts are connected");
 const footerAnchors = [...footer.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>/gi)].map(match => match[1]);
 assert.equal(footerAnchors.some(href => /instagram|snapchat|tiktok|x\.com/i.test(href)), false, "Social marks must remain icon-only without invented account URLs");
 const footerTargets = footerAnchors.filter(href => href.startsWith("#")).map(href => href.slice(1));
@@ -245,8 +245,8 @@ assert.ok(footer.includes('<a href="#journey">خطوات التقييم</a>'), "
 assert.ok(footer.includes('<a href="#visit">الموقع وطرق الوصول</a>'), "Footer must link to the location section");
 assert.deepEqual(footerTargets.filter(target => !ids.has(target)), [], "Every RUWA footer navigation target must exist on the page");
 assert.match(footer, /رُواء مشروع تجريبي ضمن معرض أعمال أبيكس ستوديو/);
-assert.match(footer, /الصور، بما فيها صور الطبيب، مولّدة بالذكاء الاصطناعي لأغراض العرض/);
-assert.match(footer, /المحتوى للتوعية العامة فقط/);
+assert.match(footer, /الصور المستخدمة لأغراض العرض، ومنها صور مولّدة بالذكاء الاصطناعي، لا تمثّل أشخاصًا حقيقيين/);
+assert.match(footer, /المحتوى للتثقيف العام ولا يغني عن تقييم طبيب الأسنان/);
 
 
 assert.match(rootAlias, /http-equiv="refresh" content="0;url=whitening-2026\.html"/);
