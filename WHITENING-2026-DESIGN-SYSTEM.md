@@ -84,7 +84,7 @@ Content sections in actual DOM order:
 | 07 | reviews | Patient reviews | Three clearly labelled slots reserved for genuine, verified and permissioned patient feedback; no invented testimonials, quotations, star icons, or scores |
 | 08 | visit | Location and access | A Riyadh-themed local visual with a city-wide Google Maps search; no precise branch address is invented |
 | 09 | faq | Frequently asked questions | Answer six focused questions about session count, result longevity, surface versus intrinsic discoloration, unsafe DIY whitening trends, sensitivity, and the effect of whitening on restorations |
-| 10 | consultation | Next step | Two working internal links to the FAQ and assessment sections; no booking, phone, or live WhatsApp claim |
+| 10 | consultation | Next step | Final WhatsApp and phone buttons open the contact-unavailable dialog; no live call, messaging, or booking is claimed |
 
 The assessment content now lives inside the first two steps of the four-step treatment journey. Suitability and safety remain together with a nested realistic-expectations panel, preserving its four patient-information cards. The patient-reviews section contains three clearly labelled spaces for genuine patient experiences covering plan clarity, patient comfort, and aftercare. No quote or rating is invented or represented as an actual patient review; each published review must be verified and approved by its author. The location section introduces Riyadh and provides a city-wide Google Maps search without inventing a branch address. The footer is the only visible location for the fictional-portfolio disclosure and the AI-image disclosure. The dentist-selection section contains three cards about professional licensing, whitening experience, and treatment-plan clarity. It does not assign invented names, identities, licences, or credentials to the illustrated people; the footer discloses that the imagery is AI-generated.
 
@@ -101,12 +101,12 @@ The Hero and header retain their contact actions. The three top-of-page buttons 
 - Header: «اتصل بنا» with a phone icon; opens the contact-unavailable dialog.
 - Hero primary: «تواصل عبر واتساب» with the WhatsApp icon; opens the contact-unavailable dialog.
 - Hero secondary: «اتصل بنا» with a phone icon; opens the contact-unavailable dialog.
-- Final section: the two internal links to #faq and #journey remain unchanged.
+- Final section: WhatsApp and phone contact buttons route to the shared contact-unavailable dialog.
 - Floating control: one circular WhatsApp preview appears after the Hero WhatsApp button leaves the viewport.
 
-The central JavaScript configuration keeps WHATSAPP_NUMBER and PHONE_NUMBER empty. The header phone button, both Hero contact buttons, and the floating WhatsApp control open the accessible contact dialog, which states that no phone or WhatsApp channel is connected and no call or message will be sent. The control leaves the keyboard tab order while hidden. The dialog supports close controls, Escape, backdrop click, focus placement/restoration, and temporary background scroll lock. No patient data is collected or transmitted.
+The central JavaScript configuration keeps WHATSAPP_NUMBER and PHONE_NUMBER empty. The header phone button, both Hero contact buttons, both final-section contact buttons, and the floating WhatsApp control open the accessible contact dialog, which states that no phone or WhatsApp channel is connected and no call or message will be sent. The control leaves the keyboard tab order while hidden. The dialog supports close controls, Escape, backdrop click, focus placement/restoration, and temporary background scroll lock. No patient data is collected or transmitted.
 
-The header and Hero controls are contact buttons, not live call or messaging links; the final-section actions remain internal links and do not imitate a booking. Every aria-controls reference must still resolve to an existing ID; all contact buttons reference contact-unavailable-dialog and the mobile menu references main-nav.
+The header, Hero, and final-section controls are contact buttons, not live call or messaging links. All six contact controls route to the shared contact-unavailable dialog until verified phone and WhatsApp details are configured. Every aria-controls reference must resolve to an existing ID; all contact buttons reference contact-unavailable-dialog and the mobile menu references main-nav.
 
 There is no HTML form, lead endpoint, appointment inventory, booking confirmation, message-copy feature, or real clinic contact channel in this version. Do not describe a dialog or internal navigation as a booking or conversion.
 
