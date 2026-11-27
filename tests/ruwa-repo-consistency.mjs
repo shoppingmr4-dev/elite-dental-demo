@@ -136,7 +136,7 @@ assert.equal([...reviewsSection.matchAll(/<article class="review-card">/g)].leng
 assert.equal([...reviewsSection.matchAll(/class="review-card-label">تجربة موثّقة/g)].length, 3, "Each review slot must be clearly labelled for verified patient feedback");
 assert.equal([...reviewsSection.matchAll(/class="review-card-copy">(?:تُدرج هنا تجربة مريض حقيقية|تُضاف هنا تجربة فعلية|يُدرج هنا رأي مريض موثّق)/g)].length, 3, "Review slots must remain placeholders for genuine patient statements");
 assert.equal([...reviewsSection.matchAll(/reviews-stars|★|★★★★★/g)].length, 0, "Do not display unverified star ratings");
-assert.ok(reviewsSection.includes("بموافقة المريض") && reviewsSection.includes("بعد موافقة المريض"), "Review cards must reiterate patient permission before publication");
+assert.ok(reviewsSection.includes("بعد موافقة المريض") && reviewsSection.includes("تجربة بموافقة صاحبها"), "Review cards must reiterate patient permission before publication");
 assert.doesNotMatch(html, /AggregateRating|reviewCount|ratingValue|itemprop=["']review/i, "No review or rating structured data may be added");
 assert.match(html, /القسم التاسع: الأسئلة الشائعة/);
 assert.deepEqual([...html.matchAll(/class="section-marker-number(?: [^"]*)?" aria-hidden="true">(\d+)<\/span>/g)].map(match => match[1]), ["01","02","03","04","05","06","07","08","09","10"], "All ten visible section markers must follow the page order");
