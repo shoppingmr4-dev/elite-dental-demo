@@ -57,9 +57,9 @@ Do not add decorative trust badges, ratings, clinic logos, or medical credential
 - HTML class: hero-portrait
 - Current presentation: contained image, bottom-centered focal position, eager loading, and high fetch priority.
 
-Keep the Hero focused on the patient benefit and whitening choice. Place the fictional-portfolio disclosure in the footer; page metadata should describe the whitening information without labelling the page as a demo. The Hero portrait caption must continue to identify the dentist portrait as an AI-generated illustration, not a real dentist.
+Keep the Hero focused on the patient benefit and whitening choice. Place the fictional-portfolio disclosure in the footer; page metadata should describe the whitening information without labelling the page as a demo. The Hero portrait caption is patient-facing copy. Keep the AI-image and fictional-project disclosure in the footer.
 
-The current page alt text and visible disclosure state that this is an AI-generated illustrative dentist portrait, not a real dentist. Keep that disclosure. Never assign a real name, credential, clinic affiliation, patient identity, or testimonial to this image.
+The current page alt text describes an illustrative dentist portrait. The footer discloses that the visual is AI-generated and does not represent a real clinician. Never assign a real name, credential, clinic affiliation, patient identity, or testimonial to this image.
 
 The approved file, its HTML element, figure placement, dimensions, focal position, framing, transform, and loading priority are protected. The source image's earlier documentation was inconsistent; the old Pexels-based preview has been retired. Do not add an external stock-photo credit to this image.
 
@@ -67,7 +67,7 @@ The approved file, its HTML element, figure placement, dimensions, focal positio
 
 Header and announcement strip:
 - RUWA wordmark and Arabic descriptor.
-- Eight navigation links to the visitor journey, including the assessment journey, patient-experience guidance, and location information.
+- Eight navigation links to the visitor journey, including assessment, dentist selection, patient reviews, and location information.
 - Header CTA: «اتصل بنا» with a phone icon; opens the disclosed contact-unavailable dialog because no real phone number is configured.
 - Mobile menu with aria-expanded state and keyboard behavior.
 
@@ -80,13 +80,13 @@ Content sections in actual DOM order:
 | 03 | options | Whitening options | Explain general options without claiming they are RUWA clinic services |
 | 04 | journey | Assessment and treatment journey | Combine oral-health assessment, option discussion, agreed procedure, and aftercare into four ordered steps |
 | 05 | suitability | Suitability, safety, and realistic expectations | Combine health/timing factors with result variation, potential effects, restoration limits, and aftercare |
-| 06 | team | Team-section preview | Three illustrative portraits with a disclosure in the footer and accessible image descriptions; no invented doctor identities or credentials |
+| 06 | team | Dentist selection | Three cards explaining professional licensing, relevant whitening experience, and clear treatment planning; no invented doctor identities or credentials |
 | 07 | reviews | Patient reviews | Three clearly labelled slots reserved for genuine, verified and permissioned patient feedback; no invented testimonials, quotations, star icons, or scores |
 | 08 | visit | Location and access | A Riyadh-themed local visual with a city-wide Google Maps search; no precise branch address is invented |
 | 09 | faq | Frequently asked questions | Answer six focused questions about session count, result longevity, surface versus intrinsic discoloration, unsafe DIY whitening trends, sensitivity, and the effect of whitening on restorations |
 | 10 | consultation | Next step | Two working internal links to the FAQ and assessment sections; no booking, phone, or live WhatsApp claim |
 
-The assessment content now lives inside the first two steps of the four-step treatment journey. Suitability and safety remain together with a nested realistic-expectations panel, preserving its four patient-information cards. The patient-reviews section contains three clearly labelled spaces for genuine patient experiences covering plan clarity, patient comfort, and aftercare. No quote or rating is invented or represented as an actual patient review; each published review must be verified and approved by its author. The location section introduces Riyadh and provides a city-wide Google Maps search without inventing a branch address. The footer is the only visible location for the fictional-portfolio disclosure and the AI-image disclosure. The team section contains three profile-style cards using AI-generated portraits, with no invented doctor names, identities, licences, or professional credentials.
+The assessment content now lives inside the first two steps of the four-step treatment journey. Suitability and safety remain together with a nested realistic-expectations panel, preserving its four patient-information cards. The patient-reviews section contains three clearly labelled spaces for genuine patient experiences covering plan clarity, patient comfort, and aftercare. No quote or rating is invented or represented as an actual patient review; each published review must be verified and approved by its author. The location section introduces Riyadh and provides a city-wide Google Maps search without inventing a branch address. The footer is the only visible location for the fictional-portfolio disclosure and the AI-image disclosure. The dentist-selection section contains three cards about professional licensing, whitening experience, and treatment-plan clarity. It does not assign invented names, identities, licences, or credentials to the illustrated people; the footer discloses that the imagery is AI-generated.
 
 ## 6. FAQ source of truth
 
