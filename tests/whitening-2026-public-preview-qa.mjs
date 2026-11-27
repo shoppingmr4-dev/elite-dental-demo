@@ -57,16 +57,17 @@ try {
       assert.match(socialMeta.title, /تبييض الأسنان بخطة تناسب حالتك/, "Open Graph title must lead with the whitening service and patient-specific plan");
       assert.match(socialMeta.description, /تعرّف إلى أسباب تغيّر لون الأسنان وخيارات التبييض/, "Open Graph description must explain the whitening subject and its useful content");
       assert.match(socialMeta.pageDescription, /تبييض الأسنان وخياراته، وأسباب تغيّر اللون/, "Search description must explain the whitening content without a demo label");
-      assert.ok(socialMeta.imageAlt.includes("مولّدة بالذكاء الاصطناعي"), "Open Graph image alt must disclose the AI illustration");
+      assert.ok(socialMeta.imageAlt.includes("صورة توضيحية لطبيب أسنان"), "Open Graph image alt must accurately describe the portrait");
       const footerDisclosure=await page.locator(".footer-notes").innerText();
-      assert.ok(footerDisclosure.includes("رُواء مشروع تجريبي ضمن معرض أعمال أبيكس ستوديو") && footerDisclosure.includes("لا يمثّل عيادة قائمة"), "Fictional-project disclosure must appear in the footer");
+      assert.ok(footerDisclosure.includes("رُواء نموذج تصميمي ضمن معرض أعمال أبيكس ستوديو") && footerDisclosure.includes("لا يمثّل عيادة قائمة"), "Fictional-project disclosure must appear in the footer");
+      assert.ok(footerDisclosure.includes("صور مولّدة بالذكاء الاصطناعي") && footerDisclosure.includes("لا تمثّل أشخاصًا حقيقيين"), "AI-generated-image disclosure must appear in the footer");
       const preFooterCopy=await page.locator("body").evaluate(el=>{
         const footer=el.querySelector(".footer");
         const clone=el.cloneNode(true);
         clone.querySelector(".footer")?.remove();
         return clone.innerText;
       });
-      assert.doesNotMatch(preFooterCopy,/هذا النموذج|هذه صفحة تجريبية|نموذج توضيحي|نموذج تجريبي|النموذج التجريبي/, "Do not identify the site as a demo outside the footer");
+      assert.doesNotMatch(preFooterCopy,/هذا النموذج|هذه صفحة تجريبية|نموذج توضيحي|نموذج تجريبي|نموذج تصميمي|مشروع تجريبي|النموذج التجريبي/, "Do not identify the site as a demo outside the footer");
       assert.equal(socialMeta.twitterCard, "summary_large_image", "Twitter large-image card type is missing");
       assert.equal(socialMeta.twitterImage, socialMeta.image, "Twitter and Open Graph image URLs must match");
       const imageResponse = await context.request.get(socialMeta.image, { timeout: 45000 });
@@ -132,7 +133,7 @@ try {
         heroImageTiltDegrees:(()=>{if(!heroPortrait)return 0;const transform=getComputedStyle(heroPortrait).transform;if(transform==="none")return 0;const values=transform.slice(transform.indexOf("(")+1,-1).split(",").map(Number);return values.length===6?Math.atan2(values[1],values[0])*180/Math.PI:0;})(),
         heroImagePreloadPresent: [...document.querySelectorAll('link[rel="preload"][as="image"]')].some(link=>new URL(link.href).pathname.endsWith("/assets/ruwa-hero-90-768.webp")),
         heroMarkupImageReferencePresent: Boolean(document.querySelector(".hero")?.innerHTML.includes("assets/ruwa-hero-90-768.webp")),
-        heroImageDisclosurePresent: document.body.innerText.includes("الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا."),
+        heroImageDisclosurePresent: Boolean(document.querySelector(".footer-notes")?.innerText.includes("صور مولّدة بالذكاء الاصطناعي")),
         heroVisualNodeCount: document.querySelectorAll(".photo-frame,.visual-backdrop,.visual-outline,.visual-index,.visual-caption,.visual-side-note,.photo-label").length,
         heroBottomItemCount: document.querySelectorAll(".hero-bottom-item").length,
         heroCopyLayoutValid: (() => {
