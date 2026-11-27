@@ -28,11 +28,11 @@ The Hero portrait at `assets/ruwa-hero-90-768.webp` is the approved AI-generated
 
 The team contains three distinct AI-generated male dentist illustrations with a visible disclosure. They do not represent real doctors or clinic employees. No doctor identities, degrees, licences, experience, verified reviews, ratings, treatment outcomes, clinic addresses, opening hours, fees, phone numbers, or operational booking services are supplied.
 
-There is **one floating WhatsApp demo control**. It appears only after the Hero's primary internal navigation link leaves the viewport and opens an accessible dialog that explicitly explains that no real WhatsApp channel is connected. The Hero primary and secondary CTAs, header CTA, and final-section CTAs are working internal links to page sections; none implies a live phone call, WhatsApp conversation, appointment, or booking. The phone and WhatsApp configuration values remain empty. No patient data is collected.
+The Hero restores two visible contact buttons: «تواصل عبر واتساب» and «اتصل بنا». The header also restores «اتصل بنا» with a phone icon. All three open the accessible contact-unavailable dialog because this is a fictional demo with empty phone and WhatsApp settings; none invents a number or pretends to place a call or send a message. The floating WhatsApp preview remains available after the Hero WhatsApp button leaves the viewport. The final section retains two internal links to the FAQ and assessment journey. No patient data is collected.
 
 ## Page architecture
 
-1. Hero — whitening proposition, approved illustrative portrait, and contact actions.
+1. Hero — whitening proposition, approved illustrative portrait, WhatsApp contact button, and call-us button.
 2. Causes of discoloration — surface stains and deeper colour changes.
 3. Whitening options — general educational descriptions, not a claim about a real clinic's services.
 4. Assessment and treatment journey — four steps from oral-health assessment and option selection to the agreed procedure and aftercare.
@@ -41,7 +41,7 @@ There is **one floating WhatsApp demo control**. It appears only after the Hero'
 7. Review transparency — three informational cards explaining source verification, explicit permission, and faithful presentation. No hypothetical patient quotations, testimonials, rating stars, or review scores are displayed.
 8. Location-section preview — a local abstract Riyadh SVG with an explicit notice that it is not a real map or clinic location; the city-wide Google Maps search is not a clinic pin.
 9. FAQ — six focused native HTML details/summary entries covering session count, result longevity, stain types, DIY-whitening cautions, sensitivity, and the effect on restorations.
-10. Next step — working internal links to the FAQ and assessment sections. One floating WhatsApp demo control remains as a disclosed preview only; no live contact or booking is available.
+10. Next step — working internal links to the FAQ and assessment sections. Hero and header contact buttons and the floating WhatsApp preview all open the disclosed demo dialog; no live contact or booking is available.
 
 The shared header, navigation, announcement strip, and footer support these sections; they are not additional numbered content sections.
 
@@ -68,7 +68,7 @@ npm run test:ruwa:consistency
 npx playwright install chromium
 ```
 
-The consistency gate verifies the ten-section order and numbering, the combined safety/expectations area, three disclosed team portraits with verified-information placeholders, three review-transparency cards with no patient quotations or decorative ratings, six focused FAQ entries, truthful internal CTAs, one floating WhatsApp demo control, the responsive menu, ARIA targets, footer and metadata demo disclosures, root redirect, and both preview redirects.
+The consistency gate verifies the ten-section order and numbering, the combined safety/expectations area, three disclosed team portraits with verified-information placeholders, three review-transparency cards with no patient quotations or decorative ratings, six focused FAQ entries, restored WhatsApp and phone demo buttons, truthful final-section internal links, and one floating WhatsApp preview, the responsive menu, ARIA targets, footer and metadata demo disclosures, root redirect, and both preview redirects.
 
 The **RUWA Browser QA** GitHub Actions workflow runs the consistency gate, Playwright Chromium checks, full-page responsive captures, Hero fold checks, approved-Hero SHA validation, and immutable public-preview verification.
 
