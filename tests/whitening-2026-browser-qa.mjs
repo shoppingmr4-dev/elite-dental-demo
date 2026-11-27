@@ -440,7 +440,7 @@ try {
             suitability:{padding:pad("#suitability"),markerToHeading:gap("#suitability .section-marker","#suitability h2"),
               headingToCopy:gap("#suitability h2","#suitability .suitability-copy p"),gridGap:style(".suitability-grid")?.gap||null,
               checkItemPadding:style(".check-item")?.padding||null,noteMargin:style(".clinical-note")?.marginTop||null},
-            expectations:{padding:pad("#suitability .expectations-panel"),markerToHeading:gap("#suitability .expectations-panel .section-marker","#suitability .expectations-panel h3"),
+            expectations:{padding:pad("#suitability .expectations-panel"),markerToHeading:gap("#suitability .expectations-panel .expectations-kicker","#suitability .expectations-panel h3"),
               headingToCopy:gap("#suitability .expectations-panel h3","#suitability .expectations-panel .section-head p"),
               introToCards:gap("#suitability .expectations-panel .section-head","#suitability .expect-grid"),cardPadding:style(".expect-card")?.padding||null},
             faq:{padding:pad("#faq"),markerToHeading:gap("#faq .section-marker","#faq h2"),
