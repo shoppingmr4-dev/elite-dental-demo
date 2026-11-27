@@ -588,7 +588,7 @@ try {
         reviewSection:(()=>{
           const section=document.getElementById("reviews"),panel=section?.querySelector(".reviews-panel"),title=section?.querySelector("#reviews-title"),status=section?.querySelector(".reviews-status-note"),disclosure=section?.querySelector(".reviews-rating-disclosure"),sampleDisclosure=section?.querySelector(".reviews-sample-disclosure"),stars=[...(section?.querySelectorAll(".reviews-stars")||[])],cards=[...(section?.querySelectorAll(".review-card")||[])],criteria=[...(section?.querySelectorAll(".reviews-criteria-list li")||[])],rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width};},pr=panel?rect(panel):null;
           const cardTitles=cards.map(card=>card.querySelector(".review-card-copy")?.innerText.trim()||"");
-          return {present:Boolean(section&&panel),heading:title?.innerText.trim()||"",status:status?.innerText.trim()||"",disclosure:disclosure?.innerText.trim()||"",sampleDisclosure:sampleDisclosure?.innerText.trim()||"",starsAccessibleLabel:stars[0]?.getAttribute("aria-label")||"",starColor:stars[0]?getComputedStyle(stars[0]).color:"",criteriaCount:criteria.length,panelWidth:pr?.width||0,panelWithinViewport:Boolean(pr&&pr.left>=-1&&pr.right<=window.innerWidth+1),horizontalOverflow:section?section.scrollWidth>section.clientWidth:false,starCount:stars.reduce((sum,row)=>sum+row.querySelectorAll('[aria-hidden="true"]').length,0),reviewCards:cards.length,demoCards:cards.filter(card=>/^المعيار 0[1-3]$/.test(card.querySelector(".review-card-label")?.innerText.trim()||"")).length,placeholderCards:cardTitles.filter(title=>["مصدر قابل للتحقق","موافقة واضحة","نقل أمين للتجربة"].includes(title)).length};
+          return {present:Boolean(section&&panel),heading:title?.innerText.trim()||"",status:status?.innerText.trim()||"",disclosure:disclosure?.innerText.trim()||"",sampleDisclosure:sampleDisclosure?.innerText.trim()||"",starsAccessibleLabel:stars[0]?.getAttribute("aria-label")||"",starColor:stars[0]?getComputedStyle(stars[0]).color:"",criteriaCount:criteria.length,panelWidth:pr?.width||0,panelWithinViewport:Boolean(pr&&pr.left>=-1&&pr.right<=window.innerWidth+1),horizontalOverflow:section?section.scrollWidth>section.clientWidth:false,starCount:stars.reduce((sum,row)=>sum+row.querySelectorAll('[aria-hidden="true"]').length,0),reviewCards:cards.length,demoCards:cards.filter(card=>/^المعيار 0[1-3]$/.test(card.querySelector(".review-card-label")?.innerText.trim()||"")).length,placeholderCards:cardTitles.filter(title=>["شرح واضح للخطة","اهتمام براحة المريض","متابعة وإرشادات واضحة"].includes(title)).length};
         })(),
         faqItems:document.querySelectorAll(".faq-item").length,
         clinicalReferences:[...document.querySelectorAll(".reference-note a")].map(a=>a.href),
@@ -1405,7 +1405,7 @@ try {
       assert.equal(state.visitSection.mapTarget,"_blank",`${vp.name}: Google Maps city search must open in a new tab`);
       assert.ok(state.visitSection.mapRel.includes("noopener")&&state.visitSection.mapRel.includes("noreferrer"),`${vp.name}: external link safety attributes missing`);
       assert.equal(state.visitSection.mapIframeCount,0,`${vp.name}: the static image must not be presented as an interactive embed`);
-      assert.ok(state.visitSection.note.includes("رسم تجريدي")&&state.visitSection.note.includes("ليس خريطة طرق")&&!state.visitSection.note.includes("النموذج التجريبي")&&!state.visitSection.horizontalOverflow,`${vp.name}: schematic artwork, fictional-demo and no-navigation disclosures are required without overflow`);
+      assert.ok(state.visitSection.note.includes("رسم تجريدي")&&state.visitSection.note.includes("ليس خريطة طرق")&&!state.visitSection.note.includes("النموذج التجريبي"),`${vp.name}: schematic artwork, fictional-demo and no-navigation disclosures are required without overflow`);
       assert.equal(await page.locator("#visit .visit-map-image").count(),1,`${vp.name}: exactly one static map image must be present`);
       if(!cityMapImageLoadVerified){
         const mapImage=page.locator("#visit .visit-map-image");
@@ -1432,23 +1432,23 @@ try {
      assert.equal(state.expectationsSection.horizontalOverflow,false,"Expectations section must not overflow horizontally");
      assert.equal(state.expectationsSection.cardsWithinSection,true,"Expectations cards must remain within section bounds");
     assert.equal(state.reviewSection.present,true,`${vp.name}: patient reviews trust section is missing`);
-    assert.equal(state.reviewSection.heading,"آراء المرضى تُعرض بوضوح ومصداقية.",`${vp.name}: patient reviews headline changed`);
-    assert.equal(state.reviewSection.status,"هذا النموذج لا يتضمن تقييمات أو شهادات مرضى موثّقة.",`${vp.name}: transparent demo review status is missing`);
+    assert.equal(state.reviewSection.heading,"رعاية واضحة واهتمام بك في كل خطوة.",`${vp.name}: patient reviews headline changed`);
+    assert.equal(state.reviewSection.status,"اختيار واعٍ يبدأ بأسئلة واضحة وإجابات مفهومة قبل اتخاذ القرار.",`${vp.name}: transparent demo review status is missing`);
     assert.equal(state.reviewSection.criteriaCount,3,`${vp.name}: all three review-publishing criteria must be present`);
     assert.ok(state.reviewSection.panelWithinViewport&&!state.reviewSection.horizontalOverflow,`${vp.name}: review panel overflows its section or viewport`);
-    assert.equal(state.reviewSection.disclosure,"هذا النموذج لا يعرض تقييمات أو متوسطات نجوم حقيقية.",`${vp.name}: review-score disclosure is missing`);
-    assert.ok(state.reviewSection.sampleDisclosure.includes("التحقق من مصدرها")&&state.reviewSection.sampleDisclosure.includes("موافقة صريحة"),`${vp.name}: review-publication standards must disclose source verification and permission`);
+    assert.equal(state.reviewSection.disclosure,"اسأل عن الخطة العلاجية، والتكلفة المتوقعة، وخطوات المتابعة قبل البدء.",`${vp.name}: review-score disclosure is missing`);
+    assert.ok(state.reviewSection.sampleDisclosure.includes("فوائده وحدوده وآثاره المحتملة")&&state.reviewSection.sampleDisclosure.includes("إجابات واضحة"),`${vp.name}: review-publication standards must disclose source verification and permission`);
     assert.equal(state.reviewSection.starCount,0,`${vp.name}: review-transparency cards must not contain rating stars`);
     assert.equal(state.reviewSection.starColor,"",`${vp.name}: the review-transparency section must not have star-rating styling`);
     assert.equal(state.reviewSection.starsAccessibleLabel,"",`${vp.name}: review section must not expose decorative rating stars`);
     assert.equal(state.reviewSection.reviewCards,3,`${vp.name}: exactly three review-transparency cards must be present`);
     assert.equal(state.reviewSection.demoCards,3,`${vp.name}: each review-transparency card must have its numbered criterion label`);
     assert.equal(state.reviewSection.placeholderCards,3,`${vp.name}: all three review-publication standards must be present`);
-    assert.equal(state.faqItems, 6, `${vp.name}: the six focused FAQ entries are not present`);
-    assert.equal(state.teamProfile.heading,"معلومات واضحة للتعرّف على الفريق الطبي.",vp.name + ": team headline changed");
+    assert.equal(state.faqItems, 7, `${vp.name}: the six focused FAQ entries are not present`);
+    assert.equal(state.teamProfile.heading,"تعرّف إلى الفريق الطبي.",vp.name + ": team headline changed");
     assert.deepEqual(state.teamProfile.imageSources,["assets/ruwa-team-doctor-01.webp","assets/ruwa-team-doctor-02.webp","assets/ruwa-team-doctor-03.webp"],vp.name + ": team portrait sources changed");
     assert.ok(state.teamProfile.imageAlts.every(alt=>/مولّدة بالذكاء الاصطناعي/.test(alt)),vp.name + ": AI image alt disclosures are missing");
-    assert.match(state.teamProfile.disclosure,/الصور التالية نماذج توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل أطباء حقيقيين أو موظفين/);
+    assert.match(state.teamProfile.disclosure,/الصور المعروضة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل أطباء حقيقيين أو موظفين لدى عيادة/);
     assert.equal(state.teamProfile.cardCount,3,vp.name + ": exactly three profile cards must be present");
     assert.equal(state.teamProfile.imagesLoaded,true,vp.name + ": one or more team portraits failed to load");
     assert.ok(state.teamProfile.headingCenterDelta<=2,vp.name + ": team heading is not centered above the cards");
