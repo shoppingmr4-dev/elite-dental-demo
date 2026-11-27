@@ -706,11 +706,13 @@ body,button,input,select,textarea{font-family:var(--body)}
 }
 @media(max-width:390px){
  .site-header{width:calc(100% - var(--gutter)*2 - 6px)}
- .header-inner{padding-inline:6px;gap:5px}
+ /* Free enough room for the fixed 44px menu hit target on 320px phones. */
+ .header-inner{padding-inline:4px;gap:3px}
  .brand{gap:5px}
  .brand-mark{width:42px;height:36px}
  .brand-mark img{width:40px;height:35px}
- .header-action{min-height:36px;padding-inline:7px;font-size:10.5px;gap:5px}
+ .header-action{min-height:36px;padding-inline:4px;font-size:10.5px;gap:0}
+ .header-action svg{display:none}
  .header-action .whatsapp-brand-icon{width:15px;height:15px}
  .menu-toggle{width:36px;height:36px}
 }
