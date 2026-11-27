@@ -270,19 +270,19 @@ for (const [name, content] of [
 }
 
 assert.match(readme, /10 content sections/);
-assert.match(readme, /6 FAQ entries/);
+assert.match(readme, /7 FAQ entries/);
 assert.match(readme, /floating WhatsApp preview/);
 assert.match(designSystem, /10 content sections/);
-assert.match(designSystem, /6 native HTML details\/summary FAQ entries/);
+assert.match(designSystem, /7 native HTML details\/summary FAQ entries/);
 assert.match(designSystem, /one circular WhatsApp preview/);
 assert.match(caseStudy, /10 أقسام رئيسية/);
-assert.match(caseStudy, /ستة أسئلة/);
+assert.match(caseStudy, /سبعة أسئلة/);
 assert.match(caseStudy, /زري تواصل في Hero.*واتساب.*اتصل بنا/);
 assert.match(productionAudit, /10 main content sections/);
-assert.match(productionAudit, /6 native details entries/);
+assert.match(productionAudit, /7 native details entries/);
 assert.match(productionAudit, /one floating WhatsApp demo control/);
 
 console.log("RUWA repository consistency: PASS");
-console.log("Sections: 10 | Reviews: no fabricated testimonials or ratings | FAQ: 6 | Contact: restored WhatsApp/phone buttons use disclosed demo dialog");
+console.log("Sections: 10 | Reviews: no fabricated testimonials or ratings | FAQ: 7 | Contact: restored WhatsApp/phone buttons use disclosed demo dialog");
 console.log("ARIA controls: all targets exist | Hero AI illustration disclosure: present");
 console.log("Repository root and legacy preview paths: redirect to whitening-2026.html");
