@@ -281,8 +281,8 @@ try {
           viewport.name + ": navigation rows must restore their original 46px height");
       }
     }
-    assert.equal(staggerState.linkOpacity.length, 7,
-      viewport.name + ": the stagger must include all seven navigation links");
+    assert.equal(staggerState.linkOpacity.length, 8,
+      viewport.name + ": the stagger must include all eight navigation links");
     assert.ok(staggerState.linkOpacity[0] > .95 &&
       staggerState.linkOpacity[1] > staggerState.linkOpacity[2] &&
       staggerState.linkOpacity[2] > staggerState.linkOpacity[3],
@@ -375,8 +375,8 @@ try {
         viewport.name + ": desktop side panel background is missing");
       assert.equal(opened.navStyle.borderTopWidth, "1px",
         viewport.name + ": desktop side panel border is missing");
-      assert.equal(opened.visibleLinks.length, 7,
-        viewport.name + ": desktop left-side panel must expose all seven navigation links");
+      assert.equal(opened.visibleLinks.length, 8,
+        viewport.name + ": desktop left-side panel must expose all eight navigation links");
       assert.ok(opened.rect.width >= 200 && opened.rect.width <= 424 &&
         opened.rect.height >= 300,
         viewport.name + ": Contact panel dimensions are not consistent with its full vertical link list");
@@ -572,7 +572,7 @@ try {
   const menuHrefs = await interactionPage.locator("#main-nav a[href^='#']").evaluateAll(
     links => links.map(link => link.getAttribute("href"))
   );
-  assert.ok(menuHrefs.length >= 7, "Expected all seven native navigation links to remain available");
+  assert.equal(menuHrefs.length, 8, "All eight native navigation links must remain available");
   for (const href of menuHrefs) {
     await interactionPage.locator("#main-nav a[href='" + href + "']").click();
     await interactionPage.waitForFunction(expectedHref => {
@@ -785,7 +785,7 @@ try {
     viewports: viewportResults,
     interactions: [
       "desktop menu opens below Contact with the original hamburger-origin circular frame reveal",
-      "all seven side-panel links reveal sequentially after the circular frame begins expanding",
+      "all eight side-panel links reveal sequentially after the circular frame begins expanding",
       "reverse circular frame close, reverse-staggered links and rapid reopen support",
       "Escape closes and restores focus",
       "native anchor destination remains active",
