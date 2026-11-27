@@ -1565,7 +1565,16 @@ body,button,input,select,textarea{font-family:var(--body)}
  }
 }
 
-
+/* Narrow-phone header fit: retain the 44px menu hit area while freeing the icon and brand width. */
+@media(max-width:390px){
+ .site-header .header-action > svg{display:none!important}
+ .site-header .brand-mark{width:38px;height:34px}
+ .site-header .brand-mark img{width:36px;height:32px}
+ .site-header .brand-name strong{font-size:23px}
+ .site-header .brand-name small{font-size:9px}
+ .site-header .brand{gap:3px}
+ .site-header .header-inner{gap:2px}
+}
 
 </style>
 
