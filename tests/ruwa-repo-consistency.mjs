@@ -272,7 +272,7 @@ for (const [name, content] of [
 
 assert.match(readme, /10 content sections/);
 assert.match(readme, /7 FAQ entries/);
-assert.match(readme, /floating WhatsApp preview/);
+assert.match(readme, /floating WhatsApp control/);
 assert.match(designSystem, /10 content sections/);
 assert.match(designSystem, /7 native HTML details\/summary FAQ entries/);
 assert.match(designSystem, /one circular WhatsApp preview/);
