@@ -283,7 +283,7 @@ assert.match(caseStudy, /سبعة أسئلة/);
 assert.match(caseStudy, /زري تواصل في Hero.*واتساب.*اتصل بنا/);
 assert.match(productionAudit, /10 main content sections/);
 assert.match(productionAudit, /7 native details entries/);
-assert.match(productionAudit, /one floating WhatsApp demo control/);
+assert.match(productionAudit, /one floating WhatsApp control/);
 
 console.log("RUWA repository consistency: PASS");
 console.log("Sections: 10 | Reviews: no fabricated testimonials or ratings | FAQ: 7 | Contact: restored WhatsApp/phone buttons use disclosed demo dialog");
