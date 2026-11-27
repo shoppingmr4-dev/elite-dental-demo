@@ -81,12 +81,12 @@ Content sections in actual DOM order:
 | 04 | journey | Assessment and treatment journey | Combine oral-health assessment, option discussion, agreed procedure, and aftercare into four ordered steps |
 | 05 | suitability | Suitability, safety, and realistic expectations | Combine health/timing factors with result variation, potential effects, restoration limits, and aftercare |
 | 06 | team | Team-section preview | Three illustrative portraits with a disclosure in the footer and accessible image descriptions; no invented doctor identities or credentials |
-| 07 | reviews | Patient experience | Three informational cards about treatment-plan clarity, patient comfort and privacy, and follow-up guidance; no invented testimonials, quotations, star icons, or scores |
+| 07 | reviews | Patient reviews | Three clearly labelled slots reserved for genuine, verified and permissioned patient feedback; no invented testimonials, quotations, star icons, or scores |
 | 08 | visit | Location and access | A Riyadh-themed local visual with a city-wide Google Maps search; no precise branch address is invented |
 | 09 | faq | Frequently asked questions | Answer six focused questions about session count, result longevity, surface versus intrinsic discoloration, unsafe DIY whitening trends, sensitivity, and the effect of whitening on restorations |
 | 10 | consultation | Next step | Two working internal links to the FAQ and assessment sections; no booking, phone, or live WhatsApp claim |
 
-The assessment content now lives inside the first two steps of the four-step treatment journey. Suitability and safety remain together with a nested realistic-expectations panel, preserving its four patient-information cards. The patient-experience section contains three practical priorities: a clearly explained treatment plan, patient comfort and privacy, and follow-up guidance. It does not present fabricated quotations as real patient reviews. The location section introduces Riyadh and provides a city-wide Google Maps search without inventing a branch address. The footer is the only visible location for the fictional-portfolio disclosure and the AI-image disclosure. The team section contains three profile-style cards using AI-generated portraits, with no invented doctor names, identities, licences, or professional credentials.
+The assessment content now lives inside the first two steps of the four-step treatment journey. Suitability and safety remain together with a nested realistic-expectations panel, preserving its four patient-information cards. The patient-reviews section contains three clearly labelled spaces for genuine patient experiences covering plan clarity, patient comfort, and aftercare. No quote or rating is invented or represented as an actual patient review; each published review must be verified and approved by its author. The location section introduces Riyadh and provides a city-wide Google Maps search without inventing a branch address. The footer is the only visible location for the fictional-portfolio disclosure and the AI-image disclosure. The team section contains three profile-style cards using AI-generated portraits, with no invented doctor names, identities, licences, or professional credentials.
 
 ## 6. FAQ source of truth
 
@@ -122,7 +122,7 @@ Before adaptation for a real clinic:
 - Do not fabricate ratings, review counts, before/after photos, clinical outcomes, equipment, facilities, discounts, or prices.
 - Do not ask visitors to send dental photographs or sensitive health details through an ordinary marketing chat.
 
-Verified doctor identities and professional credentials, genuine reviews, clinic photographs, pricing, precise maps, and opening hours must be supplied before presenting them as clinic facts. The current patient-experience panel gives prospective visitors useful questions about the plan, cost, comfort, and follow-up; it does not attribute invented statements to patients.
+Verified doctor identities and professional credentials, genuine reviews, clinic photographs, pricing, precise maps, and opening hours must be supplied before presenting them as clinic facts. The current patient-reviews panel reserves space for authentic feedback but contains no fabricated patient statements or star ratings. Reviews may be published only after verification and explicit permission.
 
 ## 9. Engineering constraints
 
