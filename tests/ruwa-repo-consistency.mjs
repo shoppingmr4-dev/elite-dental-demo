@@ -244,7 +244,7 @@ assert.ok(footerTargets.length >= 9, "RUWA footer must provide useful internal n
 assert.ok(footer.includes('<a href="#journey">خطوات التقييم</a>'), "Footer must link to the treatment journey");
 assert.ok(footer.includes('<a href="#visit">الموقع وطرق الوصول</a>'), "Footer must link to the location section");
 assert.deepEqual(footerTargets.filter(target => !ids.has(target)), [], "Every RUWA footer navigation target must exist on the page");
-assert.match(footer, /رُواء مشروع تجريبي ضمن معرض أعمال أبيكس ستوديو/);
+assert.match(footer, /رُواء نموذج تصميمي ضمن معرض أعمال أبيكس ستوديو/);
 assert.match(footer, /الصور المستخدمة لأغراض العرض، ومنها صور مولّدة بالذكاء الاصطناعي، لا تمثّل أشخاصًا حقيقيين/);
 assert.match(footer, /المحتوى للتثقيف العام ولا يغني عن تقييم طبيب الأسنان/);
 
