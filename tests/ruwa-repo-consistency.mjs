@@ -131,7 +131,7 @@ assert.ok(reviewsStart > html.indexOf('id="team"') && reviewsStart < visitPositi
 const reviewsSection = html.slice(reviewsStart, html.indexOf("</section>", reviewsStart) + 10);
 assert.ok(reviewsSection.includes("القسم السابع: آراء المرضى"), "Patient review section marker must be number 07");
 assert.ok(reviewsSection.includes("آراء المرضى وتجاربهم"), "Patient review headline is missing");
-assert.ok(reviewsSection.includes("تُعرض آراء المرضى بعد التحقق من مصدرها والحصول على موافقتهم"), "Review authenticity and permission requirements must be disclosed");
+assert.ok(reviewsSection.includes("تُعرض هنا تجارب المرضى بعد التحقق من مصدرها والحصول على موافقتهم"), "Review authenticity and permission requirements must be disclosed");
 assert.equal([...reviewsSection.matchAll(/<article class="review-card">/g)].length, 3, "Exactly three review placeholder cards must be present");
 assert.equal([...reviewsSection.matchAll(/class="review-card-label">تجربة موثّقة/g)].length, 3, "Each review slot must be clearly labelled for verified patient feedback");
 assert.equal([...reviewsSection.matchAll(/class="review-card-copy">(?:تُدرج هنا تجربة مريض حقيقية|تُضاف هنا تجربة فعلية|يُدرج هنا رأي مريض موثّق)/g)].length, 3, "Review slots must remain placeholders for genuine patient statements");
