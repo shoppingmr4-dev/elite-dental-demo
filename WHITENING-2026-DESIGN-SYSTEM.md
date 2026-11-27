@@ -96,17 +96,17 @@ Do not add duplicate questions simply to increase page length. Keep FAQ answers 
 
 ## 7. Contact behavior — exact current state
 
-There is **one floating WhatsApp demo control**. The Hero CTA, header CTA, and final-section CTAs are internal links to relevant sections:
+The Hero and header restore their contact actions. The three top-of-page buttons open the disclosed demo contact dialog because the fictional portfolio has no real phone or WhatsApp number:
 
-- Header: «استكشف الخيارات» links to #options.
-- Hero primary: «استكشف خيارات التبييض» links to #options.
-- Hero secondary: «تعرّف على خطوات التقييم» links to #journey. The supporting copy explains that suitability depends on discoloration cause, oral health, and an individualized dental assessment.
-- Final section: links to #faq and #journey.
-- Floating control: one circular WhatsApp preview appears only while the Hero primary link is outside the viewport.
+- Header: «اتصل بنا» with a phone icon; opens the contact-unavailable dialog.
+- Hero primary: «تواصل عبر واتساب» with the WhatsApp icon; opens the contact-unavailable dialog.
+- Hero secondary: «اتصل بنا» with a phone icon; opens the contact-unavailable dialog.
+- Final section: the two internal links to #faq and #journey remain unchanged.
+- Floating control: one circular WhatsApp preview appears after the Hero WhatsApp button leaves the viewport.
 
-The central JavaScript configuration keeps WHATSAPP_NUMBER and PHONE_NUMBER empty. The floating preview opens the accessible contact dialog, which explicitly states that this is a demo and no real WhatsApp, phone, or booking channel is connected. The control leaves the keyboard tab order while hidden. The dialog supports close controls, Escape, backdrop click, focus placement/restoration, and temporary background scroll lock. No patient data is collected or transmitted.
+The central JavaScript configuration keeps WHATSAPP_NUMBER and PHONE_NUMBER empty. The header phone button, both Hero contact buttons, and the floating WhatsApp preview open the accessible contact dialog, which explicitly states that this is a demo and no real WhatsApp, phone, or booking channel is connected. The control leaves the keyboard tab order while hidden. The dialog supports close controls, Escape, backdrop click, focus placement/restoration, and temporary background scroll lock. No patient data is collected or transmitted.
 
-The header, Hero, and final-section links do not pretend to call, message, or book. Every aria-controls reference must still resolve to an existing ID; the floating control references contact-unavailable-dialog and the mobile menu references main-nav.
+The header and Hero controls are contact buttons, not live call or messaging links; the final-section actions remain internal links and do not imitate a booking. Every aria-controls reference must still resolve to an existing ID; all contact buttons reference contact-unavailable-dialog and the mobile menu references main-nav.
 
 There is no HTML form, lead endpoint, appointment inventory, booking confirmation, message-copy feature, or real clinic contact channel in this version. Do not describe a dialog or internal navigation as a booking or conversion.
 
