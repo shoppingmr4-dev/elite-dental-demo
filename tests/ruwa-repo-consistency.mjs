@@ -45,7 +45,7 @@ assert.ok(visitSection.includes("الرياض") && visitSection.includes("الم
 assert.ok(visitSection.includes("موقع رُواء في الرياض") && visitSection.includes("رُواء لطب الأسنان"), "Location identity must be visible");
 assert.ok(visitSection.includes("مدينة الرياض بالكامل"), "The displayed geographic scope must remain the whole city");
 assert.ok(visitSection.includes("عنوان الفرع") && visitSection.includes("غير محدد في هذا النموذج"), "Do not invent an exact branch address");
-assert.ok(visitSection.includes("النموذج التجريبي") && visitSection.includes("لا يمثل موقعًا دقيقًا للعيادة"), "Disclose that this is a fictional demo and not a real clinic location");
+assert.ok(visitSection.includes("النموذج التجريبي") && visitSection.includes("ولا تمثل موقعًا دقيقًا للعيادة"), "Disclose that this is a fictional demo and not a real clinic location");
 const mapImage = visitSection.match(/<img\b[^>]*data-visit-map-image[^>]*>/)?.[0] || "";
 assert.ok(mapImage.includes("https://mapmap.ai/api/static-map?center=46.6753%2C24.7136"), "Use a static city-level Riyadh map image, not a generated visual or interactive map");
 assert.ok(mapImage.includes('loading="lazy"') && mapImage.includes('width="1200"') && mapImage.includes('height="720"'), "Map image must lazy-load and reserve its intrinsic dimensions");

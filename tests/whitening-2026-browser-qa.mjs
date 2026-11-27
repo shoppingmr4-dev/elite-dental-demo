@@ -18,6 +18,8 @@ const viewports = [
   { name: "desktop-1440", width: 1440, height: 900, mobile: false }
 ];
 
+let cityMapImageLoadVerified = false;
+
 
 async function measureHeader(page) {
   return page.evaluate(() => {
@@ -1409,6 +1411,18 @@ try {
       assert.equal(state.visitSection.mapIframeCount,0,`${vp.name}: the static image must not be presented as an interactive embed`);
       assert.ok(state.visitSection.note.includes("خريطة عامة وثابتة")&&state.visitSection.note.includes("النموذج التجريبي")&&!state.visitSection.horizontalOverflow,`${vp.name}: static-map, fictional-demo, and city-only disclosures are required without overflow`);
       assert.equal(await page.locator("#visit .visit-map-image").count(),1,`${vp.name}: exactly one static map image must be present`);
+      if(!cityMapImageLoadVerified){
+        const mapImage=page.locator("#visit .visit-map-image");
+        await mapImage.scrollIntoViewIfNeeded();
+        const mapLoaded=await mapImage.evaluate(async image=>{
+          image.loading="eager";
+          try{await image.decode();}catch(error){}
+          return image.complete&&image.naturalWidth>0;
+        });
+        assert.equal(mapLoaded,true,`${vp.name}: static Riyadh map image must load and decode in Chromium`);
+        cityMapImageLoadVerified=true;
+        await page.evaluate(()=>window.scrollTo({top:0,left:0,behavior:"instant"}));
+      }
     assert.deepEqual(state.duplicateIds, [], `${vp.name}: duplicate HTML IDs detected`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
     assert.equal(state.journeyStepCount,4,`${vp.name}: treatment journey must contain four clear steps`);
