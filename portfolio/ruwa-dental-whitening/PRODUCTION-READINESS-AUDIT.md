@@ -38,12 +38,12 @@ The actual current DOM order is:
 | 05 | suitability | Suitability, safety, and realistic expectations | KEEP / consolidated / clinical review required | Combines health and timing factors with result variation, possible effects, restoration limits, and aftercare. |
 | 06 | team | Dentist/team | KEEP / unchanged demo-only section | The three distinct AI-generated illustrative male portraits remain exactly as approved; no real clinician identity or credentials are claimed. |
 | 07 | reviews | Patient reviews | KEEP / explicitly illustrative | Three hypothetical patient-priority phrases appear in pastel cards with yellow decorative stars; every card and the section disclose that no authentic patient review or score is represented. |
-| 08 | visit | Clinic location | KEEP / city-level only | Displays a static city map image of Riyadh rendered from OpenStreetMap data via MapMap, with source attribution and a general Google Maps city-search link; no clinic pin or exact address is supplied. |
-| 09 | faq | Frequently asked questions | KEEP | Two non-redundant native details/summary entries are present. |
+| 08 | visit | City context | KEEP / city-level only | Uses a committed local SVG illustration inspired by a city street network; it is clearly disclosed as schematic artwork, not a road map, navigation aid, clinic pin, or exact address. A separate Google Maps action searches for Riyadh city-wide only. |
+| 09 | faq | Frequently asked questions | KEEP | Four focused native details/summary entries cover sessions, result longevity, surface versus internal discoloration, and cautions about DIY whitening mixtures. |
 | 10 | consultation | Final contact | KEEP / activate only with verified details | The actions disclose that real channels are not configured. |
 | Footer | — | Portfolio and image disclosures | KEEP | Prevents the sample from being mistaken for a real operating clinic. |
 
-The team section contains three equal demo-only profile cards with distinct AI-generated illustrative male portraits extracted from an existing RUWA concept image; these are not real doctor profiles or credentials. No authentic patient review/testimonial, review count, or rating score is supplied. The patient-reviews panel contains three fictional patient-priority phrases for design demonstration only; it is not social proof, and both the section and each card disclose that the phrases and yellow stars are not genuine testimonials or ratings. A city-level location panel identifies Riyadh, Saudi Arabia, and displays a static map image rendered from OpenStreetMap data via MapMap; its external Google Maps action searches for the city rather than a clinic. It has no precise address, map pin, or branch-specific details, and the image is not represented as a live or interactive map. No before-and-after gallery, clinic gallery, pricing section, or hours-of-operation section exists in this page.
+The team section contains three equal demo-only profile cards with distinct AI-generated illustrative male portraits extracted from an existing RUWA concept image; these are not real doctor profiles or credentials. No authentic patient review/testimonial, review count, or rating score is supplied. The patient-reviews panel contains three fictional patient-priority phrases for design demonstration only; it is not social proof, and both the section and each card disclose that the phrases and yellow stars are not genuine testimonials or ratings. A city-level context panel identifies Riyadh, Saudi Arabia, and displays a local abstract SVG illustration. The artwork is explicitly not a real street map or navigation aid; its external Google Maps action searches for the city rather than a clinic. It has no precise address, map pin, or branch-specific details. No before-and-after gallery, clinic gallery, pricing section, or hours-of-operation section exists in this page.
 
 ## 4. Confirmed current content and interaction behavior
 
@@ -51,7 +51,7 @@ The team section contains three equal demo-only profile cards with distinct AI-g
 - The page has a document title, meta description, Open Graph title/description/image, and favicon.
 - The current Hero image is assets/ruwa-hero-90-768.webp.
 - The current Hero image alt text and visible caption explicitly identify it as AI-generated and not a real dentist.
-- FAQ count: **2 native details entries**.
+- FAQ count: **4 native details entries**.
 - Contact controls: **3 WhatsApp actions and 3 phone actions**, including a context-aware floating WhatsApp control and a header phone action labelled «اتصل بنا».
 - WHATSAPP_NUMBER and PHONE_NUMBER are intentionally empty.
 - When clicked with those values empty, the actions open the local contact-unavailable dialog. They do not open WhatsApp or begin a phone call.

@@ -1403,16 +1403,16 @@ try {
      assert.equal(state.visitSection.heading,"موقع رُواء في الرياض.",`${vp.name}: location heading is incorrect`);
      assert.equal(state.visitSection.city,true,`${vp.name}: location city must be Riyadh`);
      assert.equal(state.visitSection.country,true,`${vp.name}: location country is incorrect`);
-     assert.ok(state.visitSection.mapImageSrc.startsWith("https://mapmap.ai/api/static-map?center=46.6753%2C24.7136"),`${vp.name}: static Riyadh map image is missing or incorrectly centred`);
-     assert.match(state.visitSection.mapImageSrc,/style=light.*lang=ar.*pois=0/, `${vp.name}: static map must use the light Arabic-labelled, no-POI presentation`);
-     assert.ok(state.visitSection.mapImageAlt.includes("مدينة الرياض")&&state.visitSection.mapImageAlt.includes("دون تحديد موقع العيادة"),`${vp.name}: map image alternative text must explain the city-level scope`);
+     assert.equal(state.visitSection.mapImageSrc,"assets/riyadh-schematic-map.svg",`${vp.name}: visit artwork must use the committed local SVG asset`);
+
+     assert.ok(state.visitSection.mapImageAlt.includes("رسم توضيحي تجريدي")&&state.visitSection.mapImageAlt.includes("لا يمثل خريطة فعلية"),`${vp.name}: illustration alt text must disclose that it is not a real map`);
      assert.equal(state.visitSection.mapImageLoading,"lazy",`${vp.name}: location map image must load lazily`);
      assert.deepEqual([state.visitSection.mapImageWidth,state.visitSection.mapImageHeight],["1200","720"],`${vp.name}: map image dimensions must reserve layout space`);
      assert.ok(state.visitSection.mapLink.startsWith("https://www.google.com/maps/search/?api=1&query=Riyadh"),`${vp.name}: external action must search for Riyadh, not navigate to a clinic pin`);
       assert.equal(state.visitSection.mapTarget,"_blank",`${vp.name}: Google Maps city search must open in a new tab`);
       assert.ok(state.visitSection.mapRel.includes("noopener")&&state.visitSection.mapRel.includes("noreferrer"),`${vp.name}: external link safety attributes missing`);
       assert.equal(state.visitSection.mapIframeCount,0,`${vp.name}: the static image must not be presented as an interactive embed`);
-      assert.ok(state.visitSection.note.includes("خريطة عامة وثابتة")&&state.visitSection.note.includes("النموذج التجريبي")&&!state.visitSection.horizontalOverflow,`${vp.name}: static-map, fictional-demo, and city-only disclosures are required without overflow`);
+      assert.ok(state.visitSection.note.includes("رسم تجريدي")&&state.visitSection.note.includes("ليست خريطة طرق")&&state.visitSection.note.includes("النموذج التجريبي")&&!state.visitSection.horizontalOverflow,`${vp.name}: schematic artwork, fictional-demo and no-navigation disclosures are required without overflow`);
       assert.equal(await page.locator("#visit .visit-map-image").count(),1,`${vp.name}: exactly one static map image must be present`);
       if(!cityMapImageLoadVerified){
         const mapImage=page.locator("#visit .visit-map-image");
@@ -1422,7 +1422,7 @@ try {
           try{await image.decode();}catch(error){}
           return image.complete&&image.naturalWidth>0;
         });
-        assert.equal(mapLoaded,true,`${vp.name}: static Riyadh map image must load and decode in Chromium`);
+        assert.equal(mapLoaded,true,`${vp.name}: local Riyadh schematic SVG must load and decode in Chromium`);
         cityMapImageLoadVerified=true;
         await page.evaluate(()=>window.scrollTo({top:0,left:0,behavior:"instant"}));
       }

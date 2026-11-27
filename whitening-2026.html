@@ -237,7 +237,7 @@ body.dialog-open{overflow:hidden}
 .visit-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,.75fr);align-items:stretch;gap:clamp(16px,2.4vw,30px);max-width:1160px;margin-inline:auto}
 .visit-map-stage{min-width:0;min-height:0;margin:0;overflow:hidden;border:1px solid var(--line);border-radius:24px;background:#FFFFFF;box-shadow:0 20px 54px rgba(20,45,56,.09)}
 .visit-map-image-frame{position:relative;display:grid;min-height:420px;aspect-ratio:5/3;overflow:hidden;place-items:center;background:#E8EEF0}
-.visit-map-image{display:block;width:100%;height:100%;object-fit:contain;object-position:center;background:#E8EEF0}
+.visit-map-image{display:block;width:100%;height:100%;object-fit:cover;object-position:center;background:#E8EEF0}
 .visit-map-city-tag{position:absolute;top:20px;right:20px;display:inline-flex;align-items:center;gap:9px;min-height:42px;padding:8px 14px;border:1px solid rgba(20,45,56,.08);border-radius:12px;background:rgba(255,255,255,.94);color:var(--ink);font-size:12px;font-weight:800;line-height:1.5;box-shadow:0 5px 18px rgba(20,45,56,.09);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .visit-map-city-tag svg{width:17px;height:17px;flex:none;color:var(--blue)}
 .visit-map-fallback{min-height:420px;padding:28px;display:grid;place-content:center;justify-items:center;gap:14px;background:#EEF3F4;color:var(--ink2);font-size:13px;font-weight:700;text-align:center}
@@ -1888,8 +1888,8 @@ body,button,input,select,textarea{font-family:var(--body)}
      <img
       class="visit-map-image"
       data-visit-map-image
-      src="https://mapmap.ai/api/static-map?center=46.6753%2C24.7136&amp;zoom=10&amp;size=1200x720&amp;style=light&amp;lang=ar&amp;pois=0&amp;format=webp&amp;quality=88"
-      alt="خريطة طرق عامة لمدينة الرياض في المملكة العربية السعودية، دون تحديد موقع العيادة أو عنوان فرع."
+      src="assets/riyadh-schematic-map.svg"
+      alt="رسم توضيحي تجريدي مستوحى من شبكة شوارع حضرية، ولا يمثل خريطة فعلية أو مسارًا للملاحة."
       width="1200"
       height="720"
       loading="lazy"
@@ -1902,12 +1902,12 @@ body,button,input,select,textarea{font-family:var(--body)}
      </span>
     </div>
     <div class="visit-map-fallback" data-visit-map-fallback hidden role="status">
-     <span>تعذّر تحميل صورة الخريطة حاليًا.</span>
+     <span>تعذّر عرض الرسم التوضيحي حاليًا.</span>
      <a href="https://www.google.com/maps/search/?api=1&amp;query=Riyadh%2C%20Saudi%20Arabia" target="_blank" rel="noopener noreferrer">استكشف مدينة الرياض على خرائط غوغل</a>
     </div>
     <figcaption class="visit-map-caption" id="visit-map-caption">
-     <span class="visit-map-caption-title">خريطة ثابتة لمدينة الرياض</span>
-     <span class="visit-map-caption-source">خريطة من ماب ماب · بيانات أوبن ستريت ماب</span>
+     <span class="visit-map-caption-title">رسم توضيحي تجريدي مستوحى من مدينة الرياض</span>
+     <span class="visit-map-caption-source">رسم محلي للنموذج التجريبي · أبيكس ستوديو</span>
     </figcaption>
    </figure>
    <aside class="visit-info-panel" aria-label="معلومات النطاق الجغرافي لرُواء">
@@ -1929,7 +1929,7 @@ body,button,input,select,textarea{font-family:var(--body)}
        <path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/>
       </svg>
      </a>
-     <p class="visit-note">تعرض الصورة خريطة عامة وثابتة لمدينة الرياض، ولا تمثل موقعًا دقيقًا للعيادة أو عنوانًا لفرع قائم. هذا القسم جزء من نموذج رُواء التجريبي، وليس إثباتًا لوجود عيادة فعلية في هذا الموقع.</p>
+     <p class="visit-note">الصورة رسم تجريدي للعرض البصري وليست خريطة طرق أو وسيلة للملاحة، ولا تحدد موقع عيادة أو عنوان فرع. هذا القسم جزء من نموذج رُواء التجريبي، وليس إثباتًا لوجود عيادة فعلية في الرياض.</p>
     </div>
    </aside>
   </div>
@@ -1948,8 +1948,6 @@ body,button,input,select,textarea{font-family:var(--body)}
     <p>إجابات عامة تساعدك على فهم الإجراء. تبقى التوصية المناسبة مرتبطة بفحص حالتك لدى طبيب الأسنان.</p>
    </div>
       <div class="faq-list">
-    
-    
     <details class="faq-item">
      <summary>هل أحتاج إلى أكثر من جلسة؟</summary>
      <div class="faq-answer">لا يوجد عدد موحّد يناسب الجميع. قد تختلف الحاجة إلى جلسات إضافية أو خطة على مراحل بحسب سبب التصبغ وعمقه والطريقة المستخدمة واستجابة الأسنان. يحدد طبيب الأسنان ذلك بعد التقييم والمتابعة، من دون افتراض عدد مسبق.</div>
@@ -1958,8 +1956,16 @@ body,button,input,select,textarea{font-family:var(--body)}
      <summary>كم تدوم نتيجة التبييض؟</summary>
      <div class="faq-answer">لا توجد مدة ثابتة للجميع؛ إذ تتأثر النتيجة بطريقة التبييض ونوع التصبغ والعادات اليومية التي قد تسبب تصبغات جديدة. لذلك لا يمكن الوعد بفترة محددة، ويشرح طبيب الأسنان ما يمكن توقعه بحسب الحالة.</div>
     </details>
+    <details class="faq-item">
+     <summary>ما الفرق بين التصبغات السطحية وتغيّر اللون من داخل السن؟</summary>
+     <div class="faq-answer">تتجمع التصبغات السطحية على طبقة المينا، وقد تتحسن بالتنظيف المهني أو بمنتجات مناسبة لإزالة التصبغات. أما تغيّر اللون من داخل السن فقد يرتبط بالعمر أو بأسباب أخرى، وقد يحتاج إلى تقييم وخيارات مختلفة. يحدد طبيب الأسنان السبب وما يمكن توقعه؛ فليس كل تغيّر لون يستجيب بالطريقة نفسها.</div>
+    </details>
+    <details class="faq-item">
+     <summary>هل الليمون والفحم وخلطات التبييض المنزلية آمنة؟</summary>
+     <div class="faq-answer">لا يُنصح بفرك الأسنان بالليمون أو الخلطات الحمضية أو المساحيق الخشنة بهدف تبييضها؛ فقد تؤدي الأحماض إلى تآكل المينا، وقد تُضعف المواد الكاشطة سطح الأسنان. كما لا تتوفر أدلة كافية تثبت سلامة الفحم وفاعليته للتبييض. استشر طبيب الأسنان قبل تجربة أي منتج أو طريقة.</div>
+    </details>
    </div>
-   <p class="reference-note">للقراءة التثقيفية: <a href="https://www.nhs.uk/tests-and-treatments/teeth-whitening/" target="_blank" rel="noopener noreferrer">إرشادات الخدمة الصحية الوطنية البريطانية حول تبييض الأسنان</a> و<a href="https://www.ada.org/resources/ada-library/oral-health-topics/whitening" target="_blank" rel="noopener noreferrer">المعلومات العلمية للجمعية الأمريكية لطب الأسنان </a>. هذه الصفحة توعوية ولا تغني عن التقييم السريري.</p>
+   <p class="reference-note">مراجع تثقيفية: <a href="https://www.nhs.uk/tests-and-treatments/teeth-whitening/" target="_blank" rel="noopener noreferrer">إرشادات الخدمة الصحية الوطنية البريطانية حول تبييض الأسنان</a>، و<a href="https://www.ada.org/resources/ada-library/oral-health-topics/whitening" target="_blank" rel="noopener noreferrer">معلومات الجمعية الأمريكية لطب الأسنان عن أنواع التصبغات والتبييض</a>، و<a href="https://www.mouthhealthy.org/all-topics-a-z/natural-teeth-whitening" target="_blank" rel="noopener noreferrer">توضيح الجمعية الأمريكية لطب الأسنان حول طرق التبييض المنزلية</a>. هذه الصفحة توعوية ولا تغني عن التقييم السريري.</p>
   </div>
  </section>
 

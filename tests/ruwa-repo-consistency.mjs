@@ -45,16 +45,16 @@ assert.ok(visitSection.includes("الرياض") && visitSection.includes("الم
 assert.ok(visitSection.includes("موقع رُواء في الرياض") && visitSection.includes("رُواء لطب الأسنان"), "Location identity must be visible");
 assert.ok(visitSection.includes("مدينة الرياض بالكامل"), "The displayed geographic scope must remain the whole city");
 assert.ok(visitSection.includes("عنوان الفرع") && visitSection.includes("غير محدد في هذا النموذج"), "Do not invent an exact branch address");
-assert.ok(visitSection.includes("النموذج التجريبي") && visitSection.includes("ولا تمثل موقعًا دقيقًا للعيادة"), "Disclose that this is a fictional demo and not a real clinic location");
+assert.ok(visitSection.includes("النموذج التجريبي") && visitSection.includes("لا تحدد موقع عيادة") && visitSection.includes("ليس إثباتًا لوجود عيادة فعلية"), "Disclose that the artwork is not a real clinic location");
 const mapImage = visitSection.match(/<img\b[^>]*data-visit-map-image[^>]*>/)?.[0] || "";
-assert.ok(mapImage.includes("https://mapmap.ai/api/static-map?center=46.6753%2C24.7136"), "Use a static city-level Riyadh map image, not a generated visual or interactive map");
-assert.ok(mapImage.includes('loading="lazy"') && mapImage.includes('width="1200"') && mapImage.includes('height="720"'), "Map image must lazy-load and reserve its intrinsic dimensions");
-assert.ok(mapImage.includes('alt="') && mapImage.includes("دون تحديد موقع العيادة"), "Static map requires accurate alternative text");
-assert.ok(visitSection.includes("أوبن ستريت ماب") && visitSection.includes("ماب ماب"), "Arabic map data attribution must be disclosed");
+assert.ok(mapImage.includes('src="assets/riyadh-schematic-map.svg"'), "Use the committed local SVG illustration rather than a third-party map API");
+assert.ok(mapImage.includes('loading="lazy"') && mapImage.includes('width="1200"') && mapImage.includes('height="720"'), "Local illustration must lazy-load and reserve its intrinsic dimensions");
+assert.ok(mapImage.includes('alt="') && mapImage.includes("لا يمثل خريطة فعلية"), "Illustration alternative text must state that it is not a real map");
+assert.ok(visitSection.includes("رسم محلي للنموذج التجريبي") && !visitSection.includes("MapMap") && !visitSection.includes("OpenStreetMap"), "Local illustration must not claim third-party map data attribution");
 const cityMapLink = visitSection.match(/<a class="visit-map-action"[^>]*href="([^"]+)"/)?.[1] || "";
 assert.ok(cityMapLink.startsWith("https://www.google.com/maps/search/?api=1&amp;query=Riyadh"), "Open a Google Maps city search, not exact clinic directions");
 assert.match(visitSection, /target="_blank" rel="noopener noreferrer"/, "Google Maps must open safely in a new tab");
-assert.ok(visitSection.includes("خريطة ثابتة") && visitSection.includes("خريطة عامة وثابتة"), "Clearly identify the map as a static general city map");
+assert.ok(visitSection.includes("رسم توضيحي تجريدي") && visitSection.includes("ليست خريطة طرق") && visitSection.includes("لا تحدد موقع عيادة"), "Clearly disclose that the visual is schematic artwork, not a road map or clinic location");
 assert.ok(!visitSection.includes("<iframe") && !visitSection.includes("دبوس"), "Do not present the static image as an interactive map or invent a clinic pin");
 
 const journeyStart = html.indexOf('id="journey"');
@@ -152,18 +152,23 @@ const faqAuditStart = html.indexOf('id="faq"');
 const faqAuditEnd = html.indexOf("</section>", faqAuditStart) + "</section>".length;
 const faqAuditMarkup = html.slice(faqAuditStart, faqAuditEnd);
 const faqCount = [...faqAuditMarkup.matchAll(/<details\b/gi)].length;
-assert.equal(faqCount, 2, "RUWA must contain exactly two non-redundant native FAQ entries");
+assert.equal(faqCount, 4, "RUWA must contain exactly four focused native FAQ entries");
 assert.deepEqual(
   [...faqAuditMarkup.matchAll(/<summary>([^<]+)<\/summary>/g)].map(match => match[1]),
   [
     "هل أحتاج إلى أكثر من جلسة؟",
-    "كم تدوم نتيجة التبييض؟"
+    "كم تدوم نتيجة التبييض؟",
+    "ما الفرق بين التصبغات السطحية وتغيّر اللون من داخل السن؟",
+    "هل الليمون والفحم وخلطات التبييض المنزلية آمنة؟"
   ],
   "FAQ questions must address distinct visitor concerns in the approved order"
 );
 assert.ok(faqAuditMarkup.includes("سبب التصبغ وعمقه والطريقة المستخدمة واستجابة الأسنان"), "Session-count answer must explain why treatment plans vary");
 assert.ok(html.slice(optionsStart, html.indexOf("</section>", optionsStart)).includes("التصبغات السطحية"), "Whitening options must distinguish surface stains from tooth colour");
 assert.ok(faqAuditMarkup.includes("لا توجد مدة ثابتة للجميع"), "Result-longevity answer must avoid a universal promise");
+assert.ok(faqAuditMarkup.includes("التصبغات السطحية على طبقة المينا") && faqAuditMarkup.includes("تغيّر اللون من داخل السن"), "FAQ must explain surface versus intrinsic discoloration");
+assert.ok(faqAuditMarkup.includes("تآكل المينا") && faqAuditMarkup.includes("استشر طبيب الأسنان"), "FAQ must caution against unverified home-whitening mixtures");
+assert.ok(faqAuditMarkup.includes("natural-teeth-whitening") && faqAuditMarkup.includes("oral-health-topics/whitening"), "FAQ must link to authoritative ADA guidance");
 assert.doesNotMatch(faqAuditMarkup, /ما العناية المطلوبة بعد التبييض/, "The FAQ must not repeat the dedicated aftercare section");
 assert.match(html, /:focus-visible\{outline:3px solid var\(--coral\);outline-offset:4px\}/, "A visible global keyboard focus indicator must remain available");
 
@@ -265,19 +270,19 @@ for (const [name, content] of [
 }
 
 assert.match(readme, /10 content sections/);
-assert.match(readme, /2 FAQ entries/);
+assert.match(readme, /4 FAQ entries/);
 assert.match(readme, /3 WhatsApp actions and 3 phone actions/);
 assert.match(designSystem, /10 content sections/);
-assert.match(designSystem, /2 native HTML details\/summary FAQ entries/);
+assert.match(designSystem, /4 native HTML details\/summary FAQ entries/);
 assert.match(designSystem, /3 WhatsApp actions and 3 phone actions/);
 assert.match(caseStudy, /10 أقسام رئيسية/);
-assert.match(caseStudy, /سؤالان/);
+assert.match(caseStudy, /أربعة أسئلة/);
 assert.match(caseStudy, /3 أزرار واتساب و3 أزرار اتصال هاتفي/);
 assert.match(productionAudit, /10 main content sections/);
-assert.match(productionAudit, /2 native details entries/);
+assert.match(productionAudit, /4 native details entries/);
 assert.match(productionAudit, /3 WhatsApp actions and 3 phone actions/);
 
 console.log("RUWA repository consistency: PASS");
-console.log("Sections: 9 | Reviews: unchanged transparent demo-only state | FAQ: 2 | WhatsApp actions: 3 | Phone actions: 3");
+console.log("Sections: 9 | Reviews: disclosed illustrative demo-only state | FAQ: 4 | WhatsApp actions: 3 | Phone actions: 3");
 console.log("ARIA controls: all targets exist | Hero AI illustration disclosure: present");
 console.log("Repository root and legacy preview paths: redirect to whitening-2026.html");

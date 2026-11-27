@@ -18,7 +18,7 @@ There is only one maintained RUWA page implementation. The root entry point and 
 
 RUWA is a fictional portfolio concept created by Apex Studio. It is not a commissioned or operating clinic and must not be presented as a real commercial clinic or client project.
 
-The page contains **10 content sections** and **2 FAQ entries**. Assessment is now integrated into the four-step treatment journey, while suitability, safety, and realistic expectations are presented together in one section.
+The page contains **10 content sections** and **4 FAQ entries**. Assessment is now integrated into the four-step treatment journey, while suitability, safety, and realistic expectations are presented together in one section.
 
 The separate demo sentence beneath the Hero contact buttons has been removed as requested. The footer and page metadata continue to identify RUWA as a fictional Apex Studio portfolio demonstration; the Hero portrait caption independently identifies the dentist image as AI-generated.
 
@@ -37,8 +37,8 @@ There are **3 WhatsApp actions and 3 phone actions**. The Hero WhatsApp action a
 5. Suitability, safety, and realistic expectations — relevant health factors, possible effects, result variation, restoration limits, and aftercare.
 6. Dentist/team — three illustrative portraits with explicit disclosure and no invented identities or credentials; this protected section remains unchanged.
 7. Patient reviews — three clearly labelled hypothetical patient-style phrases in pastel cards, with decorative yellow stars and repeated disclosure that they are not authentic reviews or ratings.
-8. Clinic location — presents a static, city-level Riyadh road map rendered from OpenStreetMap data by MapMap, with visible source attribution and a Google Maps city-search link; no clinic address or pin is invented.
-9. FAQ — two non-redundant native HTML details/summary entries.
+8. Clinic location — uses a local, lightweight abstract SVG illustration inspired by Riyadh; it is clearly disclosed as artwork, not a road map or clinic location, and the Google Maps link searches for the city only.
+9. FAQ — four focused native HTML details/summary entries covering sessions, result longevity, stain types, and cautions about home-whitening mixtures.
 10. Consultation/contact — WhatsApp and phone actions that disclose their inactive demo state.
 
 The shared header, navigation, announcement strip, and footer support these sections; they are not additional numbered content sections.
@@ -66,7 +66,7 @@ npm run test:ruwa:consistency
 npx playwright install chromium
 ```
 
-The consistency gate verifies the nine-section order, the four cards in the combined safety/expectations area, three disclosed team portraits, the three explicitly hypothetical patient-style review cards with decorative yellow stars and no claimed real ratings, two focused FAQ entries, six contact controls, smart floating WhatsApp visibility, the persistent-on-selection navigation menu, header phone action, ARIA targets, retained footer and metadata demo disclosures, root redirect, and both preview redirects.
+The consistency gate verifies the nine-section order, the four cards in the combined safety/expectations area, three disclosed team portraits, the three explicitly hypothetical patient-style review cards with decorative yellow stars and no claimed real ratings, four focused FAQ entries, six contact controls, smart floating WhatsApp visibility, the persistent-on-selection navigation menu, header phone action, ARIA targets, retained footer and metadata demo disclosures, root redirect, and both preview redirects.
 
 The **RUWA Browser QA** GitHub Actions workflow runs the consistency gate, Playwright Chromium checks, full-page responsive captures, Hero fold checks, approved-Hero SHA validation, and immutable public-preview verification.
 

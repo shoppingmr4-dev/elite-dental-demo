@@ -39,12 +39,13 @@ try {
     if(!response?.ok()) throw new Error(vp.name+": page load failed");
     await page.evaluate(()=>document.fonts.ready);
     await page.waitForTimeout(180);
-    // Keep production images lazy-loaded; explicitly request the below-the-fold
-    // team portraits in this full-page QA pass before checking all image assets.
+    // Preserve lazy-loading in the shipped page, but request every image in this
+    // isolated QA browser context before checking asset health. This avoids
+    // marking unvisited lazy images as broken before the browser requests them.
     await page.evaluate(async()=>{
-      const portraits=[...document.querySelectorAll("#team .team-card img")];
-      portraits.forEach(image=>image.loading="eager");
-      await Promise.all(portraits.map(image=>image.decode().catch(()=>null)));
+      const images=[...document.images];
+      images.forEach(image=>image.loading="eager");
+      await Promise.all(images.map(image=>image.decode().catch(()=>null)));
     });
     const metrics=await page.evaluate((ids)=>{
       const round=n=>Number(n.toFixed(2));
@@ -141,7 +142,7 @@ try {
         markerAriaLabel:journeyMarker?.getAttribute("aria-label")||"",
         listTag:journeyGrid?.tagName||"",
         accessibleLabel:journeyGrid?.getAttribute("aria-label")||"",
-        columns:journeyGrid?getComputedStyle(journeyGrid).gridTemplateColumns.trim().split(/\\s+/).length:0,
+        columns:journeyGrid?getComputedStyle(journeyGrid).gridTemplateColumns.trim().split(/\s+/).length:0,
         steps:journeySteps.map(step=>({
           number:textDetails(step.querySelector(".journey-step-number")),
           numberHidden:step.querySelector(".journey-step-number")?.getAttribute("aria-hidden")==="true",
@@ -243,10 +244,12 @@ try {
     if(metrics.counts.expectationsCards!==4)problems.push("Section 07 must contain exactly four realistic-expectations cards");
     if(metrics.counts.expectationsCardColumns!==(vp.width<=600?1:2))problems.push("Section 07 must use two grid columns on desktop/tablet and one on mobile");
     if(metrics.counts.teamCards!==3||metrics.counts.teamPortraits!==3)problems.push("team section must render exactly three portrait cards");
-    if(metrics.counts.reviewCriteria!==3||metrics.counts.reviewCards!==3||metrics.counts.reviewStars!==5||!metrics.counts.reviewDisclosure.includes("لا تمثل تقييمًا فعليًا")||!metrics.counts.reviewStatus.includes("لا تتوفر تقييمات مرضى موثّقة"))problems.push("patient reviews preview, demo cards, or transparency copy is incomplete");
+    if(metrics.counts.reviewCriteria!==3||metrics.counts.reviewCards!==3||metrics.counts.reviewStars!==15||!metrics.counts.reviewDisclosure.includes("لا تمثل تقييمًا أو متوسطًا حقيقيًا")||!metrics.counts.reviewStatus.includes("لا تتوفر تقييمات أو شهادات مرضى موثّقة"))problems.push("patient reviews preview, demo cards, or transparency copy is incomplete");
+    if(metrics.counts.faqItems!==4)problems.push("FAQ section must contain four focused native disclosure entries");
     if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");
     if(metrics.brokenAnchors.length)problems.push("broken in-page anchors");
-    if(metrics.images.some(i=>!i.complete||i.naturalWidth===0))problems.push("broken image asset");
+    for(const image of metrics.images.filter(i=>!i.complete||i.naturalWidth===0))
+      problems.push("broken image asset: "+image.src);
     if(errors.length)problems.push("JavaScript errors");
     if(resourceErrors.length)problems.push("local resource errors");
     if(problems.length){failures.push({viewport:vp.name,problems});console.log("[FAIL] "+vp.name+": "+problems.join(", "));}
