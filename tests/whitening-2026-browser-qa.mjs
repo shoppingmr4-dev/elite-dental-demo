@@ -1340,7 +1340,7 @@ try {
       assert.ok(groups.length>=2, `${vp.name}: header controls are not all measurable`);
       for (const group of groups) {
         assert.ok(group.left>=metrics.visualLeft-1.5 && group.right<=metrics.visualRight+1.5,
-          `${vp.name}: ${group.name} escapes the visual floating shell`);
+          `${vp.name}: ${group.name} escapes the visual floating shell; group=${JSON.stringify(group)}, shell=[${metrics.visualLeft.toFixed(2)},${metrics.visualRight.toFixed(2)}], header=[${metrics.headerWidth.toFixed(2)}px]`);
       }
       for (let index=1;index<groups.length;index++) {
         assert.ok(groups[index-1].right<=groups[index].left+1,
