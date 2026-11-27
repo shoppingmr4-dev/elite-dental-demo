@@ -83,8 +83,8 @@ try {
     assert.notEqual(after.borderColor, before.borderColor, `${selector}: hover border did not respond`);
     assert.equal(after.width, before.width, `${selector}: hover changed the card layout width`);
     assert.equal(after.height, before.height, `${selector}: hover changed the card layout height`);
-    assert.equal(after.visualWidth, before.visualWidth, `${selector}: hover changed rendered card width`);
-    assert.equal(after.visualHeight, before.visualHeight, `${selector}: hover changed rendered card height`);
+    assert.ok(Math.abs(after.visualWidth-before.visualWidth)<.1, `${selector}: hover changed rendered card width beyond sub-pixel tolerance`);
+    assert.ok(Math.abs(after.visualHeight-before.visualHeight)<.1, `${selector}: hover changed rendered card height beyond sub-pixel tolerance`);
 
     if (index === 0) {
       await card.screenshot({ path: `${OUT}/info-card-after.png` });
