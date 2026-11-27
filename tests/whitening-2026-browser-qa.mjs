@@ -1038,7 +1038,7 @@ try {
     assert.ok(state.heroCtaHeight >= 52, `${vp.name}: primary CTA hit area is too short`);
     assert.ok(state.heroCtaFontSize >= 14, `${vp.name}: primary CTA text is too small`);
     assert.ok(state.heroCtaRadius >= 999, `${vp.name}: primary CTA should retain its pill shape`);
-    assert.ok(state.heroCtaIconHidden, vp.name + ": WhatsApp icon must be hidden from assistive technology because the button already has a text label");
+    assert.ok(state.heroCtaIconHidden, vp.name + ": CTA arrow icon must be hidden from assistive technology because the link already has a text label");
     const audit=state.spacingAudit;
     assert.ok(audit.hero.markerToHeading>=16&&audit.hero.markerToHeading<=24, vp.name + ": Hero marker/headline spacing drifted: " + JSON.stringify(audit.hero));
     assert.ok(vp.width<=720 ? audit.hero.headingToCopy>=11&&audit.hero.headingToCopy<=13 : audit.hero.headingToCopy>=13&&audit.hero.headingToCopy<=19, vp.name + ": Hero headline/copy spacing drifted");
@@ -1088,7 +1088,7 @@ try {
     await page.waitForFunction(() => location.hash === "#options", null, { timeout: 3000 });
     await page.evaluate(() => history.replaceState(null, "", location.pathname + location.search));
     await page.evaluate(() => window.scrollTo({top:0,behavior:"instant"}));
-    const heroWhatsAppControl=page.locator(".hero-actions .primary-cta");const heroWhatsAppControl=page.locator(".hero-actions .primary-cta");
+    const heroWhatsAppControl=page.locator(".hero-actions .primary-cta");
     const floatingWhatsAppControl=page.locator("#whatsapp-float");
     const heroVisibleScrollY=await heroWhatsAppControl.evaluate(el=>{
       const rect=el.getBoundingClientRect();
