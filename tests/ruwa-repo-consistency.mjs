@@ -105,7 +105,7 @@ const headerEnd = html.indexOf("</header>", headerStart) + "</header>".length;
 const headerMarkup = html.slice(headerStart, headerEnd);
 assert.ok(headerStart >= 0 && headerEnd > headerStart, "RUWA semantic header is missing");
 const headerLinks = [...headerMarkup.matchAll(/<a\b[^>]*href=["'](#[^"']+)["'][^>]*>/g)].map(match => match[1]);
-assert.deepEqual(headerLinks, ["#top","#causes","#options","#journey","#suitability","#team","#reviews","#visit","#faq","#options"], "Header must preserve its brand anchor, eight navigation destinations, and internal options CTA");
+assert.deepEqual(headerLinks, ["#top","#causes","#options","#journey","#suitability","#team","#reviews","#visit","#faq"], "Header must preserve its brand anchor and eight navigation destinations while using a separate contact button");
 const secondaryHeaderLinks = [...headerMarkup.matchAll(/<a\b[^>]*class=["']nav-secondary["'][^>]*href=["'](#[^"']+)["'][^>]*>/g)].map(match => match[1]);
 assert.deepEqual(secondaryHeaderLinks, ["#causes","#options","#suitability","#reviews","#visit"], "Only the five secondary destinations may be hidden from the expanded desktop navigation");
 assert.match(html, /\.nav \.nav-secondary\{display:none\}/, "Secondary links must be hidden in the expanded desktop header");
@@ -173,13 +173,13 @@ assert.doesNotMatch(faqAuditMarkup, /ما العناية المطلوبة بعد
 assert.match(html, /:focus-visible\{outline:3px solid var\(--coral\);outline-offset:4px\}/, "A visible global keyboard focus indicator must remain available");
 
 const contactActions = [...html.matchAll(/data-contact-action=["'](whatsapp|phone)["']/gi)].map(match => match[1]);
-assert.equal(contactActions.filter(action => action === "whatsapp").length, 1, "Only the floating WhatsApp demo preview control may remain");
-assert.equal(contactActions.filter(action => action === "phone").length, 0, "No non-operational phone CTA may be shown as a live contact action");
+assert.equal(contactActions.filter(action => action === "whatsapp").length, 2, "Hero and floating WhatsApp demo controls must use the disclosed contact dialog");
+assert.equal(contactActions.filter(action => action === "phone").length, 2, "Hero and header call controls must use the disclosed contact dialog");
 
 const contactHeaderScanStart = html.indexOf('<header class="site-header"');
 const contactHeaderScanEnd = html.indexOf("</header>", contactHeaderScanStart) + "</header>".length;
 const contactHeaderMarkup = html.slice(contactHeaderScanStart, contactHeaderScanEnd);
-assert.ok(contactHeaderMarkup.includes('class="header-action"') && contactHeaderMarkup.includes('href="#options"') && contactHeaderMarkup.includes("استكشف الخيارات"), "Header CTA must navigate to the whitening options, not imitate a live phone action");
+assert.ok(contactHeaderMarkup.includes('<button class="header-action phone-cta" type="button" data-contact-action="phone"') && contactHeaderMarkup.includes("اتصل بنا") && contactHeaderMarkup.includes("M22 16.92"), "Header must restore the phone-icon call button and route it to the disclosed demo dialog");
 
 assert.match(html, /id=["']whatsapp-float["']/);
 assert.match(html, /class=["']whatsapp-float["']/);
@@ -213,8 +213,8 @@ const heroStart = html.indexOf('<section class="hero"');
 const heroEnd = html.indexOf("</section>", heroStart);
 const heroSection = heroStart >= 0 && heroEnd > heroStart ? html.slice(heroStart, heroEnd + 10) : "";
 assert.ok(heroSection, "The canonical Hero section must remain present");
-assert.match(heroSection, /class="primary-cta" href="#options">استكشف خيارات التبييض/, "Hero primary CTA must navigate to whitening options");
-assert.match(heroSection, /class="text-link consultation-cta" href="#journey">تعرّف على خطوات التقييم/, "Hero secondary CTA must navigate to the assessment journey");
+assert.match(heroSection, /class="primary-cta whatsapp-cta" type="button" data-contact-action="whatsapp"[^>]*>[\\s\\S]*?تواصل عبر واتساب/, "Hero primary CTA must restore the WhatsApp contact button");
+assert.match(heroSection, /class="text-link consultation-cta phone-cta" type="button" data-contact-action="phone"[^>]*>اتصل بنا/, "Hero secondary CTA must restore the call-us button");
 
 assert.doesNotMatch(heroSection, /hero-demo-disclosure|نموذج تجريبي من Apex Studio/, "The separate demo sentence beneath the Hero buttons must be removed");
 assert.match(html, /مفهوم تجريبي أُعدّ ضمن معرض أعمال أبيكس ستوديو/, "The footer must retain the fictional portfolio disclosure in Arabic");
