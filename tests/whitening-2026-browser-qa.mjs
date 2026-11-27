@@ -60,7 +60,16 @@ async function measureHeader(page) {
     ];
     const visibleGroups=targets
       .filter(([,element])=>element && getComputedStyle(element).display!=="none" && getComputedStyle(element).visibility!=="hidden")
-      .map(([name,element])=>({name,...rect(element)}))
+      .map(([name,element])=>{
+        const bounds=rect(element);
+        if(name!=="menu")return {name,...bounds};
+        // The menu button keeps a 44px interactive hit area, while its
+        // visible circular artwork is intentionally 36px at <=390px.
+        // Check the painted circle against the header shell; touch-target
+        // sizing is verified independently by verifyHeaderTouchTargets().
+        const visualSize=Number.parseFloat(getComputedStyle(element).getPropertyValue("--menu-toggle-visual-size"))||bounds.width;
+        return {name,...bounds,left:bounds.centerX-visualSize/2,right:bounds.centerX+visualSize/2,visualSize};
+      })
       .filter(group=>group.width>0 && group.height>0);
     return {
       layoutHeight:headerRect.height,
