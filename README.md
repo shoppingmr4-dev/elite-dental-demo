@@ -26,7 +26,7 @@ The Hero portrait at `assets/ruwa-hero-90-768.webp` is the approved AI-generated
 
 The team contains three distinct AI-generated male dentist illustrations with a visible disclosure. They do not represent real doctors or clinic employees. No doctor identities, degrees, licences, experience, verified reviews, ratings, treatment outcomes, clinic addresses, opening hours, fees, phone numbers, or operational booking services are supplied.
 
-There are **3 WhatsApp actions and 3 phone actions**. The Hero WhatsApp action and final-section WhatsApp action share the existing contact handler; a third circular floating WhatsApp control appears only while the Hero WhatsApp action is outside the viewport. The header action is now **اتصل بنا** and uses the phone channel. The WhatsApp and phone configuration values remain intentionally empty, so each action opens the accessible local unavailable-contact dialog. No patient data is collected and no appointment is confirmed.
+There is **one floating WhatsApp demo control**. It appears only after the Hero's primary internal navigation link leaves the viewport and opens an accessible dialog that explicitly explains that no real WhatsApp channel is connected. The Hero primary and secondary CTAs, header CTA, and final-section CTAs are working internal links to page sections; none implies a live phone call, WhatsApp conversation, appointment, or booking. The phone and WhatsApp configuration values remain empty. No patient data is collected.
 
 ## Page architecture
 
@@ -35,11 +35,11 @@ There are **3 WhatsApp actions and 3 phone actions**. The Hero WhatsApp action a
 3. Whitening options — general educational descriptions, not a claim about a real clinic's services.
 4. Assessment and treatment journey — four steps from oral-health assessment and option selection to the agreed procedure and aftercare.
 5. Suitability, safety, and realistic expectations — relevant health factors, possible effects, result variation, restoration limits, and aftercare.
-6. Dentist/team — three illustrative portraits with explicit disclosure and no invented identities or credentials; this protected section remains unchanged.
-7. Patient reviews — three clearly labelled hypothetical patient-style phrases in pastel cards, with decorative yellow stars and repeated disclosure that they are not authentic reviews or ratings.
-8. Clinic location — uses a local, lightweight abstract SVG illustration inspired by Riyadh; it is clearly disclosed as artwork, not a road map or clinic location, and the Google Maps link searches for the city only.
+6. Team-section preview — three illustrative portraits with a visible AI-generated-image disclosure before the cards and placeholders for verified clinician details.
+7. Review transparency — three informational cards explaining source verification, explicit permission, and faithful presentation. No hypothetical patient quotations, testimonials, rating stars, or review scores are displayed.
+8. Location-section preview — a local abstract Riyadh SVG with an explicit notice that it is not a real map or clinic location; the city-wide Google Maps search is not a clinic pin.
 9. FAQ — four focused native HTML details/summary entries covering sessions, result longevity, stain types, and cautions about home-whitening mixtures.
-10. Consultation/contact — WhatsApp and phone actions that disclose their inactive demo state.
+10. Next step — working internal links to the FAQ and assessment sections. One floating WhatsApp demo control remains as a disclosed preview only; no live contact or booking is available.
 
 The shared header, navigation, announcement strip, and footer support these sections; they are not additional numbered content sections.
 
@@ -66,7 +66,7 @@ npm run test:ruwa:consistency
 npx playwright install chromium
 ```
 
-The consistency gate verifies the nine-section order, the four cards in the combined safety/expectations area, three disclosed team portraits, the three explicitly hypothetical patient-style review cards with decorative yellow stars and no claimed real ratings, four focused FAQ entries, six contact controls, smart floating WhatsApp visibility, the persistent-on-selection navigation menu, header phone action, ARIA targets, retained footer and metadata demo disclosures, root redirect, and both preview redirects.
+The consistency gate verifies the ten-section order and numbering, the combined safety/expectations area, three disclosed team portraits with verified-information placeholders, three review-transparency cards with no patient quotations or decorative ratings, four focused FAQ entries, truthful internal CTAs, one floating WhatsApp demo control, the responsive menu, ARIA targets, footer and metadata demo disclosures, root redirect, and both preview redirects.
 
 The **RUWA Browser QA** GitHub Actions workflow runs the consistency gate, Playwright Chromium checks, full-page responsive captures, Hero fold checks, approved-Hero SHA validation, and immutable public-preview verification.
 
