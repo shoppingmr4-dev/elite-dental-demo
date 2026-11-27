@@ -119,8 +119,10 @@ try {
       if (!visual || !hero || portrait.top<hero.top-1 || portrait.bottom>hero.bottom+1 || portrait.left<visual.left-1 || portrait.right>visual.right+1) issues.push("Hero dentist portrait is not contained in its visual area");
       if (portrait && portrait.width < (window.innerWidth > 920 ? 350 : window.innerWidth <= 390 ? 250 : 260)) issues.push("Hero dentist portrait is too small to have meaningful visual presence");
       if (portrait && Math.abs(portrait.height / portrait.width - 1.5) > 0.03) issues.push("Hero dentist portrait aspect ratio is distorted");
-      if (!disclosure || disclosure.width<=0 || disclosure.height<22 || disclosure.top<portrait.bottom-1 || disclosure.bottom>visual.bottom+1) issues.push("Visible AI-illustration disclosure is missing or detached from the portrait");
-      if (disclosureText !== "الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا.") issues.push("Portrait disclosure must match the approved Arabic AI-generated image notice");
+      if (!disclosure || disclosure.width<=0 || disclosure.height<22 || disclosure.top<portrait.bottom-1 || disclosure.bottom>visual.bottom+1) issues.push("Visible Hero portrait caption is missing or detached from the portrait");
+      if (disclosureText !== "العناية تبدأ بفهم احتياج ابتسامتك.") issues.push("Hero portrait caption does not match the approved patient-facing copy");
+      const footerAIImageDisclosure=document.querySelector(".footer-notes")?.textContent.includes("صور مولّدة بالذكاء الاصطناعي")||false;
+      if(!footerAIImageDisclosure) issues.push("Footer must retain the AI-generated-image disclosure");
       if (!heroPortrait || heroPortrait.getAttribute("src")!=="assets/ruwa-hero-90-768.webp") issues.push("Hero must use the approved RUWA dentist portrait asset");
       if (heroPortrait && (heroPortrait.naturalWidth!==768 || heroPortrait.naturalHeight!==1152 || heroPortrait.getAttribute("width")!=="768" || heroPortrait.getAttribute("height")!=="1152")) issues.push("Hero portrait intrinsic dimensions or reserved layout dimensions changed");
       if (heroPortrait && heroPortrait.loading!=="eager") issues.push("Above-the-fold Hero portrait must use eager loading");
@@ -177,7 +179,7 @@ try {
       failures.push({ viewport: vp.name, issues: [...metrics.issues, ...pageErrors.map(error => `JavaScript error: ${error}`)] });
       console.log(`[FAIL] ${vp.name}: ${JSON.stringify({ issues: metrics.issues, heading: metrics.heading, paragraph: metrics.paragraph, primary: metrics.primary, secondary: metrics.secondary })}`);
     } else {
-      console.log(`[PASS] ${vp.name}: Hero portrait prominence, truthful AI disclosure, marker, headline, complete CTAs and overflow`);
+      console.log(`[PASS] ${vp.name}: Hero portrait prominence, caption, footer AI disclosure, marker, headline, complete CTAs and overflow`);
     }
     await page.close();
   }
