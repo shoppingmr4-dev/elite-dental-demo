@@ -540,8 +540,8 @@ try {
           const href=a.getAttribute("href") || "";
           return href.startsWith("tel:") || a.hostname==="wa.me" || a.hostname==="api.whatsapp.com";
         }),
-        finalWhatsAppButton:Boolean(document.querySelector('#consultation [data-contact-action="whatsapp"]')),
-         finalPhoneButton:Boolean(document.querySelector('#consultation [data-contact-action="phone"]')),
+        finalWhatsAppButton:Boolean(document.querySelector('#consultation a[href="#faq"]')),
+         finalPhoneButton:Boolean(document.querySelector('#consultation a[href="#journey"]')),
          contactChannelCounts:{
            whatsapp:document.querySelectorAll('[data-contact-action="whatsapp"]').length,
            phone:document.querySelectorAll('[data-contact-action="phone"]').length
@@ -1022,7 +1022,7 @@ try {
     assert.equal(state.ctaHref, "#options", `${vp.name}: demo hero CTA must not navigate to an unrelated section`);
     assert.equal(state.heroCtaText, "استكشف خيارات التبييض", vp.name + ": hero CTA copy is incorrect");
     assert.ok(state.heroSecondaryCta, vp.name + ": the secondary consultation link must remain visible");
-    assert.equal(state.heroSecondaryCta.text, "تعرّف على خطوات التقييم", vp.name + ": Hero phone CTA must say اتصل بنا");
+    assert.equal(state.heroSecondaryCta.text, "تعرّف على خطوات التقييم", vp.name + ": secondary CTA label must match the assessment journey");
     assert.equal(state.heroSecondaryCta.href, "#journey", vp.name + ": phone CTA must not contain a fabricated number destination");
      assert.equal(state.heroSecondaryCta.tag, "A", vp.name + ": phone CTA must be a button until a number is configured");
      assert.equal(state.heroSecondaryCta.channel, null, vp.name + ": Hero secondary action should use the phone channel");
