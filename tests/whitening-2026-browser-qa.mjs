@@ -906,7 +906,7 @@ try {
     }
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
-    assert.equal(state.heroLead, "تعرّف على خيارات تبييض الأسنان، واكتشف مع طبيب الأسنان ما يلائم صحة أسنانك وسبب تغيّر لونها وتوقعاتك للنتيجة.", `${vp.name}: hero supporting copy changed`);
+    assert.equal(state.heroLead, "تعرّف إلى خيارات تبييض الأسنان، وما الذي يحدّد ملاءمتها لك بعد تقييم طبيب الأسنان: سبب تغيّر اللون، وصحة الأسنان واللثة، والنتيجة الممكنة.", `${vp.name}: hero supporting copy changed`);
     assert.equal(state.heroTitleKickerColor, "rgb(48, 74, 84)", `${vp.name}: the introductory headline line must stay in the calm secondary ink tone`);
     assert.equal(state.heroCaptionFontSize, 12, `${vp.name}: the AI image disclosure must remain comfortably readable`);
     assert.ok(state.heroNumbersFontVariant.includes("tabular-nums"), `${vp.name}: numbered labels must use consistent tabular figures`);
@@ -944,7 +944,7 @@ try {
       vp.name + ": Hero separator must have the approved subtle 6–10 degree vertical tilt: " + JSON.stringify(state.eyebrowRule));
     assert.equal(state.eyebrowRule.color,"rgb(24, 122, 128)",vp.name + ": Hero separator must use RUWA teal");
     assert.ok(state.benefitTreatment,vp.name + ": the patient-benefit line is missing");
-    assert.equal(state.benefitTreatment.text,"الخيارات والسلامة والنتائج المتوقعة",vp.name + ": complete patient-benefit phrase changed");
+    assert.equal(state.benefitTreatment.text,"بخيار يناسب احتياجك",vp.name + ": complete patient-benefit phrase changed");
     assert.equal(state.benefitTreatment.color,"rgb(24, 122, 128)",vp.name + ": complete benefit line must use RUWA Teal");
     assert.equal(state.benefitTreatment.textDecorationLine,"none",vp.name + ": benefit line must not acquire a decorative underline");
     assert.equal(state.benefitTreatment.accentElements,0,vp.name + ": the benefit phrase must not contain an isolated accent span");
@@ -1384,7 +1384,7 @@ try {
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
     assert.deepEqual(state.pageSectionOrder, ["top","causes","options","journey","suitability","team","reviews","visit","faq","consultation"], `${vp.name}: page sections are missing or not in the approved patient-journey order`);
      assert.equal(state.visitSection.present,true,`${vp.name}: Riyadh location section is missing`);
-     assert.equal(state.visitSection.heading,"كيف سيظهر موقع العيادة؟",`${vp.name}: location heading is incorrect`);
+     assert.equal(state.visitSection.heading,"معلومات الموقع وطرق الوصول.",`${vp.name}: location heading is incorrect`);
      assert.equal(state.visitSection.city,true,`${vp.name}: location city must be Riyadh`);
      assert.equal(state.visitSection.country,true,`${vp.name}: location country is incorrect`);
      assert.equal(state.visitSection.mapImageSrc,"assets/riyadh-schematic-map.svg",`${vp.name}: visit artwork must use the committed local SVG asset`);
@@ -1423,7 +1423,7 @@ try {
      assert.equal(state.expectationsSection.horizontalOverflow,false,"Expectations section must not overflow horizontally");
      assert.equal(state.expectationsSection.cardsWithinSection,true,"Expectations cards must remain within section bounds");
     assert.equal(state.reviewSection.present,true,`${vp.name}: patient reviews trust section is missing`);
-    assert.equal(state.reviewSection.heading,"الشفافية في عرض آراء المرضى.",`${vp.name}: patient reviews headline changed`);
+    assert.equal(state.reviewSection.heading,"آراء المرضى تُعرض بوضوح ومصداقية.",`${vp.name}: patient reviews headline changed`);
     assert.equal(state.reviewSection.status,"هذا النموذج لا يتضمن تقييمات أو شهادات مرضى موثّقة.",`${vp.name}: transparent demo review status is missing`);
     assert.equal(state.reviewSection.criteriaCount,3,`${vp.name}: all three review-publishing criteria must be present`);
     assert.ok(state.reviewSection.panelWithinViewport&&!state.reviewSection.horizontalOverflow,`${vp.name}: review panel overflows its section or viewport`);
@@ -1435,8 +1435,8 @@ try {
     assert.equal(state.reviewSection.reviewCards,3,`${vp.name}: exactly three review-transparency cards must be present`);
     assert.equal(state.reviewSection.demoCards,3,`${vp.name}: each review-transparency card must have its numbered criterion label`);
     assert.equal(state.reviewSection.placeholderCards,3,`${vp.name}: all three review-publication standards must be present`);
-    assert.equal(state.faqItems, 4, `${vp.name}: the four focused FAQ entries are not present`);
-    assert.equal(state.teamProfile.heading,"مساحة مخصّصة للتعريف بأطباء العيادة.",vp.name + ": team headline changed");
+    assert.equal(state.faqItems, 6, `${vp.name}: the six focused FAQ entries are not present`);
+    assert.equal(state.teamProfile.heading,"معلومات واضحة للتعرّف على الفريق الطبي.",vp.name + ": team headline changed");
     assert.deepEqual(state.teamProfile.imageSources,["assets/ruwa-team-doctor-01.webp","assets/ruwa-team-doctor-02.webp","assets/ruwa-team-doctor-03.webp"],vp.name + ": team portrait sources changed");
     assert.ok(state.teamProfile.imageAlts.every(alt=>/مولّدة بالذكاء الاصطناعي/.test(alt)),vp.name + ": AI image alt disclosures are missing");
     assert.match(state.teamProfile.disclosure,/الصور التالية نماذج توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل أطباء حقيقيين أو موظفين/);
@@ -1782,8 +1782,8 @@ try {
 
     const finalFaqLink=page.locator('#consultation a[href="#faq"]');
     const finalJourneyLink=page.locator('#consultation a[href="#journey"]');
-    assert.equal(await finalFaqLink.innerText(),"راجع الأسئلة الشائعة",`${vp.name}: final FAQ CTA text is incorrect`);
-    assert.equal(await finalJourneyLink.innerText(),"تعرّف على خطوات التقييم",`${vp.name}: final assessment CTA text is incorrect`);
+    assert.equal(await finalFaqLink.innerText(),"استعرض الأسئلة الشائعة",`${vp.name}: final FAQ CTA text is incorrect`);
+    assert.equal(await finalJourneyLink.innerText(),"راجع خطوات التقييم",`${vp.name}: final assessment CTA text is incorrect`);
     assert.equal(await finalFaqLink.getAttribute("href"),"#faq",`${vp.name}: final FAQ CTA destination is incorrect`);
     assert.equal(await finalJourneyLink.getAttribute("href"),"#journey",`${vp.name}: final assessment CTA destination is incorrect`);
 
