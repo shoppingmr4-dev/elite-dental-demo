@@ -30,7 +30,7 @@ The actual current DOM order is:
 
 | DOM order | ID | Section | Decision | Evidence-based rationale |
 |---:|---|---|---|---|
-| Header | main-nav | Brand, eight section links, internal CTA «استكشف الخيارات» | KEEP / internal navigation | CTA links to #options and does not imply a live phone, messaging, or booking channel. |
+| Header | main-nav | Brand, eight section links, «اتصل بنا» phone button | KEEP / demo contact action | Button opens the disclosed contact-unavailable dialog; no phone number is invented. |
 | 01 | top | Hero | KEEP / protect | Explains the whitening subject and presents the approved illustrative portrait and first actions. |
 | 02 | causes | Causes of discoloration | KEEP | Provides concise context about surface and deeper colour changes. |
 | 03 | options | Whitening options | KEEP / clinical review for a real clinic | General education is not proof that a real clinic offers all listed options. |
@@ -54,14 +54,14 @@ The Hero supporting copy, treatment-options introduction, suitability explanatio
 - The current Hero image is assets/ruwa-hero-90-768.webp.
 - The current Hero image alt text and visible caption explicitly identify it as AI-generated and not a real dentist.
 - FAQ count: **6 native details entries**.
-- Contact controls: **one floating WhatsApp demo control**; Hero, header, and final CTAs are internal links to relevant sections.
+- Contact controls: **three restored top-of-page contact buttons** (Hero WhatsApp, Hero «اتصل بنا», header «اتصل بنا») plus one floating WhatsApp demo control. The two final CTAs remain internal links.
 - WHATSAPP_NUMBER and PHONE_NUMBER remain intentionally empty.
 - The floating WhatsApp preview opens the local contact-unavailable dialog, which explicitly states that no real WhatsApp, phone, or booking channel is connected.
 - Contact dialog ID: contact-unavailable-dialog.
 - The page has no HTML form, lead endpoint, appointment availability, booking confirmation, data collection, or analytics/ad pixels.
 - It does not transmit or store visitor details.
 
-The floating demo control references contact-unavailable-dialog; the mobile menu toggle references main-nav. No header or Hero CTA is a phone/WhatsApp contact action. The consistency and browser tests enforce these boundaries.
+The Hero WhatsApp button, Hero call-us button, header call-us button, and floating WhatsApp preview reference contact-unavailable-dialog. They disclose the unavailable demo channels and do not place calls or open WhatsApp. The two final-section CTAs remain internal links. The consistency and browser tests enforce these boundaries.
 
 ## 5. Protected Hero image
 
