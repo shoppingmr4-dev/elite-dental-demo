@@ -54,14 +54,14 @@ The Hero, causes, treatment options, assessment journey, suitability, realistic 
 - The current Hero image is assets/ruwa-hero-90-768.webp.
 - The current Hero image alt text and visible caption explicitly identify it as AI-generated and not a real dentist.
 - FAQ count: **7 native details entries**.
-- Contact controls: **three restored top-of-page contact buttons** (Hero WhatsApp, Hero «اتصل بنا», header «اتصل بنا») plus one floating WhatsApp control. The two final CTAs remain internal links.
+- Contact controls: **six contact buttons** across the Header, Hero, final section, and floating WhatsApp control (three WhatsApp actions and three phone actions). All six open the same contact-unavailable dialog.
 - WHATSAPP_NUMBER and PHONE_NUMBER remain intentionally empty.
 - The floating WhatsApp preview opens the local contact-unavailable dialog, which explicitly states that no real WhatsApp, phone, or booking channel is connected.
 - Contact dialog ID: contact-unavailable-dialog.
 - The page has no HTML form, lead endpoint, appointment availability, booking confirmation, data collection, or analytics/ad pixels.
 - It does not transmit or store visitor details.
 
-The Hero WhatsApp button, Hero call-us button, header call-us button, and floating WhatsApp control reference contact-unavailable-dialog. The dialog explains that a phone number or WhatsApp account is not connected yet; it does not place calls or open WhatsApp. The two final-section CTAs remain internal links. The consistency and browser tests enforce these boundaries.
+The Hero WhatsApp button, Hero call-us button, header call-us button, final-section WhatsApp and phone buttons, and floating WhatsApp control reference contact-unavailable-dialog. The dialog explains that a phone number or WhatsApp account is not connected yet; it does not place calls or open WhatsApp. The consistency and browser tests enforce these boundaries.
 
 ## 5. Protected Hero image
 
@@ -157,6 +157,6 @@ The results above are historical and predate the section consolidation; they do 
 
 ## 11. Final verdict
 
-The RUWA portfolio page contains ten main sections in DOM order, including the consolidated treatment journey and safety/expectations section. The protected team portraits remain unchanged, but the AI-image disclosure is retained in the footer. The patient-review area contains three clearly labelled slots for authentic patient feedback. It does not publish invented quotations, endorsements, ratings, or treatment outcomes; each review must be verified and authorized before publication. The Hero, header, and final CTAs use truthful internal links; one floating WhatsApp control remains, with a contact-unavailable dialog. Adding fabricated clinicians, patient reviews, ratings, clinic facts, or prices would be a regression.
+The RUWA portfolio page contains ten main sections in DOM order, including the consolidated treatment journey and safety/expectations section. The protected team portraits remain unchanged, but the AI-image disclosure is retained in the footer. The patient-review area contains three clearly labelled slots for authentic patient feedback. It does not publish invented quotations, endorsements, ratings, or treatment outcomes; each review must be verified and authorized before publication. The Hero, header, final section, and floating control use contact actions that open the contact-unavailable dialog; no live contact or booking is claimed. Adding fabricated clinicians, patient reviews, ratings, clinic facts, or prices would be a regression.
 
-The RUWA implementation remains staged on the feature branch. The Hero WhatsApp and phone buttons, header phone button, and floating WhatsApp control open the contact-unavailable dialog because no real number or contact channel is configured; the final CTAs link internally to FAQ and assessment content. Do not merge the PR, publish a production site, or activate a contact channel without explicit approval and verified clinic information.
+The RUWA implementation remains staged on the feature branch. The Hero, header, final-section and floating WhatsApp/phone controls all open the contact-unavailable dialog because no phone number or WhatsApp account is configured. Do not merge the PR, publish a production site, or activate a contact channel without explicit approval and verified clinic information.
