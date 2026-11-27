@@ -113,7 +113,7 @@ async function captureHeader(page, path) {
   }));
 }
 
-const expectedHeading = "خطوتك نحو ابتسامة أكثر إشراقًا تبييض الأسنان بخيار يناسب احتياجك";
+const expectedHeading = "ابتسامة أكثر إشراقًا تبييض الأسنان بخطة تناسب حالتك";
 const failures = [];
 const results = [];
 const motionResults = [];
@@ -887,9 +887,9 @@ try {
        `${vp.name}: WhatsApp logo is not geometrically centered in its green circle: ${JSON.stringify(state.floatingWhatsAppMetrics)}`);
     assert.equal(state.demoDialogTag, "DIALOG", `${vp.name}: accessible native dialog is missing`);
     assert.equal(state.demoDialogInitialOpen, false, `${vp.name}: demo dialog should start closed`);
-    assert.ok(state.demoDialogText.includes("هذه نسخة تجريبية؛ لا توجد أرقام اتصال أو قنوات حجز فعلية مرتبطة بها."), `${vp.name}: contact dialog initial explanation is missing`);
-    assert.ok(state.demoDialogText.includes("لن تفتح هذه المعاينة محادثة أو تبدأ اتصالًا."), `${vp.name}: unavailable contact destinations must be disclosed`);
-    assert.deepEqual(state.navLabels, ["أسباب تغيّر اللون","خيارات التبييض","خطوات التقييم","السلامة والتوقعات","تصوّر قسم الأطباء","معايير عرض الآراء","نموذج عرض الموقع","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
+    assert.ok(state.demoDialogText.includes("لم يتم ربط رقم هاتف أو حساب واتساب بهذه الصفحة بعد."), `${vp.name}: contact dialog initial explanation is missing`);
+    assert.ok(state.demoDialogText.includes("لن تبدأ هذه الصفحة اتصالًا أو ترسل رسالة من دون قناة تواصل مفعّلة."), `${vp.name}: unavailable contact destinations must be disclosed`);
+    assert.deepEqual(state.navLabels, ["أسباب تغيّر اللون","خيارات التبييض","خطوات التقييم","السلامة والتوقعات","الفريق الطبي","تجربة المريض","الموقع وطرق الوصول","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
     assert.deepEqual(state.navHrefs, ["#causes","#options","#journey","#suitability","#team","#reviews","#visit","#faq"], `${vp.name}: navigation destinations are incorrect`);
     assert.deepEqual(state.navSecondaryHrefs,["#causes","#options","#suitability","#reviews","#visit"],`${vp.name}: secondary navigation destinations changed`);
     assert.deepEqual(state.navVisibleHrefs,vp.width>920?["#journey","#team","#faq"]:[],`${vp.name}: expanded desktop header must show only three priority links`);
@@ -906,7 +906,7 @@ try {
     }
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
-    assert.equal(state.heroLead, "تعرّف إلى خيارات تبييض الأسنان، وما الذي يحدّد ملاءمتها لك بعد تقييم طبيب الأسنان: سبب تغيّر اللون، وصحة الأسنان واللثة، والنتيجة الممكنة.", `${vp.name}: hero supporting copy changed`);
+    assert.equal(state.heroLead, "اكتشف خيارات تبييض الأسنان، وتعرّف إلى ما يحدد الطريقة الأنسب لك؛ من سبب تغيّر اللون إلى صحة الأسنان واللثة والنتائج الممكنة. ابدأ بالمعلومة الصحيحة، ثم ناقش اختيارك مع طبيب الأسنان.", `${vp.name}: hero supporting copy changed`);
     assert.equal(state.heroTitleKickerColor, "rgb(48, 74, 84)", `${vp.name}: the introductory headline line must stay in the calm secondary ink tone`);
     assert.equal(state.heroCaptionFontSize, 12, `${vp.name}: the AI image disclosure must remain comfortably readable`);
     assert.ok(state.heroNumbersFontVariant.includes("tabular-nums"), `${vp.name}: numbered labels must use consistent tabular figures`);
@@ -917,9 +917,9 @@ try {
 
     assert.equal(state.redundantHeroNotesPresent, false, `${vp.name}: repetitive hero notes should be removed`);
     assert.equal(state.headlineLines, 3, `${vp.name}: headline must use the intended three-level composition`);
-    assert.equal(state.headlineKicker, "خطوتك نحو ابتسامة أكثر إشراقًا", `${vp.name}: headline introduction changed`);
+    assert.equal(state.headlineKicker, "ابتسامة أكثر إشراقًا", `${vp.name}: headline introduction changed`);
     assert.equal(state.headlineService, "تبييض الأسنان", `${vp.name}: primary service phrase changed`);
-    assert.equal(state.headlineBenefit, "بخيار يناسب احتياجك", `${vp.name}: headline benefit phrase changed`);
+    assert.equal(state.headlineBenefit, "بخطة تناسب حالتك", `${vp.name}: headline benefit phrase changed`);
     assert.equal(state.headlineOverflow, false, `${vp.name}: headline content overflows its box`);
     assert.ok(state.headingVisible, `${vp.name}: headline is not visible`);
     if (vp.width > 720) {
@@ -929,7 +929,7 @@ try {
       assert.ok(state.heroActionsRect.bottom <= state.headerRect.bottom + vp.height * 0.72,
         vp.name + ": Hero actions are too low in the first viewport");
     }
-    assert.equal(state.eyebrowLabel, "دليل تبييض الأسنان", `${vp.name}: hero eyebrow label changed`);
+    assert.equal(state.eyebrowLabel, "العناية بابتسامتك", `${vp.name}: hero eyebrow label changed`);
     assert.equal(state.eyebrowIndex, "01", `${vp.name}: hero eyebrow sequence marker is missing`);
     assert.ok(state.eyebrowToothIcon, `${vp.name}: dental tooth icon is missing`);
     assert.ok(state.eyebrowStartAligned, `${vp.name}: hero eyebrow alignment does not match the responsive text composition`);
@@ -944,7 +944,7 @@ try {
       vp.name + ": Hero separator must have the approved subtle 6–10 degree vertical tilt: " + JSON.stringify(state.eyebrowRule));
     assert.equal(state.eyebrowRule.color,"rgb(24, 122, 128)",vp.name + ": Hero separator must use RUWA teal");
     assert.ok(state.benefitTreatment,vp.name + ": the patient-benefit line is missing");
-    assert.equal(state.benefitTreatment.text,"بخيار يناسب احتياجك",vp.name + ": complete patient-benefit phrase changed");
+    assert.equal(state.benefitTreatment.text,"بخطة تناسب حالتك",vp.name + ": complete patient-benefit phrase changed");
     assert.equal(state.benefitTreatment.color,"rgb(24, 122, 128)",vp.name + ": complete benefit line must use RUWA Teal");
     assert.equal(state.benefitTreatment.textDecorationLine,"none",vp.name + ": benefit line must not acquire a decorative underline");
     assert.equal(state.benefitTreatment.accentElements,0,vp.name + ": the benefit phrase must not contain an isolated accent span");
@@ -954,14 +954,14 @@ try {
       chip.borderRadius==="999px"&&chip.backgroundColor!=="rgba(0, 0, 0, 0)"&&chip.backdropFilter.includes("blur")),
       vp.name + ": all nine section marker glass frames must share compact dimensions and translucency: " + JSON.stringify(state.sectionMarkerChips));
     const expectedMarkers=[
-      {number:"01",label:"دليل تبييض الأسنان",context:"hero"},
+      {number:"01",label:"العناية بابتسامتك",context:"hero"},
       {number:"02",label:"أسباب تغيّر لون الأسنان",context:"paper"},
       {number:"03",label:"خيارات التبييض",context:"canvas"},
       {number:"04",label:"خطوات التقييم",context:"canvas"},
       {number:"05",label:"السلامة والملاءمة",context:"paper"},
-      {number:"06",label:"تصوّر قسم الأطباء",context:"paper"},
-      {number:"07",label:"معايير عرض الآراء",context:"canvas"},
-      {number:"08",label:"نموذج عرض الموقع",context:"paper"},
+      {number:"06",label:"الفريق الطبي",context:"paper"},
+      {number:"07",label:"تجربة المريض",context:"canvas"},
+      {number:"08",label:"الموقع وطرق الوصول",context:"paper"},
       {number:"09",label:"الأسئلة الشائعة",context:"canvas"},
       {number:"10",label:"الخطوة التالية",context:"dark"}
     ];
@@ -1094,18 +1094,18 @@ try {
     await heroTrigger.focus();
     await page.keyboard.press("Enter");
     await page.waitForFunction(() => document.querySelector("#contact-unavailable-dialog")?.open === true, null, { timeout: 3000 });
-    assert.equal(await page.locator("#contact-dialog-title").innerText(), "التواصل عبر واتساب غير مفعّل في النموذج التجريبي", `${vp.name}: Hero WhatsApp button must identify its unavailable demo channel`);
+    assert.equal(await page.locator("#contact-dialog-title").innerText(), "التواصل عبر واتساب غير متاح حاليًا", `${vp.name}: Hero WhatsApp button must identify its unavailable demo channel`);
     await page.locator("#contact-dialog-close").click();
     await page.waitForFunction(() => !document.querySelector("#contact-unavailable-dialog")?.open && document.activeElement?.classList.contains("whatsapp-cta"), null, { timeout: 3000 });
     const heroPhoneTrigger=page.locator(".hero-actions .consultation-cta");
     assert.equal(await heroPhoneTrigger.getAttribute("data-contact-action"), "phone", `${vp.name}: Hero call-us button must use the phone demo channel`);
     await heroPhoneTrigger.click();
     await page.waitForFunction(() => document.querySelector("#contact-unavailable-dialog")?.open === true, null, { timeout: 3000 });
-    assert.equal(await page.locator("#contact-dialog-title").innerText(), "الاتصال غير مفعّل في النموذج التجريبي", `${vp.name}: Hero call-us button must show the unavailable phone dialog`);
+    assert.equal(await page.locator("#contact-dialog-title").innerText(), "الاتصال الهاتفي غير متاح حاليًا", `${vp.name}: Hero call-us button must show the unavailable phone dialog`);
     await page.locator("#contact-dialog-close").click();
     await headerTrigger.click();
     await page.waitForFunction(() => document.querySelector("#contact-unavailable-dialog")?.open === true, null, { timeout: 3000 });
-    assert.equal(await page.locator("#contact-dialog-title").innerText(), "الاتصال غير مفعّل في النموذج التجريبي", `${vp.name}: header call-us button must show the unavailable phone dialog`);
+    assert.equal(await page.locator("#contact-dialog-title").innerText(), "الاتصال الهاتفي غير متاح حاليًا", `${vp.name}: header call-us button must show the unavailable phone dialog`);
     await page.locator("#contact-dialog-close").click();
     await page.evaluate(() => window.scrollTo({top:0,behavior:"instant"}));
     const heroWhatsAppControl=page.locator(".hero-actions .primary-cta");
@@ -1153,7 +1153,7 @@ try {
 
     await floatingWhatsAppControl.click();
     await page.waitForFunction(()=>document.querySelector("#contact-unavailable-dialog")?.open===true,null,{timeout:3000});
-    assert.equal(await page.locator("#contact-dialog-title").innerText(),"التواصل عبر واتساب غير مفعّل في النموذج التجريبي",`${vp.name}: floating WhatsApp control must use the shared WhatsApp fallback`);
+    assert.equal(await page.locator("#contact-dialog-title").innerText(),"التواصل عبر واتساب غير متاح حاليًا",`${vp.name}: floating WhatsApp control must use the shared WhatsApp fallback`);
     await page.locator("#contact-dialog-close").click();
     await page.waitForFunction(()=>{
       const dialog=document.querySelector("#contact-unavailable-dialog");
