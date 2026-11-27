@@ -363,7 +363,10 @@ try {
             return (Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05);
           };
           const section=marker.closest("section");
-          const sectionStyle=section?getComputedStyle(section):getComputedStyle(document.body);
+          // For the final dark CTA marker, measure the actual dark contact band
+          // behind the capsule rather than the surrounding white section wrapper.
+          const surface= context==="dark" ? marker.closest(".contact-band")||section : section;
+          const sectionStyle=surface?getComputedStyle(surface):getComputedStyle(document.body);
           const bodyBg=rgba(getComputedStyle(document.body).backgroundColor);
           const surfaceBg=composite(rgba(sectionStyle.backgroundColor),bodyBg);
           const chipBg=composite(rgba(markerStyle.backgroundColor),surfaceBg);
