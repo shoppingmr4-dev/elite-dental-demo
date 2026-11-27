@@ -113,7 +113,7 @@ async function captureHeader(page, path) {
   }));
 }
 
-const expectedHeading = "ابدأ بخطوة مدروسة تبييض الأسنان لابتسامة أكثر إشراقًا";
+const expectedHeading = "خطوتك نحو ابتسامة أكثر إشراقًا تبييض الأسنان بخيار يناسب احتياجك";
 const failures = [];
 const results = [];
 const motionResults = [];
@@ -917,9 +917,9 @@ try {
 
     assert.equal(state.redundantHeroNotesPresent, false, `${vp.name}: repetitive hero notes should be removed`);
     assert.equal(state.headlineLines, 3, `${vp.name}: headline must use the intended three-level composition`);
-    assert.equal(state.headlineKicker, "ابدأ بخطوة مدروسة", `${vp.name}: headline introduction changed`);
+    assert.equal(state.headlineKicker, "خطوتك نحو ابتسامة أكثر إشراقًا", `${vp.name}: headline introduction changed`);
     assert.equal(state.headlineService, "تبييض الأسنان", `${vp.name}: primary service phrase changed`);
-    assert.equal(state.headlineBenefit, "لابتسامة أكثر إشراقًا", `${vp.name}: headline benefit phrase changed`);
+    assert.equal(state.headlineBenefit, "بخيار يناسب احتياجك", `${vp.name}: headline benefit phrase changed`);
     assert.equal(state.headlineOverflow, false, `${vp.name}: headline content overflows its box`);
     assert.ok(state.headingVisible, `${vp.name}: headline is not visible`);
     if (vp.width > 720) {
