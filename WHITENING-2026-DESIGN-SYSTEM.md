@@ -68,7 +68,7 @@ The approved file, its HTML element, figure placement, dimensions, focal positio
 Header and announcement strip:
 - RUWA wordmark and Arabic descriptor.
 - Eight navigation links to the visitor journey, including the assessment journey, review-transparency standards, and demo location section.
-- Header CTA: «استكشف الخيارات» — a real internal link to #options, not a phone or messaging action.
+- Header CTA: «اتصل بنا» with a phone icon; opens the disclosed contact-unavailable dialog because no real phone number is configured.
 - Mobile menu with aria-expanded state and keyboard behavior.
 
 Content sections in actual DOM order:
@@ -90,7 +90,7 @@ The assessment content now lives inside the first two steps of the four-step tre
 
 ## 6. FAQ source of truth
 
-There are **6 native HTML details/summary FAQ entries** in the current page. They cover session count, result longevity, surface versus internal discoloration, cautions about DIY whitening mixtures, temporary sensitivity, and the fact that restorations do not whiten like natural teeth. The tests assert this exact count and the presence of authoritative clinical references.
+There are **7 native HTML details/summary FAQ entries** in the current page. They cover session count, result longevity, surface versus internal discoloration, cautions about DIY whitening mixtures, temporary sensitivity, restoration limits, and what health information to share with the dentist before whitening. The tests assert this exact count and the presence of authoritative clinical references.
 
 Do not add duplicate questions simply to increase page length. Keep FAQ answers concise, evidence-based, non-diagnostic, and clinically reviewed before any real-clinic launch.
 
