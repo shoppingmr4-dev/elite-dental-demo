@@ -173,7 +173,7 @@ assert.match(html, /:focus-visible\{outline:3px solid var\(--coral\);outline-off
 
 const contactActions = [...html.matchAll(/data-contact-action=["'](whatsapp|phone)["']/gi)].map(match => match[1]);
 assert.equal(contactActions.filter(action => action === "whatsapp").length, 3, "Hero, final-section, and floating WhatsApp controls must use the disclosed contact dialog");
-assert.equal(contactActions.filter(action => action === "phone").length, 2, "Hero and header call controls must use the disclosed contact dialog");
+assert.equal(contactActions.filter(action => action === "phone").length, 3, "Hero, header, and final-section phone controls must use the disclosed contact dialog");
 
 const contactHeaderScanStart = html.indexOf('<header class="site-header"');
 const contactHeaderScanEnd = html.indexOf("</header>", contactHeaderScanStart) + "</header>".length;
@@ -284,6 +284,6 @@ assert.match(productionAudit, /7 native details entries/);
 assert.match(productionAudit, /one floating WhatsApp control/);
 
 console.log("RUWA repository consistency: PASS");
-console.log("Sections: 10 | Reviews: no fabricated testimonials or ratings | FAQ: 7 | Contact: restored WhatsApp/phone buttons use disclosed demo dialog");
+console.log("Sections: 10 | Reviews: verified-review slots only, no fabricated quotes or ratings | FAQ: 7 | Contact: six WhatsApp/phone controls use the contact-unavailable dialog");
 console.log("ARIA controls: all targets exist | Hero AI illustration disclosure: present");
 console.log("Repository root and legacy preview paths: redirect to whitening-2026.html");
