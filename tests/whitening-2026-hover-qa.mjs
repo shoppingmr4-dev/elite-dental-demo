@@ -112,10 +112,10 @@ try {
     );
   }
 
-  const step = desktop.locator(".step").first();
+  const step = desktop.locator(".journey-step").first();
   await step.scrollIntoViewIfNeeded();
   await desktop.waitForTimeout(760);
-  const stepBadge = step.locator(".step-no");
+  const stepBadge = step.locator(".journey-step-number");
   await step.hover();
   await desktop.waitForTimeout(280);
   const stepScale = await stepBadge.evaluate(element => getComputedStyle(element).scale);
