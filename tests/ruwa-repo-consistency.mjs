@@ -45,7 +45,7 @@ assert.ok(visitSection.includes("الرياض") && visitSection.includes("الم
 assert.ok(visitSection.includes("نطاق الموقع ومعلومات الفرع") && visitSection.includes("في الموقع الفعلي، تُعرض هنا المدينة وعنوان الفرع"), "Location section must describe a future verified location without implying an operating clinic");
 assert.ok(visitSection.includes("مدينة الرياض بالكامل"), "The displayed geographic scope must remain the whole city");
 assert.ok(visitSection.includes("عنوان الفرع") && visitSection.includes("غير محدد في هذا النموذج"), "Do not invent an exact branch address");
-assert.ok(visitSection.includes("نموذج RUWA التجريبي") && visitSection.includes("لا يحدد موقعًا فعليًا لعيادة أو فرع") && visitSection.includes("ليس خريطة طرق أو وسيلة للملاحة"), "Disclose that the artwork is not a real clinic location");
+assert.ok(visitSection.includes("نموذج RUWA التجريبي") && visitSection.includes("لا يشير إلى عنوان عيادة أو موقع فرع فعلي") && visitSection.includes("ليس خريطة طرق أو وسيلة للملاحة"), "Disclose that the artwork is not a real clinic location");
 const mapImage = visitSection.match(/<img\b[^>]*data-visit-map-image[^>]*>/)?.[0] || "";
 assert.ok(mapImage.includes('src="assets/riyadh-schematic-map.svg"'), "Use the committed local SVG illustration rather than a third-party map API");
 assert.ok(mapImage.includes('loading="lazy"') && mapImage.includes('width="1200"') && mapImage.includes('height="720"'), "Local illustration must lazy-load and reserve its intrinsic dimensions");
@@ -54,7 +54,7 @@ assert.ok(visitSection.includes("رسم توضيحي أُعدّ لهذا الن�
 const cityMapLink = visitSection.match(/<a class="visit-map-action"[^>]*href="([^"]+)"/)?.[1] || "";
 assert.ok(cityMapLink.startsWith("https://www.google.com/maps/search/?api=1&amp;query=Riyadh"), "Open a Google Maps city search, not exact clinic directions");
 assert.match(visitSection, /target="_blank" rel="noopener noreferrer"/, "Google Maps must open safely in a new tab");
-assert.ok(visitSection.includes("رسم توضيحي تجريدي") && visitSection.includes("ليس خريطة طرق") && visitSection.includes("لا يحدد موقعًا فعليًا لعيادة أو فرع"), "Clearly disclose that the visual is schematic artwork, not a road map or clinic location");
+assert.ok(visitSection.includes("رسم تجريدي توضيحي") && visitSection.includes("ليس خريطة طرق") && visitSection.includes("لا يشير إلى عنوان عيادة أو موقع فرع فعلي"), "Clearly disclose that the visual is schematic artwork, not a road map or clinic location");
 assert.ok(!visitSection.includes("<iframe") && !visitSection.includes("دبوس"), "Do not present the static image as an interactive map or invent a clinic pin");
 
 const journeyStart = html.indexOf('id="journey"');
