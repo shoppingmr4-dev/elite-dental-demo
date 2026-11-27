@@ -276,7 +276,7 @@ assert.match(designSystem, /6 native HTML details\/summary FAQ entries/);
 assert.match(designSystem, /one circular WhatsApp preview/);
 assert.match(caseStudy, /10 أقسام رئيسية/);
 assert.match(caseStudy, /ستة أسئلة/);
-assert.match(caseStudy, /زر واتساب عائم واحد للمعاينة التجريبية/);
+assert.match(caseStudy, /زري تواصل في Hero.*واتساب.*اتصل بنا/);
 assert.match(productionAudit, /10 main content sections/);
 assert.match(productionAudit, /6 native details entries/);
 assert.match(productionAudit, /one floating WhatsApp demo control/);
