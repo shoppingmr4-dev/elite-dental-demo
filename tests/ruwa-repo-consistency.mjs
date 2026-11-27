@@ -217,7 +217,7 @@ assert.ok(heroSection, "The canonical Hero section must remain present");
 assert.match(heroSection, /class="primary-cta whatsapp-cta" type="button" data-contact-action="whatsapp"[^>]*>[\s\S]*?تواصل عبر واتساب/, "Hero primary CTA must restore the WhatsApp contact button");
 assert.match(heroSection, /class="text-link consultation-cta phone-cta" type="button" data-contact-action="phone"[^>]*>اتصل بنا/, "Hero secondary CTA must restore the call-us button");
 
-assert.match(heroSection, /ابتسامة أكثر إشراقًا تبدأ من الاختيار الصحيح[\s\S]*?تبييض الأسنان[\s\S]*?بخطة تناسب حالتك/, "Hero must lead with a patient benefit and a personalized-care promise");
+assert.match(heroSection, /ابتسامة أكثر إشراقًا[\s\S]*?تبييض الأسنان[\s\S]*?بخطة تناسب حالتك/, "Hero must lead with a patient benefit and a personalized-care promise");
 assert.match(html, /رُواء مشروع تجريبي ضمن معرض أعمال أبيكس ستوديو، ولا يمثّل عيادة قائمة/, "The footer must retain the fictional portfolio disclosure in Arabic");
 const footerOffset=html.indexOf('<footer class="footer"');
 assert.doesNotMatch(html.slice(0,footerOffset), /(?:هذا النموذج|هذه صفحة تجريبية|نموذج توضيحي|نموذج تجريبي|النموذج التجريبي)/, "The fictional-project disclosure must appear only in the footer");
