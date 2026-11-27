@@ -104,7 +104,7 @@ async function captureHeader(page, path) {
   }));
 }
 
-const expectedHeading = "اكتشف خيارات تبييض الأسنان لابتسامة أكثر إشراقًا";
+const expectedHeading = "قبل اتخاذ القرار تبييض الأسنان الخيارات والسلامة والنتائج المتوقعة";
 const failures = [];
 const results = [];
 const motionResults = [];
@@ -575,8 +575,10 @@ try {
         })(),
         reviewSection:(()=>{
           const section=document.getElementById("reviews"),panel=section?.querySelector(".reviews-panel"),title=section?.querySelector("#reviews-title"),status=section?.querySelector(".reviews-status-note"),disclosure=section?.querySelector(".reviews-rating-disclosure"),sampleDisclosure=section?.querySelector(".reviews-sample-disclosure"),stars=[...(section?.querySelectorAll(".reviews-stars")||[])],cards=[...(section?.querySelectorAll(".review-card")||[])],criteria=[...(section?.querySelectorAll(".reviews-criteria-list li")||[])],rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width};},pr=panel?rect(panel):null;
-          return {present:Boolean(section&&panel),heading:title?.innerText.trim()||"",status:status?.innerText.trim()||"",disclosure:disclosure?.innerText.trim()||"",sampleDisclosure:sampleDisclosure?.innerText.trim()||"",starsAccessibleLabel:stars[0]?.getAttribute("aria-label")||"",starColor:stars[0]?getComputedStyle(stars[0]).color:"",criteriaCount:criteria.length,panelWidth:pr?.width||0,panelWithinViewport:Boolean(pr&&pr.left>=-1&&pr.right<=window.innerWidth+1),horizontalOverflow:section?section.scrollWidth>section.clientWidth:false,starCount:stars.reduce((sum,row)=>sum+row.querySelectorAll('[aria-hidden="true"]').length,0),reviewCards:cards.length,demoCards:cards.filter(card=>card.querySelector(".review-card-label")?.innerText.trim()==="عبارة تمثيلية"&&card.innerText.includes("ليس رأيًا حقيقيًا")).length,placeholderCards:cards.filter(card=>["«أريد أن أفهم سبب تغيّر لون أسناني قبل اختيار طريقة التبييض.»","«يهمني معرفة الفرق بين التبييض داخل العيادة والقوالب المنزلية.»","«أفضّل معرفة النتائج المتوقعة والآثار المحتملة قبل اتخاذ القرار.»"].includes(card.querySelector(".review-card-copy")?.innerText.trim()||"")).length};
+          const cardTitles=cards.map(card=>card.querySelector(".review-card-copy")?.innerText.trim()||"");
+          return {present:Boolean(section&&panel),heading:title?.innerText.trim()||"",status:status?.innerText.trim()||"",disclosure:disclosure?.innerText.trim()||"",sampleDisclosure:sampleDisclosure?.innerText.trim()||"",starsAccessibleLabel:stars[0]?.getAttribute("aria-label")||"",starColor:stars[0]?getComputedStyle(stars[0]).color:"",criteriaCount:criteria.length,panelWidth:pr?.width||0,panelWithinViewport:Boolean(pr&&pr.left>=-1&&pr.right<=window.innerWidth+1),horizontalOverflow:section?section.scrollWidth>section.clientWidth:false,starCount:stars.reduce((sum,row)=>sum+row.querySelectorAll('[aria-hidden="true"]').length,0),reviewCards:cards.length,demoCards:cards.filter(card=>/^المعيار 0[1-3]$/.test(card.querySelector(".review-card-label")?.innerText.trim()||"")).length,placeholderCards:cardTitles.filter(title=>["مصدر قابل للتحقق","موافقة واضحة","نقل أمين للتجربة"].includes(title)).length};
         })(),
+        faqItems:
         faqItems:document.querySelectorAll(".faq-item").length,
         clinicalReferences:[...document.querySelectorAll(".reference-note a")].map(a=>a.href),
         contrastChecks:(()=>{
@@ -841,7 +843,7 @@ try {
     assert.ok(Number.parseFloat(state.headerPanelRadius) >= 18, `${vp.name}: floating header needs rounded outer corners`);
     assert.equal(state.headerPanelTopInset, 0, `${vp.name}: header should start in its full-size state`);
     assert.equal(state.headerCompactInitially, false, `${vp.name}: header must not start in the compact state`);
-    assert.equal(state.headerActionText, "اتصل بنا", `${vp.name}: header phone CTA copy is incorrect`);
+    assert.equal(state.headerActionText, "استكشف الخيارات", `${vp.name}: header options CTA copy is incorrect`);
      assert.ok(state.headerActionAlignment, `${vp.name}: header phone CTA alignment metrics are unavailable`);
      assert.ok(["flex","inline-flex"].includes(state.headerActionAlignment.display), `${vp.name}: header phone CTA must use a flex formatting context (grid/flex items may compute inline-flex to flex)`);
      assert.equal(state.headerActionAlignment.alignItems, "center", `${vp.name}: header phone CTA contents must be vertically centered`);
@@ -855,11 +857,11 @@ try {
      const expectedHeaderPadding=vp.width<=390?10:vp.width<=720?13:vp.width<=920?16:19;
      assert.equal(Number.parseFloat(state.headerActionPaddingInlineStart),expectedHeaderPadding,
        `${vp.name}: header phone CTA horizontal padding should be slightly roomier without changing its height`);
-    assert.equal(state.headerActionHref, "", `${vp.name}: demo header CTA must not contain a fake external destination`);
-    assert.equal(state.headerActionTag, "BUTTON", `${vp.name}: header CTA must open the local demo dialog`);
-    assert.equal(state.headerActionChannel, "phone", `${vp.name}: header CTA must use the phone contact channel`);
-    assert.ok(state.headerActionHasPhoneIcon && !state.headerActionWhatsAppIcon, `${vp.name}: header must show a phone icon, not a WhatsApp icon`);
-    assert.equal(state.contactTriggerCount, 6, `${vp.name}: all six WhatsApp and phone actions must use the shared unavailable-contact dialog`);
+    assert.equal(state.headerActionHref, "#options", `${vp.name}: header CTA must navigate to the whitening options`);
+    assert.equal(state.headerActionTag, "A", `${vp.name}: header CTA must be a real internal link`);
+    assert.equal(state.headerActionChannel, "", `${vp.name}: header CTA must not claim a live contact channel`);
+    assert.ok(!state.headerActionHasPhoneIcon && !state.headerActionWhatsAppIcon, `${vp.name}: header options CTA must not display phone or WhatsApp branding`);
+    assert.equal(state.contactTriggerCount, 1, `${vp.name}: only one disclosed floating WhatsApp demo control should use the dialog`);
     assert.equal(state.heroDemoDisclosurePresent, false, `${vp.name}: the separate demo sentence under the Hero buttons must be absent`);
     assert.equal(state.floatingWhatsAppPresent, true, `${vp.name}: smart floating WhatsApp button is missing`);
      assert.ok(state.floatingWhatsAppMetrics, `${vp.name}: floating WhatsApp measurements are unavailable`);
@@ -874,9 +876,9 @@ try {
        `${vp.name}: WhatsApp logo is not geometrically centered in its green circle: ${JSON.stringify(state.floatingWhatsAppMetrics)}`);
     assert.equal(state.demoDialogTag, "DIALOG", `${vp.name}: accessible native dialog is missing`);
     assert.equal(state.demoDialogInitialOpen, false, `${vp.name}: demo dialog should start closed`);
-    assert.ok(state.demoDialogText.includes("قنوات التواصل ستعمل مباشرة عند إضافة بيانات الاتصال الرسمية"), `${vp.name}: contact dialog initial explanation is missing`);
-    assert.ok(state.demoDialogText.includes("لن يتم فتح محادثة أو بدء اتصال قبل إعداد رقم صحيح"), `${vp.name}: unavailable contact destinations must be disclosed`);
-    assert.deepEqual(state.navLabels, ["أسباب تغيّر اللون","خيارات التبييض","التقييم ورحلة التبييض","السلامة والتوقعات","الأطباء","آراء المرضى","موقعنا في الرياض","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
+    assert.ok(state.demoDialogText.includes("هذه نسخة تجريبية؛ لا توجد أرقام اتصال أو قنوات حجز فعلية مرتبطة بها."), `${vp.name}: contact dialog initial explanation is missing`);
+    assert.ok(state.demoDialogText.includes("لن تفتح هذه المعاينة محادثة أو تبدأ اتصالًا."), `${vp.name}: unavailable contact destinations must be disclosed`);
+    assert.deepEqual(state.navLabels, ["أسباب تغيّر اللون","خيارات التبييض","خطوات التقييم","السلامة والتوقعات","تصوّر قسم الأطباء","معايير عرض الآراء","نموذج عرض الموقع","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
     assert.deepEqual(state.navHrefs, ["#causes","#options","#journey","#suitability","#team","#reviews","#visit","#faq"], `${vp.name}: navigation destinations are incorrect`);
     assert.deepEqual(state.navSecondaryHrefs,["#causes","#options","#suitability","#reviews","#visit"],`${vp.name}: secondary navigation destinations changed`);
     assert.deepEqual(state.navVisibleHrefs,vp.width>920?["#journey","#team","#faq"]:[],`${vp.name}: expanded desktop header must show only three priority links`);
@@ -893,7 +895,7 @@ try {
     }
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
-    assert.equal(state.heroLead, "تختلف أسباب تغيّر لون الأسنان ونتائج التبييض من حالة لأخرى. لذلك يبدأ التقييم بفحص الأسنان واللثة، ثم يشرح لك طبيب الأسنان الخيارات المناسبة لحالتك وما يمكن توقعه من كل خيار.", `${vp.name}: hero supporting copy changed`);
+    assert.equal(state.heroLead, "يختلف سبب تغيّر لون الأسنان من شخص لآخر، كما تختلف خيارات التبييض والنتائج المتوقعة. يشرح هذا الدليل أسباب التصبغات والخيارات المتاحة وآثارها المحتملة، وما ينبغي مناقشته مع طبيب الأسنان قبل اتخاذ القرار.", `${vp.name}: hero supporting copy changed`);
     assert.equal(state.heroTitleKickerColor, "rgb(48, 74, 84)", `${vp.name}: the introductory headline line must stay in the calm secondary ink tone`);
     assert.equal(state.heroCaptionFontSize, 12, `${vp.name}: the AI image disclosure must remain comfortably readable`);
     assert.ok(state.heroNumbersFontVariant.includes("tabular-nums"), `${vp.name}: numbered labels must use consistent tabular figures`);
@@ -904,9 +906,9 @@ try {
 
     assert.equal(state.redundantHeroNotesPresent, false, `${vp.name}: repetitive hero notes should be removed`);
     assert.equal(state.headlineLines, 3, `${vp.name}: headline must use the intended three-level composition`);
-    assert.equal(state.headlineKicker, "اكتشف خيارات", `${vp.name}: headline introduction changed`);
+    assert.equal(state.headlineKicker, "قبل اتخاذ القرار", `${vp.name}: headline introduction changed`);
     assert.equal(state.headlineService, "تبييض الأسنان", `${vp.name}: primary service phrase changed`);
-    assert.equal(state.headlineBenefit, "لابتسامة أكثر إشراقًا", `${vp.name}: headline benefit phrase changed`);
+    assert.equal(state.headlineBenefit, "الخيارات والسلامة والنتائج المتوقعة", `${vp.name}: headline benefit phrase changed`);
     assert.equal(state.headlineOverflow, false, `${vp.name}: headline content overflows its box`);
     assert.ok(state.headingVisible, `${vp.name}: headline is not visible`);
     if (vp.width > 720) {
@@ -916,7 +918,7 @@ try {
       assert.ok(state.heroActionsRect.bottom <= state.headerRect.bottom + vp.height * 0.72,
         vp.name + ": Hero actions are too low in the first viewport");
     }
-    assert.equal(state.eyebrowLabel, "دليل الابتسامة", `${vp.name}: hero eyebrow label changed`);
+    assert.equal(state.eyebrowLabel, "دليل تبييض الأسنان", `${vp.name}: hero eyebrow label changed`);
     assert.equal(state.eyebrowIndex, "01", `${vp.name}: hero eyebrow sequence marker is missing`);
     assert.ok(state.eyebrowToothIcon, `${vp.name}: dental tooth icon is missing`);
     assert.ok(state.eyebrowStartAligned, `${vp.name}: hero eyebrow alignment does not match the responsive text composition`);
@@ -931,7 +933,7 @@ try {
       vp.name + ": Hero separator must have the approved subtle 6–10 degree vertical tilt: " + JSON.stringify(state.eyebrowRule));
     assert.equal(state.eyebrowRule.color,"rgb(24, 122, 128)",vp.name + ": Hero separator must use RUWA teal");
     assert.ok(state.benefitTreatment,vp.name + ": the patient-benefit line is missing");
-    assert.equal(state.benefitTreatment.text,"لابتسامة أكثر إشراقًا",vp.name + ": complete patient-benefit phrase changed");
+    assert.equal(state.benefitTreatment.text,"الخيارات والسلامة والنتائج المتوقعة",vp.name + ": complete patient-benefit phrase changed");
     assert.equal(state.benefitTreatment.color,"rgb(24, 122, 128)",vp.name + ": complete benefit line must use RUWA Teal");
     assert.equal(state.benefitTreatment.textDecorationLine,"none",vp.name + ": benefit line must not acquire a decorative underline");
     assert.equal(state.benefitTreatment.accentElements,0,vp.name + ": the benefit phrase must not contain an isolated accent span");
@@ -941,16 +943,16 @@ try {
       chip.borderRadius==="999px"&&chip.backgroundColor!=="rgba(0, 0, 0, 0)"&&chip.backdropFilter.includes("blur")),
       vp.name + ": all nine section marker glass frames must share compact dimensions and translucency: " + JSON.stringify(state.sectionMarkerChips));
     const expectedMarkers=[
-      {number:"01",label:"دليل الابتسامة",context:"hero"},
-      {number:"02",label:"أسباب تغيّر اللون",context:"paper"},
-      {number:"04",label:"الخيارات المتاحة",context:"canvas"},
-      {number:"05",label:"التقييم ورحلة التبييض",context:"canvas"},
-      {number:"06",label:"السلامة والملاءمة",context:"paper"},
-      {number:"07",label:"توقعات واقعية",context:"dark"},
-      {number:"08",label:"الفريق الطبي",context:"paper"},
-      {number:"09",label:"آراء المرضى",context:"canvas"},
-      {number:"10",label:"موقعنا في الرياض",context:"paper"},
-      {number:"11",label:"إجابات واضحة",context:"canvas"}
+      {number:"01",label:"دليل تبييض الأسنان",context:"hero"},
+      {number:"02",label:"أسباب تغيّر لون الأسنان",context:"paper"},
+      {number:"03",label:"خيارات التبييض",context:"canvas"},
+      {number:"04",label:"خطوات التقييم",context:"canvas"},
+      {number:"05",label:"السلامة والملاءمة",context:"paper"},
+      {number:"06",label:"تصوّر قسم الأطباء",context:"paper"},
+      {number:"07",label:"معايير عرض الآراء",context:"canvas"},
+      {number:"08",label:"نموذج عرض الموقع",context:"paper"},
+      {number:"09",label:"الأسئلة الشائعة",context:"canvas"},
+      {number:"10",label:"الخطوة التالية",context:"dark"}
     ];
     assert.equal(state.allSectionMarkers.length,10,vp.name + ": all ten numbered markers must be present");
     assert.deepEqual(state.allSectionMarkers.map(({number,label,context})=>({number,label,context})),expectedMarkers,
@@ -1017,20 +1019,20 @@ try {
     assert.equal(state.heroLegacyCssPresent, false, `${vp.name}: obsolete Hero image CSS remains`);
     assert.equal(state.heroBottomItemCount, 3, `${vp.name}: the three approved Hero principles must remain`);
     assert.equal(state.heroCopyLayoutValid, true, `${vp.name}: Hero copy is not aligned within its approved responsive column`);
-    assert.equal(state.ctaHref, "", `${vp.name}: demo hero CTA must not navigate to an unrelated section`);
-    assert.equal(state.heroCtaText, "تواصل عبر واتساب", vp.name + ": hero CTA copy is incorrect");
+    assert.equal(state.ctaHref, "#options", `${vp.name}: demo hero CTA must not navigate to an unrelated section`);
+    assert.equal(state.heroCtaText, "استكشف خيارات التبييض", vp.name + ": hero CTA copy is incorrect");
     assert.ok(state.heroSecondaryCta, vp.name + ": the secondary consultation link must remain visible");
-    assert.equal(state.heroSecondaryCta.text, "اتصل بنا", vp.name + ": Hero phone CTA must say اتصل بنا");
-    assert.equal(state.heroSecondaryCta.href, null, vp.name + ": phone CTA must not contain a fabricated number destination");
-     assert.equal(state.heroSecondaryCta.tag, "BUTTON", vp.name + ": phone CTA must be a button until a number is configured");
-     assert.equal(state.heroSecondaryCta.channel, "phone", vp.name + ": Hero secondary action should use the phone channel");
+    assert.equal(state.heroSecondaryCta.text, "تعرّف على خطوات التقييم", vp.name + ": Hero phone CTA must say اتصل بنا");
+    assert.equal(state.heroSecondaryCta.href, "#journey", vp.name + ": phone CTA must not contain a fabricated number destination");
+     assert.equal(state.heroSecondaryCta.tag, "A", vp.name + ": phone CTA must be a button until a number is configured");
+     assert.equal(state.heroSecondaryCta.channel, null, vp.name + ": Hero secondary action should use the phone channel");
     assert.ok(state.heroSecondaryCta.minHeight>=44, vp.name + ": secondary CTA click target must be at least 44px tall");
     assert.ok(state.heroSecondaryCta.gap>=7&&state.heroSecondaryCta.gap<=18,
       vp.name + ": primary/secondary CTA spacing is not balanced: " + JSON.stringify(state.heroSecondaryCta));
     assert.equal(state.heroSecondaryCta.stacked,false, vp.name + ": Hero WhatsApp and phone CTAs must remain side-by-side at every viewport");
-    assert.equal(state.heroCtaHref, "", `${vp.name}: demo hero CTA must not contain a fake external destination`);
-    assert.equal(state.heroCtaTag, "BUTTON", `${vp.name}: hero CTA must open the local demo dialog`);
-    assert.ok(state.heroCtaWhatsAppIcon, `${vp.name}: WhatsApp brand icon is missing from hero CTA`);
+    assert.equal(state.heroCtaHref, "#options", `${vp.name}: demo hero CTA must not contain a fake external destination`);
+    assert.equal(state.heroCtaTag, "A", `${vp.name}: hero CTA must open the local demo dialog`);
+    assert.ok(!state.heroCtaWhatsAppIcon, `${vp.name}: internal hero CTA must not display WhatsApp branding`);
     assert.equal(state.heroCtaBackground, "rgb(24, 122, 128)", `${vp.name}: primary CTA should retain the RUWA teal`);
     assert.equal(state.heroCtaForeground, "rgb(255, 255, 255)", `${vp.name}: primary CTA text should remain white`);
     assert.ok(state.heroCtaHeight >= 52, `${vp.name}: primary CTA hit area is too short`);
@@ -1059,63 +1061,34 @@ try {
     assert.equal(audit.faq.referenceMargin,"24px", vp.name + ": reference note spacing changed");
     assert.ok(Number.parseFloat(audit.contactFooter.contactToFooter)>=52, vp.name + ": contact-to-footer separation is too tight");
     assert.equal(state.liveContactChannelPresent, false, `${vp.name}: demo must not contain a live WhatsApp or phone destination`);
-    assert.ok(state.finalWhatsAppButton && state.finalPhoneButton, `${vp.name}: final WhatsApp and phone contact controls are missing`);
-     assert.deepEqual(state.contactChannelCounts,{whatsapp:3,phone:3},`${vp.name}: page must have three WhatsApp and three phone actions`);
+    assert.ok(state.finalWhatsAppButton && state.finalPhoneButton, `${vp.name}: final internal next-step links are missing`);
+     assert.deepEqual(state.contactChannelCounts,{whatsapp:1,phone:0},`${vp.name}: only the floating WhatsApp demo control may remain`);
     const dialog=page.locator("#contact-unavailable-dialog");
     const heroTrigger=page.locator(".primary-cta");
     const headerTrigger=page.locator(".header-action");
     const brokenControls = await page.locator("[aria-controls]").evaluateAll(elements =>
       elements.flatMap(element =>
         (element.getAttribute("aria-controls") || "")
-          .split(/\s+/)
+          .split(/\\s+/)
           .filter(Boolean)
           .filter(id => !document.getElementById(id))
           .map(id => id)
       )
     );
     assert.deepEqual(brokenControls, [], vp.name + ": every aria-controls target must exist");
-    assert.equal(await heroTrigger.getAttribute("aria-controls"), "contact-unavailable-dialog", vp.name + ": Hero contact control must reference the actual dialog");
-    assert.equal(await headerTrigger.getAttribute("aria-controls"), "contact-unavailable-dialog", vp.name + ": header contact control must reference the actual dialog");
+    assert.equal(await heroTrigger.getAttribute("href"), "#options", vp.name + ": Hero primary CTA must navigate to options");
+    assert.equal(await headerTrigger.getAttribute("href"), "#options", vp.name + ": header CTA must navigate to options");
+    assert.equal(await page.locator('#consultation a[href="#faq"]').count(), 1, vp.name + ": final FAQ link is missing");
+    assert.equal(await page.locator('#consultation a[href="#journey"]').count(), 1, vp.name + ": final assessment link is missing");
     await heroTrigger.focus();
     await page.keyboard.press("Enter");
-    await page.waitForFunction(() => document.querySelector("#contact-unavailable-dialog")?.open === true, null, { timeout: 3000 });
-    assert.equal(await page.evaluate(() => document.activeElement?.id), "contact-dialog-title", `${vp.name}: opening from the Hero WhatsApp CTA must move focus to the dialog heading`);
-     assert.equal(await page.locator("#contact-dialog-title").innerText(), "التواصل عبر واتساب غير مفعّل بعد", `${vp.name}: empty WhatsApp configuration should show its correct unavailable state`);
-    assert.ok(await dialog.evaluate(el=>el.matches(":modal")), `${vp.name}: demo dialog must enter the native modal top layer`);
-    await page.keyboard.press("Escape");
-    await page.waitForFunction(() => {
-      const dialog=document.querySelector("#contact-unavailable-dialog");
-      return dialog?.open === false &&
-        !document.body.classList.contains("dialog-open") &&
-        document.activeElement?.classList.contains("primary-cta");
-    }, null, { timeout: 3000 });
-    assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("primary-cta")), true, `${vp.name}: Escape must restore focus to the hero trigger`);
-    assert.equal(await page.evaluate(() => document.body.classList.contains("dialog-open")), false, `${vp.name}: body scroll lock must be removed after Escape`);
-
+    await page.waitForFunction(() => location.hash === "#options", null, { timeout: 3000 });
+    await page.evaluate(() => history.replaceState(null, "", location.pathname + location.search));
     await headerTrigger.click();
-    await page.waitForFunction(() => document.querySelector("#contact-unavailable-dialog")?.open === true, null, { timeout: 3000 });
-    await page.locator("#contact-dialog-close").click();
-    await page.waitForFunction(() => {
-      const dialog=document.querySelector("#contact-unavailable-dialog");
-      return dialog?.open === false &&
-        !document.body.classList.contains("dialog-open") &&
-        document.activeElement?.classList.contains("header-action");
-    }, null, { timeout: 3000 });
-    assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("header-action")), true, `${vp.name}: close control must restore focus to the header trigger`);
-
-    await heroTrigger.click();
-    await page.waitForFunction(() => document.querySelector("#contact-unavailable-dialog")?.open === true, null, { timeout: 3000 });
-    await page.locator("#contact-dialog-dismiss").click();
-    await page.waitForFunction(() => {
-      const dialog=document.querySelector("#contact-unavailable-dialog");
-      return dialog?.open === false &&
-        !document.body.classList.contains("dialog-open") &&
-        document.activeElement?.classList.contains("primary-cta");
-    }, null, { timeout: 3000 });
-    assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("primary-cta")), true, `${vp.name}: dialog action must restore focus to the hero trigger`);
-    assert.equal(new URL(page.url()).hash, "", `${vp.name}: demo CTA must not create an unrelated anchor navigation`);
-    await page.evaluate(()=>window.scrollTo({top:0,behavior:"instant"}));
-    const heroWhatsAppControl=page.locator('.hero-actions [data-contact-action="whatsapp"]');
+    await page.waitForFunction(() => location.hash === "#options", null, { timeout: 3000 });
+    await page.evaluate(() => history.replaceState(null, "", location.pathname + location.search));
+    await page.evaluate(() => window.scrollTo({top:0,behavior:"instant"}));
+    const heroWhatsAppControl=page.locator(".hero-actions .primary-cta");const heroWhatsAppControl=page.locator(".hero-actions .primary-cta");
     const floatingWhatsAppControl=page.locator("#whatsapp-float");
     const heroVisibleScrollY=await heroWhatsAppControl.evaluate(el=>{
       const rect=el.getBoundingClientRect();
@@ -1123,7 +1096,7 @@ try {
     });
     await page.evaluate(y=>window.scrollTo({top:y,behavior:"instant"}),heroVisibleScrollY);
     await page.waitForFunction(()=>{
-      const hero=document.querySelector('.hero-actions [data-contact-action="whatsapp"]');
+      const hero=document.querySelector(".hero-actions .primary-cta");
       const floating=document.querySelector("#whatsapp-float");
       if(!hero||!floating)return false;
       const rect=hero.getBoundingClientRect();
@@ -1140,7 +1113,7 @@ try {
     const heroOutsideScrollY=await heroWhatsAppControl.evaluate(el=>window.scrollY+el.getBoundingClientRect().bottom+4);
     await page.evaluate(y=>window.scrollTo({top:y,behavior:"instant"}),heroOutsideScrollY);
     await page.waitForFunction(()=>{
-      const hero=document.querySelector('.hero-actions [data-contact-action="whatsapp"]');
+      const hero=document.querySelector(".hero-actions .primary-cta");
       const floating=document.querySelector("#whatsapp-float");
       if(!hero||!floating)return false;
       const rect=hero.getBoundingClientRect();
@@ -1160,7 +1133,7 @@ try {
 
     await floatingWhatsAppControl.click();
     await page.waitForFunction(()=>document.querySelector("#contact-unavailable-dialog")?.open===true,null,{timeout:3000});
-    assert.equal(await page.locator("#contact-dialog-title").innerText(),"التواصل عبر واتساب غير مفعّل بعد",`${vp.name}: floating WhatsApp control must use the shared WhatsApp fallback`);
+    assert.equal(await page.locator("#contact-dialog-title").innerText(),"التواصل عبر واتساب غير مفعّل في النموذج التجريبي",`${vp.name}: floating WhatsApp control must use the shared WhatsApp fallback`);
     await page.locator("#contact-dialog-close").click();
     await page.waitForFunction(()=>{
       const dialog=document.querySelector("#contact-unavailable-dialog");
@@ -1169,7 +1142,7 @@ try {
 
     await page.evaluate(y=>window.scrollTo({top:y,behavior:"instant"}),heroVisibleScrollY);
     await page.waitForFunction(()=>{
-      const hero=document.querySelector('.hero-actions [data-contact-action="whatsapp"]');
+      const hero=document.querySelector(".hero-actions .primary-cta");
       const floating=document.querySelector("#whatsapp-float");
       if(!hero||!floating)return false;
       const rect=hero.getBoundingClientRect();
@@ -1400,7 +1373,7 @@ try {
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
     assert.deepEqual(state.pageSectionOrder, ["top","causes","options","journey","suitability","team","reviews","visit","faq","consultation"], `${vp.name}: page sections are missing or not in the approved patient-journey order`);
      assert.equal(state.visitSection.present,true,`${vp.name}: Riyadh location section is missing`);
-     assert.equal(state.visitSection.heading,"موقع رُواء في الرياض.",`${vp.name}: location heading is incorrect`);
+     assert.equal(state.visitSection.heading,"كيف سيظهر موقع العيادة؟",`${vp.name}: location heading is incorrect`);
      assert.equal(state.visitSection.city,true,`${vp.name}: location city must be Riyadh`);
      assert.equal(state.visitSection.country,true,`${vp.name}: location country is incorrect`);
      assert.equal(state.visitSection.mapImageSrc,"assets/riyadh-schematic-map.svg",`${vp.name}: visit artwork must use the committed local SVG asset`);
@@ -1430,7 +1403,7 @@ try {
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
     assert.equal(state.journeyStepCount,4,`${vp.name}: treatment journey must contain four clear steps`);
     assert.equal(state.journeyListTag,"OL",`${vp.name}: treatment journey must use an ordered list`);
-    assert.equal(state.journeyListLabel,"خطوات تقييم وتنفيذ خطة تبييض الأسنان",`${vp.name}: treatment journey list must have an accessible Arabic label`);
+    assert.equal(state.journeyListLabel,"الخطوات الأربع لتقييم خيارات تبييض الأسنان",`${vp.name}: treatment journey list must have an accessible Arabic label`);
     assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);
 
      assert.equal(state.expectationsSection.cardCount,4,"Four realistic-expectations cards must be present");
@@ -1439,23 +1412,23 @@ try {
      assert.equal(state.expectationsSection.horizontalOverflow,false,"Expectations section must not overflow horizontally");
      assert.equal(state.expectationsSection.cardsWithinSection,true,"Expectations cards must remain within section bounds");
     assert.equal(state.reviewSection.present,true,`${vp.name}: patient reviews trust section is missing`);
-    assert.equal(state.reviewSection.heading,"آراء المرضى تُعرض بأمانة ووضوح.",`${vp.name}: patient reviews headline changed`);
-    assert.equal(state.reviewSection.status,"لا تتوفر تقييمات أو شهادات مرضى موثّقة ضمن هذا النموذج التجريبي.",`${vp.name}: transparent demo review status is missing`);
+    assert.equal(state.reviewSection.heading,"الشفافية في عرض آراء المرضى.",`${vp.name}: patient reviews headline changed`);
+    assert.equal(state.reviewSection.status,"هذا النموذج لا يتضمن تقييمات أو شهادات مرضى موثّقة.",`${vp.name}: transparent demo review status is missing`);
     assert.equal(state.reviewSection.criteriaCount,3,`${vp.name}: all three review-publishing criteria must be present`);
     assert.ok(state.reviewSection.panelWithinViewport&&!state.reviewSection.horizontalOverflow,`${vp.name}: review panel overflows its section or viewport`);
-    assert.equal(state.reviewSection.disclosure,"النجوم الصفراء في البطاقات للعرض البصري فقط، ولا تمثل تقييمًا أو متوسطًا حقيقيًا.",`${vp.name}: yellow decorative-star disclosure is missing`);
-    assert.ok(state.reviewSection.sampleDisclosure.includes("أمثلة افتراضية")&&state.reviewSection.sampleDisclosure.includes("ليست أقوالًا أو تجارب لمرضى حقيقيين"),`${vp.name}: sample phrases must be clearly disclosed as fictional`);
-    assert.equal(state.reviewSection.starCount,15,`${vp.name}: three cards must each contain five decorative stars`);
-    assert.equal(state.reviewSection.starColor,"rgb(217, 158, 11)",`${vp.name}: review stars must use the approved golden-yellow color`);
-    assert.match(state.reviewSection.starsAccessibleLabel,/زخرفية.*لا تمثل تقييمًا حقيقيًا/);
+    assert.equal(state.reviewSection.disclosure,"هذا النموذج لا يعرض تقييمات أو متوسطات نجوم حقيقية.",`${vp.name}: yellow decorative-star disclosure is missing`);
+    assert.ok(state.reviewSection.sampleDisclosure.includes("التحقق من مصدرها")&&state.reviewSection.sampleDisclosure.includes("موافقة صريحة"),`${vp.name}: sample phrases must be clearly disclosed as fictional`);
+    assert.equal(state.reviewSection.starCount,0,`${vp.name}: three cards must each contain five decorative stars`);
+    assert.equal(state.reviewSection.starColor,"",`${vp.name}: review stars must use the approved golden-yellow color`);
+    assert.equal(state.reviewSection.starsAccessibleLabel,"",`${vp.name}: review section must not expose decorative rating stars`);
     assert.equal(state.reviewSection.reviewCards,3,`${vp.name}: exactly three review-style cards must be present`);
     assert.equal(state.reviewSection.demoCards,3,`${vp.name}: each sample phrase card must be visibly labelled as illustrative`);
     assert.equal(state.reviewSection.placeholderCards,3,`${vp.name}: all three approved sample phrases must be present`);
     assert.equal(state.faqItems, 4, `${vp.name}: the four focused FAQ entries are not present`);
-    assert.equal(state.teamProfile.heading,"رعاية تبدأ بفهم حالتك.",vp.name + ": team headline changed");
+    assert.equal(state.teamProfile.heading,"مساحة مخصّصة للتعريف بأطباء العيادة.",vp.name + ": team headline changed");
     assert.deepEqual(state.teamProfile.imageSources,["assets/ruwa-team-doctor-01.webp","assets/ruwa-team-doctor-02.webp","assets/ruwa-team-doctor-03.webp"],vp.name + ": team portrait sources changed");
     assert.ok(state.teamProfile.imageAlts.every(alt=>/مولّدة بالذكاء الاصطناعي/.test(alt)),vp.name + ": AI image alt disclosures are missing");
-    assert.match(state.teamProfile.disclosure,/لا تمثل أطباء حقيقيين أو موظفين/);
+    assert.match(state.teamProfile.disclosure,/الصور التالية نماذج توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل أطباء حقيقيين أو موظفين/);
     assert.equal(state.teamProfile.cardCount,3,vp.name + ": exactly three profile cards must be present");
     assert.equal(state.teamProfile.imagesLoaded,true,vp.name + ": one or more team portraits failed to load");
     assert.ok(state.teamProfile.headingCenterDelta<=2,vp.name + ": team heading is not centered above the cards");
@@ -1795,26 +1768,12 @@ try {
     await faqQuestion.click();
     assert.equal(await faqQuestion.locator("xpath=..").getAttribute("open"), null, `${vp.name}: pointer activation did not close the first FAQ item`);
 
-    const finalPhone=page.locator('#consultation [data-contact-action="phone"]');
-     await finalPhone.click();
-     await page.waitForFunction(() => {
-       const dialog=document.querySelector("#contact-unavailable-dialog");
-       return dialog?.open===true && document.querySelector("#contact-dialog-title")?.textContent==="الاتصال بالعيادة غير مفعّل بعد";
-     },null,{timeout:3000});
-     assert.equal(await page.evaluate(()=>document.activeElement?.id),"contact-dialog-title",`${vp.name}: unavailable phone action must focus the dialog heading`);
-     await page.locator("#contact-dialog-dismiss").click();
-     await page.waitForFunction(()=>!document.querySelector("#contact-unavailable-dialog")?.open,null,{timeout:3000});
-     assert.equal(await page.evaluate(()=>document.activeElement===document.querySelector('#consultation [data-contact-action="phone"]')),true,`${vp.name}: phone dialog close should restore trigger focus`);
-
-     const finalWhatsApp=page.locator('#consultation [data-contact-action="whatsapp"]');
-     await finalWhatsApp.click();
-     await page.waitForFunction(() => {
-       const dialog=document.querySelector("#contact-unavailable-dialog");
-       return dialog?.open===true && document.querySelector("#contact-dialog-title")?.textContent==="التواصل عبر واتساب غير مفعّل بعد";
-     },null,{timeout:3000});
-     await page.locator("#contact-dialog-close").click();
-     await page.waitForFunction(()=>!document.querySelector("#contact-unavailable-dialog")?.open,null,{timeout:3000});
-     assert.equal(await page.evaluate(()=>document.activeElement===document.querySelector('#consultation [data-contact-action="whatsapp"]')),true,`${vp.name}: WhatsApp dialog close should restore trigger focus`);
+    const finalFaqLink=page.locator('#consultation a[href="#faq"]');
+    const finalJourneyLink=page.locator('#consultation a[href="#journey"]');
+    assert.equal(await finalFaqLink.innerText(),"راجع الأسئلة الشائعة",`${vp.name}: final FAQ CTA text is incorrect`);
+    assert.equal(await finalJourneyLink.innerText(),"تعرّف على خطوات التقييم",`${vp.name}: final assessment CTA text is incorrect`);
+    assert.equal(await finalFaqLink.getAttribute("href"),"#faq",`${vp.name}: final FAQ CTA destination is incorrect`);
+    assert.equal(await finalJourneyLink.getAttribute("href"),"#journey",`${vp.name}: final assessment CTA destination is incorrect`);
 
     await page.goto(BASE_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
     await page.evaluate(async () => {
