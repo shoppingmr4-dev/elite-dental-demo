@@ -213,7 +213,7 @@ const heroStart = html.indexOf('<section class="hero"');
 const heroEnd = html.indexOf("</section>", heroStart);
 const heroSection = heroStart >= 0 && heroEnd > heroStart ? html.slice(heroStart, heroEnd + 10) : "";
 assert.ok(heroSection, "The canonical Hero section must remain present");
-assert.match(heroSection, /class="primary-cta whatsapp-cta" type="button" data-contact-action="whatsapp"[^>]*>[\\s\\S]*?تواصل عبر واتساب/, "Hero primary CTA must restore the WhatsApp contact button");
+assert.match(heroSection, /class="primary-cta whatsapp-cta" type="button" data-contact-action="whatsapp"[^>]*>[\s\S]*?تواصل عبر واتساب/, "Hero primary CTA must restore the WhatsApp contact button");
 assert.match(heroSection, /class="text-link consultation-cta phone-cta" type="button" data-contact-action="phone"[^>]*>اتصل بنا/, "Hero secondary CTA must restore the call-us button");
 
 assert.doesNotMatch(heroSection, /hero-demo-disclosure|نموذج تجريبي من Apex Studio/, "The separate demo sentence beneath the Hero buttons must be removed");
