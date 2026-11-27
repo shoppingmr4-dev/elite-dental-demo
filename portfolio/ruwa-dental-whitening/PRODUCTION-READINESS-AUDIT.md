@@ -39,7 +39,7 @@ The actual current DOM order is:
 | 06 | team | Dentist/team | KEEP / unchanged demo-only section | The three distinct AI-generated illustrative male portraits remain exactly as approved; no real clinician identity or credentials are claimed. |
 | 07 | reviews | Review transparency | KEEP / transparent standards only | Three informational cards explain source verification, explicit permission, and faithful presentation. No hypothetical patient quotations, testimonials, star icons, scores, or review count are shown. |
 | 08 | visit | Location-section preview | KEEP / demo-only | Uses a committed abstract Riyadh SVG and says that the real branch address will be added only after verification. The artwork is not a map or clinic location; Google Maps searches Riyadh city-wide only. |
-| 09 | faq | Frequently asked questions | KEEP | Four focused native details/summary entries cover sessions, result longevity, surface versus internal discoloration, and cautions about DIY whitening mixtures. |
+| 09 | faq | Frequently asked questions | KEEP | Six focused native details/summary entries cover session count, result longevity, surface versus internal discoloration, DIY-whitening cautions, temporary sensitivity, and whitening limits for restorations. |
 | 10 | consultation | Next step | KEEP / internal links | The section links to FAQ and assessment content. It does not pretend to place a call, send a message, or book an appointment. |
 | Footer | — | Portfolio and image disclosures | KEEP | Prevents the sample from being mistaken for a real operating clinic. |
 
@@ -47,11 +47,13 @@ The team section contains three equal demo-only profile cards with distinct AI-g
 
 ## 4. Confirmed current content and interaction behavior
 
+The Hero supporting copy, treatment-options introduction, suitability explanation, realistic-expectations introduction, team preview, review-transparency heading, location preview, final informational CTA, and footer copy were refined for one consistent patient-centered message. Two FAQs were added to address sensitivity and whitening limits for restorations.
+
 - Page language is ar-SA and direction is RTL.
-- The page has a document title, meta description, Open Graph title/description/image, and favicon.
+- The page has a document title, meta description, Open Graph title/description/image, and favicon. The metadata now emphasizes teeth-whitening options and suitability while retaining the fictional-demo disclosure.
 - The current Hero image is assets/ruwa-hero-90-768.webp.
 - The current Hero image alt text and visible caption explicitly identify it as AI-generated and not a real dentist.
-- FAQ count: **4 native details entries**.
+- FAQ count: **6 native details entries**.
 - Contact controls: **one floating WhatsApp demo control**; Hero, header, and final CTAs are internal links to relevant sections.
 - WHATSAPP_NUMBER and PHONE_NUMBER remain intentionally empty.
 - The floating WhatsApp preview opens the local contact-unavailable dialog, which explicitly states that no real WhatsApp, phone, or booking channel is connected.
