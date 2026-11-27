@@ -244,7 +244,7 @@ try {
     if(metrics.counts.expectationsCards!==4)problems.push("The combined suitability and expectations section must contain exactly four expectations cards");
     if(metrics.counts.expectationsCardColumns!==(vp.width<=600?1:2))problems.push("Section 07 must use two grid columns on desktop/tablet and one on mobile");
     if(metrics.counts.teamCards!==3||metrics.counts.teamPortraits!==3)problems.push("team section must render exactly three portrait cards");
-    if(metrics.counts.reviewCriteria!==3||metrics.counts.reviewCards!==3||metrics.counts.reviewStars!==0||!metrics.counts.reviewDisclosure.includes("اسأل عن الخطة العلاجية، والتكلفة المتوقعة، وخطوات المتابعة قبل البدء.")||!metrics.counts.reviewStatus.includes("اختيار واعٍ يبدأ بأسئلة واضحة وإجابات مفهومة قبل اتخاذ القرار."))problems.push("patient-experience content, useful prompts, or supporting cards are incomplete");
+    if(metrics.counts.reviewCriteria!==3||metrics.counts.reviewCards!==3||metrics.counts.reviewStars!==0||!metrics.counts.reviewDisclosure.includes("اسأل عن الخطة العلاجية، والتكلفة المتوقعة، وخطوات المتابعة قبل البدء.")||!metrics.counts.reviewStatus.includes("قرارك يكون أوضح عندما تعرف الخطة وفوائدها وحدودها قبل البدء."))problems.push("patient-experience content, useful prompts, or supporting cards are incomplete");
     if(metrics.counts.faqItems!==7)problems.push("FAQ section must contain seven focused native disclosure entries");
     if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");
     if(metrics.brokenAnchors.length)problems.push("broken in-page anchors");
