@@ -213,7 +213,7 @@ assert.match(heroSection, /class=["']text-link consultation-cta phone-cta["'][^>
 assert.doesNotMatch(heroSection, /اتصل بالعيادة/, "Old Hero phone CTA label must not remain");
 
 assert.doesNotMatch(heroSection, /hero-demo-disclosure|نموذج تجريبي من Apex Studio/, "The separate demo sentence beneath the Hero buttons must be removed");
-assert.match(html, /مفهوم تجريبي أُعدّ ضمن معرض أعمال Apex Studio/, "The footer must retain the fictional portfolio disclosure");
+assert.match(html, /مفهوم تجريبي أُعدّ ضمن معرض أعمال أبيكس ستوديو/, "The footer must retain the fictional portfolio disclosure in Arabic");
 assert.match(html, /<meta name="description"[^>]*نموذج تجريبي/, "Page metadata must continue to identify the fictional demo");
 
 const heroImage = html.match(/<img class="hero-portrait"[^>]*>/i)?.[0] || "";
@@ -236,7 +236,7 @@ assert.ok(footerTargets.length >= 9, "RUWA footer must provide useful internal n
 assert.ok(footer.includes('<a href="#journey">التقييم ورحلة التبييض</a>'), "Footer must link to the treatment journey");
 assert.ok(footer.includes('<a href="#visit">معلومات الزيارة</a>'), "Footer must link to the Riyadh location section");
 assert.deepEqual(footerTargets.filter(target => !ids.has(target)), [], "Every RUWA footer navigation target must exist on the page");
-assert.match(footer, /مفهوم تجريبي أُعدّ ضمن معرض أعمال Apex Studio/);
+assert.match(footer, /مفهوم تجريبي أُعدّ ضمن معرض أعمال أبيكس ستوديو/);
 assert.match(footer, /الصور المعروضة، بما فيها صور الأطباء، توضيحية مولّدة بالذكاء الاصطناعي/);
 assert.match(footer, /المحتوى للتوعية العامة فقط/);
 
