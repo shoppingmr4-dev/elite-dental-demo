@@ -113,7 +113,7 @@ async function captureHeader(page, path) {
   }));
 }
 
-const expectedHeading = "قبل اتخاذ القرار تبييض الأسنان الخيارات والسلامة والنتائج المتوقعة";
+const expectedHeading = "ابدأ بخطوة مدروسة تبييض الأسنان لابتسامة أكثر إشراقًا";
 const failures = [];
 const results = [];
 const motionResults = [];
@@ -906,7 +906,7 @@ try {
     }
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
-    assert.equal(state.heroLead, "يختلف سبب تغيّر لون الأسنان من شخص لآخر، كما تختلف خيارات التبييض والنتائج المتوقعة. يشرح هذا الدليل أسباب التصبغات والخيارات المتاحة وآثارها المحتملة، وما ينبغي مناقشته مع طبيب الأسنان قبل اتخاذ القرار.", `${vp.name}: hero supporting copy changed`);
+    assert.equal(state.heroLead, "تعرّف على خيارات تبييض الأسنان، واكتشف مع طبيب الأسنان ما يلائم صحة أسنانك وسبب تغيّر لونها وتوقعاتك للنتيجة.", `${vp.name}: hero supporting copy changed`);
     assert.equal(state.heroTitleKickerColor, "rgb(48, 74, 84)", `${vp.name}: the introductory headline line must stay in the calm secondary ink tone`);
     assert.equal(state.heroCaptionFontSize, 12, `${vp.name}: the AI image disclosure must remain comfortably readable`);
     assert.ok(state.heroNumbersFontVariant.includes("tabular-nums"), `${vp.name}: numbered labels must use consistent tabular figures`);
@@ -917,9 +917,9 @@ try {
 
     assert.equal(state.redundantHeroNotesPresent, false, `${vp.name}: repetitive hero notes should be removed`);
     assert.equal(state.headlineLines, 3, `${vp.name}: headline must use the intended three-level composition`);
-    assert.equal(state.headlineKicker, "قبل اتخاذ القرار", `${vp.name}: headline introduction changed`);
+    assert.equal(state.headlineKicker, "ابدأ بخطوة مدروسة", `${vp.name}: headline introduction changed`);
     assert.equal(state.headlineService, "تبييض الأسنان", `${vp.name}: primary service phrase changed`);
-    assert.equal(state.headlineBenefit, "الخيارات والسلامة والنتائج المتوقعة", `${vp.name}: headline benefit phrase changed`);
+    assert.equal(state.headlineBenefit, "لابتسامة أكثر إشراقًا", `${vp.name}: headline benefit phrase changed`);
     assert.equal(state.headlineOverflow, false, `${vp.name}: headline content overflows its box`);
     assert.ok(state.headingVisible, `${vp.name}: headline is not visible`);
     if (vp.width > 720) {
