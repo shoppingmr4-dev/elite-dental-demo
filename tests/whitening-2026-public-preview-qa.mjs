@@ -220,7 +220,7 @@ try {
       Math.abs(Number.parseFloat(marker.separatorHeight)-marker.numberHeight)<=.2),
       `${viewport.name}: published marker numbers must remain plain text and each separator must match the number height`);
     assert.ok(initial.markerSystem.benefit&&
-      initial.markerSystem.benefit.text==="الخيارات والسلامة والنتائج المتوقعة"&&
+      initial.markerSystem.benefit.text==="بخيار يناسب احتياجك"&&
       initial.markerSystem.benefit.color==="rgb(24, 122, 128)"&&
       initial.markerSystem.benefit.textDecorationLine==="none"&&
       initial.markerSystem.benefit.accentElements===0&&
