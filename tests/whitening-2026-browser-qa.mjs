@@ -1405,7 +1405,7 @@ try {
       assert.equal(state.visitSection.mapTarget,"_blank",`${vp.name}: Google Maps city search must open in a new tab`);
       assert.ok(state.visitSection.mapRel.includes("noopener")&&state.visitSection.mapRel.includes("noreferrer"),`${vp.name}: external link safety attributes missing`);
       assert.equal(state.visitSection.mapIframeCount,0,`${vp.name}: the static image must not be presented as an interactive embed`);
-      assert.ok(state.visitSection.note.includes("رسم تجريدي")&&state.visitSection.note.includes("ليس خريطة طرق")&&!state.visitSection.note.includes("النموذج التجريبي"),`${vp.name}: schematic artwork, fictional-demo and no-navigation disclosures are required without overflow`);
+      assert.ok(state.visitSection.note.includes("الرسم التجريدي")&&state.visitSection.note.includes("ليس خريطة طرق")&&!state.visitSection.note.includes("النموذج التجريبي"),`${vp.name}: schematic artwork, fictional-demo and no-navigation disclosures are required without overflow`);
       assert.equal(await page.locator("#visit .visit-map-image").count(),1,`${vp.name}: exactly one static map image must be present`);
       if(!cityMapImageLoadVerified){
         const mapImage=page.locator("#visit .visit-map-image");
