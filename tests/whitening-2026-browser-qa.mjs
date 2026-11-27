@@ -509,7 +509,7 @@ try {
             return context.getImageData(0,0,1,1).data[3];
           }catch{return -1;}
         })(),
-        heroImageDisclosurePresent:document.body.innerText.includes("الصورة توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثل طبيبًا حقيقيًا."),
+        heroImageDisclosurePresent:Boolean(document.querySelector(".footer-notes")?.innerText.includes("صور مولّدة بالذكاء الاصطناعي")),
         heroBottomItemCount:document.querySelectorAll(".hero-bottom-item").length,
         heroLegacyCssPresent:[".photo-frame",".visual-backdrop",".visual-outline",".visual-index",".visual-caption",".visual-side-note",".photo-label","photoEnter"].some(selector=>
           [...document.querySelectorAll("style")].some(style=>style.textContent.includes(selector))),
@@ -908,7 +908,7 @@ try {
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
     assert.equal(state.heroLead, "اكتشف خيارات تبييض الأسنان، وتعرّف إلى ما يحدد الطريقة الأنسب لك؛ من سبب تغيّر اللون إلى صحة الأسنان واللثة والنتائج الممكنة. ابدأ بالمعلومة الصحيحة، ثم ناقش اختيارك مع طبيب الأسنان.", `${vp.name}: hero supporting copy changed`);
     assert.equal(state.heroTitleKickerColor, "rgb(48, 74, 84)", `${vp.name}: the introductory headline line must stay in the calm secondary ink tone`);
-    assert.equal(state.heroCaptionFontSize, 12, `${vp.name}: the AI image disclosure must remain comfortably readable`);
+    assert.equal(state.heroCaptionFontSize, 12, `${vp.name}: the Hero portrait caption must remain comfortably readable`);
     assert.ok(state.heroNumbersFontVariant.includes("tabular-nums"), `${vp.name}: numbered labels must use consistent tabular figures`);
     if (vp.width <= 720) {
       assert.ok(state.heroLeadFontSize >= 16, `${vp.name}: mobile supporting copy must be at least 16px`);
@@ -1025,7 +1025,7 @@ try {
     assert.equal(state.heroImagePreloadPresent, true, `${vp.name}: Hero portrait preload is missing`);
     assert.equal(state.heroImageMarkupReferencePresent, true, `${vp.name}: Hero markup does not reference the approved local portrait`);
     assert.equal(state.heroImageTransparentPixelAlpha, 0, `${vp.name}: Hero portrait corner is not transparently rendered`);
-    assert.equal(state.heroImageDisclosurePresent, true, `${vp.name}: exact Arabic AI-generated image disclosure is missing`);
+    assert.equal(state.heroImageDisclosurePresent, true, `${vp.name}: footer AI-generated-image disclosure is missing`);
     assert.equal(state.heroVisualNodeCount, 0, `${vp.name}: deleted Hero frame/decorative nodes remain`);
     assert.equal(state.heroLegacyCssPresent, false, `${vp.name}: obsolete Hero image CSS remains`);
     assert.equal(state.heroBottomItemCount, 3, `${vp.name}: the three approved Hero principles must remain`);
