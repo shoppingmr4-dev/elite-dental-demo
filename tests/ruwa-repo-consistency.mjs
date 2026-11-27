@@ -62,7 +62,7 @@ const optionsStart = html.indexOf('id="options"');
 const suitabilityStart = html.indexOf('id="suitability"');
 assert.ok(optionsStart < journeyStart && journeyStart < suitabilityStart, "Treatment journey must follow whitening options and precede suitability and safety");
 const journeySection = html.slice(journeyStart, html.indexOf("</section>", journeyStart) + 10);
-assert.ok(journeySection.includes("أربع خطوات تساعد على اتخاذ قرار مدروس."), "Treatment journey headline is missing");
+assert.ok(journeySection.includes("كيف تسير رحلة التبييض؟") && journeySection.includes("أربع خطوات من التقييم إلى المتابعة."), "Treatment journey headline is missing");
 assert.ok(journeySection.includes("تنفيذ الخطة"), "Treatment implementation step is missing");
 assert.ok(journeySection.includes("العناية والمتابعة"), "Aftercare and follow-up step is missing");
 assert.match(journeySection, /<ol class="journey-grid" aria-label="الخطوات الأربع لتقييم خيارات تبييض الأسنان">/);
