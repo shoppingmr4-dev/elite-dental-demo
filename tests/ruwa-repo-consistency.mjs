@@ -172,7 +172,7 @@ assert.doesNotMatch(faqAuditMarkup, /ما العناية المطلوبة بعد
 assert.match(html, /:focus-visible\{outline:3px solid var\(--coral\);outline-offset:4px\}/, "A visible global keyboard focus indicator must remain available");
 
 const contactActions = [...html.matchAll(/data-contact-action=["'](whatsapp|phone)["']/gi)].map(match => match[1]);
-assert.equal(contactActions.filter(action => action === "whatsapp").length, 2, "Hero and floating WhatsApp demo controls must use the disclosed contact dialog");
+assert.equal(contactActions.filter(action => action === "whatsapp").length, 3, "Hero, final-section, and floating WhatsApp controls must use the disclosed contact dialog");
 assert.equal(contactActions.filter(action => action === "phone").length, 2, "Hero and header call controls must use the disclosed contact dialog");
 
 const contactHeaderScanStart = html.indexOf('<header class="site-header"');
