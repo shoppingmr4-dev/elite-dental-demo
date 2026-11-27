@@ -278,7 +278,7 @@ assert.match(caseStudy, /10 أقسام رئيسية/);
 assert.match(caseStudy, /ستة أسئلة/);
 assert.match(caseStudy, /زر واتساب عائم واحد للمعاينة التجريبية/);
 assert.match(productionAudit, /10 main content sections/);
-assert.match(productionAudit, /4 native details entries/);
+assert.match(productionAudit, /6 native details entries/);
 assert.match(productionAudit, /one floating WhatsApp demo control/);
 
 console.log("RUWA repository consistency: PASS");
