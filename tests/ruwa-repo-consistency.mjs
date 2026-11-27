@@ -54,7 +54,7 @@ assert.ok(visitSection.includes("بيانات OpenStreetMap") && visitSection.in
 const cityMapLink = visitSection.match(/<a class="visit-map-action"[^>]*href="([^"]+)"/)?.[1] || "";
 assert.ok(cityMapLink.startsWith("https://www.google.com/maps/search/?api=1&amp;query=Riyadh"), "Open a Google Maps city search, not exact clinic directions");
 assert.match(visitSection, /target="_blank" rel="noopener noreferrer"/, "Google Maps must open safely in a new tab");
-assert.ok(visitSection.includes("خريطة ثابتة") && visitSection.includes("صورة عامة"), "Clearly identify the map as a static general city map");
+assert.ok(visitSection.includes("خريطة ثابتة") && visitSection.includes("خريطة عامة وثابتة"), "Clearly identify the map as a static general city map");
 assert.ok(!visitSection.includes("<iframe") && !visitSection.includes("دبوس"), "Do not present the static image as an interactive map or invent a clinic pin");
 
 const journeyStart = html.indexOf('id="journey"');
