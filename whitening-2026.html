@@ -4,18 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#F4F7FA">
-<meta name="description" content="نموذج تجريبي من Apex Studio لصفحة تثقيفية حول تبييض الأسنان. لا يمثّل عيادة حقيقية أو خدمة طبية فعلية.">
+<meta name="description" content="نموذج تجريبي من أبيكس ستوديو لصفحة تثقيفية حول تبييض الأسنان. لا يمثّل عيادة حقيقية أو خدمة طبية فعلية.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="RUWA — نموذج تجريبي لصفحة تبييض الأسنان | Apex Studio">
-<meta property="og:description" content="تصوّر تجريبي لصفحة تثقيفية حول تبييض الأسنان، أُعدّ ضمن معرض أعمال Apex Studio. لا يمثّل عيادة حقيقية.">
+<meta property="og:title" content="RUWA — نموذج تجريبي لصفحة تبييض الأسنان | أبيكس ستوديو">
+<meta property="og:description" content="تصوّر تجريبي لصفحة تثقيفية حول تبييض الأسنان، أُعدّ ضمن معرض أعمال أبيكس ستوديو. لا يمثّل عيادة حقيقية.">
 <meta property="og:image" content="https://rawcdn.githack.com/shoppingmr4-dev/elite-dental-demo/dc0245447b73420031d8310546265d48f112e27f/assets/ruwa-hero-90-768.webp">
 <meta property="og:image:alt" content="صورة توضيحية مولّدة بالذكاء الاصطناعي لطبيب أسنان، ولا تمثل شخصًا حقيقيًا.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="RUWA — نموذج تجريبي لصفحة تبييض الأسنان | Apex Studio">
-<meta name="twitter:description" content="تصوّر تجريبي من معرض أعمال Apex Studio. لا يمثل عيادة حقيقية.">
+<meta name="twitter:title" content="RUWA — نموذج تجريبي لصفحة تبييض الأسنان | أبيكس ستوديو">
+<meta name="twitter:description" content="تصوّر تجريبي من معرض أعمال أبيكس ستوديو. لا يمثل عيادة حقيقية.">
 <meta name="twitter:image" content="https://rawcdn.githack.com/shoppingmr4-dev/elite-dental-demo/dc0245447b73420031d8310546265d48f112e27f/assets/ruwa-hero-90-768.webp">
 <meta name="twitter:image:alt" content="صورة توضيحية مولّدة بالذكاء الاصطناعي لطبيب أسنان، ولا تمثل شخصًا حقيقيًا.">
-<title>تبييض الأسنان | RUWA — نموذج تجريبي من Apex Studio</title>
+<title>تبييض الأسنان | RUWA — نموذج تجريبي من أبيكس ستوديو</title>
 <link rel="preload" href="assets/ruwa-hero-90-768.webp" as="image" type="image/webp" fetchpriority="high">
 <link rel="preload" href="assets/fonts/Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys43PW5fslBEg0.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YOG-eCRXMRrKATtYV0.woff2" as="font" type="font/woff2" crossorigin>
@@ -269,19 +269,22 @@ body.dialog-open{overflow:hidden}
 .reviews-preview-kicker{display:inline-flex;align-items:center;gap:8px;margin:0 0 8px;color:#115A60;font-size:11px;font-weight:800;line-height:1.7}
 .reviews-preview-kicker:before{content:"";width:7px;height:7px;flex:none;border-radius:50%;background:#187A80}
 .reviews-preview-title{margin:0;color:#142D38;font-family:var(--display);font-size:clamp(18px,2vw,22px);font-weight:800;line-height:1.65}
-.reviews-rating{display:flex;min-width:0;flex-direction:column;align-items:flex-end;gap:10px}
-.reviews-stars{display:inline-flex;align-items:center;gap:7px;color:#187A80;font-size:26px;line-height:1;direction:ltr}
-.reviews-stars span{display:inline-flex;align-items:center;justify-content:center}
-.reviews-rating-disclosure{max-width:480px;margin:0;color:#304A54;font-size:12px;font-weight:600;line-height:1.9;text-align:right}
+.reviews-rating-disclosure{max-width:480px;margin:0;color:#304A54;font-size:12px;font-weight:700;line-height:1.9;text-align:right}
+.reviews-sample-disclosure{margin:0;padding:13px 16px;border:1px solid rgba(181,119,0,.22);border-right:3px solid #D99E0B;border-radius:11px;background:#FFF9E8;color:#5D470F;font-size:12px;font-weight:700;line-height:1.9}
 .reviews-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.review-card{display:flex;min-width:0;min-height:210px;flex-direction:column;padding:21px 21px 17px;border:1px solid #DCE5EA;border-radius:16px;background:#FFFFFF;box-shadow:0 8px 24px rgba(20,45,56,.035)}
+.review-card{display:flex;min-width:0;min-height:238px;flex-direction:column;padding:21px 21px 17px;border:1px solid #DCE5EA;border-radius:16px;background:#FFFFFF;box-shadow:0 8px 24px rgba(20,45,56,.045)}
+.review-card:nth-child(1){background:#F3F8FC}
+.review-card:nth-child(2){background:#F0F7F3}
+.review-card:nth-child(3){background:#FCF7ED}
 .review-card-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.review-card-label{display:inline-flex;align-items:center;min-height:25px;padding:4px 9px;border:1px solid #DCE5EA;border-radius:7px;background:#F4F7FA;color:#115A60;font-size:10px;font-weight:800;line-height:1.5}
+.review-card-label{display:inline-flex;align-items:center;min-height:25px;padding:4px 9px;border:1px solid #DCE5EA;border-radius:7px;background:rgba(255,255,255,.78);color:#115A60;font-size:10px;font-weight:800;line-height:1.5}
 .review-card-index{color:#8A9A9E;font-size:11px;font-weight:700;line-height:1;direction:ltr;font-variant-numeric:tabular-nums}
-.review-card-accent{width:30px;height:3px;flex:none;margin:21px 0 13px;border-radius:3px;background:#187A80}
-.review-card-copy{flex:1;margin:0;color:#304A54;font-size:14px;font-weight:600;line-height:2.05}
-.review-card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:20px;padding-top:12px;border-top:1px solid #E6EDF0;color:#5C6D72;font-size:10px;font-weight:700;line-height:1.7}
-.review-card-footer-note{color:#115A60}
+.review-card-accent{width:30px;height:3px;flex:none;margin:17px 0 12px;border-radius:3px;background:#187A80}
+.reviews-stars{display:inline-flex;align-items:center;gap:4px;margin:0 0 14px;color:#D99E0B;font-size:19px;line-height:1;direction:ltr}
+.reviews-stars span{display:inline-flex;align-items:center;justify-content:center}
+.review-card-copy{flex:1;margin:0;color:#304A54;font-size:14px;font-weight:700;line-height:2.05}
+.review-card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:20px;padding-top:12px;border-top:1px solid rgba(220,229,234,.9);color:#5C6D72;font-size:10px;font-weight:700;line-height:1.7}
+.review-card-footer-note{color:#8A6000}
 .reviews-status-note{display:flex;align-items:center;gap:9px;width:fit-content;max-width:100%;margin:2px 0 0;padding:10px 13px;border:1px solid #DCE5EA;border-radius:9px;background:#FFFFFF;color:#304A54;font-size:12px;font-weight:700;line-height:1.8}
 .reviews-status-note:before{content:"";width:6px;height:6px;flex:none;border-radius:50%;background:#187A80}
 .reviews-criteria{min-width:0;padding:19px 22px;border:1px solid #DCE5EA;border-radius:16px;background:#FFFFFF}
@@ -658,7 +661,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  .hero-eyebrow{display:flex;width:max-content;max-width:100%;margin-inline:auto;margin-bottom:2px}
 }
 
-/* Apex Studio floating header refinement: stable layout footprint, compact visual shell. */
+/* أبيكس ستوديو floating header refinement: stable layout footprint, compact visual shell. */
 .site-header{
  position:sticky;top:10px;z-index:30;isolation:isolate;
  width:min(calc(var(--max) - 48px),calc(100% - var(--gutter)*2 - 8px));
@@ -1634,8 +1637,8 @@ body,button,input,select,textarea{font-family:var(--body)}
  <section class="content-section cause-section" id="causes" aria-labelledby="causes-title">
   <div class="wrap">
    <div class="section-head">
-    <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم الثالث: أسباب تغيّر اللون">
-      <span class="section-marker-number" aria-hidden="true">03</span>
+    <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم الثاني: أسباب تغيّر اللون">
+      <span class="section-marker-number" aria-hidden="true">02</span>
       <span class="section-marker-divider" aria-hidden="true"></span>
       <span class="section-marker-label">أسباب تغيّر اللون</span>
      </span>
@@ -1670,19 +1673,19 @@ body,button,input,select,textarea{font-family:var(--body)}
    </div>
    <div class="options-grid">
     <article class="option-card">
-     <span class="option-number">OPTION / 01</span>
+     <span class="option-number">الخيار 01</span>
      <h3>التبييض داخل العيادة</h3>
      <p>يطبّق الطبيب مادة التبييض وفق بروتوكول يناسب حالة الأسنان واللثة، مع اتخاذ إجراءات حماية الأنسجة المحيطة ومتابعة الاستجابة.</p>
      <span class="option-note">إجراء تحت إشراف طبيب الأسنان</span>
     </article>
     <article class="option-card">
-     <span class="option-number">OPTION / 02</span>
+     <span class="option-number">الخيار 02</span>
      <h3>قوالب مخصّصة للاستخدام المنزلي</h3>
      <p>قد يصف الطبيب قوالب مصممة للمريض مع تعليمات محددة للمادة ومدة الاستخدام والمتابعة. لا تُستبدل هذه الخطة بتجربة عشوائية من الإنترنت.</p>
      <span class="option-note">خطة يحددها الطبيب ويتابعها</span>
     </article>
     <article class="option-card">
-     <span class="option-number">OPTION / 03</span>
+     <span class="option-number">الخيار 03</span>
      <h3>العناية بالتصبغات السطحية</h3>
      <p>عندما يكون التغيّر سطحيًا، قد يكون التنظيف المهني أو تعديل روتين العناية كافيًا. معاجين التبييض قد تساعد على إزالة بعض التصبغات الخارجية، لكنها لا تغيّر لون السن الداخلي مثل مواد التبييض.</p>
      <span class="option-note">ليس كل تصبّغ يحتاج إلى تبييض</span>
@@ -1748,7 +1751,7 @@ body,button,input,select,textarea{font-family:var(--body)}
      </article>
      <article class="check-item">
       <span class="check-mark" aria-hidden="true">✓</span>
-      <div><h3>الحمل أو الرضاعة</h3><p>يُنصح بمناقشة الأمر مع طبيب الأسنان؛ وتوصي إرشادات NHS بتأجيل التبييض خلال الحمل والرضاعة.</p></div>
+      <div><h3>الحمل أو الرضاعة</h3><p>يُنصح بمناقشة الأمر مع طبيب الأسنان؛ وتوصي إرشادات الخدمة الصحية الوطنية البريطانية بتأجيل التبييض خلال الحمل والرضاعة.</p></div>
      </article>
     </div>
    </div>
@@ -1819,23 +1822,42 @@ body,button,input,select,textarea{font-family:var(--body)}
    <span class="eyebrow section-marker section-marker--canvas" role="group" aria-label="القسم التاسع: آراء المرضى">
     <span class="section-marker-number" aria-hidden="true">09</span><span class="section-marker-divider" aria-hidden="true"></span><span class="section-marker-label">آراء المرضى</span>
    </span>
-   <h2 id="reviews-title">كل تجربة تستحق أن تُعرض كما هي.</h2>
+   <h2 id="reviews-title">آراء المرضى تُعرض بأمانة ووضوح.</h2>
    <p>عندما تتوفر آراء حقيقية ومصرّح بنشرها، نعرضها بأمانة دون مبالغة أو إعادة صياغة مضللة.</p>
   </header>
   <div class="reviews-panel">
    <div class="reviews-preview" aria-labelledby="reviews-preview-title">
-    <div class="reviews-preview-copy"><span class="reviews-preview-kicker">معاينة تصميمية</span><h3 class="reviews-preview-title" id="reviews-preview-title">شكل عرض التقييم عند توفره</h3></div>
-    <div class="reviews-rating">
-     <span class="reviews-stars" role="img" aria-label="خمس نجوم توضيحية لأغراض التصميم فقط"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></span>
-     <p class="reviews-rating-disclosure">النجوم المعروضة توضيحية لأغراض التصميم فقط، ولا تمثل تقييمًا فعليًا.</p>
+    <div class="reviews-preview-copy">
+     <span class="reviews-preview-kicker">معاينة تصميمية</span>
+     <h3 class="reviews-preview-title" id="reviews-preview-title">نماذج توضيحية لعبارات قد تهم المريض</h3>
     </div>
+    <p class="reviews-rating-disclosure">النجوم الصفراء في البطاقات للعرض البصري فقط، ولا تمثل تقييمًا أو متوسطًا حقيقيًا.</p>
    </div>
-   <div class="reviews-grid" aria-label="بطاقات تصميمية لا تمثل شهادات مرضى فعلية">
-    <article class="review-card"><div class="review-card-top"><span class="review-card-label">نموذج توضيحي</span><span class="review-card-index" aria-hidden="true">01</span></div><span class="review-card-accent" aria-hidden="true"></span><p class="review-card-copy">مساحة مخصصة لعرض رأي مريض موثّق بعد الحصول على موافقته.</p><div class="review-card-footer"><span>لا يمثل رأيًا حقيقيًا</span><span class="review-card-footer-note">مكان للنص المصرّح به</span></div></article>
-    <article class="review-card"><div class="review-card-top"><span class="review-card-label">نموذج توضيحي</span><span class="review-card-index" aria-hidden="true">02</span></div><span class="review-card-accent" aria-hidden="true"></span><p class="review-card-copy">مساحة مخصصة لعرض رأي مريض موثّق بعد الحصول على موافقته.</p><div class="review-card-footer"><span>لا يمثل رأيًا حقيقيًا</span><span class="review-card-footer-note">مكان للنص المصرّح به</span></div></article>
-    <article class="review-card"><div class="review-card-top"><span class="review-card-label">نموذج توضيحي</span><span class="review-card-index" aria-hidden="true">03</span></div><span class="review-card-accent" aria-hidden="true"></span><p class="review-card-copy">مساحة مخصصة لعرض رأي مريض موثّق بعد الحصول على موافقته.</p><div class="review-card-footer"><span>لا يمثل رأيًا حقيقيًا</span><span class="review-card-footer-note">مكان للنص المصرّح به</span></div></article>
+   <p class="reviews-sample-disclosure">تنبيه: العبارات التالية أمثلة افتراضية لتوضيح شكل البطاقات، وليست أقوالًا أو تجارب لمرضى حقيقيين.</p>
+   <div class="reviews-grid" aria-label="ثلاث عبارات تمثيلية افتراضية وليست شهادات مرضى حقيقية">
+    <article class="review-card">
+     <div class="review-card-top"><span class="review-card-label">عبارة تمثيلية</span><span class="review-card-index" aria-hidden="true">01</span></div>
+     <span class="review-card-accent" aria-hidden="true"></span>
+     <span class="reviews-stars" role="img" aria-label="خمس نجوم زخرفية لا تمثل تقييمًا حقيقيًا"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></span>
+     <p class="review-card-copy">«أريد أن أفهم سبب تغيّر لون أسناني قبل اختيار طريقة التبييض.»</p>
+     <div class="review-card-footer"><span>نص افتراضي</span><span class="review-card-footer-note">ليس رأيًا حقيقيًا</span></div>
+    </article>
+    <article class="review-card">
+     <div class="review-card-top"><span class="review-card-label">عبارة تمثيلية</span><span class="review-card-index" aria-hidden="true">02</span></div>
+     <span class="review-card-accent" aria-hidden="true"></span>
+     <span class="reviews-stars" role="img" aria-label="خمس نجوم زخرفية لا تمثل تقييمًا حقيقيًا"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></span>
+     <p class="review-card-copy">«يهمني معرفة الفرق بين التبييض داخل العيادة والقوالب المنزلية.»</p>
+     <div class="review-card-footer"><span>نص افتراضي</span><span class="review-card-footer-note">ليس رأيًا حقيقيًا</span></div>
+    </article>
+    <article class="review-card">
+     <div class="review-card-top"><span class="review-card-label">عبارة تمثيلية</span><span class="review-card-index" aria-hidden="true">03</span></div>
+     <span class="review-card-accent" aria-hidden="true"></span>
+     <span class="reviews-stars" role="img" aria-label="خمس نجوم زخرفية لا تمثل تقييمًا حقيقيًا"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></span>
+     <p class="review-card-copy">«أفضّل معرفة النتائج المتوقعة والآثار المحتملة قبل اتخاذ القرار.»</p>
+     <div class="review-card-footer"><span>نص افتراضي</span><span class="review-card-footer-note">ليس رأيًا حقيقيًا</span></div>
+    </article>
    </div>
-   <p class="reviews-status-note" role="status">لا تتوفر تقييمات مرضى موثّقة ضمن هذا النموذج التجريبي.</p>
+   <p class="reviews-status-note" role="status">لا تتوفر تقييمات أو شهادات مرضى موثّقة ضمن هذا النموذج التجريبي.</p>
    <aside class="reviews-criteria" aria-labelledby="reviews-criteria-title">
     <h3 id="reviews-criteria-title">معايير نشر آراء المرضى</h3>
     <ol class="reviews-criteria-list">
@@ -1881,16 +1903,16 @@ body,button,input,select,textarea{font-family:var(--body)}
     </div>
     <div class="visit-map-fallback" data-visit-map-fallback hidden role="status">
      <span>تعذّر تحميل صورة الخريطة حاليًا.</span>
-     <a href="https://www.google.com/maps/search/?api=1&amp;query=Riyadh%2C%20Saudi%20Arabia" target="_blank" rel="noopener noreferrer">استكشف مدينة الرياض على خرائط Google</a>
+     <a href="https://www.google.com/maps/search/?api=1&amp;query=Riyadh%2C%20Saudi%20Arabia" target="_blank" rel="noopener noreferrer">استكشف مدينة الرياض على خرائط غوغل</a>
     </div>
     <figcaption class="visit-map-caption" id="visit-map-caption">
      <span class="visit-map-caption-title">خريطة ثابتة لمدينة الرياض</span>
-     <span class="visit-map-caption-source">MapMap · بيانات OpenStreetMap</span>
+     <span class="visit-map-caption-source">خريطة من ماب ماب · بيانات أوبن ستريت ماب</span>
     </figcaption>
    </figure>
    <aside class="visit-info-panel" aria-label="معلومات النطاق الجغرافي لرُواء">
     <div>
-     <p class="visit-info-kicker">RUWA · RIYADH</p>
+     <p class="visit-info-kicker">رُواء · الرياض</p>
      <h3>قريبون من مدينة الرياض.</h3>
      <p class="visit-info-copy">يعرض هذا القسم مدينة الرياض كنطاق جغرافي عام ضمن النموذج التجريبي، من دون الإشارة إلى حي أو فرع أو عنوان محدد.</p>
     </div>
@@ -1901,13 +1923,13 @@ body,button,input,select,textarea{font-family:var(--body)}
       <div class="visit-info-item"><span>النطاق الجغرافي</span><strong>مدينة الرياض بالكامل</strong></div>
       <div class="visit-info-item"><span>عنوان الفرع</span><strong>غير محدد في هذا النموذج</strong></div>
      </div>
-     <a class="visit-map-action" data-visit-map-link href="https://www.google.com/maps/search/?api=1&amp;query=Riyadh%2C%20Saudi%20Arabia" target="_blank" rel="noopener noreferrer" aria-label="استكشف مدينة الرياض على خرائط Google في نافذة جديدة">
-      <span>استكشف مدينة الرياض على خرائط Google</span>
+     <a class="visit-map-action" data-visit-map-link href="https://www.google.com/maps/search/?api=1&amp;query=Riyadh%2C%20Saudi%20Arabia" target="_blank" rel="noopener noreferrer" aria-label="استكشف مدينة الرياض على خرائط غوغل في نافذة جديدة">
+      <span>استكشف مدينة الرياض على خرائط غوغل</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
        <path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/>
       </svg>
      </a>
-     <p class="visit-note">تعرض الصورة خريطة عامة وثابتة لمدينة الرياض، ولا تمثل موقعًا دقيقًا للعيادة أو عنوانًا لفرع قائم. هذا القسم جزء من نموذج RUWA التجريبي، وليس إثباتًا لوجود عيادة فعلية في هذا الموقع.</p>
+     <p class="visit-note">تعرض الصورة خريطة عامة وثابتة لمدينة الرياض، ولا تمثل موقعًا دقيقًا للعيادة أو عنوانًا لفرع قائم. هذا القسم جزء من نموذج رُواء التجريبي، وليس إثباتًا لوجود عيادة فعلية في هذا الموقع.</p>
     </div>
    </aside>
   </div>
@@ -1937,7 +1959,7 @@ body,button,input,select,textarea{font-family:var(--body)}
      <div class="faq-answer">لا توجد مدة ثابتة للجميع؛ إذ تتأثر النتيجة بطريقة التبييض ونوع التصبغ والعادات اليومية التي قد تسبب تصبغات جديدة. لذلك لا يمكن الوعد بفترة محددة، ويشرح طبيب الأسنان ما يمكن توقعه بحسب الحالة.</div>
     </details>
    </div>
-   <p class="reference-note">للقراءة التثقيفية: <a href="https://www.nhs.uk/tests-and-treatments/teeth-whitening/" target="_blank" rel="noopener noreferrer">إرشادات NHS حول تبييض الأسنان</a> و<a href="https://www.ada.org/resources/ada-library/oral-health-topics/whitening" target="_blank" rel="noopener noreferrer">المعلومات العلمية للجمعية الأمريكية لطب الأسنان (ADA)</a>. هذه الصفحة توعوية ولا تغني عن التقييم السريري.</p>
+   <p class="reference-note">للقراءة التثقيفية: <a href="https://www.nhs.uk/tests-and-treatments/teeth-whitening/" target="_blank" rel="noopener noreferrer">إرشادات الخدمة الصحية الوطنية البريطانية حول تبييض الأسنان</a> و<a href="https://www.ada.org/resources/ada-library/oral-health-topics/whitening" target="_blank" rel="noopener noreferrer">المعلومات العلمية للجمعية الأمريكية لطب الأسنان </a>. هذه الصفحة توعوية ولا تغني عن التقييم السريري.</p>
   </div>
  </section>
 
@@ -1977,26 +1999,26 @@ body,button,input,select,textarea{font-family:var(--body)}
     <h2 class="footer-brand-title" id="footer-brand-title">العناية تبدأ بفهم احتياجك.</h2>
     <p class="footer-brand-copy">اعرف ما قد يغيّر لون أسنانك، وتعرّف إلى خيارات التبييض والعوامل التي يحدّد الطبيب على أساسها مدى ملاءمتها لحالتك.</p>
     <div class="footer-socials" role="group" aria-label="أيقونات منصات التواصل الاجتماعي">
-     <span class="footer-social-icon footer-social-icon--instagram" role="img" aria-label="Instagram">
+     <span class="footer-social-icon footer-social-icon--instagram" role="img" aria-label="إنستغرام">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
        <rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5.2" fill="none" stroke="#fff" stroke-width="1.9"/>
        <circle cx="12" cy="12" r="4.05" fill="none" stroke="#fff" stroke-width="1.9"/>
        <circle cx="17.65" cy="6.55" r="1.15" fill="#fff"/>
       </svg>
      </span>
-     <span class="footer-social-icon footer-social-icon--snapchat" role="img" aria-label="Snapchat">
+     <span class="footer-social-icon footer-social-icon--snapchat" role="img" aria-label="سناب شات">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
        <path d="M12 2.35c-3.55 0-5.8 2.55-5.8 6.03 0 .78.1 1.58.25 2.32-.39.18-.72.12-1.28-.13-.63-.28-1.34-.6-1.76.02-.3.45-.12.93.39 1.22.42.24 1 .35 1.15.76.12.32.01.71-.14 1.08-.48 1.17-1.4 2.2-2.53 2.78-.42.22-1.06.39-.94.89.12.51.99.65 1.53.79.77.2 1.28.51 1.5 1.2.14.43.23.91.5 1.18.47.48 1.2.04 1.8.02.43-.02.76.15 1.13.36 1.12.64 2.22 1.12 4.2 1.12s3.08-.48 4.2-1.12c.37-.21.7-.38 1.13-.36.6.02 1.33.46 1.8-.02.27-.27.36-.75.5-1.18.22-.69.73-1 1.5-1.2.54-.14 1.41-.28 1.53-.79.12-.5-.52-.67-.94-.89-1.13-.58-2.05-1.61-2.53-2.78-.15-.37-.26-.76-.14-1.08.15-.41.73-.52 1.15-.76.51-.29.69-.77.39-1.22-.42-.62-1.13-.3-1.76-.02-.56.25-.89.31-1.28.13.15-.74.25-1.54.25-2.32 0-3.48-2.25-6.03-5.8-6.03Z" fill="#000"/>
       </svg>
      </span>
-     <span class="footer-social-icon footer-social-icon--tiktok" role="img" aria-label="TikTok">
+     <span class="footer-social-icon footer-social-icon--tiktok" role="img" aria-label="تيك توك">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
        <path d="M19.2 7.05a5.1 5.1 0 0 1-3.95-4.48V2h-3.5v13.7a2.9 2.9 0 1 1-2.9-2.9c.3 0 .6.05.88.14V9.35a6.4 6.4 0 1 0 5.52 6.35V8.7a8.4 8.4 0 0 0 4.95 1.6V6.8c-.34.12-.68.2-1 .25Z" transform="translate(-.8 .15)" fill="#25F4EE"/>
        <path d="M19.2 7.05a5.1 5.1 0 0 1-3.95-4.48V2h-3.5v13.7a2.9 2.9 0 1 1-2.9-2.9c.3 0 .6.05.88.14V9.35a6.4 6.4 0 1 0 5.52 6.35V8.7a8.4 8.4 0 0 0 4.95 1.6V6.8c-.34.12-.68.2-1 .25Z" transform="translate(.8 -.15)" fill="#FE2C55"/>
        <path d="M19.2 7.05a5.1 5.1 0 0 1-3.95-4.48V2h-3.5v13.7a2.9 2.9 0 1 1-2.9-2.9c.3 0 .6.05.88.14V9.35a6.4 6.4 0 1 0 5.52 6.35V8.7a8.4 8.4 0 0 0 4.95 1.6V6.8c-.34.12-.68.2-1 .25Z" fill="#fff"/>
       </svg>
      </span>
-     <span class="footer-social-icon footer-social-icon--x" role="img" aria-label="X">
+     <span class="footer-social-icon footer-social-icon--x" role="img" aria-label="إكس">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
        <path d="M18.9 2H22l-6.78 7.75L23.2 22h-6.25l-4.9-6.41L6.44 22H3.3l7.25-8.29L2.8 2h6.4l4.43 5.83L18.9 2Zm-1.1 17.93h1.73L8.27 3.94H6.42L17.8 19.93Z" fill="#000"/>
       </svg>
@@ -2019,7 +2041,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   </nav>
    <section class="footer-notes" aria-labelledby="footer-notes-title">
     <h2 class="footer-heading" id="footer-notes-title">معلومات مهمة</h2>
-    <p>رُواء مفهوم تجريبي أُعدّ ضمن معرض أعمال Apex Studio، ولا يمثّل عيادة قائمة أو جهة طبية فعلية.</p>
+    <p>رُواء مفهوم تجريبي أُعدّ ضمن معرض أعمال أبيكس ستوديو، ولا يمثّل عيادة قائمة أو جهة طبية فعلية.</p>
     <p>الصور المعروضة، بما فيها صور الأطباء، توضيحية مولّدة بالذكاء الاصطناعي، ولا تمثّل أشخاصًا حقيقيين.</p>
     <p>المحتوى للتوعية العامة فقط، ولا يغني عن فحص طبيب الأسنان أو توصيته المهنية.</p>
    </section>
@@ -2027,7 +2049,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   <div class="footer-bottom">
    <div class="footer-bottom-inner">
     <span>© 2026 رُواء — نموذج تجريبي.</span>
-    <span class="footer-credit">التصميم والتنفيذ: Apex Studio</span>
+    <span class="footer-credit">التصميم والتنفيذ: أبيكس ستوديو</span>
     <a class="footer-top-link" href="#top">العودة إلى أعلى الصفحة <span aria-hidden="true">↑</span></a>
    </div>
   </div>

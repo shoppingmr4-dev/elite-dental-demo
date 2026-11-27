@@ -573,7 +573,10 @@ try {
             cardsWithinSection:Boolean(sectionRect&&cardRects.every(card=>card.width>0&&card.left>=sectionRect.left-1&&card.right<=sectionRect.right+1))
           };
         })(),
-        reviewSection:(()=>{const section=document.getElementById("reviews"),panel=section?.querySelector(".reviews-panel"),title=section?.querySelector("#reviews-title"),status=section?.querySelector(".reviews-status-note"),disclosure=section?.querySelector(".reviews-rating-disclosure"),stars=section?.querySelector(".reviews-stars"),cards=[...(section?.querySelectorAll(".review-card")||[])],criteria=[...(section?.querySelectorAll(".reviews-criteria-list li")||[])],rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width};},pr=panel?rect(panel):null;return {present:Boolean(section&&panel),heading:title?.innerText.trim()||"",status:status?.innerText.trim()||"",disclosure:disclosure?.innerText.trim()||"",starsAccessibleLabel:stars?.getAttribute("aria-label")||"",criteriaCount:criteria.length,panelWidth:pr?.width||0,panelWithinViewport:Boolean(pr&&pr.left>=-1&&pr.right<=window.innerWidth+1),horizontalOverflow:section?section.scrollWidth>section.clientWidth:false,starCount:stars?.querySelectorAll('[aria-hidden="true"]').length||0,reviewCards:cards.length,demoCards:cards.filter(card=>card.querySelector(".review-card-label")?.innerText.trim()==="نموذج توضيحي"&&card.innerText.includes("لا يمثل رأيًا حقيقيًا")).length,placeholderCards:cards.filter(card=>card.querySelector(".review-card-copy")?.innerText.trim()==="مساحة مخصصة لعرض رأي مريض موثّق بعد الحصول على موافقته.").length};})(),
+        reviewSection:(()=>{
+          const section=document.getElementById("reviews"),panel=section?.querySelector(".reviews-panel"),title=section?.querySelector("#reviews-title"),status=section?.querySelector(".reviews-status-note"),disclosure=section?.querySelector(".reviews-rating-disclosure"),sampleDisclosure=section?.querySelector(".reviews-sample-disclosure"),stars=[...(section?.querySelectorAll(".reviews-stars")||[])],cards=[...(section?.querySelectorAll(".review-card")||[])],criteria=[...(section?.querySelectorAll(".reviews-criteria-list li")||[])],rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width};},pr=panel?rect(panel):null;
+          return {present:Boolean(section&&panel),heading:title?.innerText.trim()||"",status:status?.innerText.trim()||"",disclosure:disclosure?.innerText.trim()||"",sampleDisclosure:sampleDisclosure?.innerText.trim()||"",starsAccessibleLabel:stars[0]?.getAttribute("aria-label")||"",starColor:stars[0]?getComputedStyle(stars[0]).color:"",criteriaCount:criteria.length,panelWidth:pr?.width||0,panelWithinViewport:Boolean(pr&&pr.left>=-1&&pr.right<=window.innerWidth+1),horizontalOverflow:section?section.scrollWidth>section.clientWidth:false,starCount:stars.reduce((sum,row)=>sum+row.querySelectorAll('[aria-hidden="true"]').length,0),reviewCards:cards.length,demoCards:cards.filter(card=>card.querySelector(".review-card-label")?.innerText.trim()==="عبارة تمثيلية"&&card.innerText.includes("ليس رأيًا حقيقيًا")).length,placeholderCards:cards.filter(card=>["«أريد أن أفهم سبب تغيّر لون أسناني قبل اختيار طريقة التبييض.»","«يهمني معرفة الفرق بين التبييض داخل العيادة والقوالب المنزلية.»","«أفضّل معرفة النتائج المتوقعة والآثار المحتملة قبل اتخاذ القرار.»"].includes(card.querySelector(".review-card-copy")?.innerText.trim()||"")).length};
+        })(),
         faqItems:document.querySelectorAll(".faq-item").length,
         clinicalReferences:[...document.querySelectorAll(".reference-note a")].map(a=>a.href),
         contrastChecks:(()=>{
@@ -939,7 +942,7 @@ try {
       vp.name + ": all nine section marker glass frames must share compact dimensions and translucency: " + JSON.stringify(state.sectionMarkerChips));
     const expectedMarkers=[
       {number:"01",label:"دليل الابتسامة",context:"hero"},
-      {number:"03",label:"أسباب تغيّر اللون",context:"paper"},
+      {number:"02",label:"أسباب تغيّر اللون",context:"paper"},
       {number:"04",label:"الخيارات المتاحة",context:"canvas"},
       {number:"05",label:"التقييم ورحلة التبييض",context:"canvas"},
       {number:"06",label:"السلامة والملاءمة",context:"paper"},
@@ -1436,16 +1439,18 @@ try {
      assert.equal(state.expectationsSection.horizontalOverflow,false,"Expectations section must not overflow horizontally");
      assert.equal(state.expectationsSection.cardsWithinSection,true,"Expectations cards must remain within section bounds");
     assert.equal(state.reviewSection.present,true,`${vp.name}: patient reviews trust section is missing`);
-    assert.equal(state.reviewSection.heading,"كل تجربة تستحق أن تُعرض كما هي.",`${vp.name}: patient reviews headline changed`);
-    assert.equal(state.reviewSection.status,"لا تتوفر تقييمات مرضى موثّقة ضمن هذا النموذج التجريبي.",`${vp.name}: transparent demo review status is missing`);
+    assert.equal(state.reviewSection.heading,"آراء المرضى تُعرض بأمانة ووضوح.",`${vp.name}: patient reviews headline changed`);
+    assert.equal(state.reviewSection.status,"لا تتوفر تقييمات أو شهادات مرضى موثّقة ضمن هذا النموذج التجريبي.",`${vp.name}: transparent demo review status is missing`);
     assert.equal(state.reviewSection.criteriaCount,3,`${vp.name}: all three review-publishing criteria must be present`);
     assert.ok(state.reviewSection.panelWithinViewport&&!state.reviewSection.horizontalOverflow,`${vp.name}: review panel overflows its section or viewport`);
-    assert.equal(state.reviewSection.disclosure,"النجوم المعروضة توضيحية لأغراض التصميم فقط، ولا تمثل تقييمًا فعليًا.",`${vp.name}: visible star-preview disclosure is missing`);
-     assert.equal(state.reviewSection.starCount,5,`${vp.name}: five decorative preview stars are missing`);
-     assert.match(state.reviewSection.starsAccessibleLabel,/توضيحية.*التصميم فقط/);
-     assert.equal(state.reviewSection.reviewCards,3,`${vp.name}: exactly three review design cards must be present`);
-     assert.equal(state.reviewSection.demoCards,3,`${vp.name}: each card must be labelled as a demonstration`);
-     assert.equal(state.reviewSection.placeholderCards,3,`${vp.name}: each card must use the approved placeholder copy`)
+    assert.equal(state.reviewSection.disclosure,"النجوم الصفراء في البطاقات للعرض البصري فقط، ولا تمثل تقييمًا أو متوسطًا حقيقيًا.",`${vp.name}: yellow decorative-star disclosure is missing`);
+    assert.ok(state.reviewSection.sampleDisclosure.includes("أمثلة افتراضية")&&state.reviewSection.sampleDisclosure.includes("ليست أقوالًا أو تجارب لمرضى حقيقيين"),`${vp.name}: sample phrases must be clearly disclosed as fictional`);
+    assert.equal(state.reviewSection.starCount,15,`${vp.name}: three cards must each contain five decorative stars`);
+    assert.equal(state.reviewSection.starColor,"rgb(217, 158, 11)",`${vp.name}: review stars must use the approved golden-yellow color`);
+    assert.match(state.reviewSection.starsAccessibleLabel,/زخرفية.*لا تمثل تقييمًا حقيقيًا/);
+    assert.equal(state.reviewSection.reviewCards,3,`${vp.name}: exactly three review-style cards must be present`);
+    assert.equal(state.reviewSection.demoCards,3,`${vp.name}: each sample phrase card must be visibly labelled as illustrative`);
+    assert.equal(state.reviewSection.placeholderCards,3,`${vp.name}: all three approved sample phrases must be present`);
     assert.equal(state.faqItems, 4, `${vp.name}: the four focused FAQ entries are not present`);
     assert.equal(state.teamProfile.heading,"رعاية تبدأ بفهم حالتك.",vp.name + ": team headline changed");
     assert.deepEqual(state.teamProfile.imageSources,["assets/ruwa-team-doctor-01.webp","assets/ruwa-team-doctor-02.webp","assets/ruwa-team-doctor-03.webp"],vp.name + ": team portrait sources changed");
