@@ -57,7 +57,7 @@ Do not add decorative trust badges, ratings, clinic logos, or medical credential
 - HTML class: hero-portrait
 - Current presentation: contained image, bottom-centered focal position, eager loading, and high fetch priority.
 
-Do not add a separate demo sentence beneath the Hero contact buttons. Preserve the fictional-portfolio disclosure in the footer and page metadata. The Hero portrait caption must continue to identify the dentist portrait as an AI-generated illustration, not a real dentist.
+Keep the Hero focused on the patient benefit and whitening choice. Place the fictional-portfolio disclosure in the footer; page metadata should describe the whitening information without labelling the page as a demo. The Hero portrait caption must continue to identify the dentist portrait as an AI-generated illustration, not a real dentist.
 
 The current page alt text and visible disclosure state that this is an AI-generated illustrative dentist portrait, not a real dentist. Keep that disclosure. Never assign a real name, credential, clinic affiliation, patient identity, or testimonial to this image.
 
@@ -67,7 +67,7 @@ The approved file, its HTML element, figure placement, dimensions, focal positio
 
 Header and announcement strip:
 - RUWA wordmark and Arabic descriptor.
-- Eight navigation links to the visitor journey, including the assessment journey, review-transparency standards, and demo location section.
+- Eight navigation links to the visitor journey, including the assessment journey, patient-experience guidance, and location information.
 - Header CTA: «اتصل بنا» with a phone icon; opens the disclosed contact-unavailable dialog because no real phone number is configured.
 - Mobile menu with aria-expanded state and keyboard behavior.
 
@@ -80,13 +80,13 @@ Content sections in actual DOM order:
 | 03 | options | Whitening options | Explain general options without claiming they are RUWA clinic services |
 | 04 | journey | Assessment and treatment journey | Combine oral-health assessment, option discussion, agreed procedure, and aftercare into four ordered steps |
 | 05 | suitability | Suitability, safety, and realistic expectations | Combine health/timing factors with result variation, potential effects, restoration limits, and aftercare |
-| 06 | team | Team-section preview | Three illustrative portraits with a visible AI-generated disclosure before the cards and placeholders for verified professional details |
-| 07 | reviews | Review transparency | Three informational cards about source verification, explicit permission, and faithful presentation; no hypothetical patient quotations, testimonials, star icons, or scores |
-| 08 | visit | Location-section preview | A committed abstract Riyadh SVG, explicitly not a real map or clinic location; keep only the city-wide Google Maps search |
+| 06 | team | Team-section preview | Three illustrative portraits with a disclosure in the footer and accessible image descriptions; no invented doctor identities or credentials |
+| 07 | reviews | Patient experience | Three informational cards about treatment-plan clarity, patient comfort and privacy, and follow-up guidance; no invented testimonials, quotations, star icons, or scores |
+| 08 | visit | Location and access | A Riyadh-themed local visual with a city-wide Google Maps search; no precise branch address is invented |
 | 09 | faq | Frequently asked questions | Answer six focused questions about session count, result longevity, surface versus intrinsic discoloration, unsafe DIY whitening trends, sensitivity, and the effect of whitening on restorations |
 | 10 | consultation | Next step | Two working internal links to the FAQ and assessment sections; no booking, phone, or live WhatsApp claim |
 
-The assessment content now lives inside the first two steps of the four-step treatment journey. Suitability and safety remain together with a nested realistic-expectations panel, preserving its four existing patient-information cards. The patient-reviews section has been converted into a review-transparency section. It presents three informational cards covering verifiable source, explicit permission, and faithful presentation. Hypothetical patient quotations and decorative yellow stars have been removed entirely; no testimonial, score, review count, or review structured data is represented. The location panel uses a local abstract SVG inspired by Riyadh but explicitly not a real map or clinic location. A separate Google Maps link searches for Riyadh city-wide only. The footer preserves the fictional portfolio disclosure and AI-image disclosure. The team section remains unchanged and contains three equal demonstration cards using distinct portraits extracted from an existing AI-generated RUWA concept image; it contains no real doctor identity or professional credentials.
+The assessment content now lives inside the first two steps of the four-step treatment journey. Suitability and safety remain together with a nested realistic-expectations panel, preserving its four patient-information cards. The patient-experience section contains three practical priorities: a clearly explained treatment plan, patient comfort and privacy, and follow-up guidance. It does not present fabricated quotations as real patient reviews. The location section introduces Riyadh and provides a city-wide Google Maps search without inventing a branch address. The footer is the only visible location for the fictional-portfolio disclosure and the AI-image disclosure. The team section contains three profile-style cards using AI-generated portraits, with no invented doctor names, identities, licences, or professional credentials.
 
 ## 6. FAQ source of truth
 
@@ -96,7 +96,7 @@ Do not add duplicate questions simply to increase page length. Keep FAQ answers 
 
 ## 7. Contact behavior — exact current state
 
-The Hero and header restore their contact actions. The three top-of-page buttons open the disclosed demo contact dialog because the fictional portfolio has no real phone or WhatsApp number:
+The Hero and header retain their contact actions. The three top-of-page buttons open a contact dialog explaining that no phone number or WhatsApp account is connected yet:
 
 - Header: «اتصل بنا» with a phone icon; opens the contact-unavailable dialog.
 - Hero primary: «تواصل عبر واتساب» with the WhatsApp icon; opens the contact-unavailable dialog.
@@ -104,7 +104,7 @@ The Hero and header restore their contact actions. The three top-of-page buttons
 - Final section: the two internal links to #faq and #journey remain unchanged.
 - Floating control: one circular WhatsApp preview appears after the Hero WhatsApp button leaves the viewport.
 
-The central JavaScript configuration keeps WHATSAPP_NUMBER and PHONE_NUMBER empty. The header phone button, both Hero contact buttons, and the floating WhatsApp preview open the accessible contact dialog, which explicitly states that this is a demo and no real WhatsApp, phone, or booking channel is connected. The control leaves the keyboard tab order while hidden. The dialog supports close controls, Escape, backdrop click, focus placement/restoration, and temporary background scroll lock. No patient data is collected or transmitted.
+The central JavaScript configuration keeps WHATSAPP_NUMBER and PHONE_NUMBER empty. The header phone button, both Hero contact buttons, and the floating WhatsApp control open the accessible contact dialog, which states that no phone or WhatsApp channel is connected and no call or message will be sent. The control leaves the keyboard tab order while hidden. The dialog supports close controls, Escape, backdrop click, focus placement/restoration, and temporary background scroll lock. No patient data is collected or transmitted.
 
 The header and Hero controls are contact buttons, not live call or messaging links; the final-section actions remain internal links and do not imitate a booking. Every aria-controls reference must still resolve to an existing ID; all contact buttons reference contact-unavailable-dialog and the mobile menu references main-nav.
 
@@ -122,7 +122,7 @@ Before adaptation for a real clinic:
 - Do not fabricate ratings, review counts, before/after photos, clinical outcomes, equipment, facilities, discounts, or prices.
 - Do not ask visitors to send dental photographs or sensitive health details through an ordinary marketing chat.
 
-Authentic doctor identity and verified professional credentials, genuine reviews, clinic photographs, pricing, maps, and opening hours remain conditional future additions. The current reviews panel explains the publication standard without implying that real reviews exist; actual reviews may be added only when genuine, verifiable, authorized material is supplied. The current team card is only a disclosed visual template.
+Verified doctor identities and professional credentials, genuine reviews, clinic photographs, pricing, precise maps, and opening hours must be supplied before presenting them as clinic facts. The current patient-experience panel gives prospective visitors useful questions about the plan, cost, comfort, and follow-up; it does not attribute invented statements to patients.
 
 ## 9. Engineering constraints
 
@@ -144,7 +144,7 @@ The dedicated workflow is .github/workflows/whitening-2026-browser-qa.yml. It ve
 - Internal navigation, mobile menu, floating header, FAQ open/close, contact actions, modal focus behavior, and no horizontal overflow.
 - The public immutable preview in Chromium.
 
-The latest successful browser QA run at this audit was [GitHub Actions run 45506899194](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45506899194) on application commit `9a3b47ec9e321b8994bc5af27f07234046a38873`. All configured steps passed: the protected Hero image check, repository consistency, dependency audit, full-page visual capture at nine viewport widths, Hero fold checks, Playwright interaction checks at nine widths, and public-preview Chromium checks at 1024px, 1280px, and 1440px. The public-preview test also verified truthful fictional-demo Open Graph/Twitter metadata and confirmed that the immutable WebP social-preview image resolves successfully with HTTP 200. Evidence is preserved in [artifact 14971429866](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45506899194/artifacts/14971429866). The workflow does not execute Lighthouse; no Lighthouse score or Core Web Vitals result is asserted.
+The latest successful browser QA run at this audit was [GitHub Actions run 45506899194](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45506899194) on application commit `9a3b47ec9e321b8994bc5af27f07234046a38873`. All configured steps passed: the protected Hero image check, repository consistency, dependency audit, full-page visual capture at nine viewport widths, Hero fold checks, Playwright interaction checks at nine widths, and public-preview Chromium checks at 1024px, 1280px, and 1440px. The public-preview test also verified accurate educational Open Graph/Twitter metadata and confirmed that the immutable WebP social-preview image resolves successfully with HTTP 200. Evidence is preserved in [artifact 14971429866](https://github.com/shoppingmr4-dev/elite-dental-demo/actions/runs/45506899194/artifacts/14971429866). The workflow does not execute Lighthouse; no Lighthouse score or Core Web Vitals result is asserted.
 
 ## 11. Redirect and deployment behavior
 
