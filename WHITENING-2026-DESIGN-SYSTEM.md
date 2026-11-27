@@ -83,14 +83,14 @@ Content sections in actual DOM order:
 | 06 | team | Team-section preview | Three illustrative portraits with a visible AI-generated disclosure before the cards and placeholders for verified professional details |
 | 07 | reviews | Review transparency | Three informational cards about source verification, explicit permission, and faithful presentation; no hypothetical patient quotations, testimonials, star icons, or scores |
 | 08 | visit | Location-section preview | A committed abstract Riyadh SVG, explicitly not a real map or clinic location; keep only the city-wide Google Maps search |
-| 09 | faq | Frequently asked questions | Answer four focused questions about session count, result longevity, surface versus intrinsic discoloration, and unsafe DIY whitening trends |
+| 09 | faq | Frequently asked questions | Answer six focused questions about session count, result longevity, surface versus intrinsic discoloration, unsafe DIY whitening trends, sensitivity, and the effect of whitening on restorations |
 | 10 | consultation | Next step | Two working internal links to the FAQ and assessment sections; no booking, phone, or live WhatsApp claim |
 
 The assessment content now lives inside the first two steps of the four-step treatment journey. Suitability and safety remain together with a nested realistic-expectations panel, preserving its four existing patient-information cards. The patient-reviews section has been converted into a review-transparency section. It presents three informational cards covering verifiable source, explicit permission, and faithful presentation. Hypothetical patient quotations and decorative yellow stars have been removed entirely; no testimonial, score, review count, or review structured data is represented. The location panel uses a local abstract SVG inspired by Riyadh but explicitly not a real map or clinic location. A separate Google Maps link searches for Riyadh city-wide only. The footer preserves the fictional portfolio disclosure and AI-image disclosure. The team section remains unchanged and contains three equal demonstration cards using distinct portraits extracted from an existing AI-generated RUWA concept image; it contains no real doctor identity or professional credentials.
 
 ## 6. FAQ source of truth
 
-There are **4 native HTML details/summary FAQ entries** in the current page. They cover session count, result longevity, surface versus internal discoloration, and cautions about DIY whitening mixtures. The tests assert this exact count and the presence of authoritative clinical references.
+There are **6 native HTML details/summary FAQ entries** in the current page. They cover session count, result longevity, surface versus internal discoloration, cautions about DIY whitening mixtures, temporary sensitivity, and the fact that restorations do not whiten like natural teeth. The tests assert this exact count and the presence of authoritative clinical references.
 
 Do not add duplicate questions simply to increase page length. Keep FAQ answers concise, evidence-based, non-diagnostic, and clinically reviewed before any real-clinic launch.
 
@@ -100,7 +100,7 @@ There is **one floating WhatsApp demo control**. The Hero CTA, header CTA, and f
 
 - Header: «استكشف الخيارات» links to #options.
 - Hero primary: «استكشف خيارات التبييض» links to #options.
-- Hero secondary: «تعرّف على خطوات التقييم» links to #journey.
+- Hero secondary: «تعرّف على خطوات التقييم» links to #journey. The supporting copy explains that suitability depends on discoloration cause, oral health, and an individualized dental assessment.
 - Final section: links to #faq and #journey.
 - Floating control: one circular WhatsApp preview appears only while the Hero primary link is outside the viewport.
 
