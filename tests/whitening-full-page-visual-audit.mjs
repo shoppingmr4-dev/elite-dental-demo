@@ -245,7 +245,7 @@ try {
     if(metrics.counts.expectationsCardColumns!==(vp.width<=600?1:2))problems.push("Section 07 must use two grid columns on desktop/tablet and one on mobile");
     if(metrics.counts.teamCards!==3||metrics.counts.teamPortraits!==3)problems.push("team section must render exactly three portrait cards");
     if(metrics.counts.reviewCriteria!==3||metrics.counts.reviewCards!==3||metrics.counts.reviewStars!==0||!metrics.counts.reviewDisclosure.includes("لا يعرض تقييمات أو متوسطات نجوم حقيقية")||!metrics.counts.reviewStatus.includes("هذا النموذج لا يتضمن تقييمات أو شهادات مرضى موثّقة"))problems.push("patient reviews preview, demo cards, or transparency copy is incomplete");
-    if(metrics.counts.faqItems!==4)problems.push("FAQ section must contain four focused native disclosure entries");
+    if(metrics.counts.faqItems!==6)problems.push("FAQ section must contain six focused native disclosure entries");
     if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");
     if(metrics.brokenAnchors.length)problems.push("broken in-page anchors");
     for(const image of metrics.images.filter(i=>!i.complete||i.naturalWidth===0))
