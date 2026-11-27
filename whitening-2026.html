@@ -1135,124 +1135,69 @@ body,button,input,select,textarea{font-family:var(--body)}
  .hero-actions .consultation-cta svg{width:16px;height:16px}
 }
 
-/* RUWA Hero topic navigation: open, frameless editorial layout. */
+/* RUWA Hero topic navigation: compact, non-sequential quick links. */
 .hero-bottom{
  display:grid;
  grid-template-columns:repeat(3,minmax(0,1fr));
  align-items:stretch;
+ gap:10px;
  width:min(100%,1080px);
- margin:30px auto 0;
+ margin:20px auto 0;
  padding:0;
- border:0;
- border-radius:0;
- background:transparent;
- box-shadow:none;
- -webkit-backdrop-filter:none;
- backdrop-filter:none;
 }
 .hero-bottom-item{
- position:relative;
  display:flex;
- flex-direction:row;
  align-items:center;
  justify-content:center;
- gap:12px;
  min-width:0;
- min-height:64px;
- padding:10px clamp(9px,1.45vw,18px);
- border:0;
- border-radius:8px;
- background:transparent;
+ min-height:54px;
+ padding:10px 12px;
+ border:1px solid #E3ECE8;
+ border-radius:12px;
+ background:rgba(255,255,255,.72);
  color:#304A54;
- text-align:right;
+ text-align:center;
  text-decoration:none;
- transition:background-color .18s ease,color .18s ease;
-}
-.hero-bottom-item:nth-child(n+2)::before{
- content:"";
- position:absolute;
- top:50%;
- inset-inline-start:0;
- width:1px;
- height:28px;
- background:#E6EEEB;
- transform:translateY(-50%);
-}
-.hero-bottom-item b{
- display:inline-flex;
- flex:0 0 34px;
- align-items:center;
- justify-content:center;
- width:34px;
- height:34px;
- border:0;
- border-radius:50%;
- background:#E3F2E9;
- color:#176F74;
- font-family:var(--body);
- font-size:12px;
- font-weight:800;
- line-height:1;
- direction:ltr;
+ transition:background-color .18s ease,border-color .18s ease,color .18s ease;
 }
 .hero-bottom-item span{
  display:block;
  min-width:0;
- color:#304A54;
+ color:inherit;
  font-family:var(--body);
- font-size:14px;
- font-weight:600;
- line-height:1.7;
- text-align:right;
+ font-size:13px;
+ font-weight:700;
+ line-height:1.65;
+ text-align:center;
 }
 .hero-bottom-item:hover{
- background:rgba(227,242,233,.32);
+ border-color:rgba(24,122,128,.24);
+ background:#EAF4EF;
+ color:#115A60;
 }
-.hero-bottom-item:hover span{color:#115A60}
 .hero-bottom-item:focus-visible{
  outline:2px solid #187A80;
- outline-offset:2px;
+ outline-offset:3px;
 }
 @media(max-width:920px){
- .hero-bottom{
-  width:min(100%,1000px);
-  margin-top:28px;
- }
- .hero-bottom-item{gap:10px;padding:10px 10px;min-height:62px}
- .hero-bottom-item b{flex-basis:32px;width:32px;height:32px}
- .hero-bottom-item span{font-size:13px}
+ .hero-bottom{gap:8px;margin-top:18px}
+ .hero-bottom-item{min-height:54px;padding:9px 8px}
+ .hero-bottom-item span{font-size:12px}
 }
 @media(max-width:720px){
  .hero-bottom{
-  grid-template-columns:minmax(0,1fr);
+  grid-template-columns:repeat(3,minmax(0,1fr));
   width:100%;
-  margin-top:22px;
-  padding:0;
+  gap:6px;
+  margin-top:16px;
  }
- .hero-bottom-item,
- .hero-bottom-item:nth-child(n+2){
-  display:flex;
-  flex-direction:row;
-  align-items:center;
-  justify-content:flex-start;
-  gap:12px;
-  min-height:58px;
-  padding:12px 10px;
-  border-radius:0;
- }
- .hero-bottom-item:nth-child(n+2){border-top:1px solid #E6EEEB}
- .hero-bottom-item:nth-child(n+2)::before{display:none}
- .hero-bottom-item b{
-  flex:0 0 32px;
-  width:32px;
-  height:32px;
-  font-size:12px;
- }
- .hero-bottom-item span{
-  font-size:13px;
-  line-height:1.7;
-  text-align:right;
- }
+ .hero-bottom-item{min-height:58px;padding:8px 5px;border-radius:10px}
+ .hero-bottom-item span{font-size:12px;line-height:1.55}
+}
+@media(max-width:400px){
+ .hero-bottom{gap:5px}
+ .hero-bottom-item{min-height:60px;padding:7px 4px}
+ .hero-bottom-item span{font-size:11px;line-height:1.55}
 }
 @media(prefers-reduced-motion:reduce){
  .hero-bottom-item{transition:none}
@@ -1633,10 +1578,10 @@ body,button,input,select,textarea{font-family:var(--body)}
      <figcaption class="hero-portrait-caption">العناية تبدأ بفهم احتياج ابتسامتك.</figcaption>
     </figure>
    </div>
-   <nav class="hero-bottom" aria-label="استكشف موضوعات تبييض الأسنان">
-    <a class="hero-bottom-item" href="#causes"><b aria-hidden="true">01</b><span>لماذا يتغيّر لون الأسنان؟</span></a>
-    <a class="hero-bottom-item" href="#options"><b aria-hidden="true">02</b><span>ما خيارات التبييض؟</span></a>
-    <a class="hero-bottom-item" href="#suitability"><b aria-hidden="true">03</b><span>هل يناسبك التبييض؟</span></a>
+   <nav class="hero-bottom" aria-label="روابط سريعة إلى موضوعات تبييض الأسنان">
+    <a class="hero-bottom-item" href="#causes"><span>أسباب تغيّر اللون</span></a>
+    <a class="hero-bottom-item" href="#options"><span>خيارات التبييض</span></a>
+    <a class="hero-bottom-item" href="#suitability"><span>هل يناسبك التبييض؟</span></a>
    </nav>
   </div>
  </section>
