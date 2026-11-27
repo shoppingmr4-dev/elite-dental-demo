@@ -890,7 +890,7 @@ try {
     assert.equal(state.demoDialogInitialOpen, false, `${vp.name}: demo dialog should start closed`);
     assert.ok(state.demoDialogText.includes("لم يتم ربط رقم هاتف أو حساب واتساب بهذه الصفحة بعد."), `${vp.name}: contact dialog initial explanation is missing`);
     assert.ok(state.demoDialogText.includes("لن تبدأ هذه الصفحة اتصالًا أو ترسل رسالة من دون قناة تواصل مفعّلة."), `${vp.name}: unavailable contact destinations must be disclosed`);
-    assert.deepEqual(state.navLabels, ["أسباب تغيّر اللون","خيارات التبييض","خطوات التقييم","السلامة والتوقعات","اختيار الطبيب","معايير الرعاية","الموقع وطرق الوصول","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
+    assert.deepEqual(state.navLabels, ["أسباب تغيّر اللون","خيارات التبييض","خطوات التقييم","السلامة والتوقعات","اختيار الطبيب","آراء المرضى","الموقع وطرق الوصول","الأسئلة الشائعة"], `${vp.name}: navigation labels or order are incorrect`);
     assert.deepEqual(state.navHrefs, ["#causes","#options","#journey","#suitability","#team","#reviews","#visit","#faq"], `${vp.name}: navigation destinations are incorrect`);
     assert.deepEqual(state.navSecondaryHrefs,["#causes","#options","#suitability","#reviews","#visit"],`${vp.name}: secondary navigation destinations changed`);
     assert.deepEqual(state.navVisibleHrefs,vp.width>920?["#journey","#team","#faq"]:[],`${vp.name}: expanded desktop header must show only three priority links`);
@@ -961,7 +961,7 @@ try {
       {number:"04",label:"خطوات التقييم",context:"canvas"},
       {number:"05",label:"السلامة والملاءمة",context:"paper"},
       {number:"06",label:"الفريق الطبي",context:"paper"},
-      {number:"07",label:"تجربة المريض",context:"canvas"},
+      {number:"07",label:"آراء المرضى",context:"canvas"},
       {number:"08",label:"الموقع وطرق الوصول",context:"paper"},
       {number:"09",label:"الأسئلة الشائعة",context:"canvas"},
       {number:"10",label:"الخطوة التالية",context:"dark"}
