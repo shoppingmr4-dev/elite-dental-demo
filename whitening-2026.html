@@ -2674,9 +2674,7 @@ body,button,input,select,textarea{font-family:var(--body)}
   lastTrigger=trigger;
   const whatsapp=channel==="whatsapp";
   title.textContent=whatsapp?"التواصل عبر واتساب غير مفعّل في النموذج التجريبي":"الاتصال غير مفعّل في النموذج التجريبي";
-  description.textContent=whatsapp
-   ?"هذه نسخة تجريبية لا ترتبط برقم واتساب أو قناة تواصل فعلية."
-   :"هذا النموذج لا يتضمن رقم اتصال أو قناة حجز فعلية.";
+  description.textContent="هذه نسخة تجريبية؛ لا توجد أرقام اتصال أو قنوات حجز فعلية مرتبطة بها.";
   document.body.classList.add("dialog-open");
   dialog.showModal();
   title.focus();
