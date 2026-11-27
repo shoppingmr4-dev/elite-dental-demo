@@ -56,7 +56,7 @@ The Hero, causes, treatment options, assessment journey, suitability, realistic 
 - FAQ count: **7 native details entries**.
 - Contact controls: **six contact buttons** across the Header, Hero, final section, and floating WhatsApp control (three WhatsApp actions and three phone actions). All six open the same contact-unavailable dialog.
 - WHATSAPP_NUMBER and PHONE_NUMBER remain intentionally empty.
-- One floating WhatsApp control opens the local contact-unavailable dialog, which explicitly states that no real WhatsApp, phone, or booking channel is connected.
+- The page includes one floating WhatsApp control that opens the local contact-unavailable dialog, which explicitly states that no real WhatsApp, phone, or booking channel is connected.
 - Contact dialog ID: contact-unavailable-dialog.
 - The page has no HTML form, lead endpoint, appointment availability, booking confirmation, data collection, or analytics/ad pixels.
 - It does not transmit or store visitor details.
