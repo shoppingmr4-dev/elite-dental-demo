@@ -42,7 +42,7 @@ const faqPosition = html.indexOf('id="faq"');
 assert.ok(reviewsPosition < visitPosition && visitPosition < faqPosition, "Riyadh location must follow reviews and precede FAQ");
 const visitSection = html.slice(visitPosition, html.indexOf("</section>", visitPosition) + 10);
 assert.ok(visitSection.includes("الرياض") && visitSection.includes("المملكة العربية السعودية"), "Riyadh city and country must be visible");
-assert.ok(visitSection.includes("كيف سيظهر موقع العيادة") && visitSection.includes("بيانات الموقع في النسخة النهائية"), "Location section must describe a future verified location without implying an operating clinic");
+assert.ok(visitSection.includes("معلومات الموقع وطرق الوصول") && visitSection.includes("تُضاف المدينة وعنوان الفرع وبيانات الوصول هنا"), "Location section must describe a future verified location without implying an operating clinic");
 assert.ok(visitSection.includes("مدينة الرياض بالكامل"), "The displayed geographic scope must remain the whole city");
 assert.ok(visitSection.includes("عنوان الفرع") && visitSection.includes("غير محدد في هذا النموذج"), "Do not invent an exact branch address");
 assert.ok(visitSection.includes("نموذج RUWA التجريبي") && visitSection.includes("لا يحدد موقعًا فعليًا لعيادة أو فرع") && visitSection.includes("ليس خريطة طرق أو وسيلة للملاحة"), "Disclose that the artwork is not a real clinic location");
@@ -72,7 +72,7 @@ assert.deepEqual([...journeySection.matchAll(/<h3>([^<]+)<\/h3>/g)].map(match =>
 
 const expectationsSection = html.slice(suitabilityStart, html.indexOf('id="team"', suitabilityStart));
 assert.ok(suitabilityStart > journeyStart, "Merged safety and expectations must follow the treatment journey");
-assert.ok(expectationsSection.includes("فهم حدود التبييض وآثاره المحتملة يساعد على اتخاذ قرار واعٍ"), "Merged safety section must introduce realistic expectations");
+assert.ok(expectationsSection.includes("فهم حدود التبييض وآثاره المحتملة على مناقشة الخيارات بتوقعات واقعية واتخاذ قرار واعٍ"), "Merged safety section must introduce realistic expectations");
 assert.deepEqual(
   [...expectationsSection.matchAll(/<article class="expect-card">[\s\S]*?<h3>([^<]+)<\/h3>/g)].map(match => match[1]),
   ["النتائج تختلف من شخص لآخر", "قد تحدث حساسية أو تهيّج مؤقت", "الحشوات والتيجان والقشور لا تتبيّض", "العناية بعد التبييض"],
@@ -130,7 +130,7 @@ const faqStart = html.indexOf('id="faq"');
 assert.ok(reviewsStart > html.indexOf('id="team"') && reviewsStart < visitPosition && visitPosition < faqStart, "Reviews remain after team; location follows reviews and precedes FAQ");
 const reviewsSection = html.slice(reviewsStart, html.indexOf("</section>", reviewsStart) + 10);
 assert.ok(reviewsSection.includes("القسم السابع: معايير عرض الآراء"), "Review transparency section marker must be number 07");
-assert.ok(reviewsSection.includes("الشفافية في عرض آراء المرضى."), "Review transparency headline is missing");
+assert.ok(reviewsSection.includes("آراء المرضى تُعرض بوضوح ومصداقية."), "Review transparency headline is missing");
 assert.ok(reviewsSection.includes("هذا النموذج لا يعرض تقييمات أو متوسطات نجوم حقيقية."), "Demo must disclose that there are no real review scores");
 assert.ok(reviewsSection.includes("تُعرض الآراء الفعلية فقط بعد التحقق من مصدرها والحصول على موافقة صريحة بنشرها."), "Review authenticity and permission criteria must be disclosed");
 assert.equal([...reviewsSection.matchAll(/class="reviews-criteria-list"/g)].length, 1, "Review publication criteria must be presented once");
@@ -148,14 +148,16 @@ const faqAuditStart = html.indexOf('id="faq"');
 const faqAuditEnd = html.indexOf("</section>", faqAuditStart) + "</section>".length;
 const faqAuditMarkup = html.slice(faqAuditStart, faqAuditEnd);
 const faqCount = [...faqAuditMarkup.matchAll(/<details\b/gi)].length;
-assert.equal(faqCount, 4, "RUWA must contain exactly four focused native FAQ entries");
+assert.equal(faqCount, 6, "RUWA must contain six focused native FAQ entries");
 assert.deepEqual(
   [...faqAuditMarkup.matchAll(/<summary>([^<]+)<\/summary>/g)].map(match => match[1]),
   [
     "هل أحتاج إلى أكثر من جلسة؟",
     "كم تدوم نتيجة التبييض؟",
     "ما الفرق بين التصبغات الخارجية والتصبغات الداخلية؟",
-    "هل الليمون والفحم وخلطات التبييض المنزلية آمنة؟"
+    "هل الليمون والفحم وخلطات التبييض المنزلية آمنة؟",
+    "هل يسبب تبييض الأسنان حساسية؟",
+    "هل تتغيّر ألوان الحشوات والتيجان مع التبييض؟"
   ],
   "FAQ questions must address distinct visitor concerns in the approved order"
 );
@@ -165,6 +167,8 @@ assert.ok(faqAuditMarkup.includes("لا توجد مدة ثابتة للجميع"
 assert.ok(faqAuditMarkup.includes("التصبغات الخارجية على سطح السن") && faqAuditMarkup.includes("التصبغات الداخلية"), "FAQ must explain surface versus intrinsic discoloration");
 assert.ok(faqAuditMarkup.includes("تآكل مينا الأسنان") && faqAuditMarkup.includes("استشر طبيب الأسنان"), "FAQ must caution against unverified home-whitening mixtures");
 assert.ok(faqAuditMarkup.includes("natural-teeth-whitening") && faqAuditMarkup.includes("oral-health-topics/whitening"), "FAQ must link to authoritative ADA guidance");
+assert.ok(faqAuditMarkup.includes("حساسية مؤقتة في الأسنان") && faqAuditMarkup.includes("أعراض شديدة أو مستمرة"), "Sensitivity FAQ must explain common temporary effects and when to seek advice");
+assert.ok(faqAuditMarkup.includes("لا تتغيّر ألوان الحشوات والتيجان والقشور الخزفية") && faqAuditMarkup.includes("اختلاف في اللون بعد التبييض"), "Restoration FAQ must explain that restorations do not whiten like natural teeth");
 assert.doesNotMatch(faqAuditMarkup, /ما العناية المطلوبة بعد التبييض/, "The FAQ must not repeat the dedicated aftercare section");
 assert.match(html, /:focus-visible\{outline:3px solid var\(--coral\);outline-offset:4px\}/, "A visible global keyboard focus indicator must remain available");
 
@@ -265,19 +269,19 @@ for (const [name, content] of [
 }
 
 assert.match(readme, /10 content sections/);
-assert.match(readme, /4 FAQ entries/);
+assert.match(readme, /6 FAQ entries/);
 assert.match(readme, /one floating WhatsApp demo control/);
 assert.match(designSystem, /10 content sections/);
-assert.match(designSystem, /4 native HTML details\/summary FAQ entries/);
+assert.match(designSystem, /6 native HTML details\/summary FAQ entries/);
 assert.match(designSystem, /one floating WhatsApp demo control/);
 assert.match(caseStudy, /10 أقسام رئيسية/);
-assert.match(caseStudy, /أربعة أسئلة/);
+assert.match(caseStudy, /ستة أسئلة/);
 assert.match(caseStudy, /زر واتساب عائم واحد للمعاينة التجريبية/);
 assert.match(productionAudit, /10 main content sections/);
 assert.match(productionAudit, /4 native details entries/);
 assert.match(productionAudit, /one floating WhatsApp demo control/);
 
 console.log("RUWA repository consistency: PASS");
-console.log("Sections: 10 | Reviews: no fabricated testimonials or ratings | FAQ: 4 | Contact: internal links plus one disclosed demo control");
+console.log("Sections: 10 | Reviews: no fabricated testimonials or ratings | FAQ: 6 | Contact: internal links plus one disclosed demo control");
 console.log("ARIA controls: all targets exist | Hero AI illustration disclosure: present");
 console.log("Repository root and legacy preview paths: redirect to whitening-2026.html");
