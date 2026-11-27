@@ -54,7 +54,7 @@ assert.ok(visitSection.includes("رسم محلي للنموذج التجريبي
 const cityMapLink = visitSection.match(/<a class="visit-map-action"[^>]*href="([^"]+)"/)?.[1] || "";
 assert.ok(cityMapLink.startsWith("https://www.google.com/maps/search/?api=1&amp;query=Riyadh"), "Open a Google Maps city search, not exact clinic directions");
 assert.match(visitSection, /target="_blank" rel="noopener noreferrer"/, "Google Maps must open safely in a new tab");
-assert.ok(visitSection.includes("رسم توضيحي تجريدي") && visitSection.includes("ليست خريطة طرق") && visitSection.includes("لا تحدد موقع عيادة"), "Clearly disclose that the visual is schematic artwork, not a road map or clinic location");
+assert.ok(visitSection.includes("رسم توضيحي تجريدي") && visitSection.includes("ليس خريطة طرق") && visitSection.includes("لا يحدد موقعًا فعليًا لعيادة أو فرع"), "Clearly disclose that the visual is schematic artwork, not a road map or clinic location");
 assert.ok(!visitSection.includes("<iframe") && !visitSection.includes("دبوس"), "Do not present the static image as an interactive map or invent a clinic pin");
 
 const journeyStart = html.indexOf('id="journey"');
@@ -82,7 +82,7 @@ assert.ok(expectationsSection.includes("لون الأسنان الأساسي و�
 assert.ok(expectationsSection.includes("لا توجد درجة نهائية يمكن ضمانها للجميع"), "No-guarantee disclosure is missing");
 assert.ok(expectationsSection.includes("قد تظهر حساسية مؤقتة في الأسنان أو تهيّج في اللثة"), "Temporary sensitivity and gum irritation must be disclosed");
 assert.ok(expectationsSection.includes("شديدة أو مستمرة"), "Significant or persistent symptoms must prompt professional advice");
-assert.ok(expectationsSection.includes("الحشوات والتيجان والقشور بالتبييض مثل الأسنان الطبيعية"), "Restoration limits must be disclosed");
+assert.ok(expectationsSection.includes("الحشوات والتيجان وقشور الأسنان بالتبييض مثل لون الأسنان الطبيعية"), "Restoration limits must be disclosed");
 assert.ok(expectationsSection.includes("اتبع تعليمات طبيب الأسنان"), "Individualized aftercare guidance is missing");
 assert.ok(expectationsSection.includes("حافظ على نظافة الفم بانتظام"), "Normal oral hygiene guidance is missing");
 assert.ok(expectationsSection.includes("قد يتغيّر اللون بمرور الوقت"), "Changing whitening results must be disclosed");
@@ -105,9 +105,9 @@ const headerEnd = html.indexOf("</header>", headerStart) + "</header>".length;
 const headerMarkup = html.slice(headerStart, headerEnd);
 assert.ok(headerStart >= 0 && headerEnd > headerStart, "RUWA semantic header is missing");
 const headerLinks = [...headerMarkup.matchAll(/<a\b[^>]*href=["'](#[^"']+)["'][^>]*>/g)].map(match => match[1]);
-assert.deepEqual(headerLinks, ["#top","#causes","#options","#journey","#suitability","#team","#reviews","#visit","#faq"], "Header must preserve its brand anchor and all seven internal destinations");
+assert.deepEqual(headerLinks, ["#top","#causes","#options","#journey","#suitability","#team","#reviews","#visit","#faq","#options"], "Header must preserve its brand anchor, eight navigation destinations, and internal options CTA");
 const secondaryHeaderLinks = [...headerMarkup.matchAll(/<a\b[^>]*class=["']nav-secondary["'][^>]*href=["'](#[^"']+)["'][^>]*>/g)].map(match => match[1]);
-assert.deepEqual(secondaryHeaderLinks, ["#causes","#options","#suitability","#reviews","#visit"], "Only the four secondary destinations may be hidden from the expanded desktop navigation");
+assert.deepEqual(secondaryHeaderLinks, ["#causes","#options","#suitability","#reviews","#visit"], "Only the five secondary destinations may be hidden from the expanded desktop navigation");
 assert.match(html, /\.nav \.nav-secondary\{display:none\}/, "Secondary links must be hidden in the expanded desktop header");
 assert.match(html, /\.nav\.open \.nav-secondary\{display:flex\}/, "All secondary links must reappear when navigation opens");
 assert.match(html, /\.site-header\.is-compact \.menu-toggle/, "Compact desktop header must expose its menu control");
@@ -163,7 +163,7 @@ assert.ok(faqAuditMarkup.includes("سبب التصبغ وعمقه والطريق
 assert.ok(html.slice(optionsStart, html.indexOf("</section>", optionsStart)).includes("التصبغات السطحية"), "Whitening options must distinguish surface stains from tooth colour");
 assert.ok(faqAuditMarkup.includes("لا توجد مدة ثابتة للجميع"), "Result-longevity answer must avoid a universal promise");
 assert.ok(faqAuditMarkup.includes("التصبغات الخارجية على سطح السن") && faqAuditMarkup.includes("التصبغات الداخلية"), "FAQ must explain surface versus intrinsic discoloration");
-assert.ok(faqAuditMarkup.includes("تآكل المينا") && faqAuditMarkup.includes("استشر طبيب الأسنان"), "FAQ must caution against unverified home-whitening mixtures");
+assert.ok(faqAuditMarkup.includes("تآكل مينا الأسنان") && faqAuditMarkup.includes("استشر طبيب الأسنان"), "FAQ must caution against unverified home-whitening mixtures");
 assert.ok(faqAuditMarkup.includes("natural-teeth-whitening") && faqAuditMarkup.includes("oral-health-topics/whitening"), "FAQ must link to authoritative ADA guidance");
 assert.doesNotMatch(faqAuditMarkup, /ما العناية المطلوبة بعد التبييض/, "The FAQ must not repeat the dedicated aftercare section");
 assert.match(html, /:focus-visible\{outline:3px solid var\(--coral\);outline-offset:4px\}/, "A visible global keyboard focus indicator must remain available");
