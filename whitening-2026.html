@@ -234,38 +234,33 @@ body.dialog-open{overflow:hidden}
 .reviews-section{background:#F4F7FA}
 .visit-section{position:relative;overflow:hidden;background:var(--paper)}
 .visit-head{max-width:900px;margin-bottom:clamp(28px,4vw,46px)}
-.visit-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(270px,.75fr);align-items:stretch;gap:clamp(16px,2.4vw,30px);max-width:1160px;margin-inline:auto}
-.visit-map-stage{position:relative;isolation:isolate;display:flex;min-height:470px;flex-direction:column;justify-content:space-between;overflow:hidden;padding:clamp(22px,3vw,34px);border:1px solid rgba(169,220,210,.18);border-radius:24px;background:radial-gradient(ellipse at 78% 16%,rgba(42,117,120,.42),transparent 34%),radial-gradient(ellipse at 14% 90%,rgba(42,117,120,.28),transparent 38%),linear-gradient(135deg,#173B45 0%,#102A34 58%,#0C2029 100%);color:#FFFFFF;box-shadow:0 22px 58px rgba(20,45,56,.13)}
-.visit-map-stage:before,.visit-map-stage:after{position:absolute;z-index:-1;content:"";pointer-events:none;border:1px solid rgba(169,220,210,.12);border-radius:50%;transform:rotate(-18deg)}
-.visit-map-stage:before{width:560px;height:330px;right:-170px;top:70px;box-shadow:0 0 0 22px rgba(169,220,210,.025),0 0 0 46px rgba(169,220,210,.02),0 0 0 70px rgba(169,220,210,.015)}
-.visit-map-stage:after{width:390px;height:240px;left:-170px;bottom:-85px;box-shadow:0 0 0 24px rgba(169,220,210,.025),0 0 0 50px rgba(169,220,210,.02)}
-.visit-map-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
-.visit-map-brand{display:inline-flex;align-items:center;gap:10px;color:#FFFFFF;font-size:13px;font-weight:800;letter-spacing:.01em}
-.visit-map-brand-mark{display:grid;place-items:center;width:36px;height:36px;border:1px solid rgba(169,220,210,.27);border-radius:11px;background:rgba(255,255,255,.07);color:#A9DCD2}
-.visit-map-brand-mark svg{width:19px;height:19px}
-.visit-map-live-label{display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:6px 11px;border:1px solid rgba(169,220,210,.22);border-radius:999px;background:rgba(255,255,255,.07);color:#D7ECE8;font-size:10px;font-weight:700;line-height:1.5}
-.visit-map-live-label:before{width:7px;height:7px;flex:none;border-radius:50%;background:#71D7B1;box-shadow:0 0 0 4px rgba(113,215,177,.12);content:""}
-.visit-map-center{max-width:590px;margin-block:48px 44px}
-.visit-map-kicker{margin:0 0 12px;color:#A9DCD2;font-size:11px;font-weight:800;letter-spacing:.13em;line-height:1.7;direction:ltr;text-align:right}
-.visit-map-center h3{margin:0;color:#FFFFFF;font-family:var(--display);font-size:clamp(32px,4vw,54px);font-weight:800;line-height:1.35}
-.visit-map-center p{max-width:510px;margin:13px 0 0;color:rgba(255,255,255,.78);font-size:13px;line-height:2}
-.visit-map-action{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:52px;margin-top:25px;padding:0 20px;border:1px solid rgba(255,255,255,.12);border-radius:13px;background:#FFFFFF;color:#142D38;font-size:13px;font-weight:800;box-shadow:0 10px 28px rgba(0,0,0,.13);transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
-.visit-map-action:hover{transform:translateY(-2px);background:#EAF3F8;box-shadow:0 14px 32px rgba(0,0,0,.2)}
-.visit-map-action:focus-visible{outline:3px solid #A9DCD2;outline-offset:4px}
-.visit-map-action svg{width:18px;height:18px;flex:none}
-.visit-map-footnote{display:flex;align-items:flex-start;gap:9px;max-width:700px;margin:0;color:rgba(255,255,255,.68);font-size:10px;line-height:1.9}
-.visit-map-footnote svg{width:15px;height:15px;flex:none;margin-top:2px;color:#A9DCD2}
-.visit-info-panel{display:flex;flex-direction:column;justify-content:space-between;min-width:0;padding:clamp(22px,2.8vw,32px);border:1px solid var(--line);border-radius:24px;background:#F4F7FA}
-.visit-info-kicker{margin:0 0 12px;color:var(--blue-deep);font-size:11px;font-weight:800;line-height:1.7}
+.visit-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,.75fr);align-items:stretch;gap:clamp(16px,2.4vw,30px);max-width:1160px;margin-inline:auto}
+.visit-map-stage{min-width:0;min-height:0;margin:0;overflow:hidden;border:1px solid var(--line);border-radius:24px;background:#FFFFFF;box-shadow:0 20px 54px rgba(20,45,56,.09)}
+.visit-map-image-frame{position:relative;display:grid;min-height:420px;aspect-ratio:5/3;overflow:hidden;place-items:center;background:#E8EEF0}
+.visit-map-image{display:block;width:100%;height:100%;object-fit:contain;object-position:center;background:#E8EEF0}
+.visit-map-city-tag{position:absolute;top:20px;right:20px;display:inline-flex;align-items:center;gap:9px;min-height:42px;padding:8px 14px;border:1px solid rgba(20,45,56,.08);border-radius:12px;background:rgba(255,255,255,.94);color:var(--ink);font-size:12px;font-weight:800;line-height:1.5;box-shadow:0 5px 18px rgba(20,45,56,.09);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.visit-map-city-tag svg{width:17px;height:17px;flex:none;color:var(--blue)}
+.visit-map-fallback{min-height:420px;padding:28px;display:grid;place-content:center;justify-items:center;gap:14px;background:#EEF3F4;color:var(--ink2);font-size:13px;font-weight:700;text-align:center}
+.visit-map-fallback[hidden]{display:none}
+.visit-map-fallback a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:12px;background:var(--blue);color:#FFFFFF;font-weight:800}
+.visit-map-caption{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:17px 20px;border-top:1px solid var(--line);background:#FFFFFF}
+.visit-map-caption-title{color:var(--ink);font-size:12px;font-weight:800;line-height:1.7}
+.visit-map-caption-source{color:var(--muted);font-size:10px;font-weight:600;line-height:1.7}
+.visit-info-panel{display:flex;min-width:0;flex-direction:column;justify-content:space-between;gap:24px;padding:clamp(22px,2.8vw,32px);border:1px solid var(--line);border-radius:24px;background:#F4F7FA}
+.visit-info-kicker{margin:0 0 12px;color:var(--blue-deep);font-size:11px;font-weight:800;line-height:1.7;letter-spacing:.08em;direction:ltr;text-align:right}
 .visit-info-panel h3{margin:0;color:var(--ink);font-family:var(--display);font-size:clamp(24px,2.5vw,31px);font-weight:800;line-height:1.55}
 .visit-info-copy{margin:12px 0 0;color:var(--ink2);font-size:13px;line-height:2}
-.visit-info-grid{display:grid;gap:10px;margin-top:26px}
-.visit-info-item{padding:15px 16px;border:1px solid var(--line);border-radius:13px;background:#FFFFFF}
+.visit-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:24px}
+.visit-info-item{min-width:0;padding:14px 15px;border:1px solid var(--line);border-radius:13px;background:#FFFFFF}
 .visit-info-item span{display:block;margin-bottom:5px;color:var(--muted);font-size:10px;font-weight:700;line-height:1.6}
-.visit-info-item strong{display:block;color:var(--ink);font-family:var(--display);font-size:15px;font-weight:800;line-height:1.7}
-.visit-note{margin:18px 0 0;padding:14px 15px;border-right:3px solid var(--coral);border-radius:10px;background:#FFFFFF;color:var(--ink2);font-size:11px;line-height:2}
-@media(max-width:900px){.visit-layout{grid-template-columns:1fr}.visit-map-stage{min-height:410px}.visit-info-panel{gap:16px}.visit-info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:600px){.visit-head{margin-bottom:24px}.visit-layout{gap:13px}.visit-map-stage{min-height:390px;padding:19px;border-radius:19px}.visit-map-center{margin-block:50px 40px}.visit-map-center h3{font-size:clamp(30px,8vw,40px)}.visit-map-center p{font-size:12px}.visit-map-action{width:100%;min-height:50px;padding-inline:12px;font-size:12px}.visit-map-footnote{font-size:10px}.visit-info-panel{padding:21px;border-radius:18px}.visit-info-grid{grid-template-columns:1fr;gap:9px}.visit-info-item{padding:13px 15px}}
+.visit-info-item strong{display:block;color:var(--ink);font-family:var(--display);font-size:14px;font-weight:800;line-height:1.7;overflow-wrap:anywhere}
+.visit-map-action{display:flex;align-items:center;justify-content:center;gap:10px;min-height:50px;margin-top:16px;padding:10px 15px;border:0;border-radius:13px;background:var(--blue);color:#FFFFFF;font-size:12px;font-weight:800;line-height:1.6;text-align:center;box-shadow:0 7px 18px rgba(24,122,128,.16);transition:transform .2s ease,background .2s ease,box-shadow .2s ease}
+.visit-map-action:hover{transform:translateY(-2px);background:var(--blue-deep);box-shadow:0 10px 24px rgba(24,122,128,.2)}
+.visit-map-action:focus-visible{outline:3px solid var(--coral);outline-offset:4px}
+.visit-map-action svg{width:17px;height:17px;flex:none}
+.visit-note{margin:17px 0 0;padding:14px 15px;border-right:3px solid var(--coral);border-radius:10px;background:#FFFFFF;color:var(--ink2);font-size:11px;line-height:2}
+@media(max-width:900px){.visit-layout{grid-template-columns:1fr}.visit-map-image-frame{min-height:390px}.visit-info-panel{gap:20px}}
+@media(max-width:600px){.visit-head{margin-bottom:24px}.visit-layout{gap:13px}.visit-map-stage{border-radius:18px}.visit-map-image-frame{min-height:300px;aspect-ratio:4/3}.visit-map-city-tag{top:13px;right:13px;min-height:37px;padding:7px 11px;font-size:10px}.visit-map-caption{align-items:flex-start;flex-direction:column;gap:3px;padding:14px 16px}.visit-info-panel{gap:17px;padding:20px;border-radius:18px}.visit-info-grid{grid-template-columns:1fr;gap:9px;margin-top:19px}.visit-info-item{padding:13px 14px}.visit-map-action{width:100%;font-size:11px}.visit-note{font-size:10px}}
 .reviews-head{margin-bottom:clamp(26px,3.2vw,36px)}
 .reviews-head h2{max-width:720px}
 .reviews-panel{display:grid;gap:17px;max-width:1100px;margin-inline:auto}
@@ -1857,57 +1852,62 @@ body,button,input,select,textarea{font-family:var(--body)}
 <section class="content-section visit-section" <section class="content-section visit-section" id="visit" aria-labelledby="visit-title">
  <div class="wrap">
   <header class="section-head visit-head">
-   <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم العاشر: موقعنا في الرياض">
+   <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم العاشر: موقع رُواء في الرياض">
     <span class="section-marker-number" aria-hidden="true">10</span>
     <span class="section-marker-divider" aria-hidden="true"></span>
     <span class="section-marker-label">موقعنا في الرياض</span>
    </span>
-   <h2 id="visit-title">نلتقي بك في الرياض.</h2>
+   <h2 id="visit-title">موقع رُواء في الرياض.</h2>
    <p>رُواء لطب الأسنان — الرياض، المملكة العربية السعودية.</p>
   </header>
   <div class="visit-layout">
-   <div class="visit-map-stage">
-    <div class="visit-map-toolbar">
-     <span class="visit-map-brand">
-      <span class="visit-map-brand-mark" aria-hidden="true">
-       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 10.1c0 5.3-8 11.4-8 11.4S4 15.4 4 10.1a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/>
-       </svg>
-      </span>
-      Google Maps
-     </span>
-     <span class="visit-map-live-label">عرض أقمار صناعية تفاعلي</span>
-    </div>
-    <div class="visit-map-center">
-     <p class="visit-map-kicker">RIYADH · SAUDI ARABIA</p>
-     <h3>استكشف الرياض من الأعلى.</h3>
-     <p>افتح عرض الأقمار الصناعية المباشر لمدينة الرياض في خرائط Google، وتصفّح المدينة بالتكبير والتحريك.</p>
-     <a class="visit-map-action" data-visit-map-link href="https://www.google.com/maps/@?api=1&amp;map_action=map&amp;center=24.7136%2C46.6753&amp;zoom=10&amp;basemap=satellite" target="_blank" rel="noopener noreferrer" aria-label="استكشف عرض الأقمار الصناعية لمدينة الرياض على خرائط Google في نافذة جديدة">
-      <span>استكشف الرياض على خرائط Google</span>
+   <figure class="visit-map-stage" aria-labelledby="visit-map-caption">
+    <div class="visit-map-image-frame">
+     <img
+      class="visit-map-image"
+      data-visit-map-image
+      src="https://mapmap.ai/api/static-map?center=46.6753%2C24.7136&amp;zoom=10&amp;size=1200x720&amp;style=light&amp;lang=ar&amp;pois=0&amp;format=webp&amp;quality=88"
+      alt="خريطة طرق عامة لمدينة الرياض في المملكة العربية السعودية، دون تحديد موقع العيادة أو عنوان فرع."
+      width="1200"
+      height="720"
+      loading="lazy"
+      decoding="async">
+     <span class="visit-map-city-tag">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-       <path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/>
+       <path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/>
       </svg>
-     </a>
+      الرياض · المملكة العربية السعودية
+     </span>
     </div>
-    <p class="visit-map-footnote">
-     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg>
-     <span>يفتح الرابط خرائط Google في نافذة جديدة. هذا عرض عام للمدينة وليس موقعًا محددًا للعيادة.</span>
-    </p>
-   </div>
-   <aside class="visit-info-panel" aria-label="معلومات موقع رُواء">
+    <div class="visit-map-fallback" data-visit-map-fallback hidden role="status">
+     <span>تعذّر تحميل صورة الخريطة حاليًا.</span>
+     <a href="https://www.google.com/maps/search/?api=1&amp;query=Riyadh%2C%20Saudi%20Arabia" target="_blank" rel="noopener noreferrer">استكشف مدينة الرياض على خرائط Google</a>
+    </div>
+    <figcaption class="visit-map-caption" id="visit-map-caption">
+     <span class="visit-map-caption-title">خريطة ثابتة لمدينة الرياض</span>
+     <span class="visit-map-caption-source">MapMap · بيانات OpenStreetMap</span>
+    </figcaption>
+   </figure>
+   <aside class="visit-info-panel" aria-label="معلومات النطاق الجغرافي لرُواء">
     <div>
-     <p class="visit-info-kicker">RUWA · LOCATION</p>
-     <h3>رُواء لطب الأسنان</h3>
-     <p class="visit-info-copy">نخدم مدينة الرياض، المملكة العربية السعودية. تُعرض المدينة هنا كنطاق جغرافي عام فقط.</p>
+     <p class="visit-info-kicker">RUWA · RIYADH</p>
+     <h3>قريبون من مدينة الرياض.</h3>
+     <p class="visit-info-copy">يعرض هذا القسم مدينة الرياض كنطاق جغرافي عام ضمن النموذج التجريبي، من دون الإشارة إلى حي أو فرع أو عنوان محدد.</p>
     </div>
     <div>
      <div class="visit-info-grid">
       <div class="visit-info-item"><span>المدينة</span><strong>الرياض</strong></div>
       <div class="visit-info-item"><span>الدولة</span><strong>المملكة العربية السعودية</strong></div>
-      <div class="visit-info-item"><span>النطاق الجغرافي</span><strong>مدينة الرياض</strong></div>
-      <div class="visit-info-item"><span>عنوان الفرع</span><strong>لم يُحدّد بعد</strong></div>
+      <div class="visit-info-item"><span>النطاق الجغرافي</span><strong>مدينة الرياض بالكامل</strong></div>
+      <div class="visit-info-item"><span>عنوان الفرع</span><strong>غير محدد في هذا النموذج</strong></div>
      </div>
-     <p class="visit-note">تعرض الخريطة نظرة عامة على مدينة الرياض، ولا تمثل عنوانًا دقيقًا لموقع العيادة. لن نعرض دبوسًا أو اتجاهات إلى فرع قبل اعتماد عنوانه الفعلي.</p>
+     <a class="visit-map-action" data-visit-map-link href="https://www.google.com/maps/search/?api=1&amp;query=Riyadh%2C%20Saudi%20Arabia" target="_blank" rel="noopener noreferrer" aria-label="استكشف مدينة الرياض على خرائط Google في نافذة جديدة">
+      <span>استكشف مدينة الرياض على خرائط Google</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+       <path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/>
+      </svg>
+     </a>
+     <p class="visit-note">تعرض الصورة خريطة عامة وثابتة لمدينة الرياض، ولا تمثل موقعًا دقيقًا للعيادة أو عنوانًا لفرع قائم. هذا القسم جزء من نموذج RUWA التجريبي، وليس إثباتًا لوجود عيادة فعلية في هذا الموقع.</p>
     </div>
    </aside>
   </div>
@@ -2785,6 +2785,19 @@ body,button,input,select,textarea{font-family:var(--body)}
  }else{
   initialize();
  }
+})();
+</script>
+<script>
+(function(){
+ const image=document.querySelector("[data-visit-map-image]");
+ const fallback=document.querySelector("[data-visit-map-fallback]");
+ if(!image||!fallback)return;
+ const revealFallback=()=>{
+  image.hidden=true;
+  fallback.hidden=false;
+ };
+ image.addEventListener("error",revealFallback,{once:true});
+ if(image.complete&&image.naturalWidth===0)revealFallback();
 })();
 </script>
 </body>

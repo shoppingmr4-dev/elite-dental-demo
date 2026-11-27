@@ -547,8 +547,8 @@ try {
         contactHasDeadEnd:Boolean(document.querySelector("#consultation a[href=\"#top\"]")),
         contentSections:["causes","options","journey","suitability","team","reviews","visit","faq","consultation"].map(id=>Boolean(document.getElementById(id))),
         visitSection:(()=>{
-          const section=document.getElementById("visit"),panel=section?.querySelector(".visit-layout"),mapStage=section?.querySelector(".visit-map-stage"),info=section?.querySelector(".visit-info-panel"),link=section?.querySelector("[data-visit-map-link");
-          return {present:Boolean(section&&panel&&mapStage&&info),heading:section?.querySelector("#visit-title")?.innerText.trim()||"",identity:info?.querySelector("h3")?.innerText.trim()||"",city:info?.innerText.includes("الرياض"),country:info?.innerText.includes("المملكة العربية السعودية"),mapLink:link?.getAttribute("href")||"",mapTarget:link?.getAttribute("target")||"",mapRel:link?.getAttribute("rel")||"",mapIframeCount:section?.querySelectorAll("iframe").length||0,note:section?.querySelector(".visit-note")?.innerText.trim()||"",horizontalOverflow:section?section.scrollWidth>section.clientWidth:false};
+          const section=document.getElementById("visit"),panel=section?.querySelector(".visit-layout"),mapStage=section?.querySelector(".visit-map-stage"),info=section?.querySelector(".visit-info-panel"),link=section?.querySelector("[data-visit-map-link]"),image=section?.querySelector("[data-visit-map-image]");
+          return {present:Boolean(section&&panel&&mapStage&&info),heading:section?.querySelector("#visit-title")?.innerText.trim()||"",identity:info?.querySelector("h3")?.innerText.trim()||"",city:info?.innerText.includes("الرياض"),country:info?.innerText.includes("المملكة العربية السعودية"),mapImageSrc:image?.getAttribute("src")||"",mapImageAlt:image?.getAttribute("alt")||"",mapImageLoading:image?.getAttribute("loading")||"",mapImageWidth:image?.getAttribute("width")||"",mapImageHeight:image?.getAttribute("height")||"",mapLink:link?.getAttribute("href")||"",mapTarget:link?.getAttribute("target")||"",mapRel:link?.getAttribute("rel")||"",mapIframeCount:section?.querySelectorAll("iframe").length||0,note:section?.querySelector(".visit-note")?.innerText.trim()||"",horizontalOverflow:section?section.scrollWidth>section.clientWidth:false};
         })(),
         journeyStepCount:document.querySelectorAll("#journey .journey-step").length,
         journeyListTag:document.querySelector("#journey .journey-grid")?.tagName||"",
@@ -1395,14 +1395,20 @@ try {
     assert.ok(state.contentSections.every(Boolean), `${vp.name}: one or more educational sections are missing`);
     assert.deepEqual(state.pageSectionOrder, ["top","causes","options","journey","suitability","team","reviews","visit","faq","consultation"], `${vp.name}: page sections are missing or not in the approved patient-journey order`);
      assert.equal(state.visitSection.present,true,`${vp.name}: Riyadh location section is missing`);
-     assert.equal(state.visitSection.heading,"نلتقي بك في الرياض.",`${vp.name}: location heading is incorrect`);
+     assert.equal(state.visitSection.heading,"موقع رُواء في الرياض.",`${vp.name}: location heading is incorrect`);
      assert.equal(state.visitSection.city,true,`${vp.name}: location city must be Riyadh`);
      assert.equal(state.visitSection.country,true,`${vp.name}: location country is incorrect`);
-     assert.ok(state.visitSection.mapLink.startsWith("https://www.google.com/maps/@?api=1&map_action=map")&&state.visitSection.mapLink.includes("basemap=satellite"),`${vp.name}: satellite map link missing`);
-      assert.equal(state.visitSection.mapTarget,"_blank",`${vp.name}: map must open in a new tab`);
+     assert.ok(state.visitSection.mapImageSrc.startsWith("https://mapmap.ai/api/static-map?center=46.6753%2C24.7136"),`${vp.name}: static Riyadh map image is missing or incorrectly centred`);
+     assert.match(state.visitSection.mapImageSrc,/style=light.*lang=ar.*pois=0/, `${vp.name}: static map must use the light Arabic-labelled, no-POI presentation`);
+     assert.ok(state.visitSection.mapImageAlt.includes("مدينة الرياض")&&state.visitSection.mapImageAlt.includes("دون تحديد موقع العيادة"),`${vp.name}: map image alternative text must explain the city-level scope`);
+     assert.equal(state.visitSection.mapImageLoading,"lazy",`${vp.name}: location map image must load lazily`);
+     assert.deepEqual([state.visitSection.mapImageWidth,state.visitSection.mapImageHeight],["1200","720"],`${vp.name}: map image dimensions must reserve layout space`);
+     assert.ok(state.visitSection.mapLink.startsWith("https://www.google.com/maps/search/?api=1&query=Riyadh"),`${vp.name}: external action must search for Riyadh, not navigate to a clinic pin`);
+      assert.equal(state.visitSection.mapTarget,"_blank",`${vp.name}: Google Maps city search must open in a new tab`);
       assert.ok(state.visitSection.mapRel.includes("noopener")&&state.visitSection.mapRel.includes("noreferrer"),`${vp.name}: external link safety attributes missing`);
-      assert.equal(state.visitSection.mapIframeCount,0,`${vp.name}: do not fake an embedded map`);
-      assert.ok(state.visitSection.note.includes("نظرة عامة على مدينة الرياض")&&!state.visitSection.horizontalOverflow,`${vp.name}: city-only disclosure missing or overflows`);
+      assert.equal(state.visitSection.mapIframeCount,0,`${vp.name}: the static image must not be presented as an interactive embed`);
+      assert.ok(state.visitSection.note.includes("خريطة عامة وثابتة")&&state.visitSection.note.includes("النموذج التجريبي")&&!state.visitSection.horizontalOverflow,`${vp.name}: static-map, fictional-demo, and city-only disclosures are required without overflow`);
+      assert.equal(await page.locator("#visit .visit-map-image").count(),1,`${vp.name}: exactly one static map image must be present`);
     assert.deepEqual(state.duplicateIds, [], `${vp.name}: duplicate HTML IDs detected`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
     assert.equal(state.journeyStepCount,4,`${vp.name}: treatment journey must contain four clear steps`);
