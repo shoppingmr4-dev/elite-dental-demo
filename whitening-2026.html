@@ -1568,32 +1568,9 @@ body,button,input,select,textarea{font-family:var(--body)}
 .fee-panel-value span{color:var(--muted);font-size:11px;font-weight:700}
 .fee-panel-value strong{color:var(--blue-deep);font-size:15px;line-height:1.7}
 .fee-panel-value small{color:var(--muted);font-size:10px;line-height:1.8}
-.visit-data-layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-.visit-location-card{
- min-width:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
- gap:12px;min-height:330px;padding:clamp(24px,3.8vw,42px);
- overflow:hidden;border-radius:24px;background:var(--ink);color:#fff
-}
-.visit-location-icon{width:52px;height:52px;display:grid;place-items:center;border-radius:16px;background:rgba(169,220,210,.13);color:#A9DCD2}
-.visit-location-icon svg{width:25px;height:25px}
-.visit-location-kicker{color:#A9DCD2;font-size:11px;font-weight:800}
-.visit-location-card h3{margin:0;font-family:var(--display);font-size:clamp(23px,2.7vw,32px);line-height:1.5}
-.visit-location-card p{max-width:430px;margin:0;color:rgba(255,255,255,.8);font-size:13px;line-height:2}
-.visit-setup-status{display:inline-flex;align-items:center;min-height:32px;margin-top:3px;padding:5px 11px;border:1px solid rgba(255,255,255,.25);border-radius:999px;color:#fff;font-size:10px;font-weight:700}
-.visit-data-panel{display:grid;align-content:stretch;gap:12px}
-.visit-data-item{display:grid;grid-template-columns:34px minmax(0,1fr);align-items:start;gap:13px;padding:19px;border:1px solid var(--line);border-radius:16px;background:#F7F9FA}
-.visit-data-icon{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:var(--lime);color:var(--blue-deep);font-size:11px;font-weight:800;direction:ltr}
-.visit-data-item h3{margin:0 0 5px;font-family:var(--display);font-size:15px;line-height:1.6}
-.visit-data-item p{margin:0;color:var(--muted);font-size:12px;line-height:1.9}
-@media(max-width:850px){
- .fee-panel{grid-template-columns:1fr}
- .visit-data-layout{grid-template-columns:1fr}
-}
 @media(max-width:600px){
  .fee-panel{gap:15px;padding:19px;border-radius:15px}
  .fee-panel-value{padding:15px}
- .visit-location-card{min-height:280px;padding:23px;border-radius:18px}
- .visit-data-item{padding:16px;border-radius:14px}
 }
 
 </style>
@@ -1620,7 +1597,7 @@ body,button,input,select,textarea{font-family:var(--body)}
    <a class="nav-secondary" href="#visit">الموقع وطرق الوصول</a>
    <a href="#faq">الأسئلة الشائعة</a>
   </nav>
-  <button class="header-action" type="button" data-contact-action="whatsapp" aria-haspopup="dialog" aria-controls="contact-unavailable-dialog"><svg class="whatsapp-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2.01c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.47 1.34 4.98L2 22l5.2-1.37c1.43.78 3.1 1.19 4.84 1.19h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.91Zm0 18.1h-.01c-1.51 0-2.99-.4-4.28-1.17l-.31-.18-3.09.81.83-3.01-.2-.31a8.26 8.26 0 0 1-1.27-4.39c0-4.57 3.72-8.29 8.3-8.29 2.21 0 4.29.86 5.85 2.43a8.24 8.24 0 0 1 2.43 5.86c0 4.57-3.72 8.29-8.29 8.29Zm4.55-6.21c-.25-.12-1.48-.73-1.71-.81-.23-.08-.4-.12-.57.12-.17.25-.65.81-.8.98-.15.17-.3.19-.55.06-.25-.12-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.38.11-.5.11-.11.25-.3.37-.45.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.57-1.37-.78-1.88-.21-.49-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.53.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.15-1.1.15-1.2-.06-.1-.23-.16-.48-.28Z"/></svg>احجز تقييمك</button>
+  <button class="header-action phone-cta" type="button" data-contact-action="phone" aria-haspopup="dialog" aria-controls="contact-unavailable-dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.19 18a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.08 3.18 2 2 0 0 1 4.08 1h3a2 2 0 0 1 2 1.72l.45 3.12a2 2 0 0 1-.57 1.73L7.7 8.83a16 16 0 0 0 6 6l1.26-1.26a2 2 0 0 1 1.73-.57l3.12.45A2 2 0 0 1 22 16.92Z"/></svg>اتصل بنا</button>
   <button class="menu-toggle" id="menu-toggle" type="button" aria-label="فتح القائمة" aria-expanded="false" aria-controls="main-nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
  </div>
 </header>
@@ -1647,8 +1624,8 @@ body,button,input,select,textarea{font-family:var(--body)}
      </h1>
      <p class="hero-lead">تعرّف إلى خيارات تبييض الأسنان، وما إذا كان الإجراء مناسبًا لحالة أسنانك. يبدأ القرار بتقييم صحة الأسنان واللثة وشرح النتائج المتوقعة والتكلفة والمخاطر قبل الموافقة على الخطة.</p>
      <div class="hero-actions">
-      <button class="primary-cta whatsapp-cta" type="button" data-contact-action="whatsapp" aria-haspopup="dialog" aria-controls="contact-unavailable-dialog"><svg class="whatsapp-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2.01c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.47 1.34 4.98L2 22l5.2-1.37c1.43.78 3.1 1.19 4.84 1.19h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.91Zm0 18.1h-.01c-1.51 0-2.99-.4-4.28-1.17l-.31-.18-3.09.81.83-3.01-.2-.31a8.26 8.26 0 0 1-1.27-4.39c0-4.57 3.72-8.29 8.3-8.29 2.21 0 4.29.86 5.85 2.43a8.24 8.24 0 0 1 2.43 5.86c0 4.57-3.72 8.29-8.29 8.29Zm4.55-6.21c-.25-.12-1.48-.73-1.71-.81-.23-.08-.4-.12-.57.12-.17.25-.65.81-.8.98-.15.17-.3.19-.55.06-.25-.12-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.38.11-.5.11-.11.25-.3.37-.45.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.57-1.37-.78-1.88-.21-.49-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.53.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.21-1.1.15-1.2-.06-.1-.23-.16-.48-.28Z"/></svg>احجز تقييمك عبر واتساب</button>
-       <button class="text-link consultation-cta phone-cta" type="button" data-contact-action="phone" aria-haspopup="dialog" aria-controls="contact-unavailable-dialog">اتصل بالعيادة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.19 18a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.08 3.18 2 2 0 0 1 4.08 1h3a2 2 0 0 1 2 1.72l.45 3.12a2 2 0 0 1-.57 1.73L7.7 8.83a16 16 0 0 0 6 6l1.26-1.26a2 2 0 0 1 1.73-.57l3.12.45A2 2 0 0 1 22 16.92Z"/></svg></button>
+      <button class="primary-cta whatsapp-cta" type="button" data-contact-action="whatsapp" aria-haspopup="dialog" aria-controls="contact-unavailable-dialog"><svg class="whatsapp-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2.01c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.47 1.34 4.98L2 22l5.2-1.37c1.43.78 3.1 1.19 4.84 1.19h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.91Zm0 18.1h-.01c-1.51 0-2.99-.4-4.28-1.17l-.31-.18-3.09.81.83-3.01-.2-.31a8.26 8.26 0 0 1-1.27-4.39c0-4.57 3.72-8.29 8.3-8.29 2.21 0 4.29.86 5.85 2.43a8.24 8.24 0 0 1 2.43 5.86c0 4.57-3.72 8.29-8.29 8.29Zm4.55-6.21c-.25-.12-1.48-.73-1.71-.81-.23-.08-.4-.12-.57.12-.17.25-.65.81-.8.98-.15.17-.3.19-.55.06-.25-.12-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.38.11-.5.11-.11.25-.3.37-.45.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.57-1.37-.78-1.88-.21-.49-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.53.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.21-1.1.15-1.2-.06-.1-.23-.16-.48-.28Z"/></svg>تواصل عبر واتساب</button>
+       <button class="text-link consultation-cta phone-cta" type="button" data-contact-action="phone" aria-haspopup="dialog" aria-controls="contact-unavailable-dialog">اتصل بنا <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.19 18a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.08 3.18 2 2 0 0 1 4.08 1h3a2 2 0 0 1 2 1.72l.45 3.12a2 2 0 0 1-.57 1.73L7.7 8.83a16 16 0 0 0 6 6l1.26-1.26a2 2 0 0 1 1.73-.57l3.12.45A2 2 0 0 1 22 16.92Z"/></svg></button>
      </div>
     </div>
     <figure class="hero-visual">
@@ -1746,21 +1723,25 @@ body,button,input,select,textarea{font-family:var(--body)}
      <span class="section-marker-divider" aria-hidden="true"></span>
      <span class="section-marker-label">خطوات التقييم</span>
     </span>
-    <h2 id="journey-title">ثلاث خطوات واضحة قبل وأثناء التبييض</h2>
-    <p>من التقييم الأولي إلى معرفة التكلفة والخطة، ثم الإجراء والمتابعة عند ملاءمتهما لحالتك.</p>
+    <h2 id="journey-title">كيف تسير رحلة التبييض؟ أربع خطوات من التقييم إلى المتابعة.</h2>
+    <p>لا يبدأ التبييض باختيار منتج أو موعد؛ بل بفحص الأسنان واللثة، وفهم سبب تغيّر اللون، ثم مناقشة الخيارات ومنافعها وحدودها قبل الاتفاق على خطة ومتابعتها.</p>
    </div>
-   <ol class="journey-grid" aria-label="ثلاث خطوات لتقييم خيارات تبييض الأسنان">
+   <ol class="journey-grid" aria-label="الخطوات الأربع لتقييم خيارات تبييض الأسنان">
     <li class="journey-step">
      <span class="journey-step-number" aria-hidden="true">01</span>
-     <div><h3>اطلب موعد تقييم</h3><p>ابدأ بطلب موعد عبر القناة الرسمية للمنشأة، واذكر أنك ترغب في مناقشة تبييض الأسنان. طلب الموعد لا يعني أن الإجراء مناسب قبل الفحص.</p></div>
+     <div><h3>تقييم صحة الأسنان واللثة</h3><p>يستمع الطبيب إلى ملاحظاتك وتاريخك الصحي، ويفحص الأسنان واللثة، ويتحقق من وجود تسوّس أو التهاب أو ألم أو حساسية قد تحتاج إلى تقييم أو علاج قبل التبييض.</p></div>
     </li>
     <li class="journey-step">
      <span class="journey-step-number" aria-hidden="true">02</span>
-     <div><h3>افحص وناقش الخطة والتكلفة</h3><p>يفحص طبيب الأسنان الأسنان واللثة، ويشرح الخيارات والنتائج الواقعية والمخاطر المحتملة والتكلفة الإجمالية وما يشمله السعر قبل موافقتك.</p></div>
+     <div><h3>شرح الخيارات ومناقشتها</h3><p>يشرح الطبيب الخيارات المتاحة، وما يمكن أن تحققه وما لا يمكنها تغييره، إلى جانب الآثار المحتملة والتكلفة والخطة المتوقعة، ثم يناقش معك ما يلائم الحالة.</p></div>
     </li>
     <li class="journey-step">
      <span class="journey-step-number" aria-hidden="true">03</span>
-     <div><h3>ابدأ بعد موافقتك وتابع</h3><p>إذا كان التبييض مناسبًا، يُنفّذ وفق الخطة المتفق عليها، ثم تحصل على تعليمات العناية والمتابعة. لا تكرر الإجراء من تلقاء نفسك.</p></div>
+     <div><h3>تنفيذ الخطة المتفق عليها</h3><p>إذا أظهر الفحص أن التبييض مناسب، يُنفّذ وفق الخطة التي شرحها الطبيب، مع الالتزام بتعليمات الاستخدام واحتياطات حماية الأسنان واللثة.</p></div>
+    </li>
+    <li class="journey-step">
+     <span class="journey-step-number" aria-hidden="true">04</span>
+     <div><h3>تعليمات العناية والمتابعة</h3><p>التزم بتعليمات العناية التي يحددها الطبيب، ولا تكرر التبييض من تلقاء نفسك. تواصل معه إذا كانت الحساسية شديدة أو استمرت أو ظهر تهيّج في اللثة.</p></div>
     </li>
    </ol>
   </div>
@@ -1892,26 +1873,55 @@ body,button,input,select,textarea{font-family:var(--body)}
 <section class="content-section visit-section" id="visit" aria-labelledby="visit-title">
  <div class="wrap">
   <header class="section-head visit-head">
-   <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم الثامن: معلومات الزيارة">
+   <span class="eyebrow section-marker section-marker--paper" role="group" aria-label="القسم الثامن: الموقع وطرق الوصول">
     <span class="section-marker-number" aria-hidden="true">08</span>
     <span class="section-marker-divider" aria-hidden="true"></span>
-    <span class="section-marker-label">معلومات الزيارة</span>
+    <span class="section-marker-label">الموقع وطرق الوصول</span>
    </span>
-   <h2 id="visit-title">اعرف عنوان الفرع وساعات العمل قبل الزيارة</h2>
-   <p>تأكد من الفرع الذي ستزوره، والعنوان الوطني الدقيق، وساعات العمل، ورابط الخريطة المباشر قبل تأكيد الموعد أو التوجه إلى العيادة.</p>
+   <h2 id="visit-title">ما الذي ينبغي التحقق منه قبل زيارة عيادة الأسنان؟</h2>
+   <p>قبل التوجه إلى عيادة الأسنان، تأكد من العنوان الدقيق وساعات العمل عبر قنواتها الرسمية، واحفظ موقع الفرع لتسهيل الوصول.</p>
   </header>
-  <div class="visit-layout visit-data-layout">
-   <section class="visit-location-card" aria-labelledby="visit-location-title">
-    <span class="visit-location-icon" aria-hidden="true">
-     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>
-     </svg>
-    </span>
-    <span class="visit-location-kicker">الموقع الجغرافي</span>
-    <h3 id="visit-location-title">الرياض، المملكة العربية السعودية</h3>
-    <p>يُضاف العنوان الوطني التفصيلي للفرع ورابط الاتجاهات بعد اعتماد بيانات المنشأة، حتى يصل الزائر إلى الموقع الصحيح دون تخمين.</p>
-    <span class="visit-setup-status">العنوان التفصيلي غير مضاف في نموذج العرض</span>
-   </section>
+  <div class="visit-layout">
+   <figure class="visit-map-stage" aria-labelledby="visit-map-caption">
+    <div class="visit-map-image-frame">
+     <img class="visit-map-image" data-visit-map-image src="assets/riyadh-schematic-map.svg" alt="رسم توضيحي مستوحى من شبكة شوارع مدينة الرياض." width="1200" height="720" loading="lazy" decoding="async">
+     <span class="visit-map-city-tag">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg>
+      الرياض · المملكة العربية السعودية
+     </span>
+    </div>
+    <div class="visit-map-fallback" data-visit-map-fallback hidden role="status">
+     <span>الرسم التوضيحي غير متاح حاليًا.</span>
+     <a href="https://www.google.com/maps/search/?api=1&amp;query=Riyadh%2C%20Saudi%20Arabia" target="_blank" rel="noopener noreferrer">استكشف مدينة الرياض على خرائط Google</a>
+    </div>
+    <figcaption class="visit-map-caption" id="visit-map-caption">
+     <span class="visit-map-caption-title">لمحة بصرية عن مدينة الرياض</span>
+     <span class="visit-map-caption-source">الرياض · المملكة العربية السعودية</span>
+    </figcaption>
+   </figure>
+   <aside class="visit-info-panel" aria-label="معلومات الموقع وطرق الوصول في الرياض">
+    <div>
+     <p class="visit-info-kicker">الموقع · الرياض</p>
+     <h3>معلومات تساعدك على التخطيط للزيارة.</h3>
+     <p class="visit-info-copy">تأكد من عنوان العيادة وساعات العمل وتفاصيل الموعد عبر قنواتها الرسمية قبل التوجه.</p>
+    </div>
+    <div>
+     <div class="visit-info-grid">
+      <div class="visit-info-item"><span>المدينة</span><strong>الرياض</strong></div>
+      <div class="visit-info-item"><span>الدولة</span><strong>المملكة العربية السعودية</strong></div>
+      <div class="visit-info-item"><span>قبل الزيارة</span><strong>تحقّق من ساعات العمل</strong></div>
+      <div class="visit-info-item"><span>تفاصيل الموقع</span><strong>راجع العنوان الرسمي</strong></div>
+     </div>
+     <a class="visit-map-action" data-visit-map-link href="https://www.google.com/maps/search/?api=1&amp;query=Riyadh%2C%20Saudi%20Arabia" target="_blank" rel="noopener noreferrer" aria-label="استكشف مدينة الرياض على خرائط Google في نافذة جديدة">
+      <span>استكشف مدينة الرياض على خرائط Google</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/></svg>
+     </a>
+     <p class="visit-note">الرسم المعروض لمحة بصرية عن مدينة الرياض، وليس خريطة فعلية أو مسارًا للملاحة. استخدم العنوان الدقيق المنشور عبر القنوات الرسمية لتحديد وجهتك.</p>
+    </div>
+   </aside>
+  </div>
+ </div>
+</section>
    <div class="visit-data-panel" aria-label="بيانات الزيارة المطلوب اعتمادها">
     <article class="visit-data-item">
      <span class="visit-data-icon" aria-hidden="true">01</span>
@@ -1938,45 +1948,37 @@ body,button,input,select,textarea{font-family:var(--body)}
      <span class="section-marker-divider" aria-hidden="true"></span>
      <span class="section-marker-label">الأسئلة الشائعة</span>
     </span>
-    <h2 id="faq-title">إجابات واضحة قبل طلب موعد التقييم</h2>
-    <p>اطّلع على أهم ما يتعلق بالملاءمة والنتائج والتكلفة، ثم ناقش حالتك مع طبيب الأسنان قبل اتخاذ القرار.</p>
+    <h2 id="faq-title">أسئلة شائعة قبل اتخاذ قرار تبييض الأسنان</h2>
+    <p>إجابات مبسطة عن عدد الجلسات، والنتيجة، والحساسية، والملاءمة. تبقى التوصية المناسبة مرتبطة بفحص الأسنان واللثة لدى طبيب الأسنان.</p>
    </div>
    <div class="faq-list">
     <details class="faq-item">
      <summary>هل أحتاج إلى أكثر من جلسة؟</summary>
-     <div class="faq-answer">لا يوجد عدد ثابت يناسب الجميع. يتحدد ذلك بحسب سبب تغيّر اللون ودرجته والطريقة المستخدمة واستجابة الأسنان. يوضح الطبيب الخطة بعد الفحص.</div>
+     <div class="faq-answer">لا يوجد عدد ثابت من الجلسات يناسب الجميع. يتحدد ذلك بحسب سبب تغيّر اللون ودرجته والطريقة المستخدمة واستجابة الأسنان. يوضح الطبيب الخطة بعد الفحص، ولا يمكن تحديد عدد الجلسات بدقة قبل التقييم.</div>
     </details>
     <details class="faq-item">
      <summary>كم تدوم نتيجة التبييض؟</summary>
-     <div class="faq-answer">تختلف مدة بقاء النتيجة من شخص لآخر، وتتأثر بطريقة التبييض والعادات التي قد تسبب تصبغات جديدة. التبييض ليس دائمًا، ولا يمكن ضمان مدة واحدة للجميع.</div>
+     <div class="faq-answer">تختلف مدة بقاء النتيجة من شخص لآخر، وتتأثر بطريقة التبييض والعادات التي قد تسبب تصبغات جديدة، مثل التدخين وبعض المشروبات. التبييض ليس دائمًا، ولا يمكن ضمان مدة واحدة للجميع؛ ويمكن للطبيب توضيح ما يمكن توقعه في حالتك.</div>
     </details>
     <details class="faq-item">
-     <summary>ما الفرق بين التصبغات السطحية والداخلية؟</summary>
-     <div class="faq-answer">توجد التصبغات السطحية على خارج السن، وقد يساعد التنظيف المهني على تقليل بعضها. أما التصبغات الداخلية فتكون ضمن بنية السن، وقد تستجيب بطريقة مختلفة. يحدد الطبيب طبيعة التصبغ بعد الفحص.</div>
+     <summary>ما الفرق بين التصبغات الخارجية والتصبغات الداخلية؟</summary>
+     <div class="faq-answer>توجد التصبغات السطحية على خارج السن، وقد يساعد التنظيف المهني أو منتجات إزالة التصبغات على تقليل بعضها. أما التصبغات الداخلية فتكون ضمن بنية السن، وقد ترتبط بالعمر أو بعوامل أخرى. يحدد طبيب الأسنان طبيعة التصبغ وما يمكن أن يفيد بعد الفحص.</div>
     </details>
     <details class="faq-item">
      <summary>هل الليمون والفحم وخلطات التبييض المنزلية آمنة؟</summary>
-     <div class="faq-answer">لا تستخدم الليمون أو الخلطات الحمضية على الأسنان؛ فقد تضر بمينا الأسنان. كما أن فرك الأسنان بمواد كاشطة أو الاعتماد على وصفات الفحم لا يضمن تبييضًا آمنًا أو فعّالًا. استشر طبيب الأسنان قبل تجربة أي منتج.</div>
+     <div class="faq-answer">لا تستخدم الليمون أو الخلطات الحمضية على الأسنان؛ فالأحماض قد تضر بمينا الأسنان. كما أن فرك الأسنان بمواد كاشطة أو الاعتماد على وصفات الفحم لا يضمن تبييضًا آمنًا أو فعّالًا. استشر طبيب الأسنان قبل تجربة أي منتج، واختر طريقة تستند إلى إرشاد مهني.</div>
     </details>
     <details class="faq-item">
      <summary>هل يسبب تبييض الأسنان حساسية؟</summary>
-     <div class="faq-answer">قد تظهر حساسية مؤقتة في الأسنان أو تهيّج في اللثة أثناء التبييض أو بعده. أخبر الطبيب عن أي حساسية سابقة، وراجعه إذا كانت الأعراض شديدة أو مستمرة.</div>
+     <div class="faq-answer">قد تظهر حساسية مؤقتة في الأسنان أو تهيّج في اللثة أثناء التبييض أو بعده. تختلف الاستجابة بحسب الشخص والطريقة المستخدمة؛ أخبر طبيب الأسنان عن أي حساسية سابقة، وراجعه إذا كانت الأعراض شديدة أو لا تتحسن.</div>
     </details>
     <details class="faq-item">
      <summary>هل تتغيّر ألوان الحشوات والتيجان مع التبييض؟</summary>
-     <div class="faq-answer">لا يغيّر التبييض لون الحشوات أو التيجان أو القشور الخزفية بالطريقة التي يغيّر بها لون الأسنان الطبيعية. أخبر الطبيب بوجود أي ترميمات قبل مناقشة الخطة.</div>
-    </details>
-    <details class="faq-item">
-     <summary>كيف أعرف التكلفة الإجمالية قبل الموافقة؟</summary>
-     <div class="faq-answer">اطلب السعر المعتمد للخدمة وبيان ما يشمله وأي رسوم إضافية قبل بدء الإجراء. يجب أن تكون التكلفة واضحة ومطابقة لما تعلنه المنشأة؛ ولا توجد قيمة سعرية موثّقة مضافة إلى نموذج RUWA الحالي.</div>
-    </details>
-    <details class="faq-item">
-     <summary>كيف أطلب موعد التقييم؟</summary>
-     <div class="faq-answer">يكون طلب الموعد عبر رقم الهاتف أو حساب واتساب الرسمي للمنشأة، مع انتظار تأكيد الموعد والفرع من فريقها. أزرار التواصل في نموذج RUWA الحالي غير مربوطة بعد، ولذلك لا تُنشئ حجزًا فعليًا.</div>
+     <div class="faq-answer">لا يغيّر التبييض لون الحشوات أو التيجان أو القشور الخزفية بالطريقة التي يغيّر بها لون الأسنان الطبيعية. لذلك قد يظهر فرق في اللون بعد الإجراء؛ أخبر الطبيب بوجود أي ترميمات قبل مناقشة الخطة.</div>
     </details>
     <details class="faq-item">
      <summary>ما الذي أذكره لطبيب الأسنان قبل التبييض؟</summary>
-     <div class="faq-answer">أخبر الطبيب عن أي ألم أو حساسية، وعن الحشوات أو التيجان أو القشور الموجودة، واذكر الأدوية والحالات الصحية ذات الصلة. تساعد هذه المعلومات، إلى جانب الفحص، على تقييم ملاءمة التبييض.</div>
+     <div class="faq-answer">أخبر الطبيب عن أي ألم أو حساسية، وعن الحشوات أو التيجان أو القشور الموجودة، واذكر الأدوية والحالات الصحية ذات الصلة. تساعده هذه المعلومات، إلى جانب فحص الأسنان واللثة، على تقييم ملاءمة التبييض ومناقشة الخيارات والاحتياطات المناسبة.</div>
     </details>
    </div>
    <p class="reference-note">مراجع تثقيفية: <a href="https://www.nhs.uk/tests-and-treatments/teeth-whitening/" target="_blank" rel="noopener noreferrer">إرشادات NHS حول تبييض الأسنان وملاءمته</a>، و<a href="https://www.ada.org/resources/ada-library/oral-health-topics/whitening" target="_blank" rel="noopener noreferrer">معلومات الجمعية الأمريكية لطب الأسنان عن تبييض الأسنان وآثاره</a>، و<a href="https://www.mouthhealthy.org/all-topics-a-z/teeth-whitening" target="_blank" rel="noopener noreferrer">دليل الجمعية الأمريكية لطب الأسنان حول منتجات التبييض</a>. هذه الصفحة توعوية ولا تغني عن التقييم السريري.</p>
@@ -2003,7 +2005,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  </section>
 </main>
 
- <button class="whatsapp-float" id="whatsapp-float" type="button" data-contact-action="whatsapp" aria-label="احجز تقييمك عبر واتساب" aria-haspopup="dialog" aria-controls="contact-unavailable-dialog" aria-hidden="true" tabindex="-1"><svg class="whatsapp-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2.01c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.47 1.34 4.98L2 22l5.2-1.37c1.43.78 3.1 1.19 4.84 1.19h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.91Zm0 18.1h-.01c-1.51 0-2.99-.4-4.28-1.17l-.31-.18-3.09.81.83-3.01-.2-.31a8.26 8.26 0 0 1-1.27-4.39c0-4.57 3.72-8.29 8.3-8.29 2.21 0 4.29.86 5.85 2.43a8.24 8.24 0 0 1 2.43 5.86c0 4.57-3.72 8.29-8.29 8.29Zm4.55-6.21c-.25-.12-1.48-.73-1.71-.81-.23-.08-.4-.12-.57.12-.17.25-.65.81-.8.98-.15.17-.3.19-.55.06-.25-.12-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.38.11-.5.11-.11.25-.3.37-.45.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.57-1.37-.78-1.88-.21-.49-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.53.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.21-1.1.15-1.2-.06-.1-.23-.16-.48-.28Z"/></svg></button>
+ <button class="whatsapp-float" id="whatsapp-float" type="button" data-contact-action="whatsapp" aria-label="التواصل عبر واتساب" aria-haspopup="dialog" aria-controls="contact-unavailable-dialog" aria-hidden="true" tabindex="-1"><svg class="whatsapp-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2.01c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.47 1.34 4.98L2 22l5.2-1.37c1.43.78 3.1 1.19 4.84 1.19h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.91Zm0 18.1h-.01c-1.51 0-2.99-.4-4.28-1.17l-.31-.18-3.09.81.83-3.01-.2-.31a8.26 8.26 0 0 1-1.27-4.39c0-4.57 3.72-8.29 8.3-8.29 2.21 0 4.29.86 5.85 2.43a8.24 8.24 0 0 1 2.43 5.86c0 4.57-3.72 8.29-8.29 8.29Zm4.55-6.21c-.25-.12-1.48-.73-1.71-.81-.23-.08-.4-.12-.57.12-.17.25-.65.81-.8.98-.15.17-.3.19-.55.06-.25-.12-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.38.11-.5.11-.11.25-.3.37-.45.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.57-1.37-.78-1.88-.21-.49-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.53.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.21-1.1.15-1.2-.06-.1-.23-.16-.48-.28Z"/></svg></button>
 
  <dialog class="contact-dialog" id="contact-unavailable-dialog" aria-labelledby="contact-dialog-title" aria-describedby="contact-dialog-description" aria-modal="true">
   <div class="contact-dialog-panel">
