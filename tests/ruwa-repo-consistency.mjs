@@ -45,7 +45,7 @@ assert.ok(visitSection.includes("الرياض") && visitSection.includes("الم
 assert.ok(visitSection.includes("كيف سيظهر موقع العيادة") && visitSection.includes("بيانات الموقع في النسخة النهائية"), "Location section must describe a future verified location without implying an operating clinic");
 assert.ok(visitSection.includes("مدينة الرياض بالكامل"), "The displayed geographic scope must remain the whole city");
 assert.ok(visitSection.includes("عنوان الفرع") && visitSection.includes("غير محدد في هذا النموذج"), "Do not invent an exact branch address");
-assert.ok(visitSection.includes("نموذج RUWA التجريبي") && visitSection.includes("لا يحدد موقعًا فعليًا") && visitSection.includes("ليست خريطة طرق"), "Disclose that the artwork is not a real clinic location");
+assert.ok(visitSection.includes("نموذج RUWA التجريبي") && visitSection.includes("لا يحدد موقعًا فعليًا لعيادة أو فرع") && visitSection.includes("ليس خريطة طرق أو وسيلة للملاحة"), "Disclose that the artwork is not a real clinic location");
 const mapImage = visitSection.match(/<img\b[^>]*data-visit-map-image[^>]*>/)?.[0] || "";
 assert.ok(mapImage.includes('src="assets/riyadh-schematic-map.svg"'), "Use the committed local SVG illustration rather than a third-party map API");
 assert.ok(mapImage.includes('loading="lazy"') && mapImage.includes('width="1200"') && mapImage.includes('height="720"'), "Local illustration must lazy-load and reserve its intrinsic dimensions");
