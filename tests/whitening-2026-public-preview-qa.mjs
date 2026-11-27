@@ -54,9 +54,9 @@ try {
         pageDescription: document.querySelector('meta[name="description"]')?.content || ""
       }));
       assert.equal(socialMeta.type, "website", "Open Graph website type is missing");
-      assert.match(socialMeta.title, /نموذج تجريبي.*Apex Studio/, "Open Graph title must identify the fictional Apex Studio demo");
+      assert.match(socialMeta.title, /نموذج تجريبي من Apex Studio/, "Open Graph title must identify the fictional Apex Studio demo");
       assert.match(socialMeta.description, /لا يمثّل عيادة حقيقية/, "Open Graph description must disclose that this is not a real clinic");
-      assert.match(socialMeta.pageDescription, /نموذج تجريبي.*لا يمثّل عيادة حقيقية/, "Search description must disclose the portfolio-demo status");
+      assert.match(socialMeta.pageDescription, /نموذج تجريبي من Apex Studio، لا يمثّل عيادة حقيقية/, "Search description must disclose the portfolio-demo status");
       assert.ok(socialMeta.imageAlt.includes("مولّدة بالذكاء الاصطناعي"), "Open Graph image alt must disclose the AI illustration");
       assert.equal(socialMeta.twitterCard, "summary_large_image", "Twitter large-image card type is missing");
       assert.equal(socialMeta.twitterImage, socialMeta.image, "Twitter and Open Graph image URLs must match");
@@ -201,16 +201,16 @@ try {
     assert.equal(initial.expectations.gridColumnCount,2,"Desktop expectations must use two balanced columns");
     assert.equal(initial.expectations.horizontalOverflow,false,"Published expectations section must not overflow horizontally");
     assert.deepEqual(initial.markerSystem.markers.map(({number,label,context})=>({number,label,context})),[
-      {number:"01",label:"دليل الابتسامة",context:"hero"},
-      {number:"02",label:"خطوات التقييم",context:"paper"},
-      {number:"03",label:"أسباب تغيّر اللون",context:"paper"},
-      {number:"04",label:"الخيارات المتاحة",context:"canvas"},
-      {number:"05",label:"رحلة التبييض",context:"canvas"},
-      {number:"06",label:"قبل اتخاذ القرار",context:"paper"},
-      {number:"07",label:"توقعات واقعية",context:"dark"},
-      {number:"08",label:"الفريق الطبي",context:"paper"},
-      {number:"09",label:"آراء المرضى",context:"canvas"},
-      {number:"10",label:"إجابات واضحة",context:"canvas"}
+      {number:"01",label:"دليل تبييض الأسنان",context:"hero"},
+      {number:"02",label:"أسباب تغيّر لون الأسنان",context:"paper"},
+      {number:"03",label:"خيارات التبييض",context:"canvas"},
+      {number:"04",label:"خطوات التقييم",context:"canvas"},
+      {number:"05",label:"السلامة والملاءمة",context:"paper"},
+      {number:"06",label:"تصوّر قسم الأطباء",context:"paper"},
+      {number:"07",label:"معايير عرض الآراء",context:"canvas"},
+      {number:"08",label:"نموذج عرض الموقع",context:"paper"},
+      {number:"09",label:"الأسئلة الشائعة",context:"canvas"},
+      {number:"10",label:"الخطوة التالية",context:"dark"}
     ], `${viewport.name}: immutable preview does not render the complete approved seven-marker system`);
     assert.ok(initial.markerSystem.markers.every(marker=>marker.numberWidth>=10&&marker.numberWidth<=22&&
       marker.numberHeight>=12&&marker.numberHeight<=18&&marker.numberBorder==="0px"&&
@@ -220,14 +220,14 @@ try {
       Math.abs(Number.parseFloat(marker.separatorHeight)-marker.numberHeight)<=.2),
       `${viewport.name}: published marker numbers must remain plain text and each separator must match the number height`);
     assert.ok(initial.markerSystem.benefit&&
-      initial.markerSystem.benefit.text==="لابتسامة أكثر إشراقًا"&&
+      initial.markerSystem.benefit.text==="الخيارات والسلامة والنتائج المتوقعة"&&
       initial.markerSystem.benefit.color==="rgb(24, 122, 128)"&&
       initial.markerSystem.benefit.textDecorationLine==="none"&&
       initial.markerSystem.benefit.accentElements===0&&
       initial.markerSystem.benefit.underlineElements===0,
       `${viewport.name}: published Hero benefit line does not use the complete, unadorned RUWA Teal treatment`);
     assert.deepEqual(initial.navLabels,
-      ["خطوات التقييم","أسباب تغيّر اللون","خيارات التبييض","رحلة التبييض","هل يناسبك؟","آراء المرضى","الأسئلة الشائعة"],
+      ["أسباب تغيّر اللون","خيارات التبييض","خطوات التقييم","السلامة والتوقعات","تصوّر قسم الأطباء","معايير عرض الآراء","نموذج عرض الموقع","الأسئلة الشائعة"],
       `${viewport.name}: the seven navigation labels or their order changed`);
     assert.ok(initial.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic")&&link.fontSize===14&&
@@ -237,7 +237,7 @@ try {
     ), `${viewport.name}: visible and collapsed navigation links must retain the approved typography: ${JSON.stringify(initial.navLinkTypography)}`);
     assert.equal(initial.navLinkTypography.filter(link=>link.height>=36).length,3,
       `${viewport.name}: expanded desktop navigation must show exactly its three primary links`);
-    assert.equal(initial.navLinkTypography.filter(link=>link.height===0).length,4,
+    assert.equal(initial.navLinkTypography.filter(link=>link.height===0).length,5,
       `${viewport.name}: the four secondary links must remain collapsed until navigation opens`);
 
     await page.evaluate(() => window.scrollTo({ top: 600, behavior: "instant" }));
@@ -274,7 +274,7 @@ try {
     });
 
     assert.equal(compact.progress, 1, `${viewport.name}: shared header progress did not reach compact state`);
-    assert.ok(compact.navLinkSizes.length===7&&compact.navLinkSizes.every(size=>size===14),
+    assert.ok(compact.navLinkSizes.length===8&&compact.navLinkSizes.every(size=>size===14),
       `${viewport.name}: navigation typography changed unexpectedly in the compact header`);
     assert.ok(compact.panelLeft > initial.panel.left && compact.panelRight > initial.panel.right,
       `${viewport.name}: both public preview frame edges did not move inward`);
