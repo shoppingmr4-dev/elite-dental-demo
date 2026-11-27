@@ -162,7 +162,7 @@ try {
         portraitAlt:heroPortrait?.getAttribute("alt")||"",
         allHeroContentVisible: issues.length === 0,
         issues,
-        horizontalOverflow: scrollWidth - clientWidth
+        horizontalOverflow: scrollWidth - viewportWidth
       };
     });
 
