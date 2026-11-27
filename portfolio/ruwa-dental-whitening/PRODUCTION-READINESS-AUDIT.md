@@ -47,13 +47,13 @@ The team section contains three equal demo-only profile cards with distinct AI-g
 
 ## 4. Confirmed current content and interaction behavior
 
-The Hero supporting copy, treatment-options introduction, suitability explanation, realistic-expectations introduction, team preview, review-transparency heading, location preview, final informational CTA, and footer copy were refined for one consistent patient-centered message. Two FAQs were added to address sensitivity and whitening limits for restorations.
+The Hero, causes, treatment options, assessment journey, suitability, realistic expectations, team, review-transparency, location, FAQ, final informational CTA, metadata, and footer copy were refined into one consistent patient-centered message. One FAQ was added to help visitors identify the health history, symptoms, and restorations to disclose before evaluation.
 
 - Page language is ar-SA and direction is RTL.
 - The page has a document title, meta description, Open Graph title/description/image, and favicon. The metadata now emphasizes teeth-whitening options and suitability while retaining the fictional-demo disclosure.
 - The current Hero image is assets/ruwa-hero-90-768.webp.
 - The current Hero image alt text and visible caption explicitly identify it as AI-generated and not a real dentist.
-- FAQ count: **6 native details entries**.
+- FAQ count: **7 native details entries**.
 - Contact controls: **three restored top-of-page contact buttons** (Hero WhatsApp, Hero «اتصل بنا», header «اتصل بنا») plus one floating WhatsApp demo control. The two final CTAs remain internal links.
 - WHATSAPP_NUMBER and PHONE_NUMBER remain intentionally empty.
 - The floating WhatsApp preview opens the local contact-unavailable dialog, which explicitly states that no real WhatsApp, phone, or booking channel is connected.
@@ -159,4 +159,4 @@ The results above are historical and predate the section consolidation; they do 
 
 The RUWA portfolio page contains ten main sections in DOM order, including the consolidated treatment journey and safety/expectations section. The protected team portraits remain unchanged, but the disclosure now appears before the three illustrative profile cards. The patient-review presentation has been changed to three transparency-standard cards; hypothetical review-style phrases and decorative stars have been removed. No authentic patient review, rating, or review count has been supplied. The Hero, header, and final CTAs use truthful internal links; only one floating WhatsApp demo preview remains, with a disclosure dialog. Adding fabricated clinicians, patient reviews, ratings, clinic facts, or prices would be a regression.
 
-The RUWA implementation remains staged on the feature branch. The Hero and header CTAs navigate internally to educational sections; the final CTAs link to FAQ and assessment content. One floating WhatsApp demo control opens a disclosure dialog only. Do not merge the PR, publish a production site, or activate a contact channel without explicit approval and verified clinic information.
+The RUWA implementation remains staged on the feature branch. The Hero WhatsApp and phone buttons, header phone button, and floating WhatsApp preview open the disclosed contact dialog because no real number or contact channel is configured; the final CTAs link internally to FAQ and assessment content. Do not merge the PR, publish a production site, or activate a contact channel without explicit approval and verified clinic information.
