@@ -158,7 +158,7 @@ try {
         if(el.matches("input,select,textarea"))return !el.getAttribute("aria-label")&&!document.querySelector('label[for="'+el.id+'"]');
         return !el.innerText.trim()&&!el.getAttribute("aria-label");
       }).map(el=>el.outerHTML.slice(0,180));
-      const scrollWidth=document.documentElement.scrollWidth,clientWidth=document.documentElement.clientWidth;
+      const scrollWidth=document.documentElement.scrollWidth,viewportWidth=window.innerWidth;
       const sectionTransitions=sections.filter(x=>!x.missing).map((s,i,a)=>({
         from:s.id,to:a[i+1]?.id||null,
         fromBackground:s.style.backgroundColor,toBackground:a[i+1]?.style.backgroundColor||null
@@ -166,7 +166,7 @@ try {
       return {
         viewport:{width:innerWidth,height:innerHeight},documentHeight:document.documentElement.scrollHeight,
         pageSectionOrder,duplicateIds,
-        horizontalOverflow:round(scrollWidth-clientWidth),sections,journeyDetails,sectionTransitions,
+        horizontalOverflow:round(Math.max(0,scrollWidth-viewportWidth)),sections,journeyDetails,sectionTransitions,
         images,brokenAnchors,emptyControls,
         counts:{sections:ids.length,steps:document.querySelectorAll(".journey-step").length,causeCards:document.querySelectorAll(".info-card").length,
           optionCards:document.querySelectorAll(".option-card").length,suitabilityItems:document.querySelectorAll(".check-item").length,

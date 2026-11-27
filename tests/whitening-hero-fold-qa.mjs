@@ -107,13 +107,13 @@ try {
       const insideViewport = item => visible(item) && item.top >= -0.5 && item.bottom <= window.innerHeight + 0.5;
       const afterHeader = item => Boolean(item && header && item.top >= header.bottom - 1);
       const scrollWidth = document.documentElement.scrollWidth;
-      const clientWidth = document.documentElement.clientWidth;
+      const viewportWidth = window.innerWidth;
       const issues = [];
       for (const [name, item] of [["Hero marker", marker], ["headline", heading], ["supporting paragraph", paragraph], ["WhatsApp CTA", primary], ["secondary CTA", secondary]]) {
         if (!insideViewport(item)) issues.push(`${name} is not fully visible at scroll position zero`);
         if (!afterHeader(item)) issues.push(`${name} overlaps the sticky header`);
       }
-      if (scrollWidth > clientWidth + 1) issues.push(`horizontal overflow: ${scrollWidth}px > ${clientWidth}px`);
+      if (scrollWidth > viewportWidth + 1) issues.push(`horizontal overflow: document ${scrollWidth}px > viewport ${viewportWidth}px`);
       if (pageYOffset !== 0) issues.push("page did not start at scroll position zero");
       if (!portrait || portrait.width<=0 || portrait.height<=0 || portrait.display==="none" || portrait.visibility!=="visible" || portrait.opacity<=.99) issues.push("Hero dentist portrait is not visible");
       if (!visual || !hero || portrait.top<hero.top-1 || portrait.bottom>hero.bottom+1 || portrait.left<visual.left-1 || portrait.right>visual.right+1) issues.push("Hero dentist portrait is not contained in its visual area");

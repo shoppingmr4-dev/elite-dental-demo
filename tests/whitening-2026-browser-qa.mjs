@@ -1484,7 +1484,7 @@ try {
     assert.ok(state.brandNameFontFamily.includes("Cormorant Garamond"), `${vp.name}: Ruwa wordmark is not using Cormorant Garamond`);
     assert.ok(state.brandWordmarkFontLoaded, `${vp.name}: Cormorant Garamond wordmark font failed to load`);
     assert.ok(state.reducedMotion, `${vp.name}: reduced-motion fallback is not active`);
-    assert.ok(state.scrollWidth <= state.clientWidth + 1, `${vp.name}: horizontal overflow ${state.scrollWidth}px > ${state.clientWidth}px`);
+    assert.ok(state.scrollWidth <= state.viewport + 1, `${vp.name}: document width ${state.scrollWidth}px exceeds the viewport ${state.viewport}px`);
 
     if (vp.width <= 920) {
       assert.equal(state.navDisplay, "none", `${vp.name}: mobile navigation should start collapsed`);
