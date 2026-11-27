@@ -45,12 +45,12 @@ assert.ok(visitSection.includes("الرياض") && visitSection.includes("الم
 assert.ok(visitSection.includes("اعرف موقع الفرع قبل زيارتك") && visitSection.includes("يساعدك الاطلاع على عنوان الفرع وساعات العمل"), "Location section must explain how visitors plan access without inventing an address");
 assert.ok(visitSection.includes("نطاق الوصول") && visitSection.includes("مدينة الرياض"), "The displayed geographic scope must remain the whole city");
 assert.ok(visitSection.includes("قبل الزيارة") && visitSection.includes("تحقق من عنوان الفرع"), "Do not invent an exact branch address");
-assert.ok(visitSection.includes("موقع الفرع وبيانات الوصول") && visitSection.includes("استخدم خريطة الوصول المعتمدة"), "Location copy must guide visitors to verify access details");
+assert.ok(visitSection.includes("تعرّف إلى المدينة، ثم تحقق من عنوان الفرع الدقيق وساعات العمل") && visitSection.includes("اعتمد على العنوان الدقيق عند التخطيط للزيارة"), "Location copy must guide visitors to verify access details");
 const mapImage = visitSection.match(/<img\b[^>]*data-visit-map-image[^>]*>/)?.[0] || "";
 assert.ok(mapImage.includes('src="assets/riyadh-schematic-map.svg"'), "Use the committed local SVG illustration rather than a third-party map API");
 assert.ok(mapImage.includes('loading="lazy"') && mapImage.includes('width="1200"') && mapImage.includes('height="720"'), "Local illustration must lazy-load and reserve its intrinsic dimensions");
 assert.ok(mapImage.includes('alt="') && mapImage.includes("لا يمثل خريطة فعلية"), "Illustration alternative text must state that it is not a real map");
-assert.ok(visitSection.includes("موقع الفرع وبيانات الوصول") && !visitSection.includes("MapMap") && !visitSection.includes("OpenStreetMap"), "Local illustration must not claim third-party map data attribution");
+assert.ok(visitSection.includes("الرسم التجريدي يعرّفك على المدينة") && !visitSection.includes("MapMap") && !visitSection.includes("OpenStreetMap"), "Local illustration must not claim third-party map data attribution");
 const cityMapLink = visitSection.match(/<a class="visit-map-action"[^>]*href="([^"]+)"/)?.[1] || "";
 assert.ok(cityMapLink.startsWith("https://www.google.com/maps/search/?api=1&amp;query=Riyadh"), "Open a Google Maps city search, not exact clinic directions");
 assert.match(visitSection, /target="_blank" rel="noopener noreferrer"/, "Google Maps must open safely in a new tab");
