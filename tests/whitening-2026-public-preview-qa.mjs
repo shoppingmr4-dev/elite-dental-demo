@@ -54,10 +54,19 @@ try {
         pageDescription: document.querySelector('meta[name="description"]')?.content || ""
       }));
       assert.equal(socialMeta.type, "website", "Open Graph website type is missing");
-      assert.match(socialMeta.title, /نموذج تجريبي من Apex Studio/, "Open Graph title must identify the fictional Apex Studio demo");
-      assert.match(socialMeta.description, /لا يمثّل عيادة حقيقية/, "Open Graph description must disclose that this is not a real clinic");
-      assert.match(socialMeta.pageDescription, /نموذج تجريبي من Apex Studio، لا يمثّل عيادة حقيقية/, "Search description must disclose the portfolio-demo status");
+      assert.match(socialMeta.title, /تبييض الأسنان بخطة تناسب حالتك/, "Open Graph title must lead with the whitening service and patient-specific plan");
+      assert.match(socialMeta.description, /تعرّف إلى أسباب تغيّر لون الأسنان وخيارات التبييض/, "Open Graph description must explain the whitening subject and its useful content");
+      assert.match(socialMeta.pageDescription, /تبييض الأسنان وخياراته، وأسباب تغيّر اللون/, "Search description must explain the whitening content without a demo label");
       assert.ok(socialMeta.imageAlt.includes("مولّدة بالذكاء الاصطناعي"), "Open Graph image alt must disclose the AI illustration");
+      const footerDisclosure=await page.locator(".footer-notes").innerText();
+      assert.ok(footerDisclosure.includes("رُواء مشروع تجريبي ضمن معرض أعمال أبيكس ستوديو") && footerDisclosure.includes("لا يمثّل عيادة قائمة"), "Fictional-project disclosure must appear in the footer");
+      const preFooterCopy=await page.locator("body").evaluate(el=>{
+        const footer=el.querySelector(".footer");
+        const clone=el.cloneNode(true);
+        clone.querySelector(".footer")?.remove();
+        return clone.innerText;
+      });
+      assert.doesNotMatch(preFooterCopy,/هذا النموذج|هذه صفحة تجريبية|نموذج توضيحي|نموذج تجريبي|النموذج التجريبي/, "Do not identify the site as a demo outside the footer");
       assert.equal(socialMeta.twitterCard, "summary_large_image", "Twitter large-image card type is missing");
       assert.equal(socialMeta.twitterImage, socialMeta.image, "Twitter and Open Graph image URLs must match");
       const imageResponse = await context.request.get(socialMeta.image, { timeout: 45000 });
@@ -66,7 +75,7 @@ try {
       const imageBytes = await imageResponse.body();
       assert.ok(imageBytes.length > 50000, `Open Graph image response is unexpectedly small: ${imageBytes.length} bytes`);
       await imageResponse.dispose();
-      console.log("[PASS] public social metadata: truthful demo disclosure and immutable Open Graph/Twitter image resolve.");
+      console.log("[PASS] public social metadata: whitening-focused copy, footer-only project disclosure, and immutable Open Graph/Twitter image resolve.");
     }
     await page.waitForSelector("#hero-title", { state: "visible", timeout: 30000 });
     await page.evaluate(async () => {
@@ -201,14 +210,14 @@ try {
     assert.equal(initial.expectations.gridColumnCount,2,"Desktop expectations must use two balanced columns");
     assert.equal(initial.expectations.horizontalOverflow,false,"Published expectations section must not overflow horizontally");
     assert.deepEqual(initial.markerSystem.markers.map(({number,label,context})=>({number,label,context})),[
-      {number:"01",label:"دليل تبييض الأسنان",context:"hero"},
+      {number:"01",label:"العناية بابتسامتك",context:"hero"},
       {number:"02",label:"أسباب تغيّر لون الأسنان",context:"paper"},
       {number:"03",label:"خيارات التبييض",context:"canvas"},
       {number:"04",label:"خطوات التقييم",context:"canvas"},
       {number:"05",label:"السلامة والملاءمة",context:"paper"},
-      {number:"06",label:"تصوّر قسم الأطباء",context:"paper"},
-      {number:"07",label:"معايير عرض الآراء",context:"canvas"},
-      {number:"08",label:"نموذج عرض الموقع",context:"paper"},
+      {number:"06",label:"الفريق الطبي",context:"paper"},
+      {number:"07",label:"تجربة المريض",context:"canvas"},
+      {number:"08",label:"الموقع وطرق الوصول",context:"paper"},
       {number:"09",label:"الأسئلة الشائعة",context:"canvas"},
       {number:"10",label:"الخطوة التالية",context:"dark"}
     ], `${viewport.name}: immutable preview does not render the complete approved ten-marker system`);
@@ -220,14 +229,14 @@ try {
       Math.abs(Number.parseFloat(marker.separatorHeight)-marker.numberHeight)<=.2),
       `${viewport.name}: published marker numbers must remain plain text and each separator must match the number height`);
     assert.ok(initial.markerSystem.benefit&&
-      initial.markerSystem.benefit.text==="بخيار يناسب احتياجك"&&
+      initial.markerSystem.benefit.text==="بخطة تناسب حالتك"&&
       initial.markerSystem.benefit.color==="rgb(24, 122, 128)"&&
       initial.markerSystem.benefit.textDecorationLine==="none"&&
       initial.markerSystem.benefit.accentElements===0&&
       initial.markerSystem.benefit.underlineElements===0,
       `${viewport.name}: published Hero benefit line does not use the complete, unadorned RUWA Teal treatment`);
     assert.deepEqual(initial.navLabels,
-      ["أسباب تغيّر اللون","خيارات التبييض","خطوات التقييم","السلامة والتوقعات","تصوّر قسم الأطباء","معايير عرض الآراء","نموذج عرض الموقع","الأسئلة الشائعة"],
+      ["أسباب تغيّر اللون","خيارات التبييض","خطوات التقييم","السلامة والتوقعات","الفريق الطبي","تجربة المريض","الموقع وطرق الوصول","الأسئلة الشائعة"],
       `${viewport.name}: the eight navigation labels or their order changed`);
     assert.ok(initial.navLinkTypography.every(link=>
       link.fontFamily.includes("IBM Plex Sans Arabic")&&link.fontSize===14&&
