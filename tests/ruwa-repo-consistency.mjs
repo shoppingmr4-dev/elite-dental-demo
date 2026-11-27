@@ -86,7 +86,7 @@ assert.ok(expectationsSection.includes("مواد الحشوات والتيجان
 assert.ok(expectationsSection.includes("حافظ على تنظيف الأسنان وفق إرشادات طبيبك"), "Individualized aftercare guidance is missing");
 assert.ok(expectationsSection.includes("قلّل العوامل التي تسبب التصبغات قدر الإمكان"), "Normal oral hygiene guidance is missing");
 assert.ok(expectationsSection.includes("قد يتغير اللون بمرور الوقت"), "Changing whitening results must be disclosed");
-assert.ok(expectationsSection.includes("قبل تكرار التبييض"), "Advice before repeating whitening is missing");
+assert.ok(expectationsSection.includes("قبل إعادة التبييض"), "Advice before repeating whitening is missing");
 assert.ok(expectationsSection.includes("الحمل أو الرضاعة") && expectationsSection.includes("لا توصي هيئة الخدمات الصحية البريطانية (NHS) بتبييض الأسنان خلال الحمل أو الرضاعة"), "Pregnancy and breastfeeding precautions must remain present");
 assert.doesNotMatch(expectationsSection, /\b\d+\s*(?:دقائق?|ساعات?|أيام?|أسابيع?|أشهر?|سنوات?)\b/, "Do not invent numerical aftercare waiting periods or result longevity");
 assert.match(html, /\.expect-grid\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\);gap:14px\}/, "Expectations grid must use two columns on desktop/tablet");
