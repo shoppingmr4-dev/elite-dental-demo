@@ -67,26 +67,26 @@ The approved file, its HTML element, figure placement, dimensions, focal positio
 
 Header and announcement strip:
 - RUWA wordmark and Arabic descriptor.
-- Eight navigation links to the visitor journey, including the treatment journey, patient-reviews transparency note, and city-level location section.
-- One phone-labelled header action: «اتصل بنا».
+- Eight navigation links to the visitor journey, including the assessment journey, review-transparency standards, and demo location section.
+- Header CTA: «استكشف الخيارات» — a real internal link to #options, not a phone or messaging action.
 - Mobile menu with aria-expanded state and keyboard behavior.
 
 Content sections in actual DOM order:
 
 | DOM order | ID | Section | Current role |
 |---:|---|---|---|
-| 01 | top | Hero | Explain the whitening subject and give the first contact action |
+| 01 | top | Hero | Explain the whitening subject and guide the visitor to the options section with an internal CTA |
 | 02 | causes | Causes of discoloration | Explain surface staining and deeper colour changes |
 | 03 | options | Whitening options | Explain general options without claiming they are RUWA clinic services |
 | 04 | journey | Assessment and treatment journey | Combine oral-health assessment, option discussion, agreed procedure, and aftercare into four ordered steps |
 | 05 | suitability | Suitability, safety, and realistic expectations | Combine health/timing factors with result variation, potential effects, restoration limits, and aftercare |
-| 06 | team | Dentist/team | Preserve the three distinct AI-generated illustrative male portrait cards exactly as approved; no real clinician identity or credentials are claimed |
-| 07 | reviews | Patient reviews | Show three pastel review-style cards with hypothetical patient-priority phrases, decorative yellow stars, and prominent disclosure that no real patients, testimonials, or ratings are represented |
-| 08 | visit | City context | Display a committed local SVG illustration inspired by Riyadh; disclose that it is schematic artwork, not a road map or clinic location; retain a Google Maps city-search action only |
+| 06 | team | Team-section preview | Three illustrative portraits with a visible AI-generated disclosure before the cards and placeholders for verified professional details |
+| 07 | reviews | Review transparency | Three informational cards about source verification, explicit permission, and faithful presentation; no hypothetical patient quotations, testimonials, star icons, or scores |
+| 08 | visit | Location-section preview | A committed abstract Riyadh SVG, explicitly not a real map or clinic location; keep only the city-wide Google Maps search |
 | 09 | faq | Frequently asked questions | Answer four focused questions about session count, result longevity, surface versus intrinsic discoloration, and unsafe DIY whitening trends |
-| 10 | consultation | Final contact | Offer WhatsApp and phone actions with an explicit inactive state |
+| 10 | consultation | Next step | Two working internal links to the FAQ and assessment sections; no booking, phone, or live WhatsApp claim |
 
-The assessment content now lives inside the first two steps of the four-step treatment journey. Suitability and safety remain together with a nested realistic-expectations panel, preserving its four existing patient-information cards. The patient-reviews section remains after the dentist/team section and before the city-level Riyadh location panel. It now uses three pastel cards with hypothetical first-person patient-priority phrases, clearly labelled as illustrative rather than authentic testimonials; yellow stars are decorative only and do not represent scores. The location panel uses a local, lightweight abstract SVG illustration inspired by a city street network. It identifies Riyadh, Saudi Arabia but is explicitly labelled as schematic artwork, not a real road map or navigation aid; it does not identify a neighborhood, clinic, branch, street address, or map pin. A separate Google Maps link searches for Riyadh city-wide only. It states that no verified patient reviews are available in this fictional demo and lists three publication principles (verifiable source, explicit permission, and faithful presentation). It includes no patient names, authentic patient quotes, actual star ratings, review counts, or Review/AggregateRating structured data. The footer preserves the fictional portfolio disclosure and AI-image disclosure. The team section remains unchanged and contains three equal demonstration cards using distinct portraits extracted from an existing AI-generated RUWA concept image; it contains no real doctor identity or professional credentials.
+The assessment content now lives inside the first two steps of the four-step treatment journey. Suitability and safety remain together with a nested realistic-expectations panel, preserving its four existing patient-information cards. The patient-reviews section has been converted into a review-transparency section. It presents three informational cards covering verifiable source, explicit permission, and faithful presentation. Hypothetical patient quotations and decorative yellow stars have been removed entirely; no testimonial, score, review count, or review structured data is represented. The location panel uses a local abstract SVG inspired by Riyadh but explicitly not a real map or clinic location. A separate Google Maps link searches for Riyadh city-wide only. The footer preserves the fictional portfolio disclosure and AI-image disclosure. The team section remains unchanged and contains three equal demonstration cards using distinct portraits extracted from an existing AI-generated RUWA concept image; it contains no real doctor identity or professional credentials.
 
 ## 6. FAQ source of truth
 
@@ -96,27 +96,19 @@ Do not add duplicate questions simply to increase page length. Keep FAQ answers 
 
 ## 7. Contact behavior — exact current state
 
-There are **3 WhatsApp actions and 3 phone actions**:
+There is **one floating WhatsApp demo control**. The Hero CTA, header CTA, and final-section CTAs are internal links to relevant sections:
 
-- Header: phone action labelled «اتصل بنا».
-- Hero: primary WhatsApp action.
-- Floating control: circular WhatsApp button, shown only while the Hero WhatsApp action is outside the viewport.
-- Hero secondary action: phone.
-- Final contact area: WhatsApp and phone.
+- Header: «استكشف الخيارات» links to #options.
+- Hero primary: «استكشف خيارات التبييض» links to #options.
+- Hero secondary: «تعرّف على خطوات التقييم» links to #journey.
+- Final section: links to #faq and #journey.
+- Floating control: one circular WhatsApp preview appears only while the Hero primary link is outside the viewport.
 
-The central JavaScript configuration contains empty values for WHATSAPP_NUMBER and PHONE_NUMBER. With those values empty:
+The central JavaScript configuration keeps WHATSAPP_NUMBER and PHONE_NUMBER empty. The floating preview opens the accessible contact dialog, which explicitly states that this is a demo and no real WhatsApp, phone, or booking channel is connected. The control leaves the keyboard tab order while hidden. The dialog supports close controls, Escape, backdrop click, focus placement/restoration, and temporary background scroll lock. No patient data is collected or transmitted.
 
-- No WhatsApp chat opens.
-- No tel: call begins.
-- No external number or live destination is fabricated.
-- Each control uses the shared central contact handler and opens the native contact-unavailable dialog while its number is empty. The floating button is controlled by IntersectionObserver and leaves the keyboard tab order while hidden.
-- The dialog identifies which channel is not activated.
-- The dialog supports its close controls, Escape, backdrop click, focus placement, focus restoration, and temporary background scroll lock.
-- The page does not collect or transmit visitor data.
+The header, Hero, and final-section links do not pretend to call, message, or book. Every aria-controls reference must still resolve to an existing ID; the floating control references contact-unavailable-dialog and the mobile menu references main-nav.
 
-Every control that uses aria-controls must reference an element ID that exists. The contact controls must reference contact-unavailable-dialog; the mobile menu toggle must reference main-nav.
-
-There is no HTML form, lead endpoint, appointment inventory, booking confirmation, message-copy feature, or actual clinic contact channel in this version. Do not call a dialog opening a booking or conversion.
+There is no HTML form, lead endpoint, appointment inventory, booking confirmation, message-copy feature, or real clinic contact channel in this version. Do not describe a dialog or internal navigation as a booking or conversion.
 
 ## 8. Clinical and trust-content boundaries
 
