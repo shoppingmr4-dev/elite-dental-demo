@@ -54,7 +54,7 @@ assert.ok(visitSection.includes("لمحة بصرية عن مدينة الريا�
 const cityMapLink = visitSection.match(/<a class="visit-map-action"[^>]*href="([^"]+)"/)?.[1] || "";
 assert.ok(cityMapLink.startsWith("https://www.google.com/maps/search/?api=1&amp;query=Riyadh"), "Open a Google Maps city search, not exact clinic directions");
 assert.match(visitSection, /target="_blank" rel="noopener noreferrer"/, "Google Maps must open safely in a new tab");
-assert.ok(visitSection.includes("تحقّق من عنوان العيادة قبل الزيارة") && visitSection.includes("استكشف مدينة الرياض على خرائط Google"), "Location section must focus on planning a visit and finding the city");
+assert.ok(visitSection.includes("ما الذي ينبغي التحقق منه قبل زيارة عيادة الأسنان؟") && visitSection.includes("استكشف مدينة الرياض على خرائط Google"), "Location section must focus on planning a visit and finding the city");
 assert.ok(!visitSection.includes("<iframe") && !visitSection.includes("دبوس"), "Do not present the static image as an interactive map or invent a clinic pin");
 
 const journeyStart = html.indexOf('id="journey"');
