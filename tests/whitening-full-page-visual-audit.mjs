@@ -218,7 +218,7 @@ try {
     const journeyDetails=metrics.journeyDetails;
     if(!journeyDetails||journeyDetails.steps.length!==4)problems.push("Merged journey section must contain exactly four ordered steps");
     if(journeyDetails){
-      const expectedTitles=["فحص الأسنان واللثة","مناقشة الخيارات المناسبة","تنفيذ الخطة","العناية والمتابعة"];
+      const expectedTitles=["تقييم صحة الأسنان واللثة","شرح الخيارات ومناقشتها","تنفيذ الخطة المتفق عليها","تعليمات العناية والمتابعة"];
       if(JSON.stringify(journeyDetails.steps.map(step=>step.title.text))!==JSON.stringify(expectedTitles))
         problems.push("Merged journey step titles differ from the approved patient journey");
       if(journeyDetails.steps.map(step=>step.number.text).join("|")!=="01|02|03|04")
@@ -227,12 +227,12 @@ try {
         problems.push("Merged journey contains an empty step title or description");
       if(journeyDetails.steps.some(step=>!step.numberHidden))
         problems.push("Visible journey numbers must be hidden from assistive technology to avoid duplicate announcements");
-      if(journeyDetails.listTag!=="OL"||journeyDetails.accessibleLabel!=="خطوات تقييم وتنفيذ خطة تبييض الأسنان")
+      if(journeyDetails.listTag!=="OL"||journeyDetails.accessibleLabel!=="الخطوات الأربع لتقييم خيارات تبييض الأسنان")
         problems.push("Merged journey must expose its steps as a labelled ordered list");
-      if(journeyDetails.heading?.text!=="من التقييم إلى العناية اللاحقة.")
+      if(journeyDetails.heading?.text!=="من الفحص الأولي إلى المتابعة.")
         problems.push("Merged journey heading differs from the approved patient-centered copy");
-      if(journeyDetails.markerLabel!=="التقييم ورحلة التبييض"||
-        journeyDetails.markerAriaLabel!=="القسم الخامس: التقييم ورحلة التبييض")
+      if(journeyDetails.markerLabel!=="خطوات التقييم"||
+        journeyDetails.markerAriaLabel!=="القسم الرابع: خطوات التقييم")
         problems.push("Merged journey marker or accessible label is incorrect");
       if(journeyDetails.steps.some(step=>step.description.style.contrastRatio<4.5||step.title.style.contrastRatio<4.5))
         problems.push("Merged journey text falls below WCAG AA normal-text contrast");
@@ -241,10 +241,10 @@ try {
         problems.push("Merged journey grid does not match its responsive four/two/one-column layout");
     }
     if(JSON.stringify(metrics.pageSectionOrder)!==JSON.stringify(["top","causes","options","journey","suitability","team","reviews","visit","faq","consultation"]))problems.push("page section order differs from the intended patient journey");
-    if(metrics.counts.expectationsCards!==4)problems.push("Section 07 must contain exactly four realistic-expectations cards");
+    if(metrics.counts.expectationsCards!==4)problems.push("The combined suitability and expectations section must contain exactly four expectations cards");
     if(metrics.counts.expectationsCardColumns!==(vp.width<=600?1:2))problems.push("Section 07 must use two grid columns on desktop/tablet and one on mobile");
     if(metrics.counts.teamCards!==3||metrics.counts.teamPortraits!==3)problems.push("team section must render exactly three portrait cards");
-    if(metrics.counts.reviewCriteria!==3||metrics.counts.reviewCards!==3||metrics.counts.reviewStars!==15||!metrics.counts.reviewDisclosure.includes("لا تمثل تقييمًا أو متوسطًا حقيقيًا")||!metrics.counts.reviewStatus.includes("لا تتوفر تقييمات أو شهادات مرضى موثّقة"))problems.push("patient reviews preview, demo cards, or transparency copy is incomplete");
+    if(metrics.counts.reviewCriteria!==3||metrics.counts.reviewCards!==3||metrics.counts.reviewStars!==0||!metrics.counts.reviewDisclosure.includes("لا يعرض تقييمات أو متوسطات نجوم حقيقية")||!metrics.counts.reviewStatus.includes("هذا النموذج لا يتضمن تقييمات أو شهادات مرضى موثّقة"))problems.push("patient reviews preview, demo cards, or transparency copy is incomplete");
     if(metrics.counts.faqItems!==4)problems.push("FAQ section must contain four focused native disclosure entries");
     if(metrics.duplicateIds.length)problems.push("duplicate HTML IDs");
     if(metrics.brokenAnchors.length)problems.push("broken in-page anchors");
