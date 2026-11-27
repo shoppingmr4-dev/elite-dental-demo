@@ -22,11 +22,11 @@ RUWA is a fictional portfolio concept created by Apex Studio. It is not a commis
 
 The page contains **10 content sections** and **7 FAQ entries**. Assessment is now integrated into the four-step treatment journey, while suitability, safety, and realistic expectations are presented together in one section.
 
-The separate demo sentence beneath the Hero contact buttons has been removed as requested. The footer and page metadata continue to identify RUWA as a fictional Apex Studio portfolio demonstration; the Hero portrait caption independently identifies the dentist image as AI-generated.
+The separate demo sentence beneath the Hero contact buttons has been removed as requested. The footer is the single visible location that identifies RUWA as an Apex Studio portfolio project rather than an operating clinic. Page metadata describes the whitening information without presenting a local medical service claim; the Hero portrait caption independently identifies the dentist image as AI-generated.
 
 The Hero portrait at `assets/ruwa-hero-90-768.webp` is the approved AI-generated illustration. Its Arabic alt text and visible disclosure state that it is not a real dentist. Its approved Git blob is protected by a CI SHA guard. Do not replace, edit, crop, recolor, reposition, or present it as a real clinician.
 
-The team contains three distinct AI-generated male dentist illustrations with a visible disclosure. They do not represent real doctors or clinic employees. No doctor identities, degrees, licences, experience, verified reviews, ratings, treatment outcomes, clinic addresses, opening hours, fees, phone numbers, or operational booking services are supplied.
+The team contains three distinct AI-generated male dentist illustrations. Their AI-generated status is disclosed in the footer and accessible image descriptions; they do not represent real doctors or clinic employees. No doctor identities, degrees, licences, experience, verified reviews, ratings, treatment outcomes, clinic addresses, opening hours, fees, phone numbers, or operational booking services are supplied.
 
 The Hero restores two visible contact buttons: «تواصل عبر واتساب» and «اتصل بنا». The header also restores «اتصل بنا» with a phone icon. All three open the accessible contact-unavailable dialog because this is a fictional demo with empty phone and WhatsApp settings; none invents a number or pretends to place a call or send a message. The floating WhatsApp preview remains available after the Hero WhatsApp button leaves the viewport. The final section retains two internal links to the FAQ and assessment journey. No patient data is collected.
 
@@ -38,7 +38,7 @@ The Hero restores two visible contact buttons: «تواصل عبر واتساب�
 4. Assessment and treatment journey — four steps from oral-health assessment and option selection to the agreed procedure and aftercare.
 5. Suitability, safety, and realistic expectations — relevant health factors, possible effects, result variation, restoration limits, and aftercare.
 6. Team-section preview — three illustrative portraits with a visible AI-generated-image disclosure before the cards and placeholders for verified clinician details.
-7. Review transparency — three informational cards explaining source verification, explicit permission, and faithful presentation. No hypothetical patient quotations, testimonials, rating stars, or review scores are displayed.
+7. Patient experience — three informational cards about a clear treatment plan, patient comfort and privacy, and aftercare guidance. No fabricated patient quotations, testimonials, ratings, or review scores are displayed.
 8. Location-section preview — a local abstract Riyadh SVG with an explicit notice that it is not a real map or clinic location; the city-wide Google Maps search is not a clinic pin.
 9. FAQ — seven focused native HTML details/summary entries covering session count, result longevity, stain types, DIY-whitening cautions, sensitivity, restoration limits, and information to share with the dentist before whitening.
 10. Next step — working internal links to the FAQ and assessment sections. Hero and header contact buttons and the floating WhatsApp preview all open the disclosed demo dialog; no live contact or booking is available.
@@ -68,7 +68,7 @@ npm run test:ruwa:consistency
 npx playwright install chromium
 ```
 
-The consistency gate verifies the ten-section order and numbering, the combined safety/expectations area, three disclosed team portraits with verified-information placeholders, three review-transparency cards with no patient quotations or decorative ratings, seven focused FAQ entries, restored WhatsApp and phone demo buttons, truthful final-section internal links, and one floating WhatsApp preview, the responsive menu, ARIA targets, footer and metadata demo disclosures, root redirect, and both preview redirects.
+The consistency gate verifies the ten-section order and numbering, the combined safety/expectations area, three AI-illustrative team portraits with professional-information placeholders, three patient-experience cards without fabricated patient statements or decorative ratings, seven focused FAQ entries, restored WhatsApp and phone demo buttons, truthful final-section internal links, and one floating WhatsApp preview, the responsive menu, ARIA targets, footer and metadata demo disclosures, root redirect, and both preview redirects.
 
 The **RUWA Browser QA** GitHub Actions workflow runs the consistency gate, Playwright Chromium checks, full-page responsive captures, Hero fold checks, approved-Hero SHA validation, and immutable public-preview verification.
 
