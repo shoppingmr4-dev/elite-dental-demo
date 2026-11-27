@@ -182,6 +182,9 @@ try {
         expectedX:toggle.left+toggle.width/2-panel.left,
         expectedY:toggle.top+toggle.height/2-panel.top,
         maxRadius:Number(element.dataset.ruwaMenuRadius||0),
+        panelRevealDuration:Number(element.dataset.ruwaPanelRevealDuration||0),
+        linkStart:Number(element.dataset.ruwaLinkStart||0),
+        linkStagger:Number(element.dataset.ruwaLinkStagger||0),
         shadow:style.boxShadow,
         transform:style.transform,
         linkOpacity:Array.from(element.querySelectorAll("a"))
@@ -202,8 +205,10 @@ try {
       viewport.name + ": the original frame reveal must not rotate or translate the menu panel");
     assert.ok(frameOpening.shadow!=="none",
       viewport.name + ": the menu frame must retain its original layered shadow");
-    assert.ok(frameOpening.linkOpacity.every(opacity=>opacity<.05),
-      viewport.name + ": navigation links must enter after the frame begins expanding");
+    assert.ok(frameOpening.panelRevealDuration>=.6&&frameOpening.linkStart>=.18&&frameOpening.linkStart<frameOpening.panelRevealDuration,
+      viewport.name + ": navigation links must be scheduled after the circular frame starts expanding");
+    assert.ok(frameOpening.linkStagger>=.07&&frameOpening.linkOpacity.some(opacity=>opacity<.99),
+      viewport.name + ": navigation links must retain their sequential stagger while the frame is opening");
 
     await page.waitForTimeout(350);
     const staggerState = await nav.evaluate(element => {
