@@ -2694,7 +2694,7 @@ body,button,input,select,textarea{font-family:var(--body)}
  const showUnavailable=(trigger,channel)=>{
   lastTrigger=trigger;
   const whatsapp=channel==="whatsapp";
-  title.textContent=whatsapp?"التواصل عبر واتساب غير مفعّل في النموذج التجريبي":"الاتصال غير مفعّل في النموذج التجريبي";
+  title.textContent=whatsapp?"واتساب غير متاح في هذه المعاينة":"الاتصال الهاتفي غير متاح في هذه المعاينة";
   description.textContent="هذه صفحة تجريبية لأغراض العرض فقط؛ لم تُضف إليها أرقام هاتف أو حساب واتساب أو خدمة حجز حقيقية.";
   document.body.classList.add("dialog-open");
   dialog.showModal();
