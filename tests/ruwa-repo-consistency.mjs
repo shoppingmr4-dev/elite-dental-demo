@@ -89,7 +89,7 @@ assert.ok(expectationsSection.includes("شديدة أو مستمرة"), "Signifi
 assert.ok(expectationsSection.includes("مواد الحشوات والتيجان والقشور لا تستجيب للتبييض مثل الأسنان الطبيعية"), "Restoration limits must be disclosed");
 assert.ok(expectationsSection.includes("التزم بتعليمات العناية التي يحددها طبيبك"), "Individualized aftercare guidance is missing");
 assert.ok(expectationsSection.includes("حافظ على تنظيف الأسنان واللثة"), "Normal oral hygiene guidance is missing");
-assert.ok(expectationsSection.includes("قد يتغير اللون بمرور الوقت"), "Changing whitening results must be disclosed");
+assert.ok(expectationsSection.includes("قد تتغير درجة اللون مع الوقت"), "Changing whitening results must be disclosed");
 assert.ok(expectationsSection.includes("اسأله قبل تكرار التبييض أو استخدام منتج إضافي"), "Professional advice before repeating whitening is missing");
 assert.ok(expectationsSection.includes("قبل أن تقرر التبييض"), "Pre-decision checklist title missing");
 assert.equal([...expectationsSection.matchAll(/class="check-item decision-check-item"/g)].length, 7, "Pre-decision list must contain seven items");
