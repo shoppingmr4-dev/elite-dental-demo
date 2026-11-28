@@ -1030,7 +1030,7 @@ try {
     assert.equal(state.heroImageParentTag, "FIGURE", `${vp.name}: the approved Hero image must remain inside its original figure`);
     assert.equal(state.heroImageParentClass, "hero-visual", `${vp.name}: the approved Hero image must remain inside .hero-visual`);
     assert.equal(state.heroImageObjectPosition, "50% 100%", `${vp.name}: the approved Hero image focal positioning changed`);
-    assert.ok(state.heroImageAlt.includes("طبيب أسنان")&&state.heroImageAlt.includes("مولّد بالذكاء الاصطناعي"), `${vp.name}: Arabic AI portrait alternative text is missing`);
+    assert.ok(state.heroImageAlt.includes("صورة توضيحية لطبيب أسنان")&&state.heroImageAlt.includes("معطفًا أبيض")&&state.heroImageAlt.includes("سماعة طبيب"), `${vp.name}: approved Arabic Hero portrait alternative text is missing`);
     assert.equal(state.heroImageLoading, "eager", `${vp.name}: above-the-fold portrait must not lazy-load`);
     assert.equal(state.heroImageFetchPriority, "high", `${vp.name}: Hero portrait fetch priority is not high`);
     assert.equal(state.heroImageObjectFit, "contain", `${vp.name}: portrait must preserve its full transparent cutout`);
