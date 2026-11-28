@@ -1,2 +1,9 @@
 node_modules/
 .DS_Store
+
+# Generated browser and visual QA output
+artifacts/
+playwright-report/
+test-results/
+lighthouse-reports/
+*.log

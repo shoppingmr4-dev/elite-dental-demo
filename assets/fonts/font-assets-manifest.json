@@ -300,5 +300,25 @@
     }
   ],
   "allDownloadsExact200": true,
-  "noFontPreload": true
+  "noFontPreload": true,
+  "activeTypography": {
+    "headingFamily": "IBM Plex Sans Arabic",
+    "headingWeights": [
+      400,
+      600,
+      700
+    ],
+    "bodyFamily": "IBM Plex Sans Arabic",
+    "bodyWeights": [
+      400,
+      600,
+      700
+    ],
+    "wordmarkFamily": "Cormorant Garamond",
+    "wordmarkWeights": [
+      500
+    ],
+    "delivery": "self-hosted WOFF2",
+    "note": "Current RUWA typography: IBM Plex Sans Arabic is shared by Arabic headings and body copy; Cormorant Garamond is reserved for the Latin RUWA wordmark."
+  }
 }
