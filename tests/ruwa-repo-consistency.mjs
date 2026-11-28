@@ -54,7 +54,7 @@ assert.ok(visitSection.includes("لمحة بصرية عن مدينة الريا�
 const cityMapLink = visitSection.match(/<a class="visit-map-action"[^>]*href="([^"]+)"/)?.[1] || "";
 assert.ok(cityMapLink.startsWith("https://www.google.com/maps/search/?api=1&amp;query=Riyadh"), "Open a Google Maps city search, not exact clinic directions");
 assert.match(visitSection, /target="_blank" rel="noopener noreferrer"/, "Google Maps must open safely in a new tab");
-assert.ok(visitSection.includes("ما الذي ينبغي التحقق منه قبل زيارة عيادة الأسنان؟") && visitSection.includes("استكشف مدينة الرياض على خرائط Google"), "Location section must focus on planning a visit and finding the city");
+assert.ok(visitSection.includes("معلومات الموقع والزيارة") && visitSection.includes("استكشف مدينة الرياض على خرائط Google"), "Location section must focus on planning a visit and finding the city");
 assert.ok(visitSection.includes("معلومات مفيدة قبل الموعد") && visitSection.includes("المعلومات الصحية والأدوية ذات الصلة") && visitSection.includes("أسئلتك عن التوقعات والتكلفة والخطة"), "Visit preparation checklist is incomplete");
 const visitPrepStart = visitSection.indexOf('class="visit-prep-list"');
 const visitPrepEnd = visitSection.indexOf("</ul>", visitPrepStart);
@@ -65,13 +65,13 @@ const faqSection = html.slice(faqPosition, html.indexOf("</section>", faqPositio
 assert.ok(faqSection.includes('<h2 id="faq-title">أسئلة شائعة عن تبييض الأسنان</h2>'), "FAQ section headline is missing");
 const consultationPosition = html.indexOf('id="consultation"');
 const consultationSection = html.slice(consultationPosition, html.indexOf("</section>", consultationPosition) + 10);
-assert.ok(consultationSection.includes('<h2 id="consultation-title">ابدأ بتقييم أسنانك قبل اختيار التبييض</h2>'), "Consultation section headline is missing");
+assert.ok(consultationSection.includes('<h2 id="consultation-title">ابدأ بتقييم أسنانك قبل اختيار طريقة التبييض</h2>'), "Consultation section headline is missing");
 const journeyStart = html.indexOf('id="journey"');
 const optionsStart = html.indexOf('id="options"');
 const suitabilityStart = html.indexOf('id="suitability"');
 assert.ok(optionsStart < journeyStart && journeyStart < suitabilityStart, "Treatment journey must follow whitening options and precede suitability and safety");
-const optionsSection = html.slice(optionsStart, journeyStart);
-assert.ok(optionsSection.includes('<h2 id="options-title">خيارات تبييض الأسنان</h2>'), "Whitening options section headline is missing");
+const optionsHeadlineMarkup = html.slice(optionsStart, journeyStart);
+assert.ok(optionsHeadlineMarkup.includes('<h2 id="options-title">خيارات تبييض الأسنان</h2>'), "Whitening options section headline is missing");
 const journeySection = html.slice(journeyStart, html.indexOf("</section>", journeyStart) + 10);
 assert.ok(journeySection.includes('<h2 id="journey-title">خطوات التبييض من التقييم إلى المتابعة</h2>'), "Treatment journey headline is missing");
 assert.ok(journeySection.includes("الاتفاق على خطة العلاج"), "Agreed treatment-plan step is missing");
