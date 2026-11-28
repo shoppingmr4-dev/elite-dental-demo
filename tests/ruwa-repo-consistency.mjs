@@ -87,10 +87,10 @@ assert.ok(expectationsSection.includes("لا يمكن ضمان درجة لون �
 assert.ok(expectationsSection.includes("قد يسبب التبييض حساسية مؤقتة في الأسنان أو تهيّجًا في اللثة"), "Temporary sensitivity and gum irritation must be disclosed");
 assert.ok(expectationsSection.includes("شديدة أو مستمرة"), "Significant or persistent symptoms must prompt professional advice");
 assert.ok(expectationsSection.includes("مواد الحشوات والتيجان والقشور لا تستجيب للتبييض مثل الأسنان الطبيعية"), "Restoration limits must be disclosed");
-assert.ok(expectationsSection.includes("حافظ على تنظيف الأسنان وفق إرشادات طبيبك"), "Individualized aftercare guidance is missing");
-assert.ok(expectationsSection.includes("قلّل العوامل التي تسبب التصبغات قدر الإمكان"), "Normal oral hygiene guidance is missing");
+assert.ok(expectationsSection.includes("التزم بتعليمات العناية التي يحددها طبيبك"), "Individualized aftercare guidance is missing");
+assert.ok(expectationsSection.includes("حافظ على تنظيف الأسنان واللثة"), "Normal oral hygiene guidance is missing");
 assert.ok(expectationsSection.includes("قد يتغير اللون بمرور الوقت"), "Changing whitening results must be disclosed");
-assert.ok(expectationsSection.includes("قبل إعادة التبييض"), "Advice before repeating whitening is missing");
+assert.ok(expectationsSection.includes("اسأله قبل تكرار التبييض أو استخدام منتج إضافي"), "Professional advice before repeating whitening is missing");
 assert.ok(expectationsSection.includes("قبل أن تقرر التبييض"), "Pre-decision checklist title missing");
 assert.equal([...expectationsSection.matchAll(/class="check-item decision-check-item"/g)].length, 7, "Pre-decision list must contain seven items");
 assert.ok(expectationsSection.includes("الحمل أو الرضاعة") && expectationsSection.includes("لا توصي هيئة الخدمات الصحية البريطانية (NHS) بتبييض الأسنان خلال الحمل أو الرضاعة"), "Pregnancy and breastfeeding precautions must remain present");
