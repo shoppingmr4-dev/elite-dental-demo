@@ -907,7 +907,7 @@ try {
     }
     assert.equal(state.dir, "rtl", `${vp.name}: RTL direction missing`);
     assert.equal(state.heading, expectedHeading, `${vp.name}: protected headline changed`);
-    assert.equal(state.heroLead, "اكتشف خيارات تبييض الأسنان، وتعرّف إلى ما يحدد الطريقة الأنسب لك؛ من سبب تغيّر اللون إلى صحة الأسنان واللثة والنتائج الممكنة. ابدأ بالمعلومة الصحيحة، ثم ناقش اختيارك مع طبيب الأسنان.", `${vp.name}: hero supporting copy changed`);
+    assert.equal(state.heroLead, "تعرّف إلى خيارات تبييض الأسنان، وما إذا كان الإجراء مناسبًا لحالة أسنانك. يبدأ القرار بتقييم صحة الأسنان واللثة وشرح النتائج المتوقعة والتكلفة والمخاطر قبل الموافقة على الخطة.", `${vp.name}: hero supporting copy changed`);
     assert.equal(state.heroTitleKickerColor, "rgb(48, 74, 84)", `${vp.name}: the introductory headline line must stay in the calm secondary ink tone`);
     assert.equal(state.heroCaptionFontSize, 12, `${vp.name}: the Hero portrait caption must remain comfortably readable`);
     assert.ok(state.heroNumbersFontVariant.includes("tabular-nums"), `${vp.name}: numbered labels must use consistent tabular figures`);
