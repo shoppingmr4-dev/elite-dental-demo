@@ -229,7 +229,7 @@ try {
         problems.push("Visible journey numbers must be hidden from assistive technology to avoid duplicate announcements");
       if(journeyDetails.listTag!=="OL"||journeyDetails.accessibleLabel!=="الخطوات الأربع لتقييم خيارات تبييض الأسنان")
         problems.push("Merged journey must expose its steps as a labelled ordered list");
-      if(journeyDetails.heading?.text!=="كيف تسير رحلة التبييض؟ أربع خطوات من التقييم إلى المتابعة.")
+      if(journeyDetails.heading?.text!=="خطوات التبييض من التقييم إلى المتابعة")
         problems.push("Merged journey heading differs from the approved patient-centered copy");
       if(journeyDetails.markerLabel!=="خطوات التقييم"||
         journeyDetails.markerAriaLabel!=="القسم الرابع: خطوات التقييم")

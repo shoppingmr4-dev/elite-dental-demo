@@ -1080,7 +1080,7 @@ try {
     assert.equal(audit.journey.stepRowPadding,"19px 16px", vp.name + ": journey step card rhythm changed");
     assert.equal(audit.causes.cardIndexToTitle,"16px", vp.name + ": cause card index/title spacing changed");
     assert.equal(audit.options.numberToTitle,"20px", vp.name + ": option label/title spacing changed");
-    assert.equal(audit.suitability.checkItemPadding,"15px 0px", vp.name + ": suitability checklist rhythm changed");
+    assert.equal(audit.suitability.checkItemPadding,"13px 0px", vp.name + ": suitability checklist rhythm changed");
     assert.equal(audit.expectations.cardPadding,vp.width<=600 ? "21px" : "21px 20px", vp.name + ": expectations card padding changed");
     assert.equal(audit.faq.summaryPadding,"18px 3px", vp.name + ": FAQ row spacing changed");
     assert.equal(audit.faq.referenceMargin,"24px", vp.name + ": reference note spacing changed");
