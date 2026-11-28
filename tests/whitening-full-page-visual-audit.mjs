@@ -218,7 +218,7 @@ try {
     const journeyDetails=metrics.journeyDetails;
     if(!journeyDetails||journeyDetails.steps.length!==4)problems.push("Merged journey section must contain exactly four ordered steps");
     if(journeyDetails){
-      const expectedTitles=["تقييم صحة الأسنان واللثة","شرح الخيارات ومناقشتها","تنفيذ الخطة المتفق عليها","تعليمات العناية والمتابعة"];
+      const expectedTitles=["تقييم صحة الأسنان واللثة","شرح الخيارات ومناقشتها","الاتفاق على خطة العلاج","تعليمات العناية والمتابعة"];
       if(JSON.stringify(journeyDetails.steps.map(step=>step.title.text))!==JSON.stringify(expectedTitles))
         problems.push("Merged journey step titles differ from the approved patient journey");
       if(journeyDetails.steps.map(step=>step.number.text).join("|")!=="01|02|03|04")
