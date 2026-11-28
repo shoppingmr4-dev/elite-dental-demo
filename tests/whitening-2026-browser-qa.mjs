@@ -569,6 +569,16 @@ try {
         journeyListLabel:document.querySelector("#journey .journey-grid")?.getAttribute("aria-label")||"",
         teamProfile:(()=>{const section=document.getElementById("team"),wrap=section?.querySelector(".team-wrap"),heading=section?.querySelector("h2"),cards=[...(section?.querySelectorAll(".team-card")||[])],images=[...(section?.querySelectorAll(".team-card img")||[])],rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width,centerX:r.left+r.width/2};},hr=heading?rect(heading):null,wr=wrap?rect(wrap):null;return {heading:heading?.innerText.trim()||"",imageSources:images.map(image=>image.getAttribute("src")||""),imageAlts:images.map(image=>image.getAttribute("alt")||""),imagesLoaded:images.length===3&&images.every(image=>image.complete&&image.naturalWidth>0),disclosure:section?.querySelector(".team-disclosure")?.innerText.trim()||"",cardCount:cards.length,cardWidths:cards.map(card=>rect(card).width),gridColumns:section?.querySelector(".team-cards")?getComputedStyle(section.querySelector(".team-cards")).gridTemplateColumns.trim().split(/\s+/).length:0,headingCenterDelta:hr&&wr?Math.abs(hr.centerX-(wr.left+wr.right)/2):999,thirdCardCenterDelta:cards.length===3&&wr?Math.abs(rect(cards[2]).centerX-(wr.left+wr.right)/2):999};})(),
         optionCards:document.querySelectorAll(".option-card").length,
+        patientDecisionContent:{
+          comparisonDetails:[...document.querySelectorAll("#options .option-card")].map(card=>card.querySelectorAll(".option-detail").length),
+          feeQuestions:document.querySelectorAll("#options .fee-checklist li").length,
+          decisionItems:document.querySelectorAll("#suitability .decision-check-item").length,
+          visitReminders:document.querySelectorAll("#visit .visit-prep-list li").length,
+          optionsOverflow:(()=>{const el=document.querySelector("#options");return Boolean(el&&el.scrollWidth>el.clientWidth)})(),
+          feeOverflow:(()=>{const el=document.querySelector("#options .fee-panel");return Boolean(el&&el.scrollWidth>el.clientWidth)})(),
+          decisionOverflow:(()=>{const el=document.querySelector("#suitability .decision-checklist");return Boolean(el&&el.scrollWidth>el.clientWidth)})(),
+          visitOverflow:(()=>{const el=document.querySelector("#visit .visit-info-panel");return Boolean(el&&el.scrollWidth>el.clientWidth)})()
+        },
         causeCards:document.querySelectorAll(".info-card").length,
         expectationsSection:(()=>{
           const section=document.querySelector("#suitability .expectations-panel");
@@ -811,6 +821,9 @@ try {
             ".hero h1",".hero-title-benefit",".hero-lead",".nav a",".header-action",
             ".primary-cta",".consultation-cta","#journey .journey-step p","#causes .info-card p",
             "#options .option-card p","#options .option-card .option-note",
+             "#options .option-detail dt","#options .option-detail dd","#options .fee-checklist li",
+             "#suitability .decision-checklist-title","#suitability .decision-check-item h3","#suitability .decision-check-item p",
+             "#visit .visit-prep-checklist h4","#visit .visit-prep-list li",
             "#suitability .suitability-copy p","#suitability .check-item p",
             "#suitability .expectations-panel .expect-card p","#team .team-intro h2","#team .team-lead","#team .team-card h3","#team .team-card p","#team .team-disclosure",
             "#reviews .reviews-head h2","#reviews .reviews-head p","#reviews .reviews-preview-title","#reviews .reviews-rating-disclosure","#reviews .review-card-copy","#reviews .reviews-status-note","#reviews .reviews-criteria-list p",
@@ -960,11 +973,11 @@ try {
       {number:"03",label:"خيارات التبييض",context:"canvas"},
       {number:"04",label:"خطوات التقييم",context:"canvas"},
       {number:"05",label:"السلامة والملاءمة",context:"paper"},
-      {number:"06",label:"الفريق الطبي",context:"paper"},
+      {number:"06",label:"اختيار الطبيب",context:"paper"},
       {number:"07",label:"آراء المرضى",context:"canvas"},
       {number:"08",label:"الموقع وطرق الوصول",context:"paper"},
       {number:"09",label:"الأسئلة الشائعة",context:"canvas"},
-      {number:"10",label:"الخطوة التالية",context:"dark"}
+      {number:"10",label:"طلب التقييم",context:"dark"}
     ];
     assert.equal(state.allSectionMarkers.length,10,vp.name + ": all ten numbered markers must be present");
     assert.deepEqual(state.allSectionMarkers.map(({number,label,context})=>({number,label,context})),expectedMarkers,
@@ -1422,13 +1435,18 @@ try {
       }
     assert.deepEqual(state.duplicateIds, [], `${vp.name}: duplicate HTML IDs detected`);
     assert.equal(state.optionCards, 3, `${vp.name}: whitening options cards are incomplete`);
+     assert.deepEqual(state.patientDecisionContent.comparisonDetails,[5,5,5],`${vp.name}: each option must show five comparable facts`);
+     assert.equal(state.patientDecisionContent.feeQuestions,6,`${vp.name}: cost guide must contain six questions`);
+     assert.equal(state.patientDecisionContent.decisionItems,7,`${vp.name}: pre-decision guide must contain seven considerations`);
+     assert.equal(state.patientDecisionContent.visitReminders,5,`${vp.name}: visit preparation must contain five reminders`);
+     assert.ok(!state.patientDecisionContent.optionsOverflow&&!state.patientDecisionContent.feeOverflow&&!state.patientDecisionContent.decisionOverflow&&!state.patientDecisionContent.visitOverflow,`${vp.name}: patient decision components overflow their containers`);
     assert.equal(state.journeyStepCount,4,`${vp.name}: treatment journey must contain four clear steps`);
     assert.equal(state.journeyListTag,"OL",`${vp.name}: treatment journey must use an ordered list`);
     assert.equal(state.journeyListLabel,"الخطوات الأربع لتقييم خيارات تبييض الأسنان",`${vp.name}: treatment journey list must have an accessible Arabic label`);
     assert.equal(state.causeCards, 2, `${vp.name}: stain explanation cards are incomplete`);
 
      assert.equal(state.expectationsSection.cardCount,4,"Four realistic-expectations cards must be present");
-     assert.deepEqual(state.expectationsSection.cardTitles,["النتائج تختلف من شخص لآخر","قد تحدث حساسية أو تهيّج مؤقت","الحشوات والتيجان والقشور لا تتبيّض","العناية بعد التبييض"],"Expectations card copy or order changed");
+     assert.deepEqual(state.expectationsSection.cardTitles,["النتائج تختلف من شخص لآخر","قد تحدث حساسية أو تهيّج مؤقت","الحشوات والتيجان والقشور لا يتغيّر لونها بالتبييض","العناية بعد التبييض"],"Expectations card copy or order changed");
      assert.equal(state.expectationsSection.gridColumnCount,vp.width<=600?1:2,"Expectations grid must use two columns except on mobile");
      assert.equal(state.expectationsSection.horizontalOverflow,false,"Expectations section must not overflow horizontally");
      assert.equal(state.expectationsSection.cardsWithinSection,true,"Expectations cards must remain within section bounds");
@@ -1454,7 +1472,7 @@ try {
     assert.equal(state.teamProfile.gridColumns,expectedTeamColumns,vp.name + ": team grid columns do not match responsive layout");
     if(vp.width>620&&vp.width<=900)assert.ok(state.teamProfile.thirdCardCenterDelta<=2,vp.name + ": third tablet card is not centered");
     assert.ok(state.clinicalReferences.some(url=>url.includes("nhs.uk")) && state.clinicalReferences.some(url=>url.includes("ada.org")), `${vp.name}: clinical reference links are missing`);
-    assert.equal(state.contrastChecks.length,33, `${vp.name}: expanded representative contrast coverage is incomplete`);
+    assert.equal(state.contrastChecks.length,41, `${vp.name}: expanded representative contrast coverage is incomplete`);
     assert.ok(state.contrastChecks.every(item=>!item.missing&&item.ratio>=4.5), `${vp.name}: representative text contrast below WCAG AA: ${JSON.stringify(state.contrastChecks)}`);
 
     // Keyboard-tab to both Hero actions and measure their rendered focus indicators.

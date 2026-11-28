@@ -55,6 +55,10 @@ const cityMapLink = visitSection.match(/<a class="visit-map-action"[^>]*href="([
 assert.ok(cityMapLink.startsWith("https://www.google.com/maps/search/?api=1&amp;query=Riyadh"), "Open a Google Maps city search, not exact clinic directions");
 assert.match(visitSection, /target="_blank" rel="noopener noreferrer"/, "Google Maps must open safely in a new tab");
 assert.ok(visitSection.includes("ما الذي ينبغي التحقق منه قبل زيارة عيادة الأسنان؟") && visitSection.includes("استكشف مدينة الرياض على خرائط Google"), "Location section must focus on planning a visit and finding the city");
+assert.ok(visitSection.includes("معلومات مفيدة قبل الموعد") && visitSection.includes("المعلومات الصحية والأدوية ذات الصلة") && visitSection.includes("أسئلتك عن التوقعات والتكلفة والخطة"), "Visit preparation checklist is incomplete");
+const visitPrepStart = visitSection.indexOf('class="visit-prep-list"');
+const visitPrepEnd = visitSection.indexOf("</ul>", visitPrepStart);
+assert.equal((visitSection.slice(visitPrepStart, visitPrepEnd).match(/<li>/g) || []).length, 5, "Visit prep must contain five reminders");
 assert.ok(!visitSection.includes("<iframe") && !visitSection.includes("دبوس"), "Do not present the static image as an interactive map or invent a clinic pin");
 
 const journeyStart = html.indexOf('id="journey"');
@@ -63,12 +67,12 @@ const suitabilityStart = html.indexOf('id="suitability"');
 assert.ok(optionsStart < journeyStart && journeyStart < suitabilityStart, "Treatment journey must follow whitening options and precede suitability and safety");
 const journeySection = html.slice(journeyStart, html.indexOf("</section>", journeyStart) + 10);
 assert.ok(journeySection.includes("كيف تسير رحلة التبييض؟") && journeySection.includes("أربع خطوات من التقييم إلى المتابعة."), "Treatment journey headline is missing");
-assert.ok(journeySection.includes("تنفيذ الخطة"), "Treatment implementation step is missing");
+assert.ok(journeySection.includes("الاتفاق على خطة العلاج"), "Agreed treatment-plan step is missing");
 assert.ok(journeySection.includes("العناية والمتابعة"), "Aftercare and follow-up step is missing");
 assert.match(journeySection, /<ol class="journey-grid" aria-label="الخطوات الأربع لتقييم خيارات تبييض الأسنان">/);
 assert.equal([...journeySection.matchAll(/<li class="journey-step">/g)].length, 4, "Treatment journey must contain exactly four ordered steps");
-assert.ok(journeySection.includes("لا يبدأ التبييض باختيار منتج أو موعد؛ بل بفحص الأسنان واللثة"), "Merged journey must begin with patient assessment");
-assert.deepEqual([...journeySection.matchAll(/<h3>([^<]+)<\/h3>/g)].map(match => match[1]), ["تقييم صحة الأسنان واللثة", "شرح الخيارات ومناقشتها", "تنفيذ الخطة المتفق عليها", "تعليمات العناية والمتابعة"], "Merged journey steps must follow the patient journey");
+assert.ok(journeySection.includes("تبدأ الرحلة بفحص الأسنان واللثة وفهم سبب تغيّر اللون"), "Merged journey must begin with patient assessment");
+assert.deepEqual([...journeySection.matchAll(/<h3>([^<]+)<\/h3>/g)].map(match => match[1]), ["تقييم صحة الأسنان واللثة", "شرح الخيارات ومناقشتها", "الاتفاق على خطة العلاج", "تعليمات العناية والمتابعة"], "Merged journey steps must follow the patient journey");
 
 const expectationsSection = html.slice(suitabilityStart, html.indexOf('id="team"', suitabilityStart));
 assert.ok(suitabilityStart > journeyStart, "Merged safety and expectations must follow the treatment journey");
@@ -87,6 +91,8 @@ assert.ok(expectationsSection.includes("حافظ على تنظيف الأسنا�
 assert.ok(expectationsSection.includes("قلّل العوامل التي تسبب التصبغات قدر الإمكان"), "Normal oral hygiene guidance is missing");
 assert.ok(expectationsSection.includes("قد يتغير اللون بمرور الوقت"), "Changing whitening results must be disclosed");
 assert.ok(expectationsSection.includes("قبل إعادة التبييض"), "Advice before repeating whitening is missing");
+assert.ok(expectationsSection.includes("قبل أن تقرر التبييض"), "Pre-decision checklist title missing");
+assert.equal([...expectationsSection.matchAll(/class="check-item decision-check-item"/g)].length, 7, "Pre-decision list must contain seven items");
 assert.ok(expectationsSection.includes("الحمل أو الرضاعة") && expectationsSection.includes("لا توصي هيئة الخدمات الصحية البريطانية (NHS) بتبييض الأسنان خلال الحمل أو الرضاعة"), "Pregnancy and breastfeeding precautions must remain present");
 assert.doesNotMatch(expectationsSection, /\b\d+\s*(?:دقائق?|ساعات?|أيام?|أسابيع?|أشهر?|سنوات?)\b/, "Do not invent numerical aftercare waiting periods or result longevity");
 assert.match(html, /\.expect-grid\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\);gap:14px\}/, "Expectations grid must use two columns on desktop/tablet");
@@ -150,7 +156,7 @@ assert.equal(faqCount, 7, "RUWA must contain seven focused native FAQ entries");
 assert.deepEqual(
   [...faqAuditMarkup.matchAll(/<summary>([^<]+)<\/summary>/g)].map(match => match[1]),
   [
-    "هل أحتاج إلى أكثر من جلسة؟",
+    "هل يؤثر تبييض الأسنان في مينا السن؟",
     "كم تدوم نتيجة التبييض؟",
     "ما الفرق بين التصبغات الخارجية والتصبغات الداخلية؟",
     "هل الليمون والفحم وخلطات التبييض المنزلية آمنة؟",
@@ -160,8 +166,17 @@ assert.deepEqual(
   ],
   "FAQ questions must address distinct visitor concerns in the approved order"
 );
-assert.ok(faqAuditMarkup.includes("سبب تغيّر اللون ودرجته والطريقة المستخدمة واستجابة الأسنان"), "Session-count answer must explain why treatment plans vary");
+assert.ok(faqAuditMarkup.includes("الإفراط في استخدام منتجات التبييض") && faqAuditMarkup.includes("قد يضر بالمينا واللثة"), "Enamel FAQ must caution against overuse and unsafe mixtures");
 assert.ok(html.slice(optionsStart, html.indexOf("</section>", optionsStart)).includes("التصبغات السطحية"), "Whitening options must distinguish surface stains from tooth colour");
+const optionsSection = html.slice(optionsStart, html.indexOf("</section>", optionsStart));
+assert.equal([...optionsSection.matchAll(/<article class="option-card">/g)].length, 3, "Three whitening choices must remain");
+assert.equal([...optionsSection.matchAll(/<dl class="option-detail-list">/g)].length, 3, "Each choice must share the comparison structure");
+assert.equal([...optionsSection.matchAll(/<div class="option-detail">/g)].length, 15, "Five facts per choice must be provided");
+assert.ok(["مكان الإجراء","الإشراف المهني","الهدف الأساسي","ما الذي يمكن أن يعالجه؟","اعتبارات مهمة"].every(label=>optionsSection.includes(label)), "Comparison criteria are incomplete");
+assert.ok(optionsSection.includes("قد يكفي إذا كان التغيّر سطحيًا") && optionsSection.includes("لا يغيّر اللون الداخلي الطبيعي للسن"), "Cleaning and whitening must remain distinct");
+assert.ok(optionsSection.includes("ماذا ينبغي أن يشمل عرض السعر؟"), "Cost guide heading is missing");
+assert.equal([...optionsSection.matchAll(/class="fee-check-number"/g)].length, 6, "Cost guide must contain six questions");
+assert.ok(optionsSection.includes("ليست عرض سعر") && optionsSection.includes("ما هو اختياري") && optionsSection.includes("بشكل منفصل"), "Cost guide must explain included, optional and separate items");
 assert.ok(faqAuditMarkup.includes("التبييض ليس دائمًا، ولا يمكن ضمان مدة واحدة للجميع"), "Result-longevity answer must avoid a universal promise");
 assert.ok(faqAuditMarkup.includes("التصبغات السطحية على خارج السن") && faqAuditMarkup.includes("التصبغات الداخلية"), "FAQ must explain surface versus intrinsic discoloration");
 assert.ok(faqAuditMarkup.includes("الأحماض قد تضر بمينا الأسنان") && faqAuditMarkup.includes("استشر طبيب الأسنان"), "FAQ must caution against unverified home-whitening mixtures");

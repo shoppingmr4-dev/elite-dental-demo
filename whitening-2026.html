@@ -1518,6 +1518,33 @@ body,button,input,select,textarea{font-family:var(--body)}
  .fee-panel-value{padding:15px}
 }
 
+
+/* Scoped patient decision-support components. */
+#options .option-card{height:100%;min-width:0}
+#options .option-detail-list{display:grid;gap:0;margin:15px 0 0;padding:0}
+#options .option-detail{display:grid;gap:4px;padding:10px 0;border-top:1px solid var(--line)}
+#options .option-detail dt{color:var(--blue-deep);font-size:11px;font-weight:800;line-height:1.6}
+#options .option-detail dd{margin:0;color:var(--muted);font-size:12px;line-height:1.85;overflow-wrap:anywhere}
+#options .fee-panel{grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);align-items:start}
+#options .fee-guide-note{margin-top:12px;color:var(--muted);font-size:11px;line-height:1.85}
+#options .fee-checklist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px;margin:0;padding:0;list-style:none}
+#options .fee-checklist li{display:grid;grid-template-columns:28px minmax(0,1fr);align-items:start;gap:9px;min-width:0;padding:10px 11px;border:1px solid rgba(17,90,96,.12);border-radius:12px;background:rgba(255,255,255,.78);color:var(--ink2);font-size:12px;font-weight:600;line-height:1.8}
+#options .fee-check-number{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--lime);color:var(--blue-deep);font-size:10px;font-weight:800;direction:ltr;font-variant-numeric:tabular-nums}
+#suitability .decision-checklist{gap:0;border:0}
+#suitability .decision-checklist-title{margin:0 0 14px;color:var(--ink);font-family:var(--display);font-size:18px;font-weight:800;line-height:1.6}
+#suitability .decision-checklist-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px;row-gap:0;margin:0;padding:0;border-top:1px solid var(--line);list-style:none}
+#suitability .decision-check-item{min-width:0;grid-template-columns:27px minmax(0,1fr);gap:10px;padding:13px 0}
+#suitability .decision-check-item:last-child{grid-column:1/-1}
+#suitability .decision-check-item h3{font-size:13px;line-height:1.65}
+#suitability .decision-check-item p{font-size:11px;line-height:1.8}
+#visit .visit-prep-checklist{margin-top:17px;padding-top:16px;border-top:1px solid var(--line)}
+#visit .visit-prep-checklist h4{margin:0 0 10px;color:var(--ink);font-family:var(--display);font-size:13px;font-weight:800;line-height:1.7}
+#visit .visit-prep-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 13px;margin:0;padding:0;list-style:none}
+#visit .visit-prep-list li{position:relative;min-width:0;padding-right:14px;color:var(--ink2);font-size:11px;line-height:1.85;overflow-wrap:anywhere}
+#visit .visit-prep-list li::before{content:"";position:absolute;top:.82em;right:0;width:5px;height:5px;border-radius:50%;background:var(--blue)}
+@media (min-width:721px) and (max-width:920px){#options .options-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#options .option-card:last-child{grid-column:1/-1}}
+@media (max-width:720px){#options .options-grid{grid-template-columns:1fr}#options .option-card:last-child{grid-column:auto}#options .fee-panel{grid-template-columns:1fr}#suitability .decision-checklist-grid{grid-template-columns:1fr}#suitability .decision-check-item:last-child{grid-column:auto}#visit .visit-prep-list{grid-template-columns:1fr}}
+
 </style>
 
 <!-- Pinned GSAP runtime: deferred so it never blocks the initial Hero render. -->
@@ -1624,37 +1651,56 @@ body,button,input,select,textarea{font-family:var(--body)}
     <h2 id="options-title">ما خيارات تبييض الأسنان، وكيف تُحدَّد الخطة المناسبة؟</h2>
     <p>تعتمد الطريقة على سبب تغيّر اللون وصحة الأسنان واللثة ووجود الحشوات أو التيجان. هذه خيارات عامة للمناقشة مع طبيب الأسنان، ولا تعني أن جميعها متاحة لدى منشأة بعينها.</p>
    </div>
-   <div class="options-grid">
+   <div class="options-grid options-comparison" role="group" aria-label="مقارنة خيارات تبييض الأسنان">
     <article class="option-card">
-     <span class="option-number">الخيار 01</span>
-     <h3>التبييض في عيادة الأسنان</h3>
-     <p>يُجرى تحت إشراف طبيب الأسنان وفق تقييم الحالة، مع حماية اللثة ومراقبة استجابة الأسنان. تختلف المادة والخطة والنتائج المتوقعة بحسب الحالة.</p>
-     <span class="option-note">يُحدَّد بعد الفحص السريري</span>
+     <span class="option-number">الخيار 01</span><h3>التبييض في عيادة الأسنان</h3>
+     <p>خيار يُجرى داخل العيادة مع حضور الطبيب ومتابعة الإجراء مباشرة.</p>
+     <dl class="option-detail-list">
+      <div class="option-detail"><dt>مكان الإجراء</dt><dd>داخل عيادة الأسنان.</dd></div>
+      <div class="option-detail"><dt>الإشراف المهني</dt><dd>إشراف مباشر من طبيب الأسنان خلال الإجراء.</dd></div>
+      <div class="option-detail"><dt>الهدف الأساسي</dt><dd>تفتيح لون الأسنان الطبيعية باستخدام مادة مخصصة للتبييض.</dd></div>
+      <div class="option-detail"><dt>ما الذي يمكن أن يعالجه؟</dt><dd>قد يناسب بعض التصبغات الخارجية أو الداخلية بحسب سبب تغيّر اللون وعمقه.</dd></div>
+      <div class="option-detail"><dt>اعتبارات مهمة</dt><dd>يتطلب تقييمًا مسبقًا وحماية اللثة، وقد تصاحبه حساسية مؤقتة.</dd></div>
+     </dl><span class="option-note">يُحدَّد بعد الفحص السريري</span>
     </article>
     <article class="option-card">
-     <span class="option-number">الخيار 02</span>
-     <h3>قوالب مخصّصة للاستخدام المنزلي</h3>
-     <p>قد يوصي الطبيب بقوالب مصممة لتلائم الأسنان، مع شرح المادة والكمية والمدة وطريقة الاستخدام والمتابعة. لا تستخدم مواد التبييض أو القوالب من تلقاء نفسك.</p>
-     <span class="option-note">تعليمات مهنية ومتابعة</span>
+     <span class="option-number">الخيار 02</span><h3>قوالب مخصّصة للاستخدام المنزلي</h3>
+     <p>تُجهّز القوالب لدى طبيب الأسنان، ثم تُستخدم في المنزل وفق تعليماته.</p>
+     <dl class="option-detail-list">
+      <div class="option-detail"><dt>مكان الإجراء</dt><dd>في المنزل بعد تجهيز القوالب لدى طبيب الأسنان.</dd></div>
+      <div class="option-detail"><dt>الإشراف المهني</dt><dd>يحدد الطبيب المادة والقالب والكمية وطريقة الاستخدام والمتابعة.</dd></div>
+      <div class="option-detail"><dt>الهدف الأساسي</dt><dd>تفتيح تدريجي للون الأسنان الطبيعية باستخدام جل يحدده الطبيب.</dd></div>
+      <div class="option-detail"><dt>ما الذي يمكن أن يعالجه؟</dt><dd>قد يناسب بعض حالات تغيّر لون الأسنان الطبيعية وفق التقييم.</dd></div>
+      <div class="option-detail"><dt>اعتبارات مهمة</dt><dd>يلزم الالتزام بالتعليمات وعدم تعديل الكمية أو مدة الاستخدام من تلقاء نفسك.</dd></div>
+     </dl><span class="option-note">تعليمات مهنية ومتابعة</span>
     </article>
     <article class="option-card">
-     <span class="option-number">الخيار 03</span>
-     <h3>التنظيف وإزالة التصبغات السطحية</h3>
-     <p>قد يساعد التنظيف المهني على إزالة بعض الترسبات والتصبغات الموجودة على السطح. وهو ليس الإجراء نفسه الذي يغيّر اللون الطبيعي للأسنان بمواد التبييض.</p>
-     <span class="option-note">قد يكون كافيًا لبعض التصبغات</span>
+     <span class="option-number">الخيار 03</span><h3>التنظيف وإزالة التصبغات السطحية</h3>
+     <p>يركز على إزالة الرواسب وبعض التصبغات الخارجية الموجودة على سطح الأسنان.</p>
+     <dl class="option-detail-list">
+      <div class="option-detail"><dt>مكان الإجراء</dt><dd>في العيادة لدى طبيب الأسنان أو أخصائي صحة الفم.</dd></div>
+      <div class="option-detail"><dt>الإشراف المهني</dt><dd>تنظيف مهني للترسبات وتقييم ما يمكن إزالته من التصبغات السطحية.</dd></div>
+      <div class="option-detail"><dt>الهدف الأساسي</dt><dd>إزالة اللويحة والجير وبعض التصبغات الخارجية.</dd></div>
+      <div class="option-detail"><dt>ما الذي يمكن أن يعالجه؟</dt><dd>قد يخفف التصبغات على السطح، لكنه لا يغيّر اللون الداخلي الطبيعي للسن.</dd></div>
+      <div class="option-detail"><dt>اعتبارات مهمة</dt><dd>قد يكفي إذا كان التغيّر سطحيًا؛ لكنه ليس بديلًا عن التبييض الكيميائي.</dd></div>
+     </dl><span class="option-note">للتصبغات والرواسب السطحية</span>
     </article>
    </div>
-   <aside class="fee-panel" aria-labelledby="fee-panel-title">
+   <aside class="fee-panel fee-guide" aria-labelledby="fee-panel-title">
     <div class="fee-panel-copy">
      <span class="fee-panel-kicker">وضوح التكلفة قبل القرار</span>
-     <h3 id="fee-panel-title">اعرف إجمالي التكلفة وما يشمله السعر</h3>
-     <p>قبل الموافقة على الإجراء، اطلب بيانًا واضحًا بالسعر الإجمالي للخدمة، وما يتضمنه، وأي رسوم إضافية محتملة. يجب أن يطابق السعر ما تعلنه المنشأة وما تعتمده رسميًا.</p>
+     <h3 id="fee-panel-title">ماذا ينبغي أن يشمل عرض السعر؟</h3>
+     <p>اسأل عمّا يشمله العرض، وما هو اختياري، وما قد يُحسب بشكل منفصل. تختلف البنود بحسب التقييم والخطة، لذا قارن بين عروض متشابهة في تفاصيلها.</p>
+     <p class="fee-guide-note">هذه أسئلة للمقارنة، وليست عرض سعر أو تأكيدًا بأن جميع البنود مشمولة.</p>
     </div>
-    <div class="fee-panel-value">
-     <span>السعر المعتمد للمنشأة</span>
-     <strong>يُضاف قبل إطلاق الإعلان</strong>
-     <small>لا توجد قيمة سعرية موثّقة في نموذج RUWA الحالي.</small>
-    </div>
+    <ul class="fee-checklist" aria-label="أسئلة توضيح تكلفة تبييض الأسنان">
+     <li><span class="fee-check-number" aria-hidden="true">01</span><span>هل يشمل العرض التقييم الأولي؟</span></li>
+     <li><span class="fee-check-number" aria-hidden="true">02</span><span>ما المواد والمستلزمات المستخدمة؟</span></li>
+     <li><span class="fee-check-number" aria-hidden="true">03</span><span>هل تتطلب الخطة جلسة واحدة أم أكثر؟</span></li>
+     <li><span class="fee-check-number" aria-hidden="true">04</span><span>هل تشمل القوالب المخصصة، إن وجدت؟</span></li>
+     <li><span class="fee-check-number" aria-hidden="true">05</span><span>هل تشمل تعليمات العناية أو المتابعة؟</span></li>
+     <li><span class="fee-check-number" aria-hidden="true">06</span><span>هل توجد رسوم إضافية محتملة؟</span></li>
+    </ul>
    </aside>
   </div>
  </section>
@@ -1669,25 +1715,13 @@ body,button,input,select,textarea{font-family:var(--body)}
      <span class="section-marker-label">خطوات التقييم</span>
     </span>
     <h2 id="journey-title">كيف تسير رحلة التبييض؟ أربع خطوات من التقييم إلى المتابعة.</h2>
-    <p>لا يبدأ التبييض باختيار منتج أو موعد؛ بل بفحص الأسنان واللثة، وفهم سبب تغيّر اللون، ثم مناقشة الخيارات ومنافعها وحدودها قبل الاتفاق على خطة ومتابعتها.</p>
+    <p>تبدأ الرحلة بفحص الأسنان واللثة وفهم سبب تغيّر اللون، ثم مناقشة البدائل والتكلفة والنتائج المتوقعة قبل الموافقة على الخطة.</p>
    </div>
    <ol class="journey-grid" aria-label="الخطوات الأربع لتقييم خيارات تبييض الأسنان">
-    <li class="journey-step">
-     <span class="journey-step-number" aria-hidden="true">01</span>
-     <div><h3>تقييم صحة الأسنان واللثة</h3><p>يستمع الطبيب إلى ملاحظاتك وتاريخك الصحي، ويفحص الأسنان واللثة، ويتحقق من وجود تسوّس أو التهاب أو ألم أو حساسية قد تحتاج إلى تقييم أو علاج قبل التبييض.</p></div>
-    </li>
-    <li class="journey-step">
-     <span class="journey-step-number" aria-hidden="true">02</span>
-     <div><h3>شرح الخيارات ومناقشتها</h3><p>يشرح الطبيب الخيارات المتاحة، وما يمكن أن تحققه وما لا يمكنها تغييره، إلى جانب الآثار المحتملة والتكلفة والخطة المتوقعة، ثم يناقش معك ما يلائم الحالة.</p></div>
-    </li>
-    <li class="journey-step">
-     <span class="journey-step-number" aria-hidden="true">03</span>
-     <div><h3>تنفيذ الخطة المتفق عليها</h3><p>إذا أظهر الفحص أن التبييض مناسب، يُنفّذ وفق الخطة التي شرحها الطبيب، مع الالتزام بتعليمات الاستخدام واحتياطات حماية الأسنان واللثة.</p></div>
-    </li>
-    <li class="journey-step">
-     <span class="journey-step-number" aria-hidden="true">04</span>
-     <div><h3>تعليمات العناية والمتابعة</h3><p>التزم بتعليمات العناية التي يحددها الطبيب، ولا تكرر التبييض من تلقاء نفسك. تواصل معه إذا كانت الحساسية شديدة أو استمرت أو ظهر تهيّج في اللثة.</p></div>
-    </li>
+    <li class="journey-step"><span class="journey-step-number" aria-hidden="true">01</span><div><h3>تقييم صحة الأسنان واللثة</h3><p>يستمع الطبيب إلى ملاحظاتك وتاريخك الصحي، ويفحص الأسنان واللثة، ويبحث عن سبب تغيّر اللون، مع الانتباه إلى الألم أو الحساسية والترميمات الموجودة.</p></div></li>
+    <li class="journey-step"><span class="journey-step-number" aria-hidden="true">02</span><div><h3>شرح الخيارات ومناقشتها</h3><p>يشرح الطبيب الخيارات التي قد تناسب حالتك، وما يمكن أن تحققه وما لا تغيّره، والآثار المحتملة والتكلفة والنتيجة الواقعية.</p></div></li>
+    <li class="journey-step"><span class="journey-step-number" aria-hidden="true">03</span><div><h3>الاتفاق على خطة العلاج</h3><p>يوضح الطبيب التوصية وخطواتها وتكلفتها وبدائلها. لا يبدأ الإجراء إلا بعد أن تفهم الخطة وتوافق عليها.</p></div></li>
+    <li class="journey-step"><span class="journey-step-number" aria-hidden="true">04</span><div><h3>تعليمات العناية والمتابعة</h3><p>اتبع تعليمات العناية الخاصة بخطتك، ولا تكرر التبييض من نفسك. اطلب المشورة إذا كانت الحساسية شديدة أو مستمرة أو ظهر تهيّج في اللثة.</p></div></li>
    </ol>
   </div>
  </section>
@@ -1703,22 +1737,20 @@ body,button,input,select,textarea{font-family:var(--body)}
      </span>
      <h2 id="suitability-title">هل التبييض مناسب لأسنانك؟</h2>
      <p>لا توجد طريقة واحدة تناسب الجميع. قبل التبييض، يحتاج طبيب الأسنان إلى فحص الأسنان واللثة ومراجعة أي ألم أو حساسية أو تشققات أو حشوات أو تيجان. يساعد هذا التقييم على تحديد ما إذا كان الإجراء مناسبًا، وما إذا كان ينبغي علاج مشكلة أخرى أولًا.</p>
-     <div class="clinical-note">إذا وُجد تسوّس أو التهاب في اللثة أو مشكلة نشطة في أحد الأسنان، فقد يلزم تقييمها وعلاجها أولًا قبل التفكير في التبييض.</div>
+     <div class="clinical-note">إذا وُجد تسوّس أو التهاب في اللثة أو مشكلة نشطة في أحد الأسنان، فقد يلزم تقييمها وعلاجها أولًا. كما لا توصي هيئة الخدمات الصحية البريطانية (NHS) بتبييض الأسنان خلال الحمل أو الرضاعة؛ ناقش التوقيت المناسب مع طبيب الأسنان.</div>
     </div>
-    <div class="check-list">
-     <article class="check-item">
-      <span class="check-mark" aria-hidden="true">✓</span>
-      <div><h3>صحة الأسنان واللثة</h3><p>ينبغي تقييم التسوّس أو التهاب اللثة أو أي مشكلة نشطة وعلاجها عند الحاجة قبل التفكير في التبييض.</p></div>
-     </article>
-     <article class="check-item">
-      <span class="check-mark" aria-hidden="true">✓</span>
-      <div><h3>الحساسية والألم ومشكلات الأسنان</h3><p>اذكر للطبيب أي حساسية أو ألم أو تشققات، وأخبره بوجود حشوات أو تيجان أو قشور؛ فقد تؤثر هذه المعلومات في ملاءمة التبييض وطريقته وتوقيته.</p></div>
-     </article>
-     <article class="check-item">
-      <span class="check-mark" aria-hidden="true">✓</span>
-      <div><h3>الحمل أو الرضاعة</h3><p>لا توصي هيئة الخدمات الصحية البريطانية (NHS) بتبييض الأسنان خلال الحمل أو الرضاعة. استشر طبيب الأسنان بشأن أي إجراء تجميلي، وأجّل التبييض إلى ما بعد هذه الفترة.</p></div>
-     </article>
-    </div>
+    <aside class="check-list decision-checklist" aria-labelledby="decision-checklist-title">
+     <h3 class="decision-checklist-title" id="decision-checklist-title">قبل أن تقرر التبييض</h3>
+     <ul class="decision-checklist-grid">
+      <li class="check-item decision-check-item"><span class="check-mark" aria-hidden="true">✓</span><div><h3>سبب تغيّر اللون</h3><p>افهم ما إذا كان التغيّر سطحيًا أو مرتبطًا بلون السن الداخلي.</p></div></li>
+      <li class="check-item decision-check-item"><span class="check-mark" aria-hidden="true">✓</span><div><h3>صحة الأسنان واللثة</h3><p>ناقش أي تسوّس أو التهاب أو مشكلة قد تحتاج إلى علاج أولًا.</p></div></li>
+      <li class="check-item decision-check-item"><span class="check-mark" aria-hidden="true">✓</span><div><h3>الحساسية أو الألم</h3><p>اذكر للطبيب أي حساسية أو ألم أو مشكلة قائمة في الأسنان.</p></div></li>
+      <li class="check-item decision-check-item"><span class="check-mark" aria-hidden="true">✓</span><div><h3>الحشوات والترميمات</h3><p>أخبره بوجود حشوات أو تيجان أو قشور قبل اختيار الطريقة.</p></div></li>
+      <li class="check-item decision-check-item"><span class="check-mark" aria-hidden="true">✓</span><div><h3>النتيجة الممكنة</h3><p>ناقش ما يمكن للتبييض تغييره وحدوده في حالتك.</p></div></li>
+      <li class="check-item decision-check-item"><span class="check-mark" aria-hidden="true">✓</span><div><h3>التكلفة والخطة</h3><p>تأكد من إجمالي التكلفة وما يشمله العرض وأي رسوم أخرى.</p></div></li>
+      <li class="check-item decision-check-item"><span class="check-mark" aria-hidden="true">✓</span><div><h3>العناية والمتابعة</h3><p>اسأل عن التعليمات وما ينبغي فعله عند ظهور أعراض.</p></div></li>
+     </ul>
+    </aside>
    </div>
    <div class="expect-section expectations-panel" role="group" aria-labelledby="expectations-title">
     <div class="section-head expectations-head">
@@ -1743,7 +1775,7 @@ body,button,input,select,textarea{font-family:var(--body)}
      </article>
      <article class="expect-card">
       <h3>العناية بعد التبييض</h3>
-      <p>حافظ على تنظيف الأسنان وفق إرشادات طبيبك، وقلّل العوامل التي تسبب التصبغات قدر الإمكان. قد يتغير اللون بمرور الوقت؛ استشر الطبيب قبل إعادة التبييض أو إضافة أي منتج آخر.</p>
+      <p>التزم بتعليمات العناية التي يحددها طبيبك، وحافظ على تنظيف الأسنان واللثة. قد تتغير درجة اللون مع الوقت؛ اسأله قبل تكرار التبييض أو استخدام منتج إضافي، واطلب المشورة إذا كانت الحساسية شديدة أو استمرت أو ظهر تهيّج في اللثة.</p>
      </article>
     </div>
    </div>
@@ -1849,6 +1881,14 @@ body,button,input,select,textarea{font-family:var(--body)}
      <p class="visit-info-kicker">الموقع · الرياض</p>
      <h3>معلومات تساعدك على التخطيط للزيارة.</h3>
      <p class="visit-info-copy">تأكد من عنوان العيادة وساعات العمل وتفاصيل الموعد عبر قنواتها الرسمية قبل التوجه.</p>
+     <div class="visit-prep-checklist" aria-labelledby="visit-prep-title">
+      <h4 id="visit-prep-title">معلومات مفيدة قبل الموعد</h4>
+      <ul class="visit-prep-list">
+       <li>المعلومات الصحية والأدوية ذات الصلة.</li><li>وجود حساسية أو ألم حالي.</li>
+       <li>الحشوات أو التيجان أو القشور الموجودة.</li><li>علاجات الأسنان السابقة التي قد تكون مهمة.</li>
+       <li>أسئلتك عن التوقعات والتكلفة والخطة.</li>
+      </ul>
+     </div>
     </div>
     <div>
      <div class="visit-info-grid">
@@ -1898,8 +1938,8 @@ body,button,input,select,textarea{font-family:var(--body)}
    </div>
    <div class="faq-list">
     <details class="faq-item">
-     <summary>هل أحتاج إلى أكثر من جلسة؟</summary>
-     <div class="faq-answer">لا يوجد عدد ثابت من الجلسات يناسب الجميع. يتحدد ذلك بحسب سبب تغيّر اللون ودرجته والطريقة المستخدمة واستجابة الأسنان. يوضح الطبيب الخطة بعد الفحص، ولا يمكن تحديد عدد الجلسات بدقة قبل التقييم.</div>
+     <summary>هل يؤثر تبييض الأسنان في مينا السن؟</summary>
+     <div class="faq-answer">التبييض بالمواد المخصصة يهدف إلى تفتيح لون السن ولا يتطلب برد سطحه أو إزالة جزء منه. لكن الإفراط في استخدام منتجات التبييض أو استعمال خلطات حمضية أو كاشطة قد يضر بالمينا واللثة؛ لذلك التزم بتوجيهات طبيب الأسنان ولا تكرر الاستخدام من نفسك.</div>
     </details>
     <details class="faq-item">
      <summary>كم تدوم نتيجة التبييض؟</summary>
@@ -1926,7 +1966,7 @@ body,button,input,select,textarea{font-family:var(--body)}
      <div class="faq-answer">أخبر الطبيب عن أي ألم أو حساسية، وعن الحشوات أو التيجان أو القشور الموجودة، واذكر الأدوية والحالات الصحية ذات الصلة. تساعده هذه المعلومات، إلى جانب فحص الأسنان واللثة، على تقييم ملاءمة التبييض ومناقشة الخيارات والاحتياطات المناسبة.</div>
     </details>
    </div>
-   <p class="reference-note">مراجع تثقيفية: <a href="https://www.nhs.uk/tests-and-treatments/teeth-whitening/" target="_blank" rel="noopener noreferrer">إرشادات NHS حول تبييض الأسنان وملاءمته</a>، و<a href="https://www.ada.org/resources/ada-library/oral-health-topics/whitening" target="_blank" rel="noopener noreferrer">معلومات الجمعية الأمريكية لطب الأسنان عن تبييض الأسنان وآثاره</a>، و<a href="https://www.mouthhealthy.org/all-topics-a-z/teeth-whitening" target="_blank" rel="noopener noreferrer">دليل الجمعية الأمريكية لطب الأسنان حول منتجات التبييض</a>. هذه الصفحة توعوية ولا تغني عن التقييم السريري.</p>
+   <p class="reference-note">مراجع تثقيفية: <a href="https://www.nhs.uk/tests-and-treatments/teeth-whitening/" target="_blank" rel="noopener noreferrer">إرشادات NHS حول تبييض الأسنان وملاءمته</a>، و<a href="https://www.ada.org/resources/ada-library/oral-health-topics/whitening" target="_blank" rel="noopener noreferrer">معلومات الجمعية الأمريكية لطب الأسنان عن تبييض الأسنان وآثاره</a>، و<a href="https://www.mouthhealthy.org/all-topics-a-z/teeth-whitening" target="_blank" rel="noopener noreferrer">دليل الجمعية الأمريكية لطب الأسنان حول منتجات التبييض</a>، و<a href="https://www.leedsth.nhs.uk/patients/resources/tooth-whitening-information-for-adult-patients/" target="_blank" rel="noopener noreferrer">دليل مستشفى Leeds NHS حول تبييض الأسنان</a>. هذه الصفحة توعوية ولا تغني عن التقييم السريري.</p>
   </div>
  </section>
 
